@@ -1,0 +1,72 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+.table-styled{
+    overflow: hidden;
+    border-radius: 2rem;
+    border: 3px solid white;
+}
+.horario-tabla {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+.horario-tabla th, .horario-tabla td {
+    border-right: 1px solid rgb(68, 68, 68);
+    border-top: 1px solid rgb(170, 170, 170);
+    border-bottom: 1px solid rgb(170, 170, 170);
+    border-left: 1px solid rgb(170, 170, 170);
+    padding: 10px;
+    text-align: center;
+    width: 10%;
+
+}
+
+.horario-tabla th, .horario{
+    background-color: #4837e0;
+    font-size: 1.1em;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Estilos para las celdas vacías */
+.horario-celda {
+    height: 5.5em;
+    background-color: #808080;
+}
+
+/* Estilos para las celdas con horario */
+.celda-horario {
+    background-color: #cce7ff;  /* Color de fondo más oscuro */
+    border: 3px solid #1483f1 !important;  /* Borde más oscuro */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: 0.5s background-color ease-in-out;
+    color: #0c4783;
+    font-weight: 300;
+}
+
+.celda-horario .materia {
+    font-weight: bold;
+    color: #004d99;
+    margin-bottom: 5px;
+}
+
+.celda-horario .salon, .celda-horario .profesor {
+    font-size: 0.9em;
+    color: #333;
+}
+
+/* Hover effect */
+.celda-horario:hover {
+    background-color: #99cfff;  /* Color de fondo más oscuro en hover */
+    cursor: pointer;
+}

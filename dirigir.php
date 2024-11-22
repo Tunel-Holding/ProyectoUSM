@@ -1,0 +1,14 @@
+<?php
+// Detectar dispositivo móvil
+function esDispositivoMovil() {
+    return preg_match('/(Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini)/i', $_SERVER['HTTP_USER_AGENT']);
+}
+
+// Redirigir según el dispositivo
+if (esDispositivoMovil()) {
+    header("Location: PaginaTlf/");
+} else {
+    header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+}
+exit();
+?>
