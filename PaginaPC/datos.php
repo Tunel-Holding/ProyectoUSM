@@ -1,5 +1,5 @@
 <?php
-session_start(); // Inicia la sesión
+session_start(); // Inicia la sesión :D
 
 // Conexión a la base de datos
 $servername = "localhost";
