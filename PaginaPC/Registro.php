@@ -17,7 +17,7 @@ $hash = password_hash($contraseña, PASSWORD_DEFAULT);
 $sql = "SELECT * FROM usuarios WHERE nombre_usuario = ? OR email = ?"; 
 $stmt = $db->prepare($sql);
 if ($stmt === false) { 
-    die("Error en la preparación de la consulta: " . $db->error); 
+    die("Error en la preparación de la consultaa: " . $db->error); 
 }
 $stmt->bind_param("ss", $nombre, $correo); 
 $stmt->execute(); 
