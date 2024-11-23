@@ -60,6 +60,7 @@
     transition: 0.5s transform ease-in-out;
     box-shadow: 5px 5px 10px black;
     position: absolute;
+    z-index: 100000;
 }
 .menu.toggle{
     transform: translateX(0);

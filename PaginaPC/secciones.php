@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (isset($_GET['valor'])) { 
+    $_SESSION['materiaselecc'] = $_GET['valor'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -127,82 +130,58 @@ session_start();
             </div>
         </div>
     </div>
-    <h1>Materias Disponibles</h1>
+    <h1><?php echo $_SESSION['materiaselecc']?></h1>
     <div class="materias">
     
     <?php
-        // Conexión a la base de datos
-        $conexion = new mysqli("localhost", "root", "", "proyectousm");
+    require 'conexion.php'; // Asegúrate de conectar a tu base de datos
 
-        // Verificar la conexión
-        if ($conexion->connect_error) {
-            die("Conexión fallida: " . $conexion->connect_error);
-        }
-
-        // ID del usuario
-        $id_usuario = $_SESSION['idusuario'];
-
-        // Obtener el semestre del usuario
-        $sql = "SELECT semestre FROM estudiantes WHERE id_usuario = ?";
-        $stmt = $conexion->prepare($sql);
-        if (!$stmt) {
-            die("Error en la preparación de la consulta: " . $conexion->error);
-        }
-        $stmt->bind_param("i", $id_usuario);
+    if (isset($_GET['valor'])) {
+        $nombre_materia = $_GET['valor'];
+        
+        // Consulta para obtener las secciones de la materia, el nombre del profesor y el horario
+        $stmt = $conn->prepare("SELECT m.id, m.nombre, m.seccion, m.creditos, p.nombre AS profesor, h.dia, h.hora_inicio, h.hora_fin
+                                FROM materias m
+                                JOIN profesores p ON m.id_profesor = p.id
+                                JOIN horariosmateria h ON m.id = h.id_materia
+                                WHERE m.nombre = ?");
+        $stmt->bind_param("s", $nombre_materia);
         $stmt->execute();
-        $stmt->bind_result($semestre);
-        $stmt->fetch();
-        $stmt->close();
+        $result = $stmt->get_result();
 
-        if (isset($semestre)) {
-            // Mostrar las materias disponibles
-            $sqlMaterias = "SELECT m.id, m.nombre, m.creditos, m.semestre
-            FROM materias m
-            JOIN (
-                SELECT nombre, MIN(id) as min_id
-                FROM materias
-                GROUP BY nombre
-            ) sub ON m.id = sub.min_id
-            LEFT JOIN Inscripciones i ON m.id = i.id_materia AND i.id_estudiante = ?
-            LEFT JOIN HistoricoAcademico h ON m.id = h.MateriaID AND h.EstudianteID = ?
-            WHERE m.semestre <= ? AND i.id_materia IS NULL AND h.MateriaID IS NULL";
-
-
-
-            $stmtMaterias = $conexion->prepare($sqlMaterias);
-            if (!$stmtMaterias) {
-                die("Error en la preparación de la consulta de materias: " . $conexion->error);
+        // Agrupar los resultados por sección
+        $secciones = [];
+        while ($row = $result->fetch_assoc()) {
+            $seccion = $row['seccion'];
+            if (!isset($secciones[$seccion])) {
+                $secciones[$seccion] = [
+                    'profesor' => $row['profesor'],
+                    'id' => $row['id'],
+                    'horarios' => []
+                ];
             }
-            $stmtMaterias->bind_param("iii", $id_usuario, $id_usuario, $semestre);
-            $stmtMaterias->execute();
-            $resultado = $stmtMaterias->get_result();
-
-            if ($resultado->num_rows > 0) {
-                while ($fila = $resultado->fetch_assoc()) { 
-                    
-                ?>
-
-                <div class="div-materia">
-                    <img src="css/images.png">
-                    <h2><?php echo $fila['nombre'];?></h2>
-                    <h4>Creditos: <?php echo $fila['creditos'];?></h4>
-                    <a class="botoninscribir" data-valor="<?php echo $fila['nombre']?>">Ver secciones</a>
-                </div>
-
-                <?php
-                }
-            } else {
-                echo "No hay materias disponibles.";
-            }
-
-            $stmtMaterias->close();
-        } else {
-            echo "No se encontró el usuario.";
+            $secciones[$seccion]['horarios'][] = $row['dia'] . " " . $row['hora_inicio'] . " - " . $row['hora_fin'];
         }
 
-        // Cerrar la conexión
-        $conexion->close();
+        // Mostrar las secciones y sus horarios agrupados
+        foreach ($secciones as $seccion => $data) {
+            ?>
+            <div class="div-seccion">
+                <img src="css/images.png" alt="Imagen de la materia">
+                <h2>Profesor: <?php echo $data['profesor']; ?></h2>
+                <h2>Sección: <?php echo $seccion; ?></h2>
+                <h4>Horarios: </h4>
+                <h4><?php echo implode("<br>", $data['horarios']); ?></h4>
+                <a class="botoninscribir" data-valor="<?php echo $data['id']; ?>">Inscribirse</a>
+            </div>
+            <?php
+            }
+        } else {
+            echo "No se ha recibido el nombre de la materia.";
+        }
     ?>
+
+
     </div>
     <script>
         const contenedor = document.getElementById('contenedor'); 
@@ -250,11 +229,11 @@ session_start();
                 document.getElementById('switchtema').checked = true;
             }
         });
-
+        
         document.querySelectorAll('.botoninscribir').forEach(button => {
             button.addEventListener('click', function() {
                 const valor = this.getAttribute('data-valor');
-                window.location.href = `secciones.php?valor=${valor}`;
+                window.location.href = `inscribir.php?valor=${valor}`;
             });
         });
 
