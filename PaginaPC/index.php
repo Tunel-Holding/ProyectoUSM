@@ -12,7 +12,7 @@ session_start();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap" rel="stylesheet">
     
-    <title>Inicio de Sesion - USM</title>
+    <title>Inicio de Sesión - USM</title>
 </head>
 <body class="body1">
 
