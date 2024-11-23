@@ -12,7 +12,7 @@
         body{
             width: 100%;
             height: auto;
-            background-color: black;
+            background-color: gray;
             display: flex;
             justify-content: center;
             flex-direction: column;
