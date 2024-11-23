@@ -132,9 +132,6 @@ session_start();
         </div>
     </div>
 
-    <?php
-    echo $_SESSION['semestre_usu']
-    ?>
     <script>
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
@@ -188,13 +185,13 @@ session_start();
             } 
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/pagina_principal.php'); 
+                    redirigir('pagina_principal.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/datos.php'); 
+                    redirigir('datos.php'); 
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/inscripcion.php'); 
+                    redirigir('inscripcion.php'); 
                 });
             }
     </script>

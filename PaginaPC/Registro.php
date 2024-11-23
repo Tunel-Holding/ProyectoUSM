@@ -34,7 +34,7 @@ if ($result->num_rows > 0) {
 
 mysqli_close($db);
 
-header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+header("Location: PaginaPC/");
 exit()
 
 ?>

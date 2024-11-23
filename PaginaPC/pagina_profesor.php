@@ -182,10 +182,10 @@
             } 
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/pagina_profesor.php'); 
+                    redirigir('pagina_profesor.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/datos.php'); 
+                    redirigir('datos.php'); 
                 });
             }
 

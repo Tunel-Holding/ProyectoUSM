@@ -256,13 +256,13 @@ session_start();
             } 
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/pagina_principal.php'); 
+                    redirigir('pagina_principal.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/datos.php'); 
+                    redirigir('datos.php'); 
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/inscripcion.php'); 
+                    redirigir('inscripcion.php'); 
                 });
             }
 

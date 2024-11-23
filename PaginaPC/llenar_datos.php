@@ -336,10 +336,10 @@ $conn->close();
             } 
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/pagina_principal.php'); 
+                    redirigir('pagina_principal.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/datos.php'); 
+                    redirigir('datos.php'); 
                 });
             }
 

@@ -14,7 +14,7 @@ if ($codigo_ingresado == $codigo_correcto) {
 } else {
      // Mostrar un mensaje de error y redirigir de nuevo
      $_SESSION['mensaje'] = "Código incorrecto. Por favor, inténtelo de nuevo.";
-     header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+     header("Location: PaginaPC/");
      exit();
 }
 ?>

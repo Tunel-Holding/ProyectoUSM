@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Mostrar consulta SQL para depuración
     
     $conn->query($sql);
-    header('Location: http://localhost/waos/Proyecto/PaginaPC/datos.php');
+    header('Location: datos.php');
 }
 
 $conn->close();

@@ -35,13 +35,13 @@ if (mysqli_num_rows($result) == 1) {
     } else {
         // Contraseña inválida
         $_SESSION['mensaje'] = "Contraseña incorrecta.";
-        header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+        header("Location: PaginaPC/");
         exit();
     }
 } else {
     // Usuario no encontrado
     $_SESSION['mensaje'] = "El Usuario ingresado no Existe. Cree una cuenta.";
-    header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+    header("Location: PaginaPC/");
     exit();
 }
 

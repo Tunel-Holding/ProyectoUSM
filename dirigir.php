@@ -8,7 +8,7 @@ function DispositivoMovil() {
 if (DispositivoMovil()) {
     header("Location: PaginaTlf/");
 } else {
-    header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+    header("Location: PaginaPC/");
 }
 exit();
 ?>

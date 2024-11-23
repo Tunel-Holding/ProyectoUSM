@@ -10,7 +10,7 @@ $result = $consulta->get_result();
 
 
 use PHPMailer\PHPMailer\PHPMailer;
-require 'C:\wamp64\www\waos\vendor\autoload.php';
+require 'vendor\autoload.php';
 
 if ($result->num_rows > 0) {
 
@@ -73,7 +73,7 @@ if ($result->num_rows > 0) {
 }
 else {
     $_SESSION['mensaje'] = "El correo ingresado no esta registrado.";
-    header("Location: http://localhost/waos/Proyecto/PaginaPC/");
+    header("Location: PaginaPC/");
 }
 ?>
 
@@ -93,8 +93,8 @@ else {
 <body>
     <div class="container">
         <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="uni">
-        <h1>Ingrese el codigo</h1>
-        <span>Hemos enviado un codigo a su correo. Por favor introduzcalo</span>
+        <h1>Ingrese el código</h1>
+        <span>Hemos enviado un código a su correo. Por favor introduzcalo</span>
         <form action="olvidarcontraseña3.php" method="post">
             <div class="container-input">
                 <input type="text" name="codigo" placeholder="Codigo" required>
