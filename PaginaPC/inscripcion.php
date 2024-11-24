@@ -128,6 +128,21 @@ session_start();
         </div>
     </div>
     <h1>Materias Disponibles</h1>
+    <?php
+        require 'conexion.php';
+        function getAvailableCredits($id_usuario) { 
+            global $conn; 
+            $sql = "SELECT creditosdisponibles FROM estudiantes WHERE id_usuario = ?"; 
+            $stmt = $conn->prepare($sql); 
+            $stmt->bind_param("i", $id_usuario); 
+            $stmt->execute(); 
+            $stmt->bind_result($creditosdisponibles); 
+            $stmt->fetch(); 
+            $stmt->close(); 
+            return $creditosdisponibles; 
+        }
+    ?>
+    <h2 class="h2">Creditos disponibles: <?php echo getAvailableCredits($_SESSION['idusuario'])?></h2>
     <div class="materias">
     
     <?php
