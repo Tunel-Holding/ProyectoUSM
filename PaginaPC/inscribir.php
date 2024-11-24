@@ -20,7 +20,6 @@
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
-                echo "Inscripción realizada con éxito.";
                 $stmt = $conn->prepare("SELECT dia, hora_inicio, hora_fin FROM horariosmateria WHERE id_materia = ?"); 
                 $stmt->bind_param("i", $id_materia); 
                 $stmt->execute(); 
@@ -30,14 +29,18 @@
                      $stmt_insert->bind_param("iisss", $id_estudiante, $id_materia, $row['dia'], $row['hora_inicio'], $row['hora_fin']); 
                      $stmt_insert->execute(); 
                     }
+                $_SESSION['mensaje'] = "Inscripción realizada con éxito.";
             } else {
-                echo "Error al inscribir al estudiante.";
+                $_SESSION['mensaje'] = "Error al inscribir al estudiante.";
             }
         } else {
-            echo "El estudiante ya está inscrito en esta materia.";
+            $_SESSION['mensaje'] = "El estudiante ya está inscrito en esta materia.";
         }
     } else {
-        echo "Solicitud no válida.";
+        $_SESSION['mensaje'] =  "Solicitud no válida.";
     }
+    $conn->close();
+    header("Location: inscripcion.php");
+    exit()
 
 ?>

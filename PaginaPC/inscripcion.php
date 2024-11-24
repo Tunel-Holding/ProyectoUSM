@@ -192,7 +192,7 @@ session_start();
                 <?php
                 }
             } else {
-                echo "No hay materias disponibles.";
+                echo "No hay materias disponibles para inscribir.";
             }
 
             $stmtMaterias->close();
@@ -273,6 +273,12 @@ session_start();
                     redirigir('inscripcion.php'); 
                 });
             }
+        document.addEventListener('DOMContentLoaded', function() {
+        <?php if (isset($_SESSION['mensaje'])): ?>
+            alert('<?php echo $_SESSION['mensaje']; ?>');
+            <?php unset($_SESSION['mensaje']); ?>
+        <?php endif; ?>
+        });
 
     </script>
 </body>
