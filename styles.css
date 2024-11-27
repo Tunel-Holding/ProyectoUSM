@@ -79,7 +79,6 @@ body {
 }
 
 .menu-noticias h1 {
-    
     text-align: center;
     font-family: "Anton", sans-serif;
     font-weight: 500;
@@ -91,14 +90,12 @@ body {
     background-position: center;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
+    -webkit-text-stroke: #ffffff 3px;
     background-clip: text;
     z-index: 2; /* Asegura que el h1 esté encima del pseudo-elemento */
     position: relative;
     /*text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.15);*/
-
 }
-
-
 
 .menu-noticias1 {
     max-width: 100%;
@@ -106,15 +103,6 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 25px;
-}
-
-.menu-noticias1 h1{
-    text-align: center;
-    color: #ffffff;
-    font-family: "Kanit", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: 10px;
 }
 
 
