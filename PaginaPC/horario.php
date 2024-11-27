@@ -132,6 +132,33 @@ session_start();
         </div>
     </div>
 
+    <h2>Horario de Clases</h2>
+
+    <div>
+        <?php
+
+            require "conexion.php";
+
+            $sql = "SELECT * FROM horario_clases ORDER BY dia_semana, hora_inicio"; 
+            $result = $conn->query($sql); 
+
+            $horario = []; 
+            $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]; 
+
+            foreach ($dias as $dia) { 
+                $horario[$dia] = []; 
+            } 
+            
+            if ($result->num_rows > 0) { 
+                while ($row = $result->fetch_assoc()) { 
+                    $horario[$row["dia_semana"]][] = $row; 
+                } 
+            }
+
+
+        ?>
+    </div>
+
     <script>
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
