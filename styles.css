@@ -74,7 +74,7 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    filter: blur(18px) grayscale(0.7); /* Aplica el blur solo a la imagen de fondo */
+    filter: blur(18px); /* Aplica el blur solo a la imagen de fondo */
     z-index: 1;
 }
 
