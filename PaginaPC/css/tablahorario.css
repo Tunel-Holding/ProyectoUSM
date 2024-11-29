@@ -49,7 +49,7 @@ body .horario-tabla th, body .horario-tabla td {
     background-color: #b9bdf5 !important;
     color: black;
     transition: all 0.3s ease-in-out !important;
-    width: 190px;
+    width: 18%;
 }
 .horario-celda:hover{
     background-color: #5e69fd !important;

@@ -143,7 +143,7 @@ session_start();
     <div class="div-horario">
         <?php
             require "conexion.php";
-            $id_estudiante_activo=1;
+            $id_estudiante_activo=$_SESSION['idusuario'];
             $sql = "
                 SELECT h.dia, h.hora_inicio, h.hora_fin, m.nombre AS materia, m.salon, p.nombre AS profesor 
                 FROM horarios h
