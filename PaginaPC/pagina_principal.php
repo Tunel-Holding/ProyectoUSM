@@ -72,6 +72,12 @@ session_start();
                         <p>Inscripción</p>
                     </div>
                 </div>
+                <div class="opción" id="horario">
+                     <div class="intopcion">
+                        <img src="css/horario.png">
+                        <p>Horario</p>
+                    </div>
+                </div>
                 <div class="opción">
                      <div class="intopcion">
                         <img src="css/notas.png">
@@ -192,6 +198,9 @@ session_start();
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
                     redirigir('inscripcion.php'); 
+                });
+                document.getElementById('horario').addEventListener('click', function() { 
+                    redirigir('horario.php'); 
                 });
             }
     </script>

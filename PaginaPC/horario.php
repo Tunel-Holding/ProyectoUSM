@@ -10,6 +10,7 @@ session_start();
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/tablahorario.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -66,10 +67,16 @@ session_start();
                         <p>Desempeño</p>
                     </div>
                 </div>
-                <div class="opción" id="inscripcion">
+                <div class="opción" id="inscripcion" id="inscripcion">
                      <div class="intopcion">
                         <img src="css/inscripción.png">
                         <p>Inscripción</p>
+                    </div>
+                </div>
+                <div class="opción" id="horario">
+                     <div class="intopcion">
+                        <img src="css/horario.png">
+                        <p>Horario</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -132,32 +139,92 @@ session_start();
         </div>
     </div>
 
-    <h2>Horario de Clases</h2>
-
-    <div>
+    <h1>Horario de Clases</h1>
+    <div class="div-horario">
         <?php
-
             require "conexion.php";
-
-            $sql = "SELECT * FROM horario_clases ORDER BY dia_semana, hora_inicio"; 
-            $result = $conn->query($sql); 
-
-            $horario = []; 
-            $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]; 
-
-            foreach ($dias as $dia) { 
-                $horario[$dia] = []; 
-            } 
+            $id_estudiante_activo=1;
+            $sql = "
+                SELECT h.dia, h.hora_inicio, h.hora_fin, m.nombre AS materia, m.salon, p.nombre AS profesor 
+                FROM horarios h
+                JOIN materias m ON h.id_materia = m.id
+                JOIN profesores p ON m.id_profesor = p.id
+                WHERE h.id_estudiante = $id_estudiante_activo
+            ";
+            $result = $conn->query($sql);
             
-            if ($result->num_rows > 0) { 
-                while ($row = $result->fetch_assoc()) { 
-                    $horario[$row["dia_semana"]][] = $row; 
-                } 
+            if (!$result) {
+                die("Error en la consulta". $conn->error);
             }
 
-
+            $datos = [];
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        $hora_inicio = strtotime($row['hora_inicio']);
+                        $hora_fin = strtotime($row["hora_fin"]);
+                        $intervalo = 45 * 60;
+                        for ($hora = $hora_inicio; $hora < $hora_fin; $hora += $intervalo) {
+                                    $hora_formateada = date("H:i:s", $hora);
+                                    $datos[$row["dia"]][$hora_formateada] = [
+                                        "materia" => $row["materia"],
+                                        "salon" => $row["salon"],
+                                        "profesor" => $row["profesor"],
+                                        "inicio" => ($hora == $hora_inicio),
+                                        "rowspan" => ceil(($hora_fin - $hora_inicio) / $intervalo)
+                                    ];
+                    }
+                }
+                $conn->close();
+            }
         ?>
+        
+        <table class="horario-tabla"> 
+            <tr> 
+                <th>Hora</th> 
+                <th>Lunes</th> 
+                <th>Martes</th> 
+                <th>Miércoles</th> 
+                <th>Jueves</th> 
+                <th>Viernes</th> 
+            </tr> 
+            <?php
+
+                function generar_horas($inicio, $intervalo, $total) { 
+                    $horas = []; 
+                    $hora_actual = strtotime($inicio); 
+                    for ($i = 0; $i < $total; $i++) {
+                        $horas[] = date("H:i:s", $hora_actual); 
+                        $hora_actual = strtotime("+$intervalo minutes", $hora_actual); 
+                    } 
+                    return $horas; 
+                }
+                $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+                $horas = generar_horas("07:00:00", 45, 10); 
+                foreach ($horas as $hora) { 
+                    $hora_para_mostrar= date("H:i",strtotime($hora));
+                    echo "<tr>"; 
+                    echo "<td>$hora_para_mostrar</td>"; 
+                    foreach($dias as $dia) {
+                        $contenido_celda="";
+                        $rowspan = 1;
+                        if (isset($datos[$dia][$hora])) {
+                            $info=$datos[$dia][$hora];
+                            if ($info["inicio"]) {
+                                $contenido_celda = $info["materia"] . "<br>" . $info["salon"] . "<br>" . $info["profesor"];
+                                $rowspan = $info["rowspan"];
+                                echo "<td class='horario-celda' rowspan='$rowspan'>$contenido_celda</td>";
+                            }
+                        }elseif (!isset($datos[$dia][$hora]) || !$info["inicio"]) {
+                            echo "<td class='celda-vacia'></td>";
+                        }
+                        
+                    }
+                    echo "</tr>"; 
+                }
+            ?>
+        </table>
     </div>
+    
 
     <script>
         const contenedor = document.getElementById('contenedor'); 
@@ -219,6 +286,9 @@ session_start();
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
                     redirigir('inscripcion.php'); 
+                });
+                document.getElementById('horario').addEventListener('click', function() { 
+                    redirigir('horario.php'); 
                 });
             }
     </script>

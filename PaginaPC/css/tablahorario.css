@@ -1,0 +1,62 @@
+:root {
+    --background-color: rgb(236, 236, 236);
+    --text-color: black;
+    --border: 1px solid black
+    
+}
+
+body.dark-mode {
+    --background-color: rgb(50, 50, 50);;
+    --text-color: white;
+    transition: all 1s ease-in-out;
+}
+
+h1{
+    text-align: center;
+    margin: 40px;
+    font-size: 80px;
+    font-family: "Poppins", sans-serif;
+    
+}
+.div-horario{
+    width: 85%;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgb(255, 255, 255);
+    margin: 10px auto;
+    font-family: "Poppins", sans-serif;
+}
+.horario-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+.horario-tabla, .horario-tabla th, .horario-tabla td {
+    border: 1px solid rgb(139, 139, 139);
+}
+body.dark-mode .horario-tabla th, body.dark-mode .horario-tabla td {
+    background-color: #174388;
+    padding: 14px;
+    text-align: center;
+    transition: all 1s ease-in-out;
+}
+body .horario-tabla th, body .horario-tabla td {
+    background-color: #9cb4da;
+    padding: 14px;
+    text-align: center;
+    transition: all 1s ease-in-out;
+}
+.horario-celda {
+    background-color: #b9bdf5 !important;
+    color: black;
+    transition: all 0.3s ease-in-out !important;
+    width: 190px;
+}
+.horario-celda:hover{
+    background-color: #5e69fd !important;
+    cursor: pointer;
+}
+
+.celda-vacia {
+    background-color: var(--background-color) !important;
+    transition: all 1s ease-in-out;
+}

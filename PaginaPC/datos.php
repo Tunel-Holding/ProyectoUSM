@@ -187,9 +187,15 @@ $conn->close(); // Cerrar la conexión
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="inscripcion">
                         <img src="css/inscripción.png">
                         <p>Inscripción</p>
+                    </div>
+                </div>
+                <div class="opción" id="horario">
+                     <div class="intopcion">
+                        <img src="css/horario.png">
+                        <p>Horario</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -327,6 +333,9 @@ $conn->close(); // Cerrar la conexión
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
                     redirigir('inscripcion.php'); 
+                });
+                document.getElementById('horario').addEventListener('click', function() { 
+                    redirigir('horario.php'); 
                 });
             }
     </script>
