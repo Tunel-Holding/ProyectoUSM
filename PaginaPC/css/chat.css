@@ -1,0 +1,32 @@
+#chat-box {
+    border: 1px solid #f0f0f0;
+    padding: 20px;
+    height: 300px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre burbujas */
+    
+}
+
+.message-bubble {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #e1ffc7;
+    position: relative;
+    word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+    max-width: 30%; /* Esto permite que el contenedor se ajuste automáticamente */
+}
+
+
+.message-bubble strong {
+    display: block; /* Hacer que el nombre del usuario esté en una línea separada */
+    margin-bottom: 5px; /* Espacio entre el nombre y el mensaje */
+}
+
+/* Estilo para el lado derecho (si es necesario) */
+.message-bubble.right {
+    background-color: #dcf8c6; /* Color diferente para los mensajes del usuario */
+    align-self: flex-end; /* Alinear a la derecha */
+}
