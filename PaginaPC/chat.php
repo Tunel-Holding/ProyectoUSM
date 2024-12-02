@@ -31,17 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Chat</h1>
     
-    <div id="chat-box">
-        <!-- Aquí se cargarán los mensajes mediante AJAX -->
+    <h1>Chat</h1>
+    <div class="cont-chat">
+        
+        <div id="chat-box">
+            <!-- Aquí se cargarán los mensajes mediante AJAX -->
+        </div>
+
+        <form id="message-form">
+            <input type="text" id="message" name="message" required>
+            <button type="submit">Enviar</button>
+        </form>
+
+
     </div>
 
-    <form id="message-form">
-        <input type="text" id="message" name="message" required>
-        <button type="submit">Enviar</button>
-    </form>
+        
 
+    
     <script>
         $(document).ready(function() {
         // Cargar mensajes al cargar la página
