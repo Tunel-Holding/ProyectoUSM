@@ -2,8 +2,6 @@
 session_start();
 require 'conexion.php';
 
-$_SESSION['idusuario'] = 4;
-
 if (!isset($_SESSION['idusuario'])) {
     header("Location: login.php");
     exit();
@@ -11,11 +9,13 @@ if (!isset($_SESSION['idusuario'])) {
 
 // Enviar mensaje
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
+    echo "Mensaje enviado";
     $message = $_POST['message'];
     $user_id = $_SESSION['idusuario'];
+    $group_id = $_SESSION['idmateria'];
 
-    $stmt = $conn->prepare("INSERT INTO messages (user_id, message) VALUES (?, ?)");
-    $stmt->bind_param("is", $user_id, $message);
+    $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("isi", $user_id, $message, $group_id);
     $stmt->execute();
     $stmt->close();
     exit(); // Salir después de insertar el mensaje
@@ -39,13 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             <!-- Aquí se cargarán los mensajes mediante AJAX -->
         </div>
 
-    <form id="message-form" enctype="multipart/form-data">
+    <form id="message-form" method="POST" action="chat.php">
         <input type="text" id="message" name="message" required>
         <button type="submit">Enviar</button>
-    </form>
-    <form id="image-form" enctype="multipart/form-data">
-    <input type="file" id="image" name="image" accept="image/*" style="display: none;" required>
-    <button type="button" id="send-image">Seleccionar y Enviar Imagen</button>
     </form>
 
     <script>
@@ -56,9 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         // Enviar mensaje
         $('#message-form').on('submit', function(e) {
             e.preventDefault(); // Evitar el envío del formulario tradicional
-
+            console.log("Formulario enviado");
             var message = $('#message').val();
-            $.post('chat.php', { message: message }, function() {
+            $.post('chat.php', { message: message }, function(data) {
+                console.log(data);
                 $('#message').val(''); // Limpiar el campo de mensaje
                 loadMessages(); // Cargar mensajes después de enviar
             });
