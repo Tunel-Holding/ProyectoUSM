@@ -35,7 +35,7 @@ if (mysqli_num_rows($result) == 1) {
     } else {
         // Contraseña inválida
         $_SESSION['mensaje'] = "Contraseña incorrecta.";
-        header("Location: PaginaPC/");
+        header("Location: index.php");
         exit();
     }
 } else {
