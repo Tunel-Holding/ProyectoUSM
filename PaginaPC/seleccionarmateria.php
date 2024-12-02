@@ -10,6 +10,7 @@ session_start();
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -78,12 +79,6 @@ session_start();
                         <p>Horario</p>
                     </div>
                 </div>
-                <div class="opción" id="chat">
-                     <div class="intopcion">
-                        <img src="css/muro.png">
-                        <p>Chat</p>
-                    </div>
-                </div>
                 <div class="opción">
                      <div class="intopcion">
                         <img src="css/notas.png">
@@ -143,7 +138,47 @@ session_start();
             </div>
         </div>
     </div>
+    <h1>Seleccionar Materia</h1>
+    <div class="materias">
+    <?php
+        require 'conexion.php';
 
+        // Suponiendo que tienes el ID del estudiante
+        $estudiante_id = 1; // Cambia esto por el ID del estudiante real
+
+        // Consulta para obtener las materias inscritas
+        $sql = "SELECT m.nombre, m.id FROM inscripciones i 
+                JOIN materias m ON i.id_materia = m.id 
+                WHERE i.id_estudiante = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Error en la preparación de la consulta: " . $conn->error);
+        }
+        $stmt->bind_param("i", $estudiante_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Verificar si hay materias inscritas
+        if ($result->num_rows > 0) {
+            // Imprimir las materias
+            while ($fila = $result->fetch_assoc()) {
+                ?>
+                <div class="div-materia">
+                    <img src="css/images.png">
+                    <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
+                    <a class="botoninscribir" data-valor="<?php echo htmlspecialchars($fila['id']); ?>">Chat</a>
+                </div>
+                <?php
+            }
+        } else {
+            echo "No tienes materias inscritas.";
+        }
+
+        // Cerrar conexión
+        $stmt->close();
+        $conn->close();
+    ?>
+    </div>
     <script>
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
@@ -191,6 +226,13 @@ session_start();
             }
         });
 
+        document.querySelectorAll('.botoninscribir').forEach(button => {
+            button.addEventListener('click', function() {
+                const valor = this.getAttribute('data-valor');
+                window.location.href = `dirigirchat.php?valor=${valor}`;
+            });
+        });
+
         function redirigir(url) { 
             window.location.href = url;; 
             // Cambia esta URL a la página de destino 
@@ -207,9 +249,6 @@ session_start();
                 });
                 document.getElementById('horario').addEventListener('click', function() { 
                     redirigir('horario.php'); 
-                });
-                document.getElementById('chat').addEventListener('click', function() { 
-                    redirigir('seleccionarmateria.php'); 
                 });
             }
     </script>

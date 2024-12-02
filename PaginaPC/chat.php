@@ -37,9 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         <!-- Aquí se cargarán los mensajes mediante AJAX -->
     </div>
 
-    <form id="message-form">
+    <form id="message-form" enctype="multipart/form-data">
         <input type="text" id="message" name="message" required>
         <button type="submit">Enviar</button>
+    </form>
+    <form id="image-form" enctype="multipart/form-data">
+    <input type="file" id="image" name="image" accept="image/*" style="display: none;" required>
+    <button type="button" id="send-image">Seleccionar y Enviar Imagen</button>
     </form>
 
     <script>
@@ -98,13 +102,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     }
 
     // Añadir un evento para detectar cuando el usuario deja de desplazarse
-    let scrollTimeout;
-    $('#chat-box').on('scroll', function() {
-        clearTimeout(scrollTimeout);
-        isUserScrolling = true;
-        scrollTimeout = setTimeout(function() {
-            isUserScrolling = false;
-        }, 100); // Cambia el tiempo de espera según sea necesario
+        let scrollTimeout;
+        $('#chat-box').on('scroll', function() {
+            clearTimeout(scrollTimeout);
+            isUserScrolling = true;
+            scrollTimeout = setTimeout(function() {
+                isUserScrolling = false;
+            }, 100); // Cambia el tiempo de espera según sea necesario
+        });
+        $('#send-image').on('click', function() {
+        $('#image').click(); // Simula un clic en el input de archivo
+    });
+
+// Detectar cuando se selecciona un archivo
+    $('#image').on('change', function() {
+        var formData = new FormData($('#image-form')[0]); // Crea un objeto FormData con los datos del formulario
+
+        $.ajax({
+            url: 'upload_image.php', // Cambia esto a la URL de tu script PHP que manejará la subida
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                $('#chat-box').html(data); // Actualiza el chat con las nuevas imágenes
+                $('#image').val(''); // Limpiar el campo de imagen
+            },
+            error: function() {
+                alert('Error al enviar la imagen.');
+            }
+        });
     });
     </script>
 </body>

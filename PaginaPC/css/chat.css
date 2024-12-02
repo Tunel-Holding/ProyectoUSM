@@ -9,8 +9,21 @@
     
 }
 
-.message-bubble {
-    display: inline-block;
+.message-bubble-usuario {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #e1ffc7;
+    position: relative;
+    word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+    max-width: 30%; /* Esto permite que el contenedor se ajuste automáticamente */
+}
+
+.message-bubble-profesor {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
     padding: 10px;
     border-radius: 15px;
     background-color: #e1ffc7;
