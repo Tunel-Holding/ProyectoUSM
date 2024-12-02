@@ -8,6 +8,12 @@ h1{
     font-size: 60px;
     margin: 50px;
 }
+.h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+}
 .materias{
     width: 100%;
     display: flex;
@@ -34,6 +40,52 @@ h1{
     height: 20vh;
 }
 .div-materia h2{
-    margin: 20px;
+    margin: 15px;
     font-weight: 600;
+}
+.div-materia h4{
+    margin: 15px;
+}
+.div-seccion{
+    height: 76vh;
+    margin: 10px;
+    background-color: rgb(116, 116, 116);
+    flex: 1 1 100%;
+    max-width: 30%;
+    box-sizing: border-box;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.div-seccion img{
+    width: 100%;
+    height: 20vh;
+}
+.div-seccion h2{
+    margin: 15px;
+    font-weight: 600;
+}
+.div-seccion h4{
+    margin: 15px;
+    line-height: 1.5;
+}
+.botoninscribir { 
+    background-color: #007BFF; /* Color azul */ 
+    border: none; 
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 12px;
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+} 
+.botoninscribir:hover { 
+    background-color: #0056b3; /* Color más oscuro en hover */ 
+    transform: scale(1.05); /* Pequeño agrandamiento */
 }

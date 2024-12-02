@@ -50,6 +50,7 @@ body {
     }
     
 }
+
 .menu-noticias {
     position: relative;
     width: 100%;
@@ -73,21 +74,28 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    filter: blur(8px); /* Aplica el blur solo a la imagen de fondo */
+    filter: blur(18px); /* Aplica el blur solo a la imagen de fondo */
     z-index: 1;
 }
 
 .menu-noticias h1 {
-    position: relative;
-    z-index: 2; /* Asegura que el h1 esté encima del pseudo-elemento */
     text-align: center;
-    color: #3a89c2;
-    font-family: "Kanit", sans-serif;
-    font-weight: 400;
+    font-family: "Anton", sans-serif;
+    font-weight: 500;
     font-style: normal;
-    font-size: 110px;
+    font-size: 170px;
+    background: #0d0628 url('PaginaPC/css/IMG_7235copia.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-stroke: #ffffff 3px;
+    background-clip: text;
+    z-index: 2; /* Asegura que el h1 esté encima del pseudo-elemento */
+    position: relative;
+    /*text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.15);*/
 }
-
 
 .menu-noticias1 {
     max-width: 100%;
@@ -95,15 +103,6 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 25px;
-}
-
-.menu-noticias1 h1{
-    text-align: center;
-    color: #ffffff;
-    font-family: "Kanit", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: 10px;
 }
 
 

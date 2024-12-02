@@ -68,6 +68,12 @@ session_start();
                         <p>Inscripción</p>
                     </div>
                 </div>
+                <div class="opción" id="horario">
+                     <div class="intopcion">
+                        <img src="css/horario.png">
+                        <p>Horario</p>
+                    </div>
+                </div>
                 <div class="opción">
                      <div class="intopcion">
                         <img src="css/notas.png">
@@ -128,6 +134,21 @@ session_start();
         </div>
     </div>
     <h1>Materias Disponibles</h1>
+    <?php
+        require 'conexion.php';
+        function getAvailableCredits($id_usuario) { 
+            global $conn; 
+            $sql = "SELECT creditosdisponibles FROM estudiantes WHERE id_usuario = ?"; 
+            $stmt = $conn->prepare($sql); 
+            $stmt->bind_param("i", $id_usuario); 
+            $stmt->execute(); 
+            $stmt->bind_result($creditosdisponibles); 
+            $stmt->fetch(); 
+            $stmt->close(); 
+            return $creditosdisponibles; 
+        }
+    ?>
+    <h2 class="h2">Creditos disponibles: <?php echo getAvailableCredits($_SESSION['idusuario'])?></h2>
     <div class="materias">
     
     <?php
@@ -186,12 +207,13 @@ session_start();
                     <img src="css/images.png">
                     <h2><?php echo $fila['nombre'];?></h2>
                     <h4>Creditos: <?php echo $fila['creditos'];?></h4>
+                    <a class="botoninscribir" data-valor="<?php echo $fila['nombre']?>">Ver secciones</a>
                 </div>
 
                 <?php
                 }
             } else {
-                echo "No hay materias disponibles.";
+                echo "No hay materias disponibles para inscribir.";
             }
 
             $stmtMaterias->close();
@@ -250,6 +272,13 @@ session_start();
             }
         });
 
+        document.querySelectorAll('.botoninscribir').forEach(button => {
+            button.addEventListener('click', function() {
+                const valor = this.getAttribute('data-valor');
+                window.location.href = `secciones.php?valor=${valor}`;
+            });
+        });
+
         function redirigir(url) { 
             window.location.href = url;; 
             // Cambia esta URL a la página de destino 
@@ -262,9 +291,19 @@ session_start();
                     redirigir('datos.php'); 
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
-                    redirigir('inscripcion.php'); 
-                });
+                    redirigir('inscripcion.php');
+                });    
+                document.getElementById('horario').addEventListener('click', function() { 
+                    redirigir('horario.php'); 
+                }); 
+                
             }
+        document.addEventListener('DOMContentLoaded', function() {
+        <?php if (isset($_SESSION['mensaje'])): ?>
+            alert('<?php echo $_SESSION['mensaje']; ?>');
+            <?php unset($_SESSION['mensaje']); ?>
+        <?php endif; ?>
+        });
 
     </script>
 </body>
