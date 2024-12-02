@@ -5,7 +5,6 @@ require 'conexion.php';
 if (!isset($_SESSION['idusuario'])) {
     exit(); // Salir si el usuario no está autenticado
 }
-$_SESSION['idmateria'] = 1;
 $idgrupo = $_SESSION['idmateria'];
 // Obtener mensajes
 $result = $conn->query("SELECT messages.message, usuarios.nombre_usuario, usuarios.nivel_usuario FROM messages JOIN usuarios ON messages.user_id = usuarios.id WHERE messages.group_id = $idgrupo ORDER BY created_at ASC");

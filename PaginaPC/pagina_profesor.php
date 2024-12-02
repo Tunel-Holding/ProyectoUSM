@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="chat">
                         <img src="css/muro.png">
                         <p>Chat</p>
                     </div>
@@ -186,6 +186,9 @@
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
                     redirigir('datos.php'); 
+                });
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria.php'); 
                 });
             }
 
