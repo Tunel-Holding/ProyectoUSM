@@ -1,5 +1,8 @@
 <?php
-session_start();
+    session_start()
+?>
+
+<?php
 require 'conexion.php';
 
 if (!isset($_SESSION['idusuario'])) {
@@ -9,7 +12,6 @@ if (!isset($_SESSION['idusuario'])) {
 
 // Enviar mensaje
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
-    echo "Mensaje enviado";
     $message = $_POST['message'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
@@ -32,17 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
 </head>
 <body>
     
-    <h1>Chat</h1>
+    <h1><?php echo $_SESSION['nombremateria']?></h1>
+
     <div class="cont-chat">
-        
+
         <div id="chat-box">
-            <!-- Aquí se cargarán los mensajes mediante AJAX -->
+             <!-- Aquí se cargarán los mensajes mediante AJAX -->
         </div>
 
-    <form id="message-form" method="POST" action="chat.php">
-        <input type="text" id="message" name="message" required>
-        <button type="submit">Enviar</button>
-    </form>
+        <form id="message-form" method="POST" action="chat.php" class="form-entry">
+            <input type="text" id="message" name="message" placeholder="Escribe un mensaje..." required>
+            <button type="submit">i</button>
+        </form>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -52,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         // Enviar mensaje
         $('#message-form').on('submit', function(e) {
             e.preventDefault(); // Evitar el envío del formulario tradicional
-            console.log("Formulario enviado");
+            
             var message = $('#message').val();
             $.post('chat.php', { message: message }, function(data) {
-                console.log(data);
+                
                 $('#message').val(''); // Limpiar el campo de mensaje
                 loadMessages(); // Cargar mensajes después de enviar
             });
@@ -70,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         }
 
         // Actualizar mensajes cada 2 segundos
-        setInterval(loadMessages, 2000);
+        setInterval(loadMessages, 200000);
     });
 
     let isUserScrolling = false;
@@ -113,25 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         $('#image').click(); // Simula un clic en el input de archivo
     });
 
-// Detectar cuando se selecciona un archivo
-    $('#image').on('change', function() {
-        var formData = new FormData($('#image-form')[0]); // Crea un objeto FormData con los datos del formulario
-
-        $.ajax({
-            url: 'upload_image.php', // Cambia esto a la URL de tu script PHP que manejará la subida
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                $('#chat-box').html(data); // Actualiza el chat con las nuevas imágenes
-                $('#image').val(''); // Limpiar el campo de imagen
-            },
-            error: function() {
-                alert('Error al enviar la imagen.');
-            }
-        });
-    });
     </script>
 </body>
 </html>

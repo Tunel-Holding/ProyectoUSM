@@ -34,7 +34,7 @@ if ($result->num_rows > 0) {
 
 mysqli_close($db);
 
-header("Location: PaginaPC/");
+header("Location: index.php");
 exit()
 
 ?>
