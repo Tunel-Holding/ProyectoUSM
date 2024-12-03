@@ -1,0 +1,145 @@
+body{
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    height: auto;
+    margin: 0;
+    flex-direction: column;
+    --tablabackground1:#d1d1d1;
+    --tablabackground2:#a7a7a7;
+    --tablabackgroundhover:#8d8b8b;
+}
+body.dark-mode{
+    --tablabackground1:#1e1e1e;
+    --tablabackground2:#2a2a2a;
+    --tablabackgroundhover:#252525;
+}
+.tabla{
+    width: 100%;
+}
+
+.btneditar, .addprof{
+    background-color: #3200f8;
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 30px;
+    text-decoration: none;
+    transition: 0.3s background-color ease-in-out;
+    border: transparent;
+    font-size: 12px;
+}
+.btneditar:hover, .addprof:hover{
+    background-color: #1f009d;
+}
+
+.addprof{
+    width: 140px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-size: 16px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+
+h1{
+    text-align: center;
+    font-size: 120px;
+    margin: 30px;
+}
+h2{
+    text-align: center;
+    font-size: 60px;
+    margin: 30px;
+}
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease-in-out;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #333; /* Borde oscuro */
+    transition: all 0.3s ease-in-out;
+}
+th {
+    background-color: var(--tablabackground1); /* Fondo de encabezado oscuro */
+    color: #7369ff; /* Color de texto verde para encabezados */
+}
+tr:nth-child(even) {
+    background-color: var(--tablabackground2); /* Fondo gris oscuro para filas pares */
+    
+}
+tr:hover {
+    background-color: var(--tablabackgroundhover); /* Color de fondo al pasar el mouse */
+    transition: all 0.3s ease-in-out;
+}
+
+.form-container {
+    background-color: #ffffff; /* Fondo del formulario claro */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .form-container {
+    background-color: #3a3a3a; /* Fondo del formulario oscuro */
+}
+
+h1 {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #007bff; /* Borde azul */
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+    border-color: #0056b3; /* Borde azul más oscuro al enfocar */
+    outline: none;
+}
+
+input[type="submit"] {
+    background-color: #007bff; /* Fondo azul */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Fondo azul más oscuro al pasar el mouse */
+}
+.formulario{
+    width: 30%;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}

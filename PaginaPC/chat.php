@@ -33,16 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
 <body>
     
     <h1>Chat</h1>
-    <div class="cont-chat">
-        
-        <div id="chat-box">
-            <!-- Aquí se cargarán los mensajes mediante AJAX -->
-        </div>
+        <div class="cont-chat">
+            
+            <div id="chat-box">
+                <!-- Aquí se cargarán los mensajes mediante AJAX -->
+            </div>
 
-    <form id="message-form" method="POST" action="chat.php">
-        <input type="text" id="message" name="message" required>
-        <button type="submit">Enviar</button>
-    </form>
+        <form id="message-form" method="POST" action="chat.php">
+            <input type="text" id="message" name="message" required>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -113,25 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         $('#image').click(); // Simula un clic en el input de archivo
     });
 
-// Detectar cuando se selecciona un archivo
-    $('#image').on('change', function() {
-        var formData = new FormData($('#image-form')[0]); // Crea un objeto FormData con los datos del formulario
-
-        $.ajax({
-            url: 'upload_image.php', // Cambia esto a la URL de tu script PHP que manejará la subida
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                $('#chat-box').html(data); // Actualiza el chat con las nuevas imágenes
-                $('#image').val(''); // Limpiar el campo de imagen
-            },
-            error: function() {
-                alert('Error al enviar la imagen.');
-            }
-        });
-    });
     </script>
 </body>
 </html>
