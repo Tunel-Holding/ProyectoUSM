@@ -1,170 +1,128 @@
 body{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+    font-family: "Poppins", sans-serif;
+    background-color: #e9fff6 ;
 }
+
+
+
 .cont-chat{
     width: 60%;
-    height: 80vh;
+    height: 88vh;
     display: flex;
     align-items: center;
     flex-direction: column;
-    border: 1px solid red;
-    background: #0064ff;
+    background-color: #0056b3;
     justify-content: center;
     border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
     
 }
 
+h1{
+    text-align: center;
+}
+
 #chat-box {
-    border: 1px solid #df1818;
-    background-color: #d3e4ff;
-    width: 80%;
+    background-color: #ffffff;
+    width: 90%;
     padding: 10px; /* Reducido desde 20px */
     height: 400px; /* Reducido desde 300px */
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    gap: 5px; /* Espacio entre burbujas reducido */
+    gap: 8px; /* Espacio entre burbujas reducido */
     border-radius: 10px; 
 }
    
+.timestamp{
+    margin: 0;
+    font-size: 10px;
+    margin-bottom: 0!important;
+}
 
 .message-bubble-usuario {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px;
     border-radius: 15px;
-    background: linear-gradient(#0064ff, #1e76ff, #468fff, #d3e4ff);    
+    background-color: #4CAF50;    
     position: relative;
     word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-    max-width: 30%; /* Esto permite que el contenedor se ajuste automáticamente */
+    max-width: 35%; /* Esto permite que el contenedor se ajuste automáticamente */
+    color: rgb(70, 70, 70);
+    align-self: flex-end; 
+    text-align: start;
+    
 }
 
 .message-bubble-profesor {
     display: flex;
     flex-direction: column;
-    align-self: flex-end;
-    padding: 10px;
+    padding: 15px;
     border-radius: 15px;
-    background: linear-gradient(#0093ff, #37bcff,#5bb9ff, #f4f8fa);
+    background: linear-gradient(#0093ff, #37bcff); 
     position: relative;
     word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-    max-width: 30%; /* Esto permite que el contenedor se ajuste automáticamente */
+    max-width: 35%; /* Esto permite que el contenedor se ajuste automáticamente */
+    color: rgb(70, 70, 70);
+    align-self: flex-start; 
+    display: flex;
+    flex-direction: column;
 }
 
-.message-bubble strong {
+
+
+.message-bubble-usuario p, .message-bubble-profesor p {
+    color: #000;
     display: block; /* Hacer que el nombre del usuario esté en una línea separada */
-    margin-bottom: 3px; /* Espacio entre el nombre y el mensaje reducido */
+    margin-top: 0;
+    margin-bottom: 14px;
+}
+.message-bubble-usuario strong, .message-bubble-profesor strong {
+    color: #000;
+    display: block; /* Hacer que el nombre del usuario esté en una línea separada */
+    margin-bottom: 10px;
 }
 
+.message-form{
+    width: 90%; 
+    display: flex; 
+    background-color: #333; /* Fondo gris oscuro */ 
+    border-radius: 5px; 
+    padding: 10px; 
+    margin-top: 10px;
+}
 
-
-.messageBox {
-    width: fit-content;
+.form-entry{
+    width: 50%;
+    padding: 10px;
+    margin: 15px;
     height: 40px;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: #2d2d2d;
-    padding: 0 15px;
+    background-color: #0c00b4;
     border-radius: 10px;
-    border: 1px solid rgb(63, 63, 63);
-}
-.messageBox:focus-within {
-    border: 1px solid rgb(110, 110, 110);
-}
-.fileUploadWrapper {
-    width: fit-content;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
-#file {
-    display: none;
-}
-.fileUploadWrapper label {
-    cursor: pointer;
-    width: fit-content;
-    height: fit-content;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-.fileUploadWrapper label svg {
-    height: 18px;
-}
-.fileUploadWrapper label svg path {
-    transition: all 0.3s;
-}
-.fileUploadWrapper label svg circle {
-    transition: all 0.3s;
-}
-.fileUploadWrapper label:hover svg path {
-    stroke: #fff;
-}
-.fileUploadWrapper label:hover svg circle {
-    stroke: #fff;
-    fill: #3c3c3c;
-}
-.fileUploadWrapper label:hover .tooltip {
-    display: block;
-    opacity: 1;
-}
-.tooltip {
-    position: absolute;
-    top: -40px;
-    display: none;
-    opacity: 0;
-    color: white;
-    font-size: 10px;
-    text-wrap: nowrap;
-    background-color: #000;
-    padding: 6px 10px;
-    border: 1px solid #3c3c3c;
-    border-radius: 5px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.596);
-    transition: all 0.3s;
-}
-#messageInput {
-    width: 200px;
-    height: 100%;
+input{
+    width: 80%;
+    height: 70%;
+    margin-right: 20px;
+    border: 1px solid gray;
+    border-radius: 30px;
     background-color: transparent;
-    outline: none;
-    border: none;
+    color: white;
     padding-left: 10px;
-    color: white;
-}
-#messageInput:focus ~ #sendButton svg path,
-#messageInput:valid ~ #sendButton svg path {
-    fill: #3c3c3c;
-    stroke: white;
 }
 
-#sendButton {
-    width: fit-content;
-    height: 100%;
-    background-color: transparent;
-    outline: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
+button{
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: #000855;
+    color: white;
+    border: transparent;
 }
-#sendButton svg {
-    height: 18px;
-    transition: all 0.3s;
-}
-#sendButton svg path {
-    transition: all 0.3s;
-}
-#sendButton:hover svg path {
-    fill: #3c3c3c;
-    stroke: white;
-}  

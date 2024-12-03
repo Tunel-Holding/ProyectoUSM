@@ -1,5 +1,8 @@
 <?php
-session_start();
+    session_start()
+?>
+
+<?php
 require 'conexion.php';
 
 if (!isset($_SESSION['idusuario'])) {
@@ -9,7 +12,6 @@ if (!isset($_SESSION['idusuario'])) {
 
 // Enviar mensaje
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
-    echo "Mensaje enviado";
     $message = $_POST['message'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
@@ -32,11 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
 </head>
 <body>
     
-    <h1>Chat</h1>
-        <div class="cont-chat">
-            
+    <h1><?php echo $_SESSION['nombremateria']?></h1>
+    
+    <div class="cont-chat">
+    
             <div id="chat-box">
-                <!-- Aquí se cargarán los mensajes mediante AJAX -->
+                 <!-- Aquí se cargarán los mensajes mediante AJAX -->
             </div>
 
         <form id="message-form" method="POST" action="chat.php">
@@ -53,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         // Enviar mensaje
         $('#message-form').on('submit', function(e) {
             e.preventDefault(); // Evitar el envío del formulario tradicional
-            console.log("Formulario enviado");
+            
             var message = $('#message').val();
             $.post('chat.php', { message: message }, function(data) {
-                console.log(data);
+                
                 $('#message').val(''); // Limpiar el campo de mensaje
                 loadMessages(); // Cargar mensajes después de enviar
             });
@@ -71,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         }
 
         // Actualizar mensajes cada 2 segundos
-        setInterval(loadMessages, 2000);
+        setInterval(loadMessages, 200000);
     });
 
     let isUserScrolling = false;
