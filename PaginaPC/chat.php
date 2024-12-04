@@ -165,12 +165,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     </div>
 
     <h1><?php echo $_SESSION['nombremateria']?></h1>
-
+    
     <div class="cont-chat">
-
-        <div id="chat-box">
-             <!-- Aquí se cargarán los mensajes mediante AJAX -->
-        </div>
+    
+            <div id="chat-box">
+                 <!-- Aquí se cargarán los mensajes mediante AJAX -->
+            </div>
 
     </div>
     <form id="message-form" method="POST" action="chat.php" class="form-entry">
