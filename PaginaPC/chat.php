@@ -269,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         }
 
         // Actualizar mensajes cada 2 segundos
-        setInterval(loadMessages, 200000);
+        setInterval(loadMessages, 2000);
     });
 
     let isUserScrolling = false;
