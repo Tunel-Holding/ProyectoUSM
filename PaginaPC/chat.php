@@ -42,9 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                  <!-- Aquí se cargarán los mensajes mediante AJAX -->
             </div>
 
-        <form id="message-form" method="POST" action="chat.php">
-            <input type="text" id="message" name="message" required>
-            <button type="submit">Enviar</button>
+        <form id="message-form" method="POST" action="chat.php" class="form-entry">
+            <input type="text" id="message" name="message" placeholder="Escribe un mensaje..." required>
+            <button type="submit">i</button>
         </form>
     </div>
 
