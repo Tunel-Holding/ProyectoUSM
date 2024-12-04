@@ -1,9 +1,11 @@
 body{
     font-family: "Poppins", sans-serif;
-    background-color: #e9fff6 ;
+    --fondo: white;
 }
 
-
+body.dark-mode{
+    --fondo: rgb(60, 60, 60);
+}
 
 .cont-chat{
     width: 60%;
@@ -15,8 +17,7 @@ body{
     justify-content: center;
     border-radius: 10px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-    
+    margin: 0 auto;    
 }
 
 h1{
@@ -24,35 +25,42 @@ h1{
 }
 
 #chat-box {
-    background-color: #ffffff;
-    width: 90%;
+    background-color: var(--fondo);
+    width: 99%;
     padding: 10px; /* Reducido desde 20px */
-    height: 400px; /* Reducido desde 300px */
+    height: 520px; /* Reducido desde 300px */
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
     gap: 8px; /* Espacio entre burbujas reducido */
-    border-radius: 10px; 
+    border-radius: 10px;
+    transition: background-color 0.5s ease-in-out;
+    padding-bottom: 65px;
 }
    
 .timestamp{
     margin: 0;
-    font-size: 10px;
+    font-size: 12px;
     margin-bottom: 0!important;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
 }
 
 .message-bubble-usuario {
     display: flex;
     flex-direction: column;
     padding: 15px;
-    border-radius: 15px;
-    background-color: #4CAF50;    
+    border-radius: 20px;
+    background: linear-gradient(#138808, #4CAF50);    
     position: relative;
+    max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
     word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-    max-width: 35%; /* Esto permite que el contenedor se ajuste automáticamente */
-    color: rgb(70, 70, 70);
+    color: rgb(77, 77, 77);
     align-self: flex-end; 
     text-align: start;
+    font-size: 14px;
+    margin-top: 10px;
     
 }
 
@@ -60,15 +68,16 @@ h1{
     display: flex;
     flex-direction: column;
     padding: 15px;
-    border-radius: 15px;
+    border-radius: 20px;
     background: linear-gradient(#0093ff, #37bcff); 
     position: relative;
     word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-    max-width: 35%; /* Esto permite que el contenedor se ajuste automáticamente */
+    max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
     color: rgb(70, 70, 70);
     align-self: flex-start; 
     display: flex;
     flex-direction: column;
+    font-size: 14px;
 }
 
 
@@ -76,53 +85,67 @@ h1{
 .message-bubble-usuario p, .message-bubble-profesor p {
     color: #000;
     display: block; /* Hacer que el nombre del usuario esté en una línea separada */
-    margin-top: 0;
-    margin-bottom: 14px;
+    margin-bottom: 5px;
 }
 .message-bubble-usuario strong, .message-bubble-profesor strong {
     color: #000;
     display: block; /* Hacer que el nombre del usuario esté en una línea separada */
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .message-form{
     width: 90%; 
     display: flex; 
-    background-color: #333; /* Fondo gris oscuro */ 
+    background-color: rgb(88, 88, 88); /* Fondo gris oscuro */ 
     border-radius: 5px; 
-    padding: 10px; 
+    padding: 20px; 
     margin-top: 10px;
 }
 
 .form-entry{
-    width: 50%;
-    padding: 10px;
-    margin: 15px;
-    height: 40px;
+    width: 40%;
+    padding: 3px;
+    margin: 20px;
+    height: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: #0c00b4;
-    border-radius: 10px;
+    background-color: #0330ac;
+    border-radius: 25px;
+    margin: 0 auto;
+    transform: translateY(-130%);
+    margin-bottom: 100px;
+    
 }
 
 input{
     width: 80%;
     height: 70%;
-    margin-right: 20px;
-    border: 1px solid gray;
+    margin-right: 10px;
+    border: 1px solid rgb(37, 36, 36);
     border-radius: 30px;
     background-color: transparent;
     color: white;
     padding-left: 10px;
+    margin-left: 35px;
 }
 
 button{
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 100%;
-    background-color: #000855;
+    background-color: #020f85;
+    border-left: 10px;
     color: white;
     border: transparent;
+    transition: background-color 0.3s ease-in-out;
+}
+button:hover{
+    background-color: #0434b9;
+}
+.btn-img{
+    width: 25px;
+    height: auto;
+    margin: 0 auto;
 }

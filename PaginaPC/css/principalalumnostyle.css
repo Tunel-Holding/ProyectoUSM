@@ -133,7 +133,7 @@ body {
 }
 
 body.dark-mode {
-    --background-color: rgb(50, 50, 50);;
+    --background-color: rgb(50, 50, 50);
     --text-color: white;
 }
 .themeswitcher{
