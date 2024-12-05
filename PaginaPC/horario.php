@@ -143,13 +143,13 @@ session_start();
     <div class="div-horario">
         <?php
             require "conexion.php";
-            $id_estudiante_activo=$_SESSION['idusuario'];
+            $id_estudiante=$_SESSION['idusuario'];
             $sql = "
                 SELECT h.dia, h.hora_inicio, h.hora_fin, m.nombre AS materia, m.salon, p.nombre AS profesor 
                 FROM horarios h
                 JOIN materias m ON h.id_materia = m.id
                 JOIN profesores p ON m.id_profesor = p.id
-                WHERE h.id_estudiante = $id_estudiante_activo
+                WHERE h.id_estudiante = $id_estudiante
             ";
             $result = $conn->query($sql);
             
