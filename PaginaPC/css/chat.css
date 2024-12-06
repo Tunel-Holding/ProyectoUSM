@@ -22,13 +22,15 @@ body.dark-mode{
 
 h1{
     text-align: center;
+    margin: 30px;
+    font-size: 60px;
 }
 
 #chat-box {
     background-color: var(--fondo);
     width: 99%;
     padding: 10px; /* Reducido desde 20px */
-    height: 520px; /* Reducido desde 300px */
+    height: 560px; /* Reducido desde 300px */
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -103,7 +105,7 @@ h1{
 }
 
 .form-entry{
-    width: 40%;
+    width: 43%;
     padding: 3px;
     margin: 20px;
     height: 50px;
@@ -114,9 +116,7 @@ h1{
     background-color: #0330ac;
     border-radius: 25px;
     margin: 0 auto;
-    transform: translateY(-130%);
-    margin-bottom: 100px;
-    
+    transform: translateY(-130%);    
 }
 
 input{
@@ -129,6 +129,7 @@ input{
     color: white;
     padding-left: 10px;
     margin-left: 35px;
+    padding-right: 15px;
 }
 
 button{
@@ -140,6 +141,8 @@ button{
     color: white;
     border: transparent;
     transition: background-color 0.3s ease-in-out;
+    margin-right: 10px;
+    cursor: pointer;
     
 }
 button:hover{
@@ -149,4 +152,94 @@ button:hover{
     width: 25px;
     height: auto;
     margin: 0 auto;
+}
+
+#uploadButton {
+    background-color: #0045c5;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+#uploadButton:hover{
+    background-color: #00217c;
+}
+
+#uploadButton img{
+    width: 40px;
+    margin: 0 auto  ;
+}
+
+.date-separator {
+    text-align: center;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #b8b8b85b;
+    border: 1px solid #9999996c;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 40%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    
+}
+
+.button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+#SubirDiv {
+    position: absolute;
+    bottom: -50px;
+    left: 27%;
+    background-color: var(--fondo);
+    padding: 5px;
+    border: 1px solid #ccccccaf;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    max-width: 100px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#SubirDiv.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#SubirDiv .button {
+    width: 80%;
+}
+.msg-foto{
+    margin-bottom: 20px;
+    border-radius: 20px;
+}
+.file img{
+    width: 100px;
+}
+a{
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
 }

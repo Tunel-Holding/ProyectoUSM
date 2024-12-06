@@ -1,3 +1,4 @@
+
 <?php
     session_start()
 ?>
@@ -16,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
 
-    $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo) VALUES (?, ?, ?, 'texto')");
     $stmt->bind_param("isi", $user_id, $message, $group_id);
     $stmt->execute();
     $stmt->close();
@@ -92,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                         <p>Desempeño</p>
                     </div>
                 </div>
-                <div class="opción" id="inscripcion" id="inscripcion">
+                <div class="opción" id="inscripcion">
                      <div class="intopcion">
                         <img src="css/inscripción.png">
                         <p>Inscripción</p>
@@ -102,6 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                      <div class="intopcion">
                         <img src="css/horario.png">
                         <p>Horario</p>
+                    </div>
+                </div>
+                <div class="opción" id="chat">
+                     <div class="intopcion">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -163,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             </div>
         </div>
     </div>
-
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <h1><?php echo $_SESSION['nombremateria']?></h1>
     
     <div class="cont-chat">
@@ -173,12 +180,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             </div>
 
     </div>
-    <form id="message-form" method="POST" action="chat.php" class="form-entry">
+    <form id="message-form" method="POST" action="chat.php" class="form-entry" enctype="multipart/form-data">
+            <button type="button" id="uploadButton" onclick="toggleUploadDiv()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg></button>
             <input type="text" id="message" name="message" placeholder="Escribe un mensaje..." required>
-            <button type="submit"><img class="btn-img" src="css/enviar-mensaje.png"></button>
+            <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg></button>
     </form>
+    <div id="SubirDiv">
+        <button class="button" onclick="document.getElementById('imageInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/></svg></button>
+        <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="uploadFile('image')">
+
+        <button class="button" onclick="document.getElementById('docInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg></button>
+        <input type="file" id="docInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display:none" onchange="uploadFile('document')">
+    </div>
 
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -241,6 +257,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                 });
                 document.getElementById('horario').addEventListener('click', function() { 
                     redirigir('horario.php'); 
+                });
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria.php'); 
                 });
             }
         
@@ -312,6 +331,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
         $('#image').click(); // Simula un clic en el input de archivo
     });
 
+    document.getElementById('uploadButton').addEventListener("click", () => {
+            document.getElementById('SubirDiv').classList.toggle('show');
+            event.stopPropagation();
+        });
+        document.addEventListener('click', function(event) { 
+            if (!container.contains(event.target) && container.classList.contains('show')) { 
+                container.classList.remove('show'); 
+            } 
+        });
+        document.addEventListener('click', function(event) { 
+            var div = document.getElementById('SubirDiv'); 
+            if (!div.contains(event.target)) { 
+                div.classList.remove('show'); 
+            } 
+        });
+
+        function uploadFile(type) {
+            var fileInput;
+            var validTypes;
+
+            if (type === 'image') {
+                fileInput = document.getElementById('imageInput');
+                validTypes = ['image/gif', 'image/jpeg', 'image/png'];
+            } else {
+                fileInput = document.getElementById('docInput');
+                validTypes = [
+                    'application/msword', 
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'application/vnd.ms-excel',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'application/vnd.ms-powerpoint',
+                    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    'application/pdf'
+                ];
+            }
+
+            var file = fileInput.files[0];
+            if (file) {
+                if (validTypes.includes(file.type)) {
+                    var formData = new FormData();
+                    formData.append('file', file);
+
+                    fetch('upload.php', {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => {
+                        if (response.ok) {
+                            alert('Archivo subido exitosamente');
+                        } else {
+                            alert('Error al subir el archivo');
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al subir el archivo');
+                    });
+                } else {
+                    alert('Tipo de archivo no permitido.');
+                }
+            }
+        }
     
     </script>
 </body>
