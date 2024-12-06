@@ -28,6 +28,9 @@ if ($result->num_rows > 0) {
 } else {
     $sql= "INSERT INTO usuarios (nombre_usuario, email, contrasena, nivel_usuario) VALUES ('$nombre', '$correo', '$hash', 'usuario')";
     if (mysqli_query($db, $sql)) {
+        $idusuario = $db->insert_id;
+        $sql= "INSERT INTO estudiantes (id_usuario, carrera, semestre, creditosdisponibles) VALUES ('$idusuario', 'Ingenieria en Sistemas', 1, 20)";
+        mysqli_query($db, $sql);
         $_SESSION['mensaje'] = "Registro exitoso";
     }
 }

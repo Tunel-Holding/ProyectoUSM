@@ -144,7 +144,7 @@ session_start();
         require 'conexion.php';
 
         // Suponiendo que tienes el ID del estudiante
-        $estudiante_id = 1; // Cambia esto por el ID del estudiante real
+        $estudiante_id = $_SESSION['idusuario']; // Cambia esto por el ID del estudiante real
 
         // Consulta para obtener las materias inscritas
         $sql = "SELECT m.nombre, m.id FROM inscripciones i 
