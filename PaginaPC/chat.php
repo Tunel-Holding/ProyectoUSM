@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                         <p>Desempeño</p>
                     </div>
                 </div>
-                <div class="opción" id="inscripcion" id="inscripcion">
+                <div class="opción" id="inscripcion">
                      <div class="intopcion">
                         <img src="css/inscripción.png">
                         <p>Inscripción</p>
@@ -103,6 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                      <div class="intopcion">
                         <img src="css/horario.png">
                         <p>Horario</p>
+                    </div>
+                </div>
+                <div class="opción" id="chat">
+                     <div class="intopcion">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -164,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             </div>
         </div>
     </div>
-
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <h1><?php echo $_SESSION['nombremateria']?></h1>
     
     <div class="cont-chat">
@@ -188,6 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     </div>
 
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -250,6 +257,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                 });
                 document.getElementById('horario').addEventListener('click', function() { 
                     redirigir('horario.php'); 
+                });
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria.php'); 
                 });
             }
         

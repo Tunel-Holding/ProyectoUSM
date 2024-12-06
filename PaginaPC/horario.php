@@ -67,7 +67,7 @@ session_start();
                         <p>Desempeño</p>
                     </div>
                 </div>
-                <div class="opción" id="inscripcion" id="inscripcion">
+                <div class="opción" id="inscripcion">
                      <div class="intopcion">
                         <img src="css/inscripción.png">
                         <p>Inscripción</p>
@@ -77,6 +77,12 @@ session_start();
                      <div class="intopcion">
                         <img src="css/horario.png">
                         <p>Horario</p>
+                    </div>
+                </div>
+                <div class="opción" id="chat">
+                     <div class="intopcion">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -138,7 +144,7 @@ session_start();
             </div>
         </div>
     </div>
-
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <h1>Horario de Clases</h1>
     <div class="div-horario">
         <?php
@@ -227,6 +233,7 @@ session_start();
     
 
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -289,6 +296,9 @@ session_start();
                 });
                 document.getElementById('horario').addEventListener('click', function() { 
                     redirigir('horario.php'); 
+                });
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria.php'); 
                 });
             }
     </script>

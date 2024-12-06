@@ -413,3 +413,26 @@ body.dark-mode {
 .Btn:active {
     transform: translate(-2px ,2px);
 }
+.back-button{
+    position: absolute;
+    left: 20px;
+    background-color: #0052d6;
+    border: transparent;
+    border-radius: 10px;
+    width: 100px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Poppins", sans-serif;
+    font-size: 20px;
+    color: black;
+    transition: all 0.3s ease-in-out;
+    gap: 10px;
+    cursor: pointer;
+}
+.back-button:hover{
+    background-color: #0e3470;
+    border-radius: 50px;
+    color: white;
+}

@@ -71,6 +71,18 @@ if (isset($_GET['valor'])) {
                         <p>Inscripción</p>
                     </div>
                 </div>
+                <div class="opción" id="horario">
+                     <div class="intopcion">
+                        <img src="css/horario.png">
+                        <p>Horario</p>
+                    </div>
+                </div>
+                <div class="opción" id="chat">
+                     <div class="intopcion">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
+                    </div>
+                </div>
                 <div class="opción">
                      <div class="intopcion">
                         <img src="css/notas.png">
@@ -130,6 +142,7 @@ if (isset($_GET['valor'])) {
             </div>
         </div>
     </div>
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <h1><?php echo $_SESSION['materiaselecc']?></h1>
     <div class="materias">
     
@@ -184,6 +197,7 @@ if (isset($_GET['valor'])) {
 
     </div>
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -250,6 +264,12 @@ if (isset($_GET['valor'])) {
                 });
                 document.getElementById('inscripcion').addEventListener('click', function() { 
                     redirigir('inscripcion.php'); 
+                });
+                document.getElementById('horario').addEventListener('click', function() { 
+                    redirigir('horario.php'); 
+                });
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria.php'); 
                 });
             }
 

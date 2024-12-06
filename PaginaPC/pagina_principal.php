@@ -144,6 +144,8 @@ session_start();
         </div>
     </div>
 
+    
+
     <script>
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
