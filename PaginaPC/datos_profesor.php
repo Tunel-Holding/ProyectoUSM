@@ -91,7 +91,7 @@ $conn->close(); // Cerrar la conexión
         }
         .wecontainer h1 {
             text-align: center;
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
         }
         .wecontainer ul {
             list-style: none;
@@ -101,17 +101,17 @@ $conn->close(); // Cerrar la conexión
             margin: 10px 0;
             padding: 10px;
             background: transparent; /* Azul claro */
-            border: 1px solid #004c97; /* Borde azul oscuro */
+            border: 1px solid #26c8dd; /* Borde azul oscuro */
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
             font-size: 1.1em;
         }
         .wecontainer li strong {
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
         }
         .wecontainer li span {
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
         }
         .wecontainer a{
             font-weight: 700;
@@ -121,7 +121,7 @@ $conn->close(); // Cerrar la conexión
             margin: 20px auto 0;
             padding: 10px 20px;
             background-color: #ffd700; /* Amarillo */
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -259,7 +259,7 @@ $conn->close(); // Cerrar la conexión
     </div>
     <div class="pagina">
     <div class="wecontainer">
-        <h1>Datos del Estudiante</h1>
+        <h1>Datos del Profesor</h1>
         <ul>
             <li><strong>Número de Cédula:</strong> <span><?php echo $estudiante['cedula']; ?></span></li>
             <li><strong>Nombres:</strong> <span><?php echo $estudiante['nombres']; ?></span></li>

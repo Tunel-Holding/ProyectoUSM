@@ -7,9 +7,21 @@ $conn = new mysqli("localhost", "root", "", "proyectousm");
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
+
+// Obtener los datos del estudiante más reciente
+$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario ORDER BY id DESC LIMIT 1";
+$result = $conn->query($sql);
+
+// Verificar si la consulta fue exitosa
+if (!$result) {
+    die("Error en la consulta: " . $conn->error);
+}
+
+$estudiante = $result->fetch_assoc();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
-    $cedula_nueva = $_POST['numero_cedula'];
+    $cedula_nueva = $_POST['cedula'];
     $nombres = $_POST['nombres'];
     $apellidos = $_POST['apellidos'];
     $sexo = $_POST['sexo'];
@@ -264,33 +276,32 @@ $conn->close();
         <h1>Modificar Datos</h1>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 
-            <div class="form">
-            <label for="numero_cedula">Número de Cédula:</label>
-            <input type="text" id="numero_cedula" name="numero_cedula" value="<?php echo isset($numero_cedula) ? $numero_cedula : ''; ?>">
+        <div class="form">
+            <label for="cedula">Número de Cédula:</label>
+            <input type="text" id="cedula" name="cedula" value="<?php echo isset($estudiante['cedula']) ? $estudiante['cedula'] : ''; ?>">
             
             <label for="nombres">Nombres:</label>
-            <input type="text" id="nombres" name="nombres" value="<?php echo isset($nombres) ? $nombres : ''; ?>">
+            <input type="text" id="nombres" name="nombres" value="<?php echo isset($estudiante['nombres']) ? $estudiante['nombres'] : ''; ?>">
             
             <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" value="<?php echo isset($apellidos) ? $apellidos : ''; ?>">
+            <input type="text" id="apellidos" name="apellidos" value="<?php echo isset($estudiante['apellidos']) ? $estudiante['apellidos'] : ''; ?>">
             
             <label for="sexo">Sexo:</label>
             <select id="sexo" name="sexo">
-                <option value="" <?php if (isset($sexo) && $sexo == '') echo 'selected'; ?>>Seleccione</option>
-                <option value="Masculino" <?php if (isset($sexo) && $sexo == 'Masculino') echo 'selected'; ?>>Masculino</option>
-                <option value="Femenino" <?php if (isset($sexo) && $sexo == 'Femenino') echo 'selected'; ?>>Femenino</option>
+                <option value="" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == '') echo 'selected'; ?>>Seleccione</option>
+                <option value="Masculino" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == 'Masculino') echo 'selected'; ?>>Masculino</option>
+                <option value="Femenino" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == 'Femenino') echo 'selected'; ?>>Femenino</option>
             </select>
 
             <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="telefono" value="<?php echo isset($telefono) ? $telefono : ''; ?>">
+            <input type="text" id="telefono" name="telefono" value="<?php echo isset($estudiante['telefono']) ? $estudiante['telefono'] : ''; ?>">
             
             <label for="correo">Correo:</label>
-            <input type="email" id="correo" name="correo" value="<?php echo isset($correo) ? $correo : ''; ?>">
+            <input type="email" id="correo" name="correo" value="<?php echo isset($estudiante['correo']) ? $estudiante['correo'] : ''; ?>">
             
             <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" name="direccion" value="<?php echo isset($direccion) ? $direccion : ''; ?>">
-            </div>
-
+            <input type="text" id="direccion" name="direccion" value="<?php echo isset($estudiante['direccion']) ? $estudiante['direccion'] : ''; ?>">
+            
             <input type="submit" class="button" value="Guardar cambios">
         </form>
     </div>

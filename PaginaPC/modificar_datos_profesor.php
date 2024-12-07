@@ -8,7 +8,7 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Obtener los datos del estudiante más reciente
+// Obtener los datos del profesor más reciente
 $sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario ORDER BY id DESC LIMIT 1";
 $result = $conn->query($sql);
 
@@ -88,7 +88,7 @@ $conn->close();
             font-family: "Poppins", sans-serif;
             max-width: 500px; /* Ajustamos el ancho del contenedor */
             background: var(--background-form);
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
             padding: 20px;
             box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
             border-radius: 8px;
@@ -103,7 +103,7 @@ $conn->close();
         }
         .wecontainer h1 {
             margin-bottom: 20px;
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
         }
         .wecontainer .form {
             display: grid;
@@ -112,7 +112,7 @@ $conn->close();
             align-items: center;
         }
         .wecontainer label {
-            color: #004c97; /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
             font-size: 0.9em; /* Reducimos el tamaño de la fuente */
             font-weight: 500;
         }
@@ -121,7 +121,7 @@ $conn->close();
             padding: 8px;
             width: 100%;
             background: transparent;
-            border: 1px solid #004c97; /* Azul oscuro */
+            border: 1px solid #26c8dd; /* Azul oscuro */
             border-radius: 4px;
             font-size: 0.9em; /* Reducimos el tamaño de la fuente */
         }
@@ -130,7 +130,7 @@ $conn->close();
             margin-top: 20px;
             padding: 10px 20px;
             background: #ffd700 !important; /* Amarillo */
-            color: #004c97 !important; /* Azul oscuro */
+            color: #26c8dd !important; /* Azul oscuro */
             border: none;
             border-radius: 4px;
             cursor: pointer;
