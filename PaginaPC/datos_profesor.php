@@ -56,25 +56,27 @@ $conn->close(); // Cerrar la conexión
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/principalprofesor.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Datos - USM</title>
     <style>
         body.dark-mode {
-            --background-color: black;
+            --background-color: rgb(50,50,50);
             --text-color: white;
             --background-form: rgb(147, 136, 136);
         }
         .pagina {
-            margin: 0;
+            
+            margin: 0 auto;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             color: #fff; /* Blanco */
+            width: 50%;
         }
         .wecontainer {
             font-family: "Poppins", sans-serif;
@@ -168,34 +170,28 @@ $conn->close(); // Cerrar la conexión
                 </svg>  
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción">
-                    <div class="intopcion" id="inicio">
+                <div class="opción" id="inicio">
+                    <div class="intopcion">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción">
-                     <div class="intopcion" id="datos">
+                <div class="opción" id="datos">
+                     <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
                 </div>
                 <div class="opción">
                      <div class="intopcion">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
+                        <img src="css/cursos.png">
+                        <p>Cursos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="inscripcion">
-                        <img src="css/inscripción.png">
-                        <p>Inscripción</p>
-                    </div>
-                </div>
-                <div class="opción" id="horario">
-                     <div class="intopcion">
-                        <img src="css/horario.png">
-                        <p>Horario</p>
+                     <div class="intopcion" id="chat">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -257,6 +253,7 @@ $conn->close(); // Cerrar la conexión
             </div>
         </div>
     </div>
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <div class="pagina">
     <div class="wecontainer">
         <h1>Datos del Profesor</h1>
@@ -269,11 +266,12 @@ $conn->close(); // Cerrar la conexión
             <li><strong>Correo:</strong> <span>&nbsp;&nbsp;&nbsp;<?php echo $estudiante['correo']; ?></span></li>
             <li><strong>Dirección:</strong> <span><?php echo $estudiante['direccion']; ?></span></li>
         </ul>
-        <a href="modificar_datos_profesores.php" class="button">Modificar datos</a>
+        <a href="modificar_datos_profesor.php" class="button">Modificar datos</a>
     </div>
     </div>
 
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 

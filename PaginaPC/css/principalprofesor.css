@@ -59,6 +59,8 @@
     transform: translateX(-120%);
     transition: 0.5s transform ease-in-out;
     box-shadow: 5px 5px 10px black;
+    position : absolute;
+    z-index: 10000;
 }
 .menu.toggle{
     transform: translateX(0);
@@ -125,7 +127,7 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    margin: 0px;
+    
     height: 100vh;
     transition: 1s background-color ease-in-out;
 }
@@ -414,6 +416,7 @@ body.dark-mode {
 }
 .back-button{
     position: absolute;
+    top: 15%;
     left: 20px;
     background-color: #0052d6;
     border: transparent;
@@ -429,6 +432,7 @@ body.dark-mode {
     transition: all 0.3s ease-in-out;
     gap: 10px;
     cursor: pointer;
+    z-index: 1;
 }
 .back-button:hover{
     background-color: #0e3470;

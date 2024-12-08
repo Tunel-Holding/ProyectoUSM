@@ -4,6 +4,7 @@
     background: linear-gradient(to bottom, #adf5ff 0%, #adf5ff 80%, transparent 100%);
     display: flex;
     align-items: center;
+    margin-bottom: 30px;
     
 }
 .cabecera button img{
@@ -63,6 +64,7 @@
     box-shadow: 5px 5px 10px black;
     top: 12%;
     position: absolute;
+    z-index: 1000;
 }
 .menu.toggle{
     transform: translateX(0);
@@ -420,6 +422,7 @@ body.dark-mode {
 }
 .back-button{
     position: absolute;
+    top: 15%;
     left: 20px;
     background-color: #0052d6;
     border: transparent;
@@ -435,6 +438,7 @@ body.dark-mode {
     transition: all 0.3s ease-in-out;
     gap: 10px;
     cursor: pointer;
+    z-index: 0;
 }
 .back-button:hover{
     background-color: #0e3470;

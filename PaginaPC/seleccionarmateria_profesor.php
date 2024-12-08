@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,21 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principaladministracion.css">
+    <link rel="stylesheet" href="css/principalprofesor.css">
+    <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
 </head>
 <body>
-
+   
     <div class="cabecera">
-
+        
         <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
+            <img src="css/logo.png" alt="Logo">
         </button>
         <p>Universidad Santa María</p>
-
+        
     </div>
 
     <div class="menu" id="menu">
@@ -40,37 +44,37 @@
                         </g>
                     </g>
                 </g>
-                </svg>
+                </svg>  
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción">
-                    <div class="intopcion" id="inicio">
+                <div class="opción" id="inicio">
+                    <div class="intopcion">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción">
-                     <div class="intopcion" id="datos">
+                <div class="opción" id="datos">
+                     <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="profesor">
-                        <img src="css/profesor.png">
-                        <p>Profesores</p>
+                     <div class="intopcion">
+                        <img src="css/cursos.png">
+                        <p>Cursos</p>
+                    </div>
+                </div>
+                <div class="opción">
+                     <div class="intopcion" id="chat">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
                      <div class="intopcion">
-                        <img src="css/alumno.png">
-                        <p>Alumnos</p>
-                    </div>
-                </div>
-                <div class="opción">
-                     <div class="intopcion">
-                        <img src="css/horario.png">
-                        <p>Horarios</p>
+                        <img src="css/notas.png">
+                        <p>Notas</p>
                     </div>
                 </div>
             </div>
@@ -97,9 +101,9 @@
             <form action="logout.php" method="POST">
             <div class="logout">
                 <button class="Btn">
-
+                
                 <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-
+                
                 <div class="text">Salir</div>
                 </button>
             </div>
@@ -128,34 +132,96 @@
             </div>
         </div>
     </div>
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
+    <div class="materias">
+    <?php
+        require 'conexion.php'; // Asegúrate de que este archivo conecta a tu base de datos
+
+        // Obtener el nombre de usuario del profesor desde la sesión
+        $id_usuario = $_SESSION['idusuario']; // Cambia esto por la información real del profesor
+
+        // Consulta para obtener el ID del profesor
+        $sql_profesor = "SELECT id FROM profesores WHERE id_usuario = ?";
+        $stmt_profesor = $conn->prepare($sql_profesor);
+        if (!$stmt_profesor) {
+            die("Error en la preparación de la consulta: " . $conn->error);
+        }
+        $stmt_profesor->bind_param("s", $id_usuario);
+        $stmt_profesor->execute();
+        $result_profesor = $stmt_profesor->get_result();
+
+        if ($result_profesor->num_rows > 0) {
+            // Obtener el ID del profesor
+            $fila_profesor = $result_profesor->fetch_assoc();
+            $profesor_id = $fila_profesor['id'];
+        } else {
+            die("No se encontró el profesor con ese nombre de usuario.");
+        }
+
+        $stmt_profesor->close();
+
+        // Consulta para obtener las materias que da el profesor
+        $sql = "SELECT m.nombre, m.id FROM materias m 
+                WHERE m.id_profesor = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Error en la preparación de la consulta: " . $conn->error);
+        }
+        $stmt->bind_param("i", $profesor_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Verificar si hay materias
+        if ($result->num_rows > 0) {
+            // Imprimir las materias
+            while ($fila = $result->fetch_assoc()) {
+                ?>
+                <div class="div-materia">
+                    <img src="css/images.png">
+                    <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
+                    <a class="botoninscribir" data-valor="<?php echo htmlspecialchars($fila['id']); ?>">Chat</a>
+                </div>
+                <?php
+            }
+        } else {
+            echo "No tienes materias asignadas.";
+        }
+
+        // Cerrar conexión
+        $stmt->close();
+        $conn->close();
+    ?>
+    </div>
+
 
     <script>
-        const contenedor = document.getElementById('contenedor');
-        const botonIzquierdo = document.getElementById('boton-izquierdo');
-        const botonDerecho = document.getElementById('boton-derecho');
-        botonIzquierdo.addEventListener('click', () => {
-            contenedor.scrollBy({ left: -94, behavior: 'smooth'
-            });
-        });
-        botonDerecho.addEventListener('click', () => {
+        function goBack() { window.history.back(); }
+        const contenedor = document.getElementById('contenedor'); 
+        const botonIzquierdo = document.getElementById('boton-izquierdo'); 
+        const botonDerecho = document.getElementById('boton-derecho'); 
+        botonIzquierdo.addEventListener('click', () => { 
+            contenedor.scrollBy({ left: -94, behavior: 'smooth' 
+            }); 
+        }); 
+        botonDerecho.addEventListener('click', () => { 
             contenedor.scrollBy({ left: 94, behavior: 'smooth'
-            });
+            }); 
         });
 
         document.getElementById('logoButton').addEventListener("click", () => {
             document.getElementById('menu').classList.toggle('toggle');
             event.stopPropagation();
         });
-        document.addEventListener('click', function(event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
-            }
+        document.addEventListener('click', function(event) { 
+            if (!container.contains(event.target) && container.classList.contains('toggle')) { 
+                container.classList.remove('toggle'); 
+            } 
         });
-        document.addEventListener('click', function(event) {
-            var div = document.getElementById('menu');
-            if (!div.contains(event.target)) {
-                div.classList.remove('toggle');
-            }
+        document.addEventListener('click', function(event) { 
+            var div = document.getElementById('menu'); 
+            if (!div.contains(event.target)) { 
+                div.classList.remove('toggle'); 
+            } 
         });
         document.getElementById('switchtema').addEventListener('change', function() {
             if (this.checked) {
@@ -175,20 +241,27 @@
                 document.getElementById('switchtema').checked = true;
             }
         });
+        document.querySelectorAll('.botoninscribir').forEach(button => {
+            button.addEventListener('click', function() {
+                const valor = this.getAttribute('data-valor');
+                window.location.href = `dirigirchat_profesores.php?valor=${valor}`;
+            });
+        });
 
-        function redirigir(url) {
-            window.location.href = url;;
-            // Cambia esta URL a la página de destino
-            }
+
+        function redirigir(url) { 
+            window.location.href = url;; 
+            // Cambia esta URL a la página de destino 
+            } 
             window.onload = function() {
-                document.getElementById('inicio').addEventListener('click', function() {
-                    redirigir('pagina_administracion.php');
+                document.getElementById('inicio').addEventListener('click', function() { 
+                    redirigir('pagina_profesor.php'); 
                 });
-                document.getElementById('datos').addEventListener('click', function() {
-                    redirigir('buscar_datos_admin.html');
+                document.getElementById('datos').addEventListener('click', function() { 
+                    redirigir('datos_profesor.php'); 
                 });
-                document.getElementById('profesor').addEventListener('click', function() {
-                    redirigir('admin_profesores.php');
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria_profesor.php'); 
                 });
             }
 

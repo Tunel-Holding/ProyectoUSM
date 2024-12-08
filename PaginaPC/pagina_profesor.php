@@ -43,13 +43,13 @@
                 </svg>  
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción">
+                <div class="opción" id="inicio">
                     <div class="intopcion">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción">
+                <div class="opción" id="datos">
                      <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
@@ -185,10 +185,10 @@
                     redirigir('pagina_profesor.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('datos.php'); 
+                    redirigir('datos_profesor.php'); 
                 });
                 document.getElementById('chat').addEventListener('click', function() { 
-                    redirigir('seleccionarmateria.php'); 
+                    redirigir('seleccionarmateria_profesor.php'); 
                 });
             }
 

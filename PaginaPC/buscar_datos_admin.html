@@ -25,6 +25,11 @@
             border-width: 10px 2px 10px 2px; /* Bordes superiores e inferiores gruesos, laterales finos */
             border-style: solid;
             border-color: #ffd700; /* Borde amarillo */
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            
         }
         h1 {
             color: #0056b3; /* Color celeste oscuro para el título */
@@ -105,7 +110,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="datos">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
@@ -183,6 +188,7 @@
             </div>
         </div>
     </div>
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <div class="container">
         <h1>Buscar Usuario</h1>
         <form action="datos_admin.php" method="get">
@@ -192,6 +198,7 @@
         </form>
     </div>
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -245,6 +252,9 @@
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
                     redirigir('pagina_administracion.php'); 
+                });
+                document.getElementById('datos').addEventListener('click', function() { 
+                    redirigir('buscar_datos_admin.html'); 
                 });
                 document.getElementById('profesor').addEventListener('click', function() { 
                     redirigir('admin_profesores.php'); 

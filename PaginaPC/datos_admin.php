@@ -15,6 +15,7 @@
 
             
             .container {
+                font-family: "Poppins", sans-serif;
                 max-width: 600px;
                 width: 100%;
                 background-color: #adf5ff; /* Fondo celeste del cuadro */
@@ -24,12 +25,17 @@
                 border-width: 10px 2px 10px 2px; /* Bordes superiores e inferiores gruesos, laterales finos */
                 border-style: solid;
                 border-color: #ffd700; /* Borde amarillo */
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: auto;
             }
             h1 {
                 color: #0056b3; /* Color celeste oscuro para el título */
                 text-align: center;
                 margin-bottom: 24px;
-                font-size: 24px;
+                font-size: 30px;
                 font-weight: 700; /* Negrita */
             }
             p, .resultado p {
@@ -89,7 +95,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="datos">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
@@ -167,6 +173,7 @@
             </div>
         </div>
     </div>
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <?php
 
 
@@ -259,6 +266,7 @@ if (isset($_GET['query'])) {
 }
 ?>
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -315,6 +323,9 @@ if (isset($_GET['query'])) {
                 });
                 document.getElementById('profesor').addEventListener('click', function() { 
                     redirigir('admin_profesores.php'); 
+                });
+                document.getElementById('datos').addEventListener('click', function() { 
+                    redirigir('buscar_datos_admin.html'); 
                 });
             }
 

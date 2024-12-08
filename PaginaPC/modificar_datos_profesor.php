@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Mostrar consulta SQL para depuración
     
     $conn->query($sql);
-    header('Location: datos.php');
+    header('Location: datos_profesor.php');
 }
 
 $conn->close();
@@ -64,14 +64,14 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/principalprofesor.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Datos - USM</title>
     <style>
         body.dark-mode {
-            --background-color: black;
+            --background-color: rgb(50,50,50);
             --text-color: white;
             --background-form: rgb(147, 136, 136);
         }
@@ -81,7 +81,6 @@ $conn->close();
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             color: #fff; /* Blanco */
         }
         .wecontainer {
@@ -167,7 +166,7 @@ $conn->close();
                             <g id="-Round-/-Navigation-/-arrow_back_ios" transform="translate(442.000000, 54.000000)">
                                 <g>
                                     <polygon id="Path" opacity="0.87" points="0 0 24 0 24 24 0 24"></polygon>
-                                    <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
+                                    <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
                                 </g>
                             </g>
                         </g>
@@ -176,34 +175,28 @@ $conn->close();
                 </svg>  
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción">
-                    <div class="intopcion" id="inicio">
+                <div class="opción" id="inicio">
+                    <div class="intopcion">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción">
-                     <div class="intopcion" id="datos">
+                <div class="opción" id="datos">
+                     <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
                 </div>
                 <div class="opción">
                      <div class="intopcion">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
+                        <img src="css/cursos.png">
+                        <p>Cursos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="inscripcion">
-                        <img src="css/inscripción.png">
-                        <p>Inscripción</p>
-                    </div>
-                </div>
-                <div class="opción" id="horario">
-                     <div class="intopcion">
-                        <img src="css/horario.png">
-                        <p>Horario</p>
+                     <div class="intopcion" id="chat">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -223,7 +216,7 @@ $conn->close();
                             <g id="-Round-/-Navigation-/-arrow_forward_ios" transform="translate(238.000000, 54.000000)">
                                 <g>
                                     <polygon id="Path" opacity="0.87" points="24 24 0 24 0 0 24 0"></polygon>
-                                    <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
+                                    <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
                                 </g>
                             </g>
                         </g>
@@ -233,14 +226,16 @@ $conn->close();
             </button>
         </div>
         <div class="inferior">
+            <form action="logout.php" method="POST">
             <div class="logout">
-                <form action="logout.php" method="POST">
-                    <button class="Btn" type="submit">
-                    <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-                    <div class="text">Salir</div>
-                    </button>
-                </form>
+                <button class="Btn">
+                
+                <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+                
+                <div class="text">Salir</div>
+                </button>
             </div>
+            </form>
             <div class="themeswitcher">
                 <label class="theme-switch">
                     <input type="checkbox" class="theme-switch__checkbox" id="switchtema">
@@ -265,6 +260,7 @@ $conn->close();
             </div>
         </div>
     </div>
+    <button onclick="goBack()" class="back-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Salir</button>
     <div class="pagina">
     <div class="wecontainer">
         <h1>Modificar Datos</h1>
@@ -302,6 +298,7 @@ $conn->close();
     </div>
 
     <script>
+        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -354,17 +351,13 @@ $conn->close();
             } 
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/pagina_principal.php'); 
+                    redirigir('pagina_profesor.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('http://localhost/waos/Proyecto/PaginaPC/datos.php'); 
+                    redirigir('datos_profesor.php'); 
                 });
-            
-                document.getElementById('inscripcion').addEventListener('click', function() { 
-                    redirigir('inscripcion.php'); 
-                });
-                document.getElementById('horario').addEventListener('click', function() { 
-                    redirigir('horario.php'); 
+                document.getElementById('chat').addEventListener('click', function() { 
+                    redirigir('seleccionarmateria_profesor.php'); 
                 });
             }
 

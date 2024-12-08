@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="datos">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
@@ -207,6 +207,9 @@
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
                     redirigir('pagina_administracion.php'); 
+                });
+                document.getElementById('datos').addEventListener('click', function() { 
+                    redirigir('buscar_datos_admin.html'); 
                 });
                 document.getElementById('profesor').addEventListener('click', function() { 
                     redirigir('admin_profesores.php'); 
