@@ -324,7 +324,7 @@ $conn->close(); // Cerrar la conexión
             } 
             window.onload = function() {
                 document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('pagina_principal.php'); 
+                    redirigir('pagina_profesor.php'); 
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
                     redirigir('datos_profesor.php'); 
