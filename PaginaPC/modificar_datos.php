@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // Obtener los datos del estudiante más reciente
-$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario ORDER BY id DESC LIMIT 1";
+$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario WHERE usuario_id = '".$_SESSION['idusuario']."'";
 $result = $conn->query($sql);
 
 // Verificar si la consulta fue exitosa
