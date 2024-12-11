@@ -154,7 +154,7 @@
                         <tr>
                             <th>Nombre del Profesor</th>
                             <th>Materias</th>
-                            <th>Editar</th>
+                            <th>Añadir</th>
                         </tr>";
                 
                 // Salida de cada fila
@@ -162,7 +162,7 @@
                     echo "<tr>
                             <td>" . htmlspecialchars($row['Nombre_Profesor']) . "</td>
                             <td>" . htmlspecialchars($row['Materias']) . "</td>
-                            <td><a href='editar_profesor.php?id=" . $row['id_profesor'] . "' class='btneditar'>Editar</a></td>
+                            <td><a href='editar_profesor.php?id=" . $row['id_profesor'] . "' class='btneditar'>Añadir materias</a></td>
                           </tr>";
                 }
                 echo "</table>";
