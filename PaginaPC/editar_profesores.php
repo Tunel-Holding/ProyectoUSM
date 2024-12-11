@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                           </script>";
                 } else {
                     echo "<script>
-                            alert('No se encontró la materia o el profesor no fue asignado.');
+                            alert('La materia ya ha sido Asignada .');
                             window.history.back();
                           </script>";
                 }
