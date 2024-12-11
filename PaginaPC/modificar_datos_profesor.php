@@ -8,8 +8,8 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Obtener los datos del profesor más reciente
-$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario ORDER BY id DESC LIMIT 1";
+// Obtener los datos del estudiante más reciente
+$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario WHERE usuario_id = '".$_SESSION['idusuario']."'";
 $result = $conn->query($sql);
 
 // Verificar si la consulta fue exitosa
@@ -19,6 +19,7 @@ if (!$result) {
 
 $estudiante = $result->fetch_assoc();
 
+$error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
@@ -33,28 +34,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verificar que todos los datos estén presentes
     if (empty($cedula_nueva) || empty($nombres) || empty($apellidos) || empty($sexo) || empty($telefono) || empty($correo) || empty($direccion)) {
-        die("Todos los campos son obligatorios.");
+        $error_message = "Todos los campos son obligatorios.";
+    } else {
+        // Actualizar los datos en la base de datos
+        $sql = "UPDATE datos_usuario SET 
+                cedula='$cedula_nueva', 
+                nombres='$nombres', 
+                apellidos='$apellidos', 
+                sexo='$sexo', 
+                telefono='$telefono', 
+                correo='$correo', 
+                direccion='$direccion' 
+                WHERE usuario_id='$idusuario'";
+
+        $conn->query($sql);
+         header('Location: datos_profesor.php');
     }
-
-    // Actualizar los datos en la base de datos
-    $sql = "UPDATE datos_usuario SET 
-            cedula='$cedula_nueva', 
-            nombres='$nombres', 
-            apellidos='$apellidos', 
-            sexo='$sexo', 
-            telefono='$telefono', 
-            correo='$correo', 
-            direccion='$direccion' 
-            WHERE usuario_id='$idusuario'";
-
-    // Mostrar consulta SQL para depuración
-    
-    $conn->query($sql);
-    header('Location: datos_profesor.php');
 }
 
 $conn->close();
-
 ?>
 
 <!DOCTYPE html>
@@ -137,6 +135,13 @@ $conn->close();
         }
         .wecontainer .button:hover {
             background-color: #ffcc00; /* Amarillo oscuro */
+        }
+        .error {
+            border: 2px solid red;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
         }
     </style>
 
@@ -264,36 +269,40 @@ $conn->close();
     <div class="pagina">
     <div class="wecontainer">
         <h1>Modificar Datos</h1>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-
-            <div class="form">
+        <form method="POST" action="">
+        <?php if ($error_message): ?>
+            <p class="error-message"><?php echo $error_message; ?></p>
+        <?php endif; ?>
+        
+        <div class="form">
             <label for="cedula">Número de Cédula:</label>
-            <input type="text" id="cedula" name="cedula" value="<?php echo isset($estudiante['cedula']) ? $estudiante['cedula'] : ''; ?>">
+            <input type="text" id="cedula" name="cedula" value="<?php echo isset($estudiante['cedula']) ? $estudiante['cedula'] : ''; ?>" class="<?php echo empty($_POST['cedula']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
             
             <label for="nombres">Nombres:</label>
-            <input type="text" id="nombres" name="nombres" value="<?php echo isset($estudiante['nombres']) ? $estudiante['nombres'] : ''; ?>">
+            <input type="text" id="nombres" name="nombres" value="<?php echo isset($estudiante['nombres']) ? $estudiante['nombres'] : ''; ?>" class="<?php echo empty($_POST['nombres']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
             
             <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" value="<?php echo isset($estudiante['apellidos']) ? $estudiante['apellidos'] : ''; ?>">
+            <input type="text" id="apellidos" name="apellidos" value="<?php echo isset($estudiante['apellidos']) ? $estudiante['apellidos'] : ''; ?>" class="<?php echo empty($_POST['apellidos']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
             
             <label for="sexo">Sexo:</label>
-            <select id="sexo" name="sexo">
+            <select id="sexo" name="sexo" class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
                 <option value="" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == '') echo 'selected'; ?>>Seleccione</option>
                 <option value="Masculino" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == 'Masculino') echo 'selected'; ?>>Masculino</option>
                 <option value="Femenino" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == 'Femenino') echo 'selected'; ?>>Femenino</option>
             </select>
 
             <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="telefono" value="<?php echo isset($estudiante['telefono']) ? $estudiante['telefono'] : ''; ?>">
+            <input type="text" id="telefono" name="telefono" value="<?php echo isset($estudiante['telefono']) ? $estudiante['telefono'] : ''; ?>" class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
             
             <label for="correo">Correo:</label>
-            <input type="email" id="correo" name="correo" value="<?php echo isset($estudiante['correo']) ? $estudiante['correo'] : ''; ?>">
+            <input type="email" id="correo" name="correo" value="<?php echo isset($estudiante['correo']) ? $estudiante['correo'] : ''; ?>" class="<?php echo empty($_POST['correo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
             
             <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" name="direccion" value="<?php echo isset($estudiante['direccion']) ? $estudiante['direccion'] : ''; ?>">
+            <input type="text" id="direccion" name="direccion" value="<?php echo isset($estudiante['direccion']) ? $estudiante['direccion'] : ''; ?>" class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
             
             <input type="submit" class="button" value="Guardar cambios">
-        </form>
+        </div>
+    </form>
     </div>
     </div>
 
