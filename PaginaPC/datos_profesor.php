@@ -62,79 +62,80 @@ $conn->close(); // Cerrar la conexión
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Datos - USM</title>
     <style>
-        body.dark-mode {
-            --background-color: rgb(50,50,50);
-            --text-color: white;
-            --background-form: rgb(147, 136, 136);
-        }
-        .pagina {
-            
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff; /* Blanco */
-            width: 50%;
-        }
-        .wecontainer {
-            font-family: "Poppins", sans-serif;
-            max-width: 600px;
-            background: var(--background-form);
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            border-radius: 8px;
-            border-top: 10px solid #ffd700; /* Amarillo */
-            border-bottom: 10px solid #ffd700; /* Amarillo */
-            border-left: 1px solid #ffd700 !important;
-            border-right: 1px solid #ffd700 !important;
-            transition: 1s background ease-in-out;
-        }
-        .wecontainer h1 {
-            text-align: center;
-            color: #26c8dd; /* Azul oscuro */
-        }
-        .wecontainer ul {
-            list-style: none;
-            padding: 0;
-        }
-        .wecontainer li {
-            margin: 10px 0;
-            padding: 10px;
-            background: transparent; /* Azul claro */
-            border: 1px solid #26c8dd; /* Borde azul oscuro */
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.1em;
-        }
-        .wecontainer li strong {
-            color: #26c8dd; /* Azul oscuro */
-        }
-        .wecontainer li span {
-            color: #26c8dd; /* Azul oscuro */
-        }
-        .wecontainer a{
-            font-weight: 700;
-        }
-        .button {
-            display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background-color: #ffd700; /* Amarillo */
-            color: #26c8dd; /* Azul oscuro */
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 1em;
-            text-decoration: none;
-        }
-        .button:hover {
-            background-color: #ffcc00; /* Amarillo oscuro */
-        }
-    </style>
+    body.dark-mode {
+        --background-color: rgb(50,50,50);
+        --text-color: white;
+        --background-form: rgb(147, 136, 136);
+    }
+    .pagina {
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #fff; /* Blanco */
+    }
+    .wecontainer {
+        font-family: "Poppins", sans-serif;
+        max-width: 1400px; /* Aumenté aún más el ancho máximo */
+        background: var(--background-form);
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        border-radius: 8px;
+        border-top: 10px solid #ffd700; /* Amarillo */
+        border-bottom: 10px solid #ffd700; /* Amarillo */
+        border-left: 1px solid #ffd700 !important;
+        border-right: 1px solid #ffd700 !important;
+        transition: 1s background ease-in-out;
+    }
+    .wecontainer h1 {
+        text-align: center;
+        color: #26c8dd; /* Azul oscuro */
+    }
+    .wecontainer ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan en varias filas */
+        justify-content: space-between;
+    }
+    .wecontainer li {
+        margin: 10px;
+        padding: 20px; /* Aumenté el padding para cuadros más grandes */
+        background: transparent; /* Azul claro */
+        border: 1px solid #26c8dd; /* Borde azul oscuro */
+        border-radius: 4px;
+        flex: 1 1 calc(45% - 40px); /* Reduje un poco el cálculo para cuadros más grandes */
+        box-sizing: border-box;
+        font-size: 1.2em; /* Aumenté el tamaño de la fuente */
+    }
+    .wecontainer li strong {
+        color: #26c8dd; /* Azul oscuro */
+    }
+    .wecontainer li span {
+        color: #26c8dd; /* Azul oscuro */
+    }
+    .wecontainer a {
+        font-weight: 700;
+    }
+    .button {
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 20px;
+        background-color: #ffd700; /* Amarillo */
+        color: #26c8dd; /* Azul oscuro */
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 1em;
+        text-decoration: none;
+    }
+    .button:hover {
+        background-color: #ffcc00; /* Amarillo oscuro */
+    }
+</style>
 </head>
 <body>
     <div class="contenedorentrante3">
