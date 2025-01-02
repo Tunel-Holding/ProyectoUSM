@@ -11,50 +11,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
     <style>
-            @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
-            
-            .container {
-                font-family: "Poppins", sans-serif;
-                max-width: 600px;
-                width: 100%;
-                background-color: #adf5ff; /* Fondo celeste del cuadro */
-                padding: 40px;
-                border-radius: 12px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                border-width: 10px 2px 10px 2px; /* Bordes superiores e inferiores gruesos, laterales finos */
-                border-style: solid;
-                border-color: #ffd700; /* Borde amarillo */
-                margin: 0 auto;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                height: auto;
-            }
-            h1 {
-                color: #0056b3; /* Color celeste oscuro para el título */
-                text-align: center;
-                margin-bottom: 24px;
-                font-size: 30px;
-                font-weight: 700; /* Negrita */
-            }
-            p, .resultado p {
-                color: #333;
-                font-size: 16px;
-                margin-bottom: 20px;
-                font-family: "Roboto", sans-serif; /* Fuente Roboto */
-            }
-            .resultado {
-                margin-bottom: 20px;
-                padding: 20px;
-                border: 1px solid #0056b3; /* Borde celeste */
-                border-radius: 8px;
-                background-color: #e0f7fa; /* Fondo celeste claro */
-            }
-            .resultado p {
-                margin: 8px 0;
-            }
-        </style>
+    .container {
+        font-family: "Poppins", sans-serif;
+        max-width: 900px; /* Ancho máximo aún más reducido */
+        width: 75%; /* Ancho del contenedor ajustado al 75% de la pantalla */
+        background-color: #adf5ff; /* Fondo celeste del cuadro */
+        padding: 45px; /* Espaciado interno reducido */
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-width: 10px 2px 10px 2px; /* Bordes superiores e inferiores gruesos, laterales finos */
+        border-style: solid;
+        border-color: #ffd700; /* Borde amarillo */
+        margin: 20px auto; /* Margen superior e inferior */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+    }
+
+    h1 {
+        color: #0056b3; /* Color celeste oscuro para el título */
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 30px; /* Tamaño del texto reducido */
+        font-weight: 700; /* Negrita */
+    }
+
+    p, .resultado p {
+        color: #333;
+        font-size: 16px; /* Tamaño del texto reducido */
+        margin-bottom: 18px; /* Espaciado inferior */
+        font-family: "Roboto", sans-serif; /* Fuente Roboto */
+    }
+
+    .resultado {
+        margin-bottom: 18px; /* Espaciado inferior */
+        padding: 18px; /* Espaciado interno */
+        border: 1px solid #0056b3; /* Borde celeste */
+        border-radius: 8px;
+        background-color: #e0f7fa; /* Fondo celeste claro */
+    }
+
+    .resultado p {
+        margin: 10px 0; /* Espaciado interno */
+    }
+</style>
+
 </head>
 <body>
    

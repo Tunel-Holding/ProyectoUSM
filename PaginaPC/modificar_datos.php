@@ -68,83 +68,87 @@ $conn->close();
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Datos - USM</title>
     <style>
-        body.dark-mode {
-            --background-color: rgb(50,50,50);
-            --text-color: white;
-            --background-form: rgb(147, 136, 136);
-        }
-        .pagina {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff; /* Blanco */
-        }
-        .wecontainer {
-            font-family: "Poppins", sans-serif;
-            max-width: 500px; /* Ajustamos el ancho del contenedor */
-            background: var(--background-form);
-            color: #004c97; /* Azul oscuro */
-            padding: 20px;
-            box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
-            border-radius: 8px;
-            border-top: 10px solid #ffd700; /* Amarillo */
-            border-bottom: 10px solid #ffd700; /* Amarillo */
-            border-left: 1px solid #ffd700 !important;
-            border-right: 1px solid #ffd700 !important;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            transition: 1s background ease-in-out;
-        }
-        .wecontainer h1 {
-            margin-bottom: 20px;
-            color: #004c97; /* Azul oscuro */
-        }
-        .wecontainer .form {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Dividimos en dos columnas */
-            gap: 10px;
-            align-items: center;
-        }
-        .wecontainer label {
-            color: #004c97; /* Azul oscuro */
-            font-size: 0.9em; /* Reducimos el tamaño de la fuente */
-            font-weight: 500;
-        }
-        .wecontainer input, select{
-            left: 40%;
-            padding: 8px;
-            width: 100%;
-            background: transparent;
-            border: 1px solid #004c97; /* Azul oscuro */
-            border-radius: 4px;
-            font-size: 0.9em; /* Reducimos el tamaño de la fuente */
-        }
-        .wecontainer .button {
-            grid-column: span 2; /* El botón ocupa ambas columnas */
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #ffd700 !important; /* Amarillo */
-            color: #004c97 !important; /* Azul oscuro */
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        .wecontainer .button:hover {
-            background-color: #ffcc00; /* Amarillo oscuro */
-        }
-        .error {
-            border: 2px solid red;
-        }
-        .error-message {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+    body.dark-mode {
+        --background-color: rgb(50,50,50);
+        --text-color: white;
+        --background-form: rgb(147, 136, 136);
+    }
+    .pagina {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #fff; /* Blanco */
+        background-color: var(--background-color);
+    }
+    .wecontainer {
+        font-family: "Poppins", sans-serif;
+        max-width: 1200px; /* Ajustamos el ancho máximo del contenedor */
+        width: 90%; /* Abarcamos un 90% del ancho de la página */
+        background: var(--background-form);
+        color: #004c97; /* Azul oscuro */
+        padding: 40px; /* Aumentamos el padding */
+        box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
+        border-radius: 8px;
+        border-top: 10px solid #ffd700; /* Amarillo */
+        border-bottom: 10px solid #ffd700; /* Amarillo */
+        border-left: 1px solid #ffd700 !important;
+        border-right: 1px solid #ffd700 !important;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        transition: 1s background ease-in-out;
+    }
+    .wecontainer h1 {
+        margin-bottom: 20px;
+        color: #004c97; /* Azul oscuro */
+        font-size: 2em; /* Aumentamos el tamaño de la fuente */
+    }
+    .wecontainer .form {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dividimos en dos columnas */
+        gap: 10px;
+        align-items: center;
+    }
+    .wecontainer label {
+        color: #004c97; /* Azul oscuro */
+        font-size: 1.2em; /* Aumentamos el tamaño de la fuente */
+        font-weight: 500;
+    }
+    .wecontainer input, select {
+        left: 40%;
+        padding: 10px; /* Aumentamos el padding */
+        width: 100%;
+        background: transparent;
+        border: 1px solid #004c97; /* Azul oscuro */
+        border-radius: 4px;
+        font-size: 1em; /* Aumentamos el tamaño de la fuente */
+    }
+    .wecontainer .button {
+        grid-column: span 2; /* El botón ocupa ambas columnas */
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #ffd700 !important; /* Amarillo */
+        color: #004c97 !important; /* Azul oscuro */
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.2em; /* Aumentamos el tamaño de la fuente */
+    }
+    .wecontainer .button:hover {
+        background-color: #ffcc00; /* Amarillo oscuro */
+    }
+    .error {
+        border: 2px solid red;
+    }
+    .error-message {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
 
 </head>
 <body>
