@@ -1,11 +1,11 @@
 import flet as ft
 from time import sleep
 import requests
+from datetime import datetime
 
 
 def main(page: ft.Page):
     page.title = "USM app"
-    
     page.window.full_screen = True
     page.window.maximized = True
     page.padding = 0
@@ -14,6 +14,16 @@ def main(page: ft.Page):
     # Recuperar usuario y contraseña de localStorage
     saved_user = page.client_storage.get("saved_user")
     saved_password = page.client_storage.get("saved_password")
+
+    def obtener_horario():
+        try:
+            response = requests.get("http://127.0.0.1:5000/horario")
+            response.raise_for_status()
+            datos = response.json()
+            return datos
+        except requests.exceptions.RequestException as e:
+            print(f"Error al obtener los datos del horario: {e}")
+            return []
 
     def on_login_click(e):
         usuario = e.control.parent.parent.controls[1].value
@@ -29,19 +39,14 @@ def main(page: ft.Page):
                 data = response.json()
                 nivel_usuario = data.get("nivel_usuario")
 
-                # Animar la opacidad del Stack antes de limpiar la página
                 login_container.opacity=0
                 background_container.opacity=0
                 login_container.update()
                 background_container.update()
                 sleep(2)
-                login_container.visible = False
-                background_container.visible = False
-                login_container.update()
-                background_container.update()
-                sleep(2)
-                principal_container.visible=True
-                principal_container.update()
+                page.clean()
+                mostrar_pagina_principal()
+                
 
                 # Mostrar el diálogo para guardar la contraseña solo si no hay credenciales guardadas
                 if not saved_user or not saved_password:
@@ -83,10 +88,10 @@ def main(page: ft.Page):
         sleep(0.2)
         fondo.opacity = 1
         fondo.update()
-        sleep(0.2)
+        sleep(0.5)
         cosa2.visible = True
         cosa2.update()
-        sleep(0.2)
+        sleep(0.5)
         cosa2.opacity = 0.9
         cosa2.update()
 
@@ -97,24 +102,23 @@ def main(page: ft.Page):
     def cerrar_sesión():            
             # Mostrar el contenedor de inicio de sesión
             print("Sesión cerrada.")
-        
+            page.drawer.open = False
+            page.update()
+            sleep(1)
+            page.clean()
+            page.add(stack)
             # Mostrar el contenedor de inicio de sesión y el fondo
-            login_container.visible = True
-            background_container.visible = True
             login_container.opacity = 1
             background_container.opacity = 1
             login_container.update()
             background_container.update()
+            sleep(2)
             
-            # Ocultar las demás páginas
             
-            pagina_item2.visible = False
-            pagina_item3.visible = False
-            page.update()
     
     def mostrar_pagina(index):
             # Ocultar todas las páginas
-            
+            principal_container.visible = False
             principal_container.update()
             pagina_item2.visible = False
             pagina_item2.update()
@@ -136,10 +140,18 @@ def main(page: ft.Page):
             elif index == 3:
                 cerrar_sesión()
 
+    def mostrar_pagina_principal():
+        page.add(principal_container, pagina_item2, pagina_item3)
+        principal_container.visible=True
+        principal_container.opacity=1
+        principal_container.update()
+        sleep(2)
+
+
     loading_container = ft.Container(
         content=ft.Column(
             controls=[
-                ft.Image(src="https://i.ibb.co/txP36Y4/logo.png", width=200, height=200),
+                ft.Image(src="http://192.168.1.5/waos/Proyecto/PaginaTlf/LogoUSM.png", width=200, height=200),
                 ft.ProgressRing()
             ],
             alignment=ft.MainAxisAlignment.CENTER,
@@ -179,7 +191,7 @@ def main(page: ft.Page):
     )
 
     background_container = ft.Container(
-        content=ft.Image(src="https://i.ibb.co/fv0Yst8/IMG-7235copia.webp", width=page.width, height=page.height, fit=ft.ImageFit.COVER),
+        content=ft.Image(src="http://192.168.1.5/waos/Proyecto/PaginaTlf/IMG_Fondo.webp", width=page.width, height=page.height, fit=ft.ImageFit.COVER),
         alignment=ft.alignment.center,
         width=page.width,
         height=page.height,
@@ -244,8 +256,8 @@ def main(page: ft.Page):
                 ),
                 ft.Divider(thickness=1),
                 ft.NavigationDrawerDestination(
-                    icon=ft.Icon(ft.Icons.PERSON_ROUNDED, ft.Colors.WHITE),
-                    icon_content=ft.Icon(ft.Icons.PERSON_ROUNDED, ft.Colors.WHITE),
+                    icon=ft.Icon(ft.Icons.SCHEDULE_ROUNDED, ft.Colors.WHITE),
+                    icon_content=ft.Icon(ft.Icons.SCHEDULE_ROUNDED, ft.Colors.WHITE),
                     label="Horario",
                     
                 ),
@@ -267,6 +279,44 @@ def main(page: ft.Page):
             elevation=40
         )
     
+    horarios = obtener_horario()
+
+    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
+    horas = ['07:00', '08:30', '09:15', '10:00', '10:45', '11:30', '12:15', '01:00', '01:45', '02:30', '03:15', '04:00', '04:45', '05:30']
+
+    columnas = [
+        ft.DataColumn(label=ft.Text("Horario")),
+        *[ft.DataColumn(label=ft.Text(dia)) for dia in dias_semana]
+    ]
+
+    filas = []
+    for hora in horas:
+        celdas = [ft.DataCell(ft.Text(hora))]
+        for dia in dias_semana:
+            clases = [horario for horario in horarios if horario['dia'] == dia and datetime.strptime(horario['hora_inicio'], '%H:%M:%S') == datetime.strptime(hora, '%H:%M')]
+
+            if clases:
+                clase = clases[0]
+                materia = f"{clase['nombre_materia']}\n{clase['salon']}"
+            else:
+                materia = ""
+            celdas.append(ft.DataCell(ft.Text(materia, text_align=ft.TextAlign.CENTER)))
+        filas.append(ft.DataRow(cells=celdas))
+
+    tabla=ft.DataTable(
+            columns=columnas,
+            rows=filas,  # Color de fondo del encabezado
+            data_row_min_height=50,
+        )
+    tablafila =ft.Row( 
+        controls=[tabla],
+        scroll=ft.ScrollMode.ALWAYS,
+    )
+    tablacolumna = ft.Column(
+        controls=[tablafila],
+        scroll=ft.ScrollMode.ALWAYS,
+    )
+    
     pagina_item2 = ft.Container(
             content=ft.Column(
                 controls=[ 
@@ -274,11 +324,11 @@ def main(page: ft.Page):
                     ft.Container(  # Contenedor adicional para centrar el texto
                         content=ft.Text("Horario", size=35, text_align=ft.TextAlign.CENTER),
                         alignment=ft.Alignment(0.0,-1.0),
-                        expand=True  # Permitir que el contenedor ocupe el espacio disponible
-                    )
+                        ),
+                    tablacolumna
 
                 ],
-                
+                spacing=10,
                 expand=True
             ),
             opacity=1,  # Comenzar con opacidad 0
@@ -302,25 +352,21 @@ def main(page: ft.Page):
                 
                 expand=True
             ),
-            opacity=1,  # Comenzar con opacidad 0
+            opacity=0,  # Comenzar con opacidad 0
             animate_opacity=300,  # Animar la opacidad
             margin=ft.Margin(0,40,0,0),
-            visible=True,
+            visible=False,
             expand=True
-        )   
+        )
 
     # Crear el Stack y agregarlo a la página
     stack = ft.Stack([background_container, login_container, register_container], alignment=ft.alignment.center, animate_opacity=300)
     page.add(loading_container)
     page.add(stack)
-    page.add(register_container)
-    page.add(principal_container)
-    page.add(pagina_item2)
-    page.add(pagina_item3)
 
     loading_container.opacity = 1
     loading_container.update()
-    sleep(4)
+    sleep(3)
     aplicartransicion(loading_container, login_container, background_container)
 
 ft.app(target=main)
