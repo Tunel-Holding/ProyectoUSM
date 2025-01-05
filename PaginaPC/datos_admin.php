@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="alumno">
                         <img src="css/alumno.png">
                         <p>Alumnos</p>
                     </div>
@@ -330,6 +330,9 @@ if (isset($_GET['query'])) {
                 });
                 document.getElementById('datos').addEventListener('click', function() { 
                     redirigir('buscar_datos_admin.html'); 
+                });
+                document.getElementById('alumno').addEventListener('click', function() { 
+                    redirigir('admin_alumnos.php'); 
                 });
             }
 
