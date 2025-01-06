@@ -6,7 +6,6 @@
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principaladministracion.css">
-    <link rel="stylesheet" href="css/admin_profesores.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -14,16 +13,27 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 50px;
-            background-color: #f0f0f0;
+            --background-color:#d4d4d4;
+            --bg-container: #f9f9f9;
+            color: #333;
+        }
+        body.dark-mode {
+            --background-color: #1a1a1a;
+            --bg-container:rgb(47, 47, 47);
+            color: white;
         }
         .container {
             max-width: 1200px; /* Ajustar el ancho del contenedor */
             margin: auto;
-            background-color: #fff;
+            background-color: var(--bg-container);
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            transition: all 0.3s ease-in-out; /* Añadir transición a los cambios */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            align-content: center;
         }
         h1 {
             text-align: center;
@@ -38,7 +48,8 @@
             display: none; /* Inicialmente oculto */
         }
         .search-container {
-            display: flex direction column;
+            display: flex;
+            flex-direction: column;
             justify-content: center; /* Centra el contenedor de búsqueda */
             align-items: center; /* Alinea verticalmente */
             margin-bottom: 20px;
@@ -63,7 +74,8 @@
             border: none;
             border-radius: 40px;
             cursor: pointer;
-            display: flex direction column;
+            display: flex; 
+            flex-direction: column;
             align-items: center;
             justify-content: center; /* Centra el texto vertical y horizontalmente */
             font-size: 14px; /* Reduce el tamaño de la letra */
