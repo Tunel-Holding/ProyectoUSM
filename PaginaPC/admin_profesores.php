@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="alumno">
                         <img src="css/alumno.png">
                         <p>Alumnos</p>
                     </div>
@@ -237,6 +237,9 @@
                 });
                 document.getElementById('profesor').addEventListener('click', function() { 
                     redirigir('admin_profesores.php'); 
+                });
+                document.getElementById('alumno').addEventListener('click', function() { 
+                    redirigir('admin_alumnos.php'); 
                 });
             }
 

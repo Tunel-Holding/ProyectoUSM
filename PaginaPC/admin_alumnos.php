@@ -11,6 +11,116 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px; /* Ajustar el ancho del contenedor */
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Lobster', cursive;
+            font-size: 30px;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none; /* Inicialmente oculto */
+        }
+        .search-container {
+            display: flex direction column;
+            justify-content: center; /* Centra el contenedor de búsqueda */
+            align-items: center; /* Alinea verticalmente */
+            margin-bottom: 20px;
+            gap: 20px; /* Añade espacio entre la barra de búsqueda y el botón */
+        }
+        .search-box {
+            width: 100%; /* Permite que la barra de búsqueda ocupe todo el espacio disponible */
+            max-width: 600px; /* Ajusta el ancho máximo de la barra de búsqueda */
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 40px;
+            transition: box-shadow 0.3s ease; /* Animación al pasar el cursor */
+        }
+        .search-box:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Efecto de sombra al pasar el cursor */
+        }
+        .search-button {
+            padding: 10px;
+            background-color: rgb(69, 160, 160);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            display: flex direction column;
+            align-items: center;
+            justify-content: center; /* Centra el texto vertical y horizontalmente */
+            font-size: 14px; /* Reduce el tamaño de la letra */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Añade transición para animación */
+        }
+        .search-button:hover {
+            background-color: rgb(45, 120, 120); /* Cambia el color de fondo al pasar el cursor */
+            transform: scale(1.05); /* Escala ligeramente el botón */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: rgb(69, 160, 160);
+            color: white;
+            font-weight: bold;
+        }
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9e9e9;
+        }
+        .acciones {
+            display: flex direction column;
+            gap: 10px;
+        }
+        .acciones a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: rgb(69, 160, 160);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            display: flex direction column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .acciones a:hover {
+            background-color: rgb(45, 120, 120);
+        }
+    </style>
 </head>
 <body>
    
@@ -51,7 +161,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="datos">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
@@ -130,118 +240,124 @@
         </div>
     </div>
      
-    <h1>Añadir Profesores</h1>
-    <div class="formulario">
-        <form action="addprofesor.php" method="POST">
-            <label for="nombre">Nombre del Profesor:</label>
-            <input type="text" id="nombre" name="nombre" required><br><br>
+    <div class="container">
+        <h1>Búsqueda de Estudiantes</h1>
+        <?php
+        require "conexion.php";
 
-            <label for="nombre_usuario">Nombre de Usuario:</label>
-            <input type="text" id="nombre_usuario" name="nombre_usuario" required><br><br>
+        $mostrarBusqueda = true;
+        $errorMensaje = '';
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
+        if (isset($_GET['query'])) {
+            $busqueda = trim($_GET['query']);
 
-            <input type="submit" value="Añadir Profesor">
-        </form>
-    </div>
-    
-    <?php
-    require "conexion.php";
-    use PHPMailer\PHPMailer\PHPMailer;
-    require '../../vendor/autoload.php';
-    // Procesar el formulario al enviarlo
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $nombre = $_POST['nombre'];
-        $nombre_usuario = $_POST['nombre_usuario'];
-        $email = $_POST['email'];
-        $hash = password_hash("UsMProfesor**", PASSWORD_DEFAULT);
-
-        // Insertar en la tabla de usuarios
-        $sql_usuario = "INSERT INTO usuarios (nombre_usuario, email, contrasena, nivel_usuario) VALUES ('$nombre_usuario', '$email', '$hash', 'profesor')";
-        
-        if ($conn->query($sql_usuario) === TRUE) {
-            // Obtener el ID del usuario recién insertado
-            $id_usuario = $conn->insert_id;
-
-            // Insertar en la tabla de profesores
-            $sql_profesor = "INSERT INTO profesores (id_usuario, nombre) VALUES ('$id_usuario', '$nombre')";
-            
-            if ($conn->query($sql_profesor) === TRUE) {
-                
-                $mail = new PHPMailer(true);
-                // Configuración del servidor
-                $mail->isSMTP();
-                $mail->isHTML(true);
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'modulo11usm@gmail.com'; // Tu correo de Gmail
-                $mail->Password = 'aoau ilmo tglw yodm'; // Tu contraseña de Gmail o aplicación
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;;
-                $mail->Port = 587;
-        
-                // Destinatarios y contenido
-                $mail->setFrom('modulo11usm@gmail.com', 'Universidad Santa Maria');
-                $mail->addAddress($email);
-                $mail->Subject = 'Creacion de Perfil Profesor';
-                $mail->Body    ="
-                <!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <link rel='preconnect' href='https://fonts.googleapis.com'>
-                    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-                    <link href='https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap' rel='stylesheet'>
-                    <title>Document</title>
-                </head>
-                <body style='background-color: black; font-family: \"Afacad Flux\", sans-serif; color: #baedff; text-align: center;'>
-                    <table width='100%' cellspacing='0' cellpadding='0'>
-                        <tr>
-                            <td style='background-color: blue; border-radius: 0 0 100% 100%; text-align: center;'>
-                                <img src='https://i.ibb.co/vq9kfL9/logo.pngcss/logo.png' style='width: 170px; margin: 10px;' alt='Logo'>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style='padding: 40px 0;'>
-                                <h1 style='margin: 20px; font-size: 50px;'>Bienvenido a la USM</h1>
-                                <span style='font-size: 30px;'>Sus dato s son: </span>
-                                <div style='font-size: 40px; margin: 40px 0;'>Usuario: $nombre_usuario </div>
-                                <div style='font-size: 40px; margin: 40px 0;'>Contraseña: UsMProfesor**</div>
-                                <p>Ingrese a nuestro sistema para iniciar su cuenta</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style='background-color: blue; border-radius: 100% 100% 0 0; text-align: center; padding: 10px 0;'>
-                                <h2 style='color: white; margin: 0;'>Modulo 11 - USM</h2>
-                            </td>
-                        </tr>
-                    </table>
-                </body>
-                </html>";
-        
-                // Enviar el correo
-                $mail->send();
-
-                echo "<script>
-                        alert('Profesor añadido con éxito.');
-                        window.location.href = 'admin_profesores.php';
-                      </script>";
+            if ($busqueda === '') {
+                $errorMensaje = 'Por favor, ingrese una cédula para buscar.';
             } else {
-                echo "Error al añadir el profesor: " . $conn->error;
+                $conn = new mysqli("localhost", "root", "", "proyectousm");
+
+                if ($conn->connect_error) {
+                    die("Conexión fallida: " . $conn->connect_error);
+                }
+
+                $conn->set_charset("utf8");
+
+                $sql = "
+                    SELECT
+                        du.cedula, du.nombres, du.apellidos,
+                        e.semestre, e.creditosdisponibles,
+                        GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS materias
+                    FROM
+                        datos_usuario du
+                    LEFT JOIN
+                        estudiantes e ON du.usuario_id = e.id_usuario
+                    LEFT JOIN
+                        inscripciones i ON du.usuario_id = i.id_estudiante
+                    LEFT JOIN
+                        materias m ON i.id_materia = m.id
+                    WHERE
+                        du.cedula LIKE '%$busqueda%'
+                    GROUP BY
+                        du.cedula, du.nombres, du.apellidos, e.semestre, e.creditosdisponibles
+                ";
+
+                $result = $conn->query($sql);
+
+                if ($result === false) {
+                    echo "<p>Error en la consulta SQL: " . $conn->error . "</p>";
+                } else {
+                    if ($result->num_rows > 0) {
+                        $mostrarBusqueda = false;
+                        echo "<table border='1'>
+                                <tr>
+                                    <th>Nombre y Apellido</th>
+                                    <th>Cédula</th>
+                                    <th>Materias</th>
+                                    <th>Semestre</th>
+                                    <th>Créditos Disponibles</th>
+                                    <th>Acciones</th>
+                                </tr>";
+
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                    <td>" . htmlspecialchars($row['nombres']) . " " . htmlspecialchars($row['apellidos']) . "</td>
+                                    <td>" . htmlspecialchars($row['cedula']) . "</td>
+                                    <td>" . htmlspecialchars($row['materias']) . "</td>
+                                    <td>" . htmlspecialchars($row['semestre']) . "</td>
+                                    <td>" . htmlspecialchars($row['creditosdisponibles']) . "</td>
+                                    <td class='acciones'>
+                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "'>Modificar Sección</a>
+                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "'>Ajustar Créditos</a>
+                                    </td>
+                                </tr>";
+                        }
+                        echo "</table>";
+                    } else {
+                        echo "<p>No se encontraron resultados.</p>";
+                    }
+                }
+
+                $conn->close();
             }
-        } else {
-            echo "Error al añadir el usuario: " . $conn->error;
         }
 
-        
-        
-    }
+        if ($mostrarBusqueda) {
+            echo '
+                <div class="search-container">
+                    <form action="admin_alumnos.php" method="get" onsubmit="return validateForm()">
+                        <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
+                        <button type="submit" class="search-button">Buscar</button>
+                    </form>
+                </div>
+                <p id="error-message" class="error-message">' . $errorMensaje . '</p>
+            ';
+        }
+        ?>
 
-    // Cerrar conexión
-    $conn->close();
+        <script>
+            function validateForm() {
+                var query = document.querySelector('.search-box').value.trim();
+                var errorMessage = document.getElementById('error-message');
 
-    ?>
+                if (query === '') {
+                    errorMessage.style.display = 'block';
+                    setTimeout(function() {
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                    return false;
+                }
+                return true;
+            }
+
+            if ('<?php echo $errorMensaje; ?>' !== '') {
+                document.getElementById('error-message').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('error-message').style.display = 'none';
+                }, 3000);
+            }
+        </script>
+    </div>
+    
     <script>
         function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
@@ -298,11 +414,11 @@
                 document.getElementById('inicio').addEventListener('click', function() { 
                     redirigir('pagina_administracion.php'); 
                 });
-                document.getElementById('profesor').addEventListener('click', function() { 
-                    redirigir('admin_profesores.php'); 
-                });
                 document.getElementById('datos').addEventListener('click', function() { 
                     redirigir('buscar_datos_admin.html'); 
+                });
+                document.getElementById('profesor').addEventListener('click', function() { 
+                    redirigir('admin_profesores.php'); 
                 });
                 document.getElementById('alumno').addEventListener('click', function() { 
                     redirigir('admin_alumnos.php'); 

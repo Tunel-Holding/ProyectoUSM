@@ -62,15 +62,15 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="alumno">
                         <img src="css/alumno.png">
                         <p>Alumnos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="materias">
                         <img src="css/horario.png">
-                        <p>Horarios</p>
+                        <p>Materias</p>
                     </div>
                 </div>
             </div>
@@ -189,6 +189,9 @@
                 });
                 document.getElementById('profesor').addEventListener('click', function() {
                     redirigir('admin_profesores.php');
+                });
+                document.getElementById('alumno').addEventListener('click', function() { 
+                    redirigir('admin_alumnos.php'); 
                 });
             }
 
