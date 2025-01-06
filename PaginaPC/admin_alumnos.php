@@ -23,7 +23,7 @@
             color: white;
         }
         .container {
-            max-width: 1200px; /* Ajustar el ancho del contenedor */
+            max-width: 1000px; /* Ajustar el ancho del contenedor */
             margin: auto;
             background-color: var(--bg-container);
             padding: 20px;
@@ -34,11 +34,20 @@
             flex-direction: column;
             align-items: center;
             align-content: center;
+            height: auto;
         }
         h1 {
             text-align: center;
             font-family: 'Lobster', cursive;
-            font-size: 30px;
+            font-size: 60px;
+        }
+        .formulario-cedula {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+            width: 100%;
         }
         .error-message {
             color: red;
@@ -54,6 +63,7 @@
             align-items: center; /* Alinea verticalmente */
             margin-bottom: 20px;
             gap: 20px; /* Añade espacio entre la barra de búsqueda y el botón */
+            width: 100%;
         }
         .search-box {
             width: 100%; /* Permite que la barra de búsqueda ocupe todo el espacio disponible */
@@ -89,28 +99,41 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: #fff;
+            background-color: var(--bg-container);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
         }
         th, td {
             padding: 12px;
             text-align: left;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
         }
         th {
             background-color: rgb(69, 160, 160);
             color: white;
-            font-weight: bold;
+        }
+        body.dark-mode th {
+            background-color: rgb(45, 120, 120);
         }
         td {
             border-bottom: 1px solid #ddd;
         }
+        body.dark-mode td {
+            border-bottom: 1px solid #555;
+        }
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        body.dark-mode tr:nth-child(even) {
+            background-color: #333;
+        }
         tr:hover {
             background-color: #e9e9e9;
+        }
+        body.dark-mode tr:hover {
+            background-color: #444;
         }
         .acciones {
             display: flex direction column;
@@ -337,7 +360,7 @@
         if ($mostrarBusqueda) {
             echo '
                 <div class="search-container">
-                    <form action="admin_alumnos.php" method="get" onsubmit="return validateForm()">
+                    <form action="admin_alumnos.php" method="get" class="formulario-cedula" onsubmit="return validateForm()">
                         <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
                         <button type="submit" class="search-button">Buscar</button>
                     </form>
