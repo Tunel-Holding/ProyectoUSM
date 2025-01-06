@@ -14,7 +14,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 50px;
             background-color: #f0f0f0;
         }
         .container {
@@ -325,7 +324,7 @@
         if ($mostrarBusqueda) {
             echo '
                 <div class="search-container">
-                    <form action="prueba.php" method="get" onsubmit="return validateForm()">
+                    <form action="admin_alumnos.php" method="get" onsubmit="return validateForm()">
                         <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
                         <button type="submit" class="search-button">Buscar</button>
                     </form>
