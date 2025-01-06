@@ -152,6 +152,7 @@
             align-items: center;
             justify-content: center;
             font-size: 14px;
+            margin: 5px;
         }
         .acciones a:hover {
             background-color: rgb(45, 120, 120);
