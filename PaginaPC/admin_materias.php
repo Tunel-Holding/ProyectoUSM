@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
+    <link rel="stylesheet" href="css/admin_materias.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principaladministracion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,15 +63,15 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="alumno">
+                     <div class="intopcion">
                         <img src="css/alumno.png">
                         <p>Alumnos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="materias">
+                     <div class="intopcion">
                         <img src="css/horario.png">
-                        <p>Materias</p>
+                        <p>Horarios</p>
                     </div>
                 </div>
             </div>
@@ -129,6 +130,27 @@
         </div>
     </div>
 
+    <h1>Materias</h1>
+    <?php
+        require 'conexion.php';
+        $sql = "SELECT DISTINCT nombre FROM materias";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            echo "<table><tr><th>Nombre de la Materia</th><th></th><th></th></tr>";
+            // Salida de datos de cada fila
+            while($row = $result->fetch_assoc()) {
+                $nombreMateria = $row["nombre"];
+                echo "<tr><td>" . $nombreMateria . "</td>";
+                echo "<td class='button-cell'><button onclick=\"window.location.href='editar_materia.php?nombre=$nombreMateria'\">Editar</button></td>";
+                echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_materia.php?nombre=$nombreMateria'\">Eliminar</button></td></tr>";
+            }
+            echo "</table>";
+            echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";
+        } else {
+            echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";
+        }
+        $conn->close();
+    ?>
     <script>
         const contenedor = document.getElementById('contenedor');
         const botonIzquierdo = document.getElementById('boton-izquierdo');
@@ -147,8 +169,8 @@
             event.stopPropagation();
         });
         document.addEventListener('click', function(event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
+            if (!contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
+                contenedor.classList.remove('toggle');
             }
         });
         document.addEventListener('click', function(event) {
@@ -189,9 +211,6 @@
                 });
                 document.getElementById('profesor').addEventListener('click', function() {
                     redirigir('admin_profesores.php');
-                });
-                document.getElementById('alumno').addEventListener('click', function() { 
-                    redirigir('admin_alumnos.php'); 
                 });
             }
 

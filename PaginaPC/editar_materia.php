@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
+    <link rel="stylesheet" href="css/admin_materias.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principaladministracion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,15 +63,15 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="alumno">
+                     <div class="intopcion">
                         <img src="css/alumno.png">
                         <p>Alumnos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="materias">
+                     <div class="intopcion">
                         <img src="css/horario.png">
-                        <p>Materias</p>
+                        <p>Horarios</p>
                     </div>
                 </div>
             </div>
@@ -128,6 +129,55 @@
             </div>
         </div>
     </div>
+    
+    <h1>Secciones de la Materia</h1>
+    <?php
+        require 'conexion.php';
+        $nombre = $_GET['nombre'];
+        $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre='$nombre' ORDER BY m.seccion ASC";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            echo "<table><tr><th>Nombre de la Materia</th><th>Profesor</th><th>Salón</th><th>Créditos</th><th>Semestre</th><th>Sección</th><th></th><th></th></tr>";
+            // Salida de datos de cada fila
+            while($row = $result->fetch_assoc()) {
+                echo "<tr><td>" . $row["nombre"] . "</td>";
+                echo "<td>" . $row["profesor_nombre"] . "</td>";
+                echo "<td>" . $row["salon"] . "</td>";
+                echo "<td>" . $row["creditos"] . "</td>";
+                echo "<td>" . $row["semestre"] . "</td>";
+                echo "<td>" . $row["seccion"] . "</td>";
+                echo "<td class='button-cell'><button onclick=\"window.location.href='editar_seccion.php?id=" . $row["id"] . "'\">Editar</button></td>";
+                echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_seccion.php?id=" . $row["id"] . "'\">Eliminar</button></td></tr>";
+            }
+            echo "</table>";
+        } else {
+            echo "No se encontraron secciones para la materia seleccionada.";
+        }
+
+        // Obtener información de la materia para el formulario de edición
+        $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre='$nombre' LIMIT 1";
+        $resultMateria = $conn->query($sqlMateria);
+        $materia = $resultMateria->fetch_assoc();
+        $conn->close();
+    ?>
+
+    <a href='añadir_seccion.php?nombre=<?php echo $nombre; ?>'><button id='agregar'>Añadir Sección</button></a>
+
+    <h1>Editar Materia</h1>
+    <form class="form-materia" action="procesar_editar_materia.php" method="POST">
+        <input type="hidden" name="nombreOriginal" value="<?php echo $materia['nombre']; ?>">
+        <div>
+            <label for="nombre">Nombre de la Materia:</label>
+            <input type="text" id="nombre" name="nombre" value="<?php echo $materia['nombre']; ?>" required>
+        </div>
+        <div>
+            <label for="creditos">Número de Créditos:</label>
+            <input type="number" id="creditos" name="creditos" value="<?php echo $materia['creditos']; ?>" required>
+        </div>
+        <div>
+            <button type="submit" id="editar">Editar Materia</button>
+        </div>
+    </form>
 
     <script>
         const contenedor = document.getElementById('contenedor');
@@ -147,8 +197,8 @@
             event.stopPropagation();
         });
         document.addEventListener('click', function(event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
+            if (!contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
+                contenedor.classList.remove('toggle');
             }
         });
         document.addEventListener('click', function(event) {
@@ -189,9 +239,6 @@
                 });
                 document.getElementById('profesor').addEventListener('click', function() {
                     redirigir('admin_profesores.php');
-                });
-                document.getElementById('alumno').addEventListener('click', function() { 
-                    redirigir('admin_alumnos.php'); 
                 });
             }
 
