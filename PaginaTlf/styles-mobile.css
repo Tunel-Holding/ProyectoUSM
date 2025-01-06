@@ -1,0 +1,133 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Asegura que los divs se apilen desde la parte superior */
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0056b3;
+}
+
+h1 {
+    font-size: 4em; /* Tamaño de fuente más pequeño */
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000; /* Sombra del texto */
+    margin-top: 0; /* Espacio desde la parte superior */
+    position: relative; /* Añadido para usar z-index */
+    z-index: 2;
+}
+
+a {
+    text-decoration: none;
+}
+
+.menu-noticias {
+    position: relative;
+    width: 100%;
+    min-height: 610px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0; /* Elimina cualquier margen */
+    overflow: hidden; /* Asegura que el contenido no se desborde */
+    border-radius: 0 0 50px 50px;
+    z-index: 1; /* Asegura que la imagen esté detrás del h1 */
+}
+
+.menu-noticias::before {
+    content: '';
+    position: absolute;
+    top: 0; /* Asegura que el pseudo-elemento esté pegado a la parte superior */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://usm.edu.ve/wp-content/uploads/2022/11/Foto-usm.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: blur(13px); /* Aplica el blur solo a la imagen de fondo */
+    z-index: 1;
+}
+
+.menu-noticias1 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    text-align: center; /* Centra el texto horizontalmente */
+}
+
+.menu-noticias1 h1 {
+    font-size: 2em; /* Ajusta este valor para cambiar el tamaño de la fuente */
+    color: #ffffff; /* Asegura que el texto sea visible */
+    position: relative; /* Añadido para usar z-index */
+    z-index: 2;
+}
+
+.boton-inicio { 
+    color: white; 
+    background-color: #0b5db6; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    transition: background-color 0.3s ease, transform 0.3s ease, scale 0.3s ease; 
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    cursor: pointer;
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    z-index: 2;
+    height: 35px;  
+}
+.boton-inicio:hover { 
+    background-color: #003f7f;
+}
+
+.boton-inicio img {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.image-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row; /* Alinea los divs horizontalmente */
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-left: 5px;
+    margin-right: 0;
+    font-size: 10%;
+}
+
+
+
+.image-wrapper {
+    display: flex;
+    flex-direction: column; /* Alinea el contenido verticalmente */
+    align-items: center;
+    position: relative;
+    margin: 20px;
+    text-align: center;
+    cursor: pointer;
+    flex: 1; /* Permite que los divs se ajusten en tamaño */
+}
+
+.image-wrapper img {
+    width: 140px; /* Ajusta este valor para cambiar el tamaño máximo de la imagen */
+    height: 140px;
+    margin-right: 10px ;
+    border-radius: 100%; /* Añade bordes redondeados a la imagen */
+}
+
+.boton-inicio .Logo {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
