@@ -124,27 +124,7 @@
         body.dark-mode tr:hover {
             background-color: #444;
         }
-        .acciones {
-            display: flex direction column;
-            gap: 10px;
-        }
-        .acciones a {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: rgb(69, 160, 160);
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            text-align: center;
-            display: flex direction column;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        .acciones a:hover {
-            background-color: rgb(45, 120, 120);
-        }
+        
     </style>
 </head>
 <body>
