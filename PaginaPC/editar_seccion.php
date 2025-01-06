@@ -1,25 +1,105 @@
+<?php
+include 'conexion.php';
+
+$id = $_GET['id'];
+
+// Obtener los detalles de la sección a editar
+$sql = "SELECT * FROM materias WHERE id='$id'";
+$result = $conn->query($sql);
+$seccion = $result->fetch_assoc();
+// Verificar si la columna id_profesor existe en la tabla materias y si está vacía
+if (!array_key_exists('id_profesor', $seccion)) {
+    die("Error: La columna 'id_profesor' no existe en la tabla 'materias'.");
+}
+$idProfesor = !empty($seccion['id_profesor']) ? $seccion['id_profesor'] : null;
+
+// Obtener la lista de profesores
+$sqlProfesores = "SELECT id, nombre FROM profesores";
+$resultProfesores = $conn->query($sqlProfesores);
+$conn->close();
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
+    <link rel="stylesheet" href="css/admin_materias.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principaladministracion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Inicio - USM</title>
+    <title>Editar Sección</title>
+    <script>
+        function generarClases() {
+            const cantidadClases = document.getElementById('cantidadClases').value;
+            const contenedorClases = document.getElementById('contenedorClases');
+            contenedorClases.innerHTML = '';
+
+            for (let i = 0; i < cantidadClases; i++) {
+                // Agregar línea divisora al principio del primer grupo
+                if (i === 0) {
+                    const hr = document.createElement('hr');
+                    contenedorClases.appendChild(hr);
+                }
+
+                const claseDiv = document.createElement('div');
+                claseDiv.classList.add('clase');
+
+                const diaLabel = document.createElement('label');
+                diaLabel.textContent = 'Día:';
+                const diaSelect = document.createElement('select');
+                diaSelect.name = `dia_${i}`;
+                const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+                dias.forEach(dia => {
+                    const option = document.createElement('option');
+                    option.value = dia;
+                    option.textContent = dia;
+                    diaSelect.appendChild(option);
+                });
+
+                const inicioLabel = document.createElement('label');
+                inicioLabel.textContent = 'Hora de Inicio:';
+                const inicioInput = document.createElement('input');
+                inicioInput.type = 'time';
+                inicioInput.name = `inicio_${i}`;
+
+                const finLabel = document.createElement('label');
+                finLabel.textContent = 'Hora de Fin:';
+                const finInput = document.createElement('input');
+                finInput.type = 'time';
+                finInput.name = `fin_${i}`;
+
+                claseDiv.appendChild(diaLabel);
+                claseDiv.appendChild(diaSelect);
+                claseDiv.appendChild(inicioLabel);
+                claseDiv.appendChild(inicioInput);
+                claseDiv.appendChild(finLabel);
+                claseDiv.appendChild(finInput);
+
+                contenedorClases.appendChild(claseDiv);
+
+                // Agregar línea divisora entre cada grupo
+                const hr = document.createElement('hr');
+                contenedorClases.appendChild(hr);
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById('cantidadClases').value = 1;
+            generarClases();
+        };
+    </script>
 </head>
 <body>
 
     <div class="cabecera">
-
         <button type="button" id="logoButton">
             <img src="css/logoazul.png" alt="Logo">
         </button>
         <p>Universidad Santa María</p>
-
     </div>
 
     <div class="menu" id="menu">
@@ -68,14 +148,14 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="materias">
+                     <div class="intopcion">
                         <img src="css/horario.png">
-                        <p>Materias</p>
+                        <p>Horarios</p>
                     </div>
                 </div>
             </div>
             <button class="boton" id="boton-derecho">
-            <svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/1999/xlink">
                 <title>arrow_forward_ios</title>
                 <desc>Created with Sketch.</desc>
                 <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -129,6 +209,30 @@
         </div>
     </div>
 
+    <h1>Editar Sección</h1>
+
+    <form class="form-materia" action="procesar_editar_seccion.php" method="POST">
+        <input type="hidden" name="id" value="<?php echo $id; ?>"> <!-- Pasar el ID de la sección -->
+        <div>
+            <label for="salon">Salón:</label>
+            <input type="text" name="salon" id="salon" value="<?php echo $seccion['salon']; ?>">
+        </div>
+        <div>
+            <label for="cantidadClases">Cantidad de Clases:</label>
+            <select id="cantidadClases" name="cantidadClases" onchange="generarClases()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div id="contenedorClases"></div>
+        <div>
+            <button type="submit" id="editar">Editar Materia</button>
+        </div>
+    </form>
+
     <script>
         const contenedor = document.getElementById('contenedor');
         const botonIzquierdo = document.getElementById('boton-izquierdo');
@@ -147,8 +251,8 @@
             event.stopPropagation();
         });
         document.addEventListener('click', function(event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
+            if (!contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
+                contenedor.classList.remove('toggle');
             }
         });
         document.addEventListener('click', function(event) {
@@ -190,12 +294,9 @@
                 document.getElementById('profesor').addEventListener('click', function() {
                     redirigir('admin_profesores.php');
                 });
-                document.getElementById('materias').addEventListener('click', function() {
-                    redirigir('admin_materias.php');
-                });
             }
 
     </script>
-
+    
 </body>
 </html>
