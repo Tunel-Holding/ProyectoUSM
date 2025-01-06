@@ -139,7 +139,8 @@
             display: flex direction column;
             gap: 10px;
         }
-        .acciones a {
+        .acciones a.btn-modificar,
+        .acciones a.btn-ajustar {
             display: inline-block;
             padding: 8px 16px;
             background-color: rgb(69, 160, 160);
@@ -154,7 +155,8 @@
             font-size: 14px;
             margin: 5px;
         }
-        .acciones a:hover {
+        .acciones a.btn-modificar:hover,
+        .acciones a.btn-ajustar:hover {
             background-color: rgb(45, 120, 120);
         }
     </style>
@@ -343,8 +345,8 @@
                                     <td>" . htmlspecialchars($row['semestre']) . "</td>
                                     <td>" . htmlspecialchars($row['creditosdisponibles']) . "</td>
                                     <td class='acciones'>
-                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "'>Modificar Sección</a>
-                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "'>Ajustar Créditos</a>
+                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-modificar'>Modificar Sección</a>
+                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-ajustar'>Ajustar Créditos</a>
                                     </td>
                                 </tr>";
                         }

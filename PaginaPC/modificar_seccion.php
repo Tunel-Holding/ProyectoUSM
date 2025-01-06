@@ -66,10 +66,12 @@
             width: 100%;
             max-width: 300px;
         }
-        button {
+        .btn-modificar {
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 20px;
+            padding: 8px 16px;
             border: 1px solid #ccc;
+            transition: background-color 0.3s ease, transform 0.3s ease;
             background-color:rgb(69, 160, 160);
             color: white;
             cursor: pointer;
@@ -77,8 +79,12 @@
             width: 100%;
             max-width: 300px;
         }
-        button:hover {
+        .btn-modificar:hover {
             background-color:rgb(69, 160, 160);
+            transform: scale(1.05);
+        }
+        .btn-modificar:active { 
+            transform: scale(0.95); 
         }
         .btn-container {
             display: flex;
@@ -323,7 +329,7 @@
                                         echo "<option value='$seccion'>$seccion</option>";
                                     }
                                     echo "</select>
-                                                    <button type='submit'>Modificar</button>
+                                                    <button type='submit' class='btn-modificar'>Modificar</button>
                                                 </form>
                                             </td>
                                         </tr>";

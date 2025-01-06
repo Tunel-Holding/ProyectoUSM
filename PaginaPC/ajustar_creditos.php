@@ -65,9 +65,12 @@
             width: 100%;
             max-width: 300px;
         }
-        button {
+        .btn-ajustar {
             padding: 10px;
-            border-radius: 5px;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
             border: 1px solid #ccc;
             background-color:rgb(69, 160, 160);
             color: white;
@@ -76,12 +79,17 @@
             width: 100%;
             max-width: 300px;
         }
-        button:hover {
+        .btn-ajustar:hover {
             background-color:rgb(69, 160, 160);
+            transform: scale(1.05);
+        }
+        .btn-ajustar:active { 
+            transform: scale(0.95); 
         }
         .btn-container {
             display: flex;
             justify-content: center;
+            border-radius: 15px;
         }
         /* Estilos para los elementos del formulario */
         select {
@@ -291,7 +299,7 @@
                             <label for='creditos'>Nuevo Número de Créditos:</label>
                             <input type='number' name='creditos' id='creditos' required min='0'>
                             <div class='btn-container'>
-                                <button type='submit'>Ajustar Créditos</button>
+                                <button type='submit' class='btn-ajustar'>Ajustar Créditos</button>
                             </div>
                           </form>";
                 } else {
