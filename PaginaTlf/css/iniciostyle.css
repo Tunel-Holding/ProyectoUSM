@@ -1,0 +1,147 @@
+body{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 92.6vh;
+    font-family: 'Jost', sans-serif;
+    background-image: url('https://usm.edu.ve/wp-content/uploads/2022/11/Foto-usm.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.main{
+    width: 340px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.6);
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 5px 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+#chk{
+    display: none;
+}
+
+.login{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+label{
+    color: #0056b3;
+    font-size: 2.2em;
+    justify-content: center;
+    display: flex;
+    margin: 60px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .5s ease-in-out;
+}
+
+input{
+    width: 60%;
+    height: 20px;
+    background: #e0dede;
+    justify-content: center;
+    display: flex;
+    margin: 20px auto;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+button{
+    width: 60%;
+    height: 40px;
+    margin: 10px auto;
+    justify-content: center;
+    display: block;
+    color: #fff;
+    background: #0056b3;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 20px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+}
+
+button:hover{
+    background: #4a2c6d;
+}
+
+.signup{
+    height: 460px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 60% / 10%;
+    transform: translateY(-180px);
+    transition: .4s ease-in-out;
+}
+
+.signup label{
+    color: #0056b3;
+    transform: scale(.6) translateY(15px);
+}
+
+#chk:checked ~ .signup{
+    transform: translateY(-500px);
+}
+#chk:checked ~ .signup label{
+    transform: scale(1) translateY(30px);
+}
+
+#chk:checked ~ .login label{
+    transform: scale(.6);
+}
+
+.password-hint {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 86, 179, 0.9);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.password-strength {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.contenedorentrante1{
+    position: absolute;
+    background-color: #0056b3;
+    width: 100%;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 92.6vh;
+    transform: translateY(100%);
+}
+
+.contenedorentrante1 img{
+    width: 100px;
+    height: auto;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
