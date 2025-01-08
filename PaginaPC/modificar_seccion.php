@@ -35,65 +35,60 @@
             align-items: center;
             align-content: center;
             height: auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+        /* Animación de desvanecimiento */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         h1 {
             text-align: center;
             font-family: 'Lobster', cursive;
             font-size: 60px;
         }
-        .formulario-cedula {
+        form {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-top: 40px;
-            width: 100%;
+            gap: 20px;
         }
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-top: 10px;
+        label {
             font-weight: bold;
-            display: none; /* Inicialmente oculto */
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
         }
-        .search-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centra el contenedor de búsqueda */
-            align-items: center; /* Alinea verticalmente */
-            margin-bottom: 20px;
-            gap: 20px; /* Añade espacio entre la barra de búsqueda y el botón */
-            width: 100%;
-        }
-        .search-box {
-            width: 100%; /* Permite que la barra de búsqueda ocupe todo el espacio disponible */
-            max-width: 600px; /* Ajusta el ancho máximo de la barra de búsqueda */
-            margin-bottom: 10px;
+        /* Estilos para los elementos del formulario */
+        select {
             padding: 10px;
+            border-radius: 5px;
             border: 1px solid #ccc;
-            border-radius: 40px;
-            transition: box-shadow 0.3s ease; /* Animación al pasar el cursor */
+            width: 100%;
+            max-width: 300px;
         }
-        .search-box:hover {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Efecto de sombra al pasar el cursor */
-        }
-        .search-button {
+        .btn-modificar {
             padding: 10px;
-            background-color: rgb(69, 160, 160);
+            border-radius: 20px;
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            background-color:rgb(69, 160, 160);
             color: white;
-            border: none;
-            border-radius: 40px;
             cursor: pointer;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Centra el texto vertical y horizontalmente */
-            font-size: 14px; /* Reduce el tamaño de la letra */
-            transition: background-color 0.3s ease, transform 0.3s ease; /* Añade transición para animación */
+            margin-top: 10px;
+            width: 100%;
+            max-width: 300px;
         }
-        .search-button:hover {
-            background-color: rgb(45, 120, 120); /* Cambia el color de fondo al pasar el cursor */
-            transform: scale(1.05); /* Escala ligeramente el botón */
+        .btn-modificar:hover {
+            background-color:rgb(69, 160, 160);
+            transform: scale(1.05);
+        }
+        .btn-modificar:active { 
+            transform: scale(0.95); 
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
         }
         table {
             width: 100%;
@@ -135,30 +130,7 @@
         body.dark-mode tr:hover {
             background-color: #444;
         }
-        .acciones {
-            display: flex direction column;
-            gap: 10px;
-        }
-        .acciones a.btn-modificar,
-        .acciones a.btn-ajustar {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: rgb(69, 160, 160);
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            text-align: center;
-            display: flex direction column;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            margin: 5px;
-        }
-        .acciones a.btn-modificar:hover,
-        .acciones a.btn-ajustar:hover {
-            background-color: rgb(45, 120, 120);
-        }
+        
     </style>
 </head>
 <body>
@@ -280,121 +252,116 @@
     </div>
      
     <div class="container">
-        <h1>Búsqueda de Estudiantes</h1>
+        <h1>Modificar Sección</h1>
         <?php
-        require "conexion.php";
+        require 'conexion.php';
 
-        $mostrarBusqueda = true;
-        $errorMensaje = '';
+        if (isset($_GET['id_estudiante'])) {
+            $cedula_estudiante = htmlspecialchars($_GET['id_estudiante']);
+            echo "<p>Cédula del Estudiante: $cedula_estudiante</p>";
 
-        if (isset($_GET['query'])) {
-            $busqueda = trim($_GET['query']);
+            // Verificar la existencia del estudiante en datos_usuario
+            $sql_verificar = "SELECT * FROM datos_usuario WHERE cedula = ?";
+            if ($stmt_verificar = $conn->prepare($sql_verificar)) {
+                $stmt_verificar->bind_param("s", $cedula_estudiante);
+                $stmt_verificar->execute();
+                $result_verificar = $stmt_verificar->get_result();
 
-            if ($busqueda === '') {
-                $errorMensaje = 'Por favor, ingrese una cédula para buscar.';
-            } else {
-                $conn = new mysqli("localhost", "root", "", "proyectousm");
+                if ($result_verificar->num_rows > 0) {
 
-                if ($conn->connect_error) {
-                    die("Conexión fallida: " . $conn->connect_error);
-                }
+                    // Consulta principal para obtener las materias inscritas y sus secciones
+                    $sql = "
+                        SELECT
+                            du.nombres, du.apellidos, m.nombre AS materia, m.id AS id_materia, m.seccion AS seccion_actual
+                        FROM
+                            inscripciones i
+                        JOIN
+                            datos_usuario du ON i.id_estudiante = du.usuario_id
+                        JOIN
+                            estudiantes e ON du.usuario_id = e.id_usuario
+                        JOIN
+                            materias m ON i.id_materia = m.id
+                        WHERE
+                            du.cedula = ?
+                    ";
 
-                $conn->set_charset("utf8");
+                    if ($stmt = $conn->prepare($sql)) {
+                        $stmt->bind_param("s", $cedula_estudiante);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
-                $sql = "
-                    SELECT
-                        du.cedula, du.nombres, du.apellidos,
-                        e.semestre, e.creditosdisponibles,
-                        GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS materias
-                    FROM
-                        datos_usuario du
-                    LEFT JOIN
-                        estudiantes e ON du.usuario_id = e.id_usuario
-                    LEFT JOIN
-                        inscripciones i ON du.usuario_id = i.id_estudiante
-                    LEFT JOIN
-                        materias m ON i.id_materia = m.id
-                    WHERE
-                        du.cedula LIKE '%$busqueda%'
-                    GROUP BY
-                        du.cedula, du.nombres, du.apellidos, e.semestre, e.creditosdisponibles
-                ";
+                        if ($result->num_rows > 0) {
+                            echo "<p>Materias Inscritas:</p>";
+                            echo "<table>
+                                    <tr>
+                                        <th>Materia</th>
+                                        <th>Sección Actual</th>
+                                        <th>Nueva Sección</th>
+                                    </tr>";
 
-                $result = $conn->query($sql);
+                            while ($row = $result->fetch_assoc()) {
+                                $id_materia = htmlspecialchars($row['id_materia']);
+                                $materia = htmlspecialchars($row['materia']);
+                                $seccion_actual = htmlspecialchars($row['seccion_actual']);
 
-                if ($result === false) {
-                    echo "<p>Error en la consulta SQL: " . $conn->error . "</p>";
-                } else {
-                    if ($result->num_rows > 0) {
-                        $mostrarBusqueda = false;
-                        echo "<table border='1'>
-                                <tr>
-                                    <th>Nombre y Apellido</th>
-                                    <th>Cédula</th>
-                                    <th>Materias</th>
-                                    <th>Semestre</th>
-                                    <th>Créditos Disponibles</th>
-                                    <th>Acciones</th>
-                                </tr>";
+                                // Consulta para obtener todas las secciones disponibles de la materia actual
+                                $sql_secciones = "
+                                    SELECT seccion
+                                    FROM materias
+                                    WHERE nombre = ?
+                                ";
+                                if ($stmt_secciones = $conn->prepare($sql_secciones)) {
+                                    $stmt_secciones->bind_param("s", $materia);
+                                    $stmt_secciones->execute();
+                                    $result_secciones = $stmt_secciones->get_result();
 
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                                    <td>" . htmlspecialchars($row['nombres']) . " " . htmlspecialchars($row['apellidos']) . "</td>
-                                    <td>" . htmlspecialchars($row['cedula']) . "</td>
-                                    <td>" . htmlspecialchars($row['materias']) . "</td>
-                                    <td>" . htmlspecialchars($row['semestre']) . "</td>
-                                    <td>" . htmlspecialchars($row['creditosdisponibles']) . "</td>
-                                    <td class='acciones'>
-                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-modificar'>Modificar Sección</a>
-                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-ajustar'>Ajustar Créditos</a>
-                                    </td>
-                                </tr>";
+                                    echo "<tr>
+                                            <td>$materia</td>
+                                            <td>$seccion_actual</td>
+                                            <td>
+                                                <form action='modificar_seccion_procesar.php' method='post'>
+                                                    <input type='hidden' name='id_estudiante' value='$cedula_estudiante'>
+                                                    <input type='hidden' name='id_materia' value='$id_materia'>
+                                                    <input type='hidden' name='materia_nombre' value='$materia'> <!-- Añadido -->
+                                                    <select name='nueva_seccion'>";
+                                    while ($row_seccion = $result_secciones->fetch_assoc()) {
+                                        $seccion = htmlspecialchars($row_seccion['seccion']);
+                                        echo "<option value='$seccion'>$seccion</option>";
+                                    }
+                                    echo "</select>
+                                                    <button type='submit' class='btn-modificar'>Modificar</button>
+                                                </form>
+                                            </td>
+                                        </tr>";
+                                    $stmt_secciones->close();
+                                } else {
+                                    echo "<p>Error al preparar la consulta de secciones: " . $conn->error . "</p>";
+                                }
+                            }
+
+                            echo "</table>";
+                        } else {
+                            echo "<p>No se encontró el estudiante en la consulta principal.</p>";
                         }
-                        echo "</table>";
+
+                        $stmt->close();
                     } else {
-                        echo "<p>No se encontraron resultados.</p>";
+                        echo "<p>Error al preparar la consulta principal: " . $conn->error . "</p>";
                     }
+                } else {
+                    echo "<p>Estudiante no encontrado en datos_usuario.</p>";
                 }
 
-                $conn->close();
+                $stmt_verificar->close();
+            } else {
+                echo "<p>Error al preparar la consulta de verificación: " . $conn->error . "</p>";
             }
+        } else {
+            echo "<p>Cédula de estudiante no proporcionada.</p>";
         }
 
-        if ($mostrarBusqueda) {
-            echo '
-                <div class="search-container">
-                    <form action="admin_alumnos.php" method="get" class="formulario-cedula" onsubmit="return validateForm()">
-                        <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
-                        <button type="submit" class="search-button">Buscar</button>
-                    </form>
-                </div>
-                <p id="error-message" class="error-message">' . $errorMensaje . '</p>
-            ';
-        }
+        $conn->close();
         ?>
-
-        <script>
-            function validateForm() {
-                var query = document.querySelector('.search-box').value.trim();
-                var errorMessage = document.getElementById('error-message');
-
-                if (query === '') {
-                    errorMessage.style.display = 'block';
-                    setTimeout(function() {
-                        errorMessage.style.display = 'none';
-                    }, 3000);
-                    return false;
-                }
-                return true;
-            }
-
-            if ('<?php echo $errorMensaje; ?>' !== '') {
-                document.getElementById('error-message').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('error-message').style.display = 'none';
-                }, 3000);
-            }
-        </script>
     </div>
     
     <script>

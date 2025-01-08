@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Inicio - USM</title>
+    <title>Ajustar Créditos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,65 +35,69 @@
             align-items: center;
             align-content: center;
             height: auto;
+            animation: fadeIn 1s ease-in-out;
+        }
+        /* Animación de desvanecimiento */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         h1 {
             text-align: center;
             font-family: 'Lobster', cursive;
             font-size: 60px;
         }
-        .formulario-cedula {
+        form {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-top: 40px;
-            width: 100%;
+            gap: 20px;
         }
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-top: 10px;
+        label {
             font-weight: bold;
-            display: none; /* Inicialmente oculto */
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
         }
-        .search-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centra el contenedor de búsqueda */
-            align-items: center; /* Alinea verticalmente */
-            margin-bottom: 20px;
-            gap: 20px; /* Añade espacio entre la barra de búsqueda y el botón */
-            width: 100%;
-        }
-        .search-box {
-            width: 100%; /* Permite que la barra de búsqueda ocupe todo el espacio disponible */
-            max-width: 600px; /* Ajusta el ancho máximo de la barra de búsqueda */
-            margin-bottom: 10px;
+        input {
             padding: 10px;
+            border-radius: 5px;
             border: 1px solid #ccc;
-            border-radius: 40px;
-            transition: box-shadow 0.3s ease; /* Animación al pasar el cursor */
+            width: 100%;
+            max-width: 300px;
         }
-        .search-box:hover {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Efecto de sombra al pasar el cursor */
-        }
-        .search-button {
+        .btn-ajustar {
             padding: 10px;
-            background-color: rgb(69, 160, 160);
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: 1px solid #ccc;
+            background-color:rgb(69, 160, 160);
             color: white;
-            border: none;
-            border-radius: 40px;
             cursor: pointer;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Centra el texto vertical y horizontalmente */
-            font-size: 14px; /* Reduce el tamaño de la letra */
-            transition: background-color 0.3s ease, transform 0.3s ease; /* Añade transición para animación */
+            margin-top: 10px;
+            width: 100%;
+            max-width: 300px;
         }
-        .search-button:hover {
-            background-color: rgb(45, 120, 120); /* Cambia el color de fondo al pasar el cursor */
-            transform: scale(1.05); /* Escala ligeramente el botón */
+        .btn-ajustar:hover {
+            background-color:rgb(69, 160, 160);
+            transform: scale(1.05);
+        }
+        .btn-ajustar:active { 
+            transform: scale(0.95); 
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            border-radius: 15px;
+        }
+        /* Estilos para los elementos del formulario */
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 300px;
         }
         table {
             width: 100%;
@@ -135,30 +139,7 @@
         body.dark-mode tr:hover {
             background-color: #444;
         }
-        .acciones {
-            display: flex direction column;
-            gap: 10px;
-        }
-        .acciones a.btn-modificar,
-        .acciones a.btn-ajustar {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: rgb(69, 160, 160);
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            text-align: center;
-            display: flex direction column;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            margin: 5px;
-        }
-        .acciones a.btn-modificar:hover,
-        .acciones a.btn-ajustar:hover {
-            background-color: rgb(45, 120, 120);
-        }
+        
     </style>
 </head>
 <body>
@@ -280,121 +261,61 @@
     </div>
      
     <div class="container">
-        <h1>Búsqueda de Estudiantes</h1>
+        <h1>Ajustar Créditos</h1>
         <?php
-        require "conexion.php";
+        require 'conexion.php';
 
-        $mostrarBusqueda = true;
-        $errorMensaje = '';
+        if (isset($_GET['id_estudiante'])) {
+            $cedula_estudiante = htmlspecialchars($_GET['id_estudiante']);
+            echo "<p>Cédula del Estudiante: $cedula_estudiante</p>";
 
-        if (isset($_GET['query'])) {
-            $busqueda = trim($_GET['query']);
+            // Obtener la información del estudiante
+            $sql_estudiante = "
+                SELECT du.nombres, du.apellidos, e.creditosdisponibles, e.id_usuario
+                FROM datos_usuario du
+                JOIN estudiantes e ON du.usuario_id = e.id_usuario
+                WHERE du.cedula = ?
+            ";
 
-            if ($busqueda === '') {
-                $errorMensaje = 'Por favor, ingrese una cédula para buscar.';
-            } else {
-                $conn = new mysqli("localhost", "root", "", "proyectousm");
+            if ($stmt_estudiante = $conn->prepare($sql_estudiante)) {
+                $stmt_estudiante->bind_param("s", $cedula_estudiante);
+                $stmt_estudiante->execute();
+                $result_estudiante = $stmt_estudiante->get_result();
 
-                if ($conn->connect_error) {
-                    die("Conexión fallida: " . $conn->connect_error);
-                }
+                if ($result_estudiante->num_rows > 0) {
+                    $row_estudiante = $result_estudiante->fetch_assoc();
+                    $nombres = htmlspecialchars($row_estudiante['nombres']);
+                    $apellidos = htmlspecialchars($row_estudiante['apellidos']);
+                    $creditosdisponibles = htmlspecialchars($row_estudiante['creditosdisponibles']);
+                    $id_usuario = htmlspecialchars($row_estudiante['id_usuario']);
 
-                $conn->set_charset("utf8");
+                    echo "<p>Nombre: $nombres $apellidos</p>";
+                    echo "<p>Créditos Disponibles: $creditosdisponibles</p>";
 
-                $sql = "
-                    SELECT
-                        du.cedula, du.nombres, du.apellidos,
-                        e.semestre, e.creditosdisponibles,
-                        GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS materias
-                    FROM
-                        datos_usuario du
-                    LEFT JOIN
-                        estudiantes e ON du.usuario_id = e.id_usuario
-                    LEFT JOIN
-                        inscripciones i ON du.usuario_id = i.id_estudiante
-                    LEFT JOIN
-                        materias m ON i.id_materia = m.id
-                    WHERE
-                        du.cedula LIKE '%$busqueda%'
-                    GROUP BY
-                        du.cedula, du.nombres, du.apellidos, e.semestre, e.creditosdisponibles
-                ";
-
-                $result = $conn->query($sql);
-
-                if ($result === false) {
-                    echo "<p>Error en la consulta SQL: " . $conn->error . "</p>";
+                    // Formulario para ajustar créditos
+                    echo "<form action='ajustar_creditos_procesar.php' method='post'>
+                            <input type='hidden' name='id_usuario' value='$id_usuario'>
+                            <input type='hidden' name='id_estudiante' value='$cedula_estudiante'>
+                            <label for='creditos'>Nuevo Número de Créditos:</label>
+                            <input type='number' name='creditos' id='creditos' required min='0'>
+                            <div class='btn-container'>
+                                <button type='submit' class='btn-ajustar'>Ajustar Créditos</button>
+                            </div>
+                          </form>";
                 } else {
-                    if ($result->num_rows > 0) {
-                        $mostrarBusqueda = false;
-                        echo "<table border='1'>
-                                <tr>
-                                    <th>Nombre y Apellido</th>
-                                    <th>Cédula</th>
-                                    <th>Materias</th>
-                                    <th>Semestre</th>
-                                    <th>Créditos Disponibles</th>
-                                    <th>Acciones</th>
-                                </tr>";
-
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                                    <td>" . htmlspecialchars($row['nombres']) . " " . htmlspecialchars($row['apellidos']) . "</td>
-                                    <td>" . htmlspecialchars($row['cedula']) . "</td>
-                                    <td>" . htmlspecialchars($row['materias']) . "</td>
-                                    <td>" . htmlspecialchars($row['semestre']) . "</td>
-                                    <td>" . htmlspecialchars($row['creditosdisponibles']) . "</td>
-                                    <td class='acciones'>
-                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-modificar'>Modificar Sección</a>
-                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-ajustar'>Ajustar Créditos</a>
-                                    </td>
-                                </tr>";
-                        }
-                        echo "</table>";
-                    } else {
-                        echo "<p>No se encontraron resultados.</p>";
-                    }
+                    echo "<p>No se encontró el estudiante con la cédula proporcionada.</p>";
                 }
 
-                $conn->close();
+                $stmt_estudiante->close();
+            } else {
+                echo "<p>Error al preparar la consulta de estudiante: " . $conn->error . "</p>";
             }
+        } else {
+            echo "<p>Cédula de estudiante no proporcionada.</p>";
         }
 
-        if ($mostrarBusqueda) {
-            echo '
-                <div class="search-container">
-                    <form action="admin_alumnos.php" method="get" class="formulario-cedula" onsubmit="return validateForm()">
-                        <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
-                        <button type="submit" class="search-button">Buscar</button>
-                    </form>
-                </div>
-                <p id="error-message" class="error-message">' . $errorMensaje . '</p>
-            ';
-        }
+        $conn->close();
         ?>
-
-        <script>
-            function validateForm() {
-                var query = document.querySelector('.search-box').value.trim();
-                var errorMessage = document.getElementById('error-message');
-
-                if (query === '') {
-                    errorMessage.style.display = 'block';
-                    setTimeout(function() {
-                        errorMessage.style.display = 'none';
-                    }, 3000);
-                    return false;
-                }
-                return true;
-            }
-
-            if ('<?php echo $errorMensaje; ?>' !== '') {
-                document.getElementById('error-message').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('error-message').style.display = 'none';
-                }, 3000);
-            }
-        </script>
     </div>
     
     <script>
