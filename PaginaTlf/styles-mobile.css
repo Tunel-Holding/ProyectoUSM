@@ -106,13 +106,13 @@ a {
 }
 
 
-
 .image-wrapper {
     display: flex;
     flex-direction: column; /* Alinea el contenido verticalmente */
     align-items: center;
     position: relative;
     margin: 20px;
+    margin-bottom: 80px;
     text-align: center;
     cursor: pointer;
     flex: 1; /* Permite que los divs se ajusten en tamaño */
@@ -125,9 +125,103 @@ a {
     border-radius: 100%; /* Añade bordes redondeados a la imagen */
 }
 
+.image-wrapper p {
+    font-size: 15em; /* Agranda la letra de los elementos <p> */
+    margin-top: 10px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000; /* Sombra del texto */
+    margin-top: 0; /* Espacio desde la parte superior */
+    position: relative; /* Añadido para usar z-index */
+    z-index: 2;
+}
+
 .boton-inicio .Logo {
     width: 40px;
     height: auto;
     margin-right: 10px;
 }
 
+.dropdown-menu li {
+    padding: 100px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 8em; /* Agranda la letra de los elementos <li> */
+}
+
+.dropdown-menu {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 220px; /* Justo debajo de la imagen */
+    left: 0%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+    to { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+}
+
+.image-wrapper:hover .dropdown-menu {
+    max-height: 700px;
+    opacity: 1;
+    animation: slideDown 0.5s ease-out forwards;
+}
+
+.dropdown-menu.hidden {
+    max-height: 0;
+    opacity: 0;
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+.dropdown-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dropdown-menu ul li {
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.dropdown-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.swiper {
+    width: 80%;
+    height: 80vh;
+    border-radius: 30px;
+    margin-bottom: 5%;
+}
