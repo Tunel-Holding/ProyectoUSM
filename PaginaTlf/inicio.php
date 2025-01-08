@@ -36,7 +36,7 @@
 
     </div>
     <div class="contenedorentrante1 fixed-bottom" id="contenedorEntrante">
-        <img src="logo.png">
+        <img src="css/logo.png">
     </div>
 
     <script>

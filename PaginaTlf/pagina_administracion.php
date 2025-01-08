@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="contenedorentrante1 fixed-top" id="contenedorEntrante">
-        <img src="logo.png">
+        <img src="css/logo.png">
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

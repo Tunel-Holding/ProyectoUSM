@@ -14,7 +14,7 @@ $nivelusuario = $_SESSION['nivelusu'];
 <body>
 	
 <div class="contenedorentrante1 fixed-top" id="contenedorEntrante">
-    <img src="logo.png">
+    <img src="css/logo.png">
 </div>
 
 <script>

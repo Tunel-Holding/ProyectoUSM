@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USM</title>
-    <link rel="stylesheet" href="styles-mobile.css">
+    <link rel="stylesheet" href="css/styles-mobile.css">
 </head>
 <body>
      
     <div class="menu-noticias">
         <a href="inicio.php" class="boton-inicio">
-            <img src="logo.png" alt="Logo" class="Logo"> Iniciar Sesión
+            <img src="css/logo.png" alt="Logo" class="Logo"> Iniciar Sesión
         </a> 
         <div class="menu-noticiasint">
             <h1>USM</h1>
