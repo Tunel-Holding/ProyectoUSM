@@ -193,6 +193,9 @@
                 document.getElementById('alumno').addEventListener('click', function() { 
                     redirigir('admin_alumnos.php'); 
                 });
+                document.getElementById('materias').addEventListener('click', function() { 
+                    redirigir('admin_materias.php'); 
+                });
             }
 
     </script>
