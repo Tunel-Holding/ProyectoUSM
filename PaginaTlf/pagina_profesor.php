@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/iniciostyle.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="css/principal_profesores_tlf.css">
+    <title>Universidad Santa Maria</title>
 </head>
 <body>
     <div class="contenedorentrante1 fixed-top" id="contenedorEntrante">
@@ -17,5 +18,12 @@
             contenedor.style.transform = 'translateY(-100%)';
         });
     </script>
+
+<div class="cabecera">        
+        <button type="button" id="logoButton">
+            <img src="css/logo.png" alt="Logo">
+        </button>
+        <p>USM</p>
+    </div>
 </body>
 </html>
