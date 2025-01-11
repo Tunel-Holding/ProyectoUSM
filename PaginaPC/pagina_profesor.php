@@ -1,3 +1,10 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['idusuario'])) {
+        header('Location: index.php');
+        exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +63,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
                         <p>Cursos</p>
                     </div>
@@ -129,6 +136,8 @@
         </div>
     </div>
 
+    <?php echo $_SESSION['idusuario'] ?>
+
     <script>
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
@@ -180,17 +189,20 @@
             window.location.href = url;; 
             // Cambia esta URL a la página de destino 
             } 
-            window.onload = function() {
-                document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('pagina_profesor.php'); 
-                });
-                document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('datos_profesor.php'); 
-                });
-                document.getElementById('chat').addEventListener('click', function() { 
-                    redirigir('seleccionarmateria_profesor.php'); 
-                });
-            }
+        window.onload = function() {
+            document.getElementById('inicio').addEventListener('click', function() { 
+                redirigir('pagina_profesor.php'); 
+            });
+            document.getElementById('datos').addEventListener('click', function() { 
+                redirigir('datos_profesor.php'); 
+            });
+            document.getElementById('chat').addEventListener('click', function() { 
+                redirigir('seleccionarmateria_profesor.php'); 
+            });
+            document.getElementById('cursos').addEventListener('click', function() { 
+                redirigir('cursos.php'); 
+            });
+        }
 
     </script>
 

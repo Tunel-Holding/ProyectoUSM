@@ -1,3 +1,10 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['idusuario'])) {
+        header('Location: index.php');
+        exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +12,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principaladministracion.css">
-    <link rel="stylesheet" href="css/admin_profesores.css">
+    <link rel="stylesheet" href="css/tablahorario.css">
+    <link rel="stylesheet" href="css/principalprofesor.css">
+    <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -17,7 +25,7 @@
     <div class="cabecera">
         
         <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
+            <img src="css/logo.png" alt="Logo">
         </button>
         <p>Universidad Santa María</p>
         
@@ -44,34 +52,34 @@
                 </svg>  
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción">
-                    <div class="intopcion" id="inicio">
+                <div class="opción" id="inicio">
+                    <div class="intopcion">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción">
+                <div class="opción" id="datos">
                      <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="profesor">
-                        <img src="css/profesor.png">
-                        <p>Profesores</p>
+                     <div class="intopcion" id="cursos">
+                        <img src="css/cursos.png">
+                        <p>Cursos</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="alumno">
-                        <img src="css/alumno.png">
-                        <p>Alumnos</p>
+                     <div class="intopcion" id="chat">
+                        <img src="css/muro.png">
+                        <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion" id="materias">
-                        <img src="css/horario.png">
-                        <p>Materias</p>
+                     <div class="intopcion">
+                        <img src="css/notas.png">
+                        <p>Notas</p>
                     </div>
                 </div>
             </div>
@@ -129,121 +137,125 @@
             </div>
         </div>
     </div>
-     
-    <h1>Añadir Profesores</h1>
-    <div class="formulario">
-        <form action="addprofesor.php" method="POST">
-            <label for="nombre">Nombre del Profesor:</label>
-            <input type="text" id="nombre" name="nombre" required><br><br>
 
-            <label for="nombre_usuario">Nombre de Usuario:</label>
-            <input type="text" id="nombre_usuario" name="nombre_usuario" required><br><br>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
-
-            <input type="submit" value="Añadir Profesor">
-        </form>
-    </div>
-    
-    <?php
-    require "conexion.php";
-    use PHPMailer\PHPMailer\PHPMailer;
-    require '../vendor/autoload.php';
-    // Procesar el formulario al enviarlo
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $nombre = $_POST['nombre'];
-        $nombre_usuario = $_POST['nombre_usuario'];
-        $email = $_POST['email'];
-        $hash = password_hash("UsMProfesor**", PASSWORD_DEFAULT);
-
-        // Insertar en la tabla de usuarios
-        $sql_usuario = "INSERT INTO usuarios (nombre_usuario, email, contrasena, nivel_usuario) VALUES ('$nombre_usuario', '$email', '$hash', 'profesor')";
-        
-        if ($conn->query($sql_usuario) === TRUE) {
-            // Obtener el ID del usuario recién insertado
-            $id_usuario = $conn->insert_id;
-
-            // Insertar en la tabla de profesores
-            $sql_profesor = "INSERT INTO profesores (id_usuario, nombre) VALUES ('$id_usuario', '$nombre')";
+    <h1>Horario de Clases del Profesor</h1>
+    <div class="div-horario">
+        <?php
+            require "conexion.php";
+            $id_usuario = $_SESSION['idusuario'];
             
-            if ($conn->query($sql_profesor) === TRUE) {
-                
-                $mail = new PHPMailer(true);
-                // Configuración del servidor
-                $mail->isSMTP();
-                $mail->isHTML(true);
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'modulo11usm@gmail.com'; // Tu correo de Gmail
-                $mail->Password = 'aoau ilmo tglw yodm'; // Tu contraseña de Gmail o aplicación
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;;
-                $mail->Port = 587;
-        
-                // Destinatarios y contenido
-                $mail->setFrom('modulo11usm@gmail.com', 'Universidad Santa Maria');
-                $mail->addAddress($email);
-                $mail->Subject = 'Creacion de Perfil Profesor';
-                $mail->Body    ="
-                <!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <link rel='preconnect' href='https://fonts.googleapis.com'>
-                    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-                    <link href='https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap' rel='stylesheet'>
-                    <title>Document</title>
-                </head>
-                <body style='background-color: black; font-family: \"Afacad Flux\", sans-serif; color: #baedff; text-align: center;'>
-                    <table width='100%' cellspacing='0' cellpadding='0'>
-                        <tr>
-                            <td style='background-color: blue; border-radius: 0 0 100% 100%; text-align: center;'>
-                                <img src='https://i.ibb.co/vq9kfL9/logo.pngcss/logo.png' style='width: 170px; margin: 10px;' alt='Logo'>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style='padding: 40px 0;'>
-                                <h1 style='margin: 20px; font-size: 50px;'>Bienvenido a la USM</h1>
-                                <span style='font-size: 30px;'>Sus dato s son: </span>
-                                <div style='font-size: 40px; margin: 40px 0;'>Usuario: $nombre_usuario </div>
-                                <div style='font-size: 40px; margin: 40px 0;'>Contraseña: UsMProfesor**</div>
-                                <p>Ingrese a nuestro sistema para iniciar su cuenta</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style='background-color: blue; border-radius: 100% 100% 0 0; text-align: center; padding: 10px 0;'>
-                                <h2 style='color: white; margin: 0;'>Modulo 11 - USM</h2>
-                            </td>
-                        </tr>
-                    </table>
-                </body>
-                </html>";
-        
-                // Enviar el correo
-                $mail->send();
-
-                echo "<script>
-                        alert('Profesor añadido con éxito.');
-                        window.location.href = 'admin_profesores.php';
-                      </script>";
+            // Buscar la id del profesor en la tabla profesores
+            $sql_profesor = "SELECT id FROM profesores WHERE id_usuario = $id_usuario";
+            $result_profesor = $conn->query($sql_profesor);
+            
+            if ($result_profesor->num_rows > 0) {
+                $row_profesor = $result_profesor->fetch_assoc();
+                $id_profesor = $row_profesor['id'];
             } else {
-                echo "Error al añadir el profesor: " . $conn->error;
+                die("No se encontró el profesor con la id de usuario proporcionada.");
             }
-        } else {
-            echo "Error al añadir el usuario: " . $conn->error;
-        }
 
+            // Buscar los horarios de las materias que imparte el profesor
+            $sql = "
+                SELECT h.dia, h.hora_inicio, h.hora_fin, m.nombre AS materia, m.salon 
+                FROM horariosmateria h
+                JOIN materias m ON h.id_materia = m.id
+                WHERE m.id_profesor = $id_profesor
+            ";
+            $result = $conn->query($sql);
+            
+            if (!$result) {
+                die("Error en la consulta". $conn->error);
+            }
+
+            $datos = [];
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    $hora_inicio = strtotime($row['hora_inicio']);
+                    $hora_fin = strtotime($row["hora_fin"]);
+                    $intervalo = 45 * 60;
+                    for ($hora = $hora_inicio; $hora < $hora_fin; $hora += $intervalo) {
+                        $hora_formateada = date("H:i:s", $hora);
+                        $datos[$row["dia"]][$hora_formateada] = [
+                            "materia" => $row["materia"],
+                            "salon" => $row["salon"],
+                            "inicio" => ($hora == $hora_inicio),
+                            "rowspan" => ceil(($hora_fin - $hora_inicio) / $intervalo)
+                        ];
+                    }
+                }
+            }
+        ?>
         
-        
-    }
+        <table class="horario-tabla"> 
+            <tr> 
+                <th>Hora</th> 
+                <th>Lunes</th> 
+                <th>Martes</th> 
+                <th>Miércoles</th> 
+                <th>Jueves</th> 
+                <th>Viernes</th> 
+            </tr> 
+            <?php
+                function generar_horas($inicio, $intervalo, $total) { 
+                    $horas = []; 
+                    $hora_actual = strtotime($inicio); 
+                    for ($i = 0; $i < $total; $i++) {
+                        $horas[] = date("H:i:s", $hora_actual); 
+                        $hora_actual = strtotime("+$intervalo minutes", $hora_actual); 
+                    } 
+                    return $horas; 
+                }
+                $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+                $horas = generar_horas("07:00:00", 45, 10); 
+                foreach ($horas as $hora) { 
+                    $hora_para_mostrar= date("H:i",strtotime($hora));
+                    echo "<tr>"; 
+                    echo "<td>$hora_para_mostrar</td>"; 
+                    foreach($dias as $dia) {
+                        $contenido_celda="";
+                        $rowspan = 1;
+                        if (isset($datos[$dia][$hora])) {
+                            $info=$datos[$dia][$hora];
+                            if ($info["inicio"]) {
+                                $contenido_celda = $info["materia"] . "<br>" . $info["salon"];
+                                $rowspan = $info["rowspan"];
+                                echo "<td class='horario-celda' rowspan='$rowspan'>$contenido_celda</td>";
+                            }
+                        }elseif (!isset($datos[$dia][$hora]) || !$info["inicio"]) {
+                            echo "<td class='celda-vacia'></td>";
+                        }
+                    }
+                    echo "</tr>"; 
+                }
+            ?>
+        </table>
+    </div>
 
-    // Cerrar conexión
-    $conn->close();
+    <h1>Mis Cursos</h1>
+    <div class="materias">
+        <?php
+            // Obtener los cursos que imparte el profesor
+            $sql_cursos = "SELECT nombre, id FROM materias WHERE id_profesor = $id_profesor";
+            $result_cursos = $conn->query($sql_cursos);
 
-    ?>
+            if ($result_cursos->num_rows > 0) {
+                while ($fila = $result_cursos->fetch_assoc()) {
+                    ?>
+                    <div class="div-materia">
+                        <img src="css/images.png">
+                        <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
+                        <a class="botoninscribir" data-valor="<?php echo htmlspecialchars($fila['id']); ?>">Ver Curso</a>
+                    </div>
+                    <?php
+                }
+            } else {
+                echo "No tienes cursos asignados.";
+            }
+        ?>
+    </div>
+
     <script>
-        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -294,23 +306,27 @@
             window.location.href = url;; 
             // Cambia esta URL a la página de destino 
             } 
-            window.onload = function() {
-                document.getElementById('inicio').addEventListener('click', function() { 
-                    redirigir('pagina_administracion.php'); 
-                });
-                document.getElementById('profesor').addEventListener('click', function() { 
-                    redirigir('admin_profesores.php'); 
-                });
-                document.getElementById('datos').addEventListener('click', function() { 
-                    redirigir('buscar_datos_admin.html'); 
-                });
-                document.getElementById('alumno').addEventListener('click', function() { 
-                    redirigir('admin_alumnos.php'); 
-                });
-                document.getElementById('materias').addEventListener('click', function() { 
-                    redirigir('admin_materias.php'); 
-                });
-            }
+        window.onload = function() {
+            document.getElementById('inicio').addEventListener('click', function() { 
+                redirigir('pagina_profesor.php'); 
+            });
+            document.getElementById('datos').addEventListener('click', function() { 
+                redirigir('datos_profesor.php'); 
+            });
+            document.getElementById('chat').addEventListener('click', function() { 
+                redirigir('seleccionarmateria_profesor.php'); 
+            });
+            document.getElementById('cursos').addEventListener('click', function() { 
+                redirigir('cursos.php'); 
+            });
+        }
+
+        document.querySelectorAll('.botoninscribir').forEach(button => {
+            button.addEventListener('click', function() {
+                const valor = this.getAttribute('data-valor');
+                window.location.href = `listacursos.php?valor=${valor}`;
+            });
+        });
 
     </script>
 
