@@ -35,13 +35,13 @@ if (mysqli_num_rows($result) == 1) {
     } else {
         // Contraseña inválida
         $_SESSION['mensaje'] = "Contraseña incorrecta.";
-        header("Location: index.php");
+        header("Location: inicio.php");
         exit();
     }
 } else {
     // Usuario no encontrado
     $_SESSION['mensaje'] = "El Usuario ingresado no Existe. Cree una cuenta.";
-    header("Location: PaginaPC/");
+    header("Location: inicio.php");
     exit();
 }
 
