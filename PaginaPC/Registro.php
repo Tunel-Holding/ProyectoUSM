@@ -37,7 +37,7 @@ if ($result->num_rows > 0) {
 
 mysqli_close($db);
 
-header("Location: index.php");
+header("Location: inicio.php");
 exit()
 
 ?>
