@@ -117,9 +117,9 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="materias">
                         <img src="css/horario.png">
-                        <p>Horarios</p>
+                        <p>Materias</p>
                     </div>
                 </div>
             </div>
@@ -333,6 +333,9 @@ if (isset($_GET['query'])) {
                 });
                 document.getElementById('alumno').addEventListener('click', function() { 
                     redirigir('admin_alumnos.php'); 
+                });
+                document.getElementById('materias').addEventListener('click', function() { 
+                    redirigir('admin_materias.php'); 
                 });
             }
 
