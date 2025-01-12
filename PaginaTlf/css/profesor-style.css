@@ -8,6 +8,7 @@ body {
   background: var(--background);
   color: var(--color);
   transition: all 0.5s ease-in-out;
+
 }
 
 .contenedorentrante1 {
@@ -19,8 +20,8 @@ body {
   height: 70px;
   background: linear-gradient(
     to bottom,
-    #174388 0%,
-    #174388 80%,
+    #38a6e6 0%,
+    #26c8dd 80%,
     transparent 100%
   );
   display: flex;
@@ -59,12 +60,7 @@ body {
   width: 220px;
   height: auto;
   background: rgb(23, 67, 136);
-  background: linear-gradient(
-    90deg,
-    rgba(23, 67, 136, 1) 0%,
-    rgba(30, 99, 208, 1) 49%,
-    rgba(28, 117, 255, 1) 100%
-  );
+  background: linear-gradient(90deg, #38a6e6 0%, #26c8dd 50%, #18e4ff 100%);
   position: absolute;
   left: 0px;
   top: 61px;
@@ -82,7 +78,6 @@ body {
   background-color: transparent;
   display: flex;
   margin-top: 20px;
-  margin-bottom: 20px;
   border-radius: 0px 0px 0px 0px;
   flex-direction: column;
   overflow: hidden;
@@ -172,7 +167,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 100%;
-  background-color: #274098;
+  background-color: #276f98;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,7 +189,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 100%;
-  background-color: #274098;
+  background-color: #276f98;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,7 +199,7 @@ body {
 
 /* From Uiverse.io by Emil190313 */
 .toggle {
-  background-color: #274098;
+  background-color: #276f98;
   width: 40px;
   height: 40px;
   border-radius: 50%;
