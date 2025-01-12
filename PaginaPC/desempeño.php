@@ -1,5 +1,44 @@
 <?php
-session_start();
+    session_start();
+
+    // Conectar a la base de datos
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "proyectousm";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Conexión fallida: " . $conn->connect_error);
+    }
+
+    $user_id = $_SESSION['idusuario'];
+
+    // Consultas SQL para seleccionar notas y nombres de materias
+    $sql = "SELECT n.final, m.nombre, m.id AS materia_id 
+            FROM notas n 
+            INNER JOIN materias m ON n.materia_id = m.id 
+            WHERE n.usuario_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $materias = array();
+    while ($row = $result->fetch_assoc()) {
+        $materias[$row['nombre']] = $row['final'];
+
+        // Insertar datos en la tabla historicoacademico
+        $sql_insert = "INSERT INTO historicoacademico (EstudianteID, MateriaID, Calificacion) VALUES (?, ?, ?)";
+        $stmt_insert = $conn->prepare($sql_insert);
+        $stmt_insert->bind_param("iii", $user_id, $row['materia_id'], $row['final']);
+        $stmt_insert->execute();
+        $stmt_insert->close();
+    }
+
+    $stmt->close();
+    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -10,11 +49,76 @@ session_start();
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
-    <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Inicio - USM</title>
+    <title>Desempeño del Estudiante</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            --background-color:#d4d4d4;
+            --bg-container: #f9f9f9;
+            color: #333;
+        }
+        body.dark-mode {
+            --background-color: rgb(50,50,50);
+            --text-color: white;
+            --background-form: rgb(147, 136, 136);
+        }
+        .wecontainer {
+            font-family: "Poppins", sans-serif;
+            margin: auto;
+            width: 100%;
+            max-width: 1000px;
+            background-color: var(--bg-container);
+            background: #ffffff; /* Fondo blanco */
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            border: 3px solid #ffd700; /* Borde amarillo */
+            border-top-width: 10px; /* Borde superior más grande */
+            border-bottom-width: 10px; /* Borde inferior más grande */
+            transition: 1s background ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            align-content: center;
+            height: auto;
+        }
+        .wecontainer h1 {
+            text-align: center;
+            color: #004c97; /* Azul oscuro */
+            margin-bottom: 20px;
+            font-size: 2em; /* Tamaño de fuente más grande */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin: 20px 0;
+            font-size: 18px; /* Tamaño de fuente más grande */
+            text-align: left;
+            background-color: #e1ecf4; /* Fondo azul claro */
+            overflow: hidden;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #ffd700; /* Fondo amarillo */
+            color: #004c97; /* Azul oscuro */
+            font-weight: bold; /* Texto en negrita */
+        }
+        td {
+            background-color: #ffffff; /* Fondo blanco */
+            color: #004c97; /* Azul oscuro */
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <div class="contenedorentrante3">
@@ -144,50 +248,24 @@ session_start();
             </div>
         </div>
     </div>
-     
-    <h1>Seleccionar Materia</h1>
-    <div class="materias">
-    <?php
-        require 'conexion.php';
 
-        // Suponiendo que tienes el ID del estudiante
-        $estudiante_id = $_SESSION['idusuario']; // Cambia esto por el ID del estudiante real
-
-        // Consulta para obtener las materias inscritas
-        $sql = "SELECT m.nombre, m.id FROM inscripciones i 
-                JOIN materias m ON i.id_materia = m.id 
-                WHERE i.id_estudiante = ?";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            die("Error en la preparación de la consulta: " . $conn->error);
-        }
-        $stmt->bind_param("i", $estudiante_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Verificar si hay materias inscritas
-        if ($result->num_rows > 0) {
-            // Imprimir las materias
-            while ($fila = $result->fetch_assoc()) {
-                ?>
-                <div class="div-materia">
-                    <img src="css/images.png">
-                    <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
-                    <a class="botoninscribir" data-valor="<?php echo htmlspecialchars($fila['id']); ?>">Chat</a>
-                </div>
-                <?php
+    <div class="wecontainer">
+        <h1>Desempeño del Estudiante</h1>
+        
+        <table>
+            <tr>
+                <th>Materia</th>
+                <th>Nota Final</th>
+            </tr>
+            <?php
+            foreach ($materias as $materia => $nota_final) {
+                echo "<tr><td>$materia</td><td>$nota_final</td></tr>";
             }
-        } else {
-            echo "No tienes materias inscritas.";
-        }
-
-        // Cerrar conexión
-        $stmt->close();
-        $conn->close();
-    ?>
+            ?>
+        </table>
     </div>
+
     <script>
-        function goBack() { window.history.back(); }
         const contenedor = document.getElementById('contenedor'); 
         const botonIzquierdo = document.getElementById('boton-izquierdo'); 
         const botonDerecho = document.getElementById('boton-derecho'); 
@@ -232,13 +310,6 @@ session_start();
                 document.body.classList.add('dark-mode');
                 document.getElementById('switchtema').checked = true;
             }
-        });
-
-        document.querySelectorAll('.botoninscribir').forEach(button => {
-            button.addEventListener('click', function() {
-                const valor = this.getAttribute('data-valor');
-                window.location.href = `dirigirchat.php?valor=${valor}`;
-            });
         });
 
         function redirigir(url) { 

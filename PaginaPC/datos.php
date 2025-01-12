@@ -62,11 +62,7 @@ $conn->close(); // Cerrar la conexión
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Datos - USM</title>
     <style>
-    body.dark-mode {
-        --background-color: rgb(50,50,50);
-        --text-color: white;
-        --background-form: rgb(147, 136, 136);
-    }
+    
     .pagina {
         margin: 0;
         padding: 20px;
@@ -184,7 +180,7 @@ $conn->close(); // Cerrar la conexión
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="desempeño">
                         <img src="css/situacionacademica.png">
                         <p>Desempeño</p>
                     </div>
@@ -350,6 +346,9 @@ $conn->close(); // Cerrar la conexión
                 });
                 document.getElementById('chat').addEventListener('click', function() { 
                     redirigir('seleccionarmateria.php'); 
+                });
+                document.getElementById('desempeño').addEventListener('click', function() { 
+                    redirigir('desempeño.php'); 
                 });
             }
     </script>

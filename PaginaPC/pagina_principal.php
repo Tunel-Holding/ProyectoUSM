@@ -61,7 +61,7 @@ session_start();
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="desempeño">
                         <img src="css/situacionacademica.png">
                         <p>Desempeño</p>
                     </div>
@@ -212,6 +212,9 @@ session_start();
                 });
                 document.getElementById('chat').addEventListener('click', function() { 
                     redirigir('seleccionarmateria.php'); 
+                });
+                document.getElementById('desempeño').addEventListener('click', function() { 
+                    redirigir('desempeño.php'); 
                 });
             }
     </script>
