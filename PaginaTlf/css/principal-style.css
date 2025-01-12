@@ -1,0 +1,245 @@
+body.darkmode {
+  --background: rgb(39, 39, 39);
+  --color: white;
+}
+body {
+  --background: rgb(227, 227, 227);
+  --color: black;
+  background: var(--background);
+  color: var(--color);
+  transition: all 0.5s ease-in-out;
+}
+
+.contenedorentrante1 {
+  z-index: 2;
+}
+
+.cabecera {
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(
+    to bottom,
+    #174388 0%,
+    #174388 80%,
+    transparent 100%
+  );
+  display: flex;
+  align-items: center;
+  position: fixed; /* Fija la cabecera en la parte superior */
+  top: 0; /* Asegura que esté pegada a la parte superior */
+  left: 0; /* Asegura que esté alineada a la izquierda */
+  z-index: 1;
+}
+.cabecera button img {
+  width: 70px;
+  height: auto;
+}
+.cabecera button {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  left: 0px;
+  top: -10px;
+  width: 70px;
+  height: auto;
+  cursor: pointer;
+  user-select: none;
+}
+.cabecera p {
+  font-family: "Poppins", sans-serif;
+  font-size: 38px;
+  color: white;
+  text-shadow: 1px 1px 3px #000000; /* Sombra del texto */
+  position: absolute;
+  right: 20px;
+  user-select: none;
+}
+
+.menu {
+  width: 220px;
+  height: auto;
+  background: rgb(23, 67, 136);
+  background: linear-gradient(
+    90deg,
+    rgba(23, 67, 136, 1) 0%,
+    rgba(30, 99, 208, 1) 49%,
+    rgba(28, 117, 255, 1) 100%
+  );
+  position: absolute;
+  left: 0px;
+  top: 61px;
+  border-radius: 0px 30px 30px 0px;
+  overflow: hidden;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+.menu.visible {
+  transform: translateX(0);
+}
+.opciones {
+  width: 100%;
+  height: auto;
+  background-color: transparent;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 0px 0px 0px 0px;
+  flex-direction: column;
+  overflow: hidden;
+}
+.opcion {
+  width: 90%;
+  height: 50px;
+  background-color: transparent;
+  padding-left: 30px;
+
+  display: flex;
+  align-items: center;
+  user-select: none;
+  font-size: 22px;
+  position: relative;
+  overflow: hidden;
+  color: white; /* Color del texto por defecto */
+}
+
+.opcion p {
+  text-shadow: 1px 1px 2px black;
+  position: relative;
+  z-index: 1; /* Asegura que el texto esté por encima del fondo */
+}
+
+.opcion::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(
+    255,
+    255,
+    255
+  ); /* Color de fondo para la opción seleccionada */
+  transition: all 0.5s ease-in-out;
+  z-index: 0; /* Asegura que el fondo esté por debajo del texto */
+}
+
+.opcion.opcion-seleccionada::before {
+  left: 0;
+}
+
+.opcion.opcion-seleccionada p {
+  text-shadow: 1px 1px 2px black; /* Asegura que la sombra de texto se aplique a la opción seleccionada */
+  color: rgb(0, 0, 0); /* Color del texto para la opción seleccionada */
+}
+
+.opcion:not(:last-child) {
+  position: relative;
+}
+
+.opcion:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(160, 160, 160, 1),
+    rgba(204, 204, 204, 0)
+  );
+}
+
+.opcion:last-child.opcion-seleccionada {
+  border-radius: 0px 0px 0px 0px; /* Mantiene el borde inferior derecho redondeado */
+}
+
+.opcion:last-child.opcion-seleccionada::before {
+  border-radius: 0px 0px 0px 0px; /* Mantiene el borde inferior derecho redondeado */
+}
+.abajo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.logout {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: #274098;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-left: 0px;
+}
+
+.logout svg {
+  width: 20px;
+  height: auto;
+  margin-right: 10px;
+  fill: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+}
+.dark-mode {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: #274098;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-left: 15px;
+}
+
+/* From Uiverse.io by Emil190313 */
+.toggle {
+  background-color: #274098;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 0 50px 20px rgba(0, 0, 0, 0.1);
+  line-height: 1;
+}
+
+.input {
+  display: none;
+}
+
+.icon {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  transition: transform 500ms;
+}
+
+.icon--moon {
+  transition-delay: 200ms;
+  color: rgb(255, 255, 255);
+}
+
+.icon--sun {
+  transform: scale(0);
+  color: yellow;
+}
+
+#switch:checked + .icon--moon {
+  transform: rotate(360deg) scale(0);
+}
+
+#switch:checked ~ .icon--sun {
+  transition-delay: 200ms;
+  transform: scale(1) rotate(360deg);
+}
