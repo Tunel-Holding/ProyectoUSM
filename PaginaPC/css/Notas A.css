@@ -1,20 +1,5 @@
-body {
-    font-family: Arial, sans-serif;
-    --background-color:#d4d4d4;
-    --bg-container: #f9f9f9;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 40vh;
-    margin: 0;
-    background-color: #f0f0f0;
-}
-body.dark-mode {
-    --background-color: #1a1a1a;
-    --bg-container:rgb(47, 47, 47);
-    color: white;
+body{
+    font-family: "Poppins", sans-serif;
 }
 .tabla input {
     width: 90%; /* Asegura que el input no exceda el ancho de la celda */
@@ -22,6 +7,7 @@ body.dark-mode {
 }
 
 h1 {
+    font-size: 70px;
     margin-bottom: 10px; /* Espacio entre el título y la tabla */
     text-align: center; /* Centramos el texto del título */
 }
@@ -30,7 +16,7 @@ h1 {
     height: 200px;
     border-collapse: collapse; /* Unimos los bordes de las celdas */
     width: 95%; /* Ancho de la tabla */
-    background-color: white; /* Fondo blanco */
+    
     margin: auto; /* Centramos la tabla */
     border-collapse: collapse;
     table-layout: fixed;  /* Asegura que el tamaño de las celdas sea fijo */
@@ -53,16 +39,11 @@ h1 {
     color: white; /* Texto blanco para el encabezado */
 }
 
-.tabla td {
-    background-color: #f9f9f9; /* Color de fondo para las celdas */
-}
-
 .container {
     text-align: center;
 }
 
-button {
-    
+.button{
     width: 170px;
     height: 45px;
     font-size: 15px;
@@ -79,7 +60,7 @@ button {
     margin: 5px; /* Espacio de 5 píxeles entre los botones */
 }
 
-button:hover {
+.button:hover {
     background-color: #0c51b1;
 }
 .error-message {

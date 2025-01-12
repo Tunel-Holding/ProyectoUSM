@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,7 +165,6 @@
                 <th class="th">Acción</th>
             </tr>
             <?php
-                session_start();
                 $servername = "localhost";
                 $username = "root";
                 $password = "";
@@ -193,7 +196,12 @@
                         INNER JOIN materias m ON n.materia_id = m.id 
                         WHERE n.usuario_id = ? AND n.semestre = ?";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ii", $idusuario, $semestre);
+                if (!$stmt) {
+                    die("Fallo en la preparación: " . $conn->error);
+                }
+                if (!$stmt->bind_param("ss", $idusuario, $semestre)) { 
+                    die("Fallo en el enlace: " . $stmt->error); 
+                }
                 $stmt->execute();
                 $result = $stmt->get_result();
 
@@ -206,7 +214,7 @@
                         echo "<td class='td'>" . ($row['Parcial3'] ?? 'N/A') . "</td>";
                         echo "<td class='td'>" . ($row['Parcial4'] ?? 'N/A') . "</td>";
                         echo "<td class='td'>" . ($row['Final'] ?? 'N/A') . "</td>";
-                        echo "<td class='td button-cell'><button onclick=\"obtenerYActualizarNotas('" . $row['materia'] . "')\">Ver Parcial</button></td>";
+                        echo "<td class='td button-cell'><button class='button' onclick=\"obtenerYActualizarNotas('" . $row['materia'] . "')\">Ver Parcial</button></td>";
                         echo "</tr>";
                     }
                 } else {
