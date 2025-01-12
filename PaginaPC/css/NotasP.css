@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 30vh;
+    margin: 0;
+    background-color: #f0f0f0;
+} 
+
+.tabla input {
+    width: 90%; /* Asegura que el input no exceda el ancho de la celda */
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+}
+
+h1 {
+    margin-bottom: 20px; /* Espacio entre el título y la tabla */
+    text-align: center; /* Centramos el texto del título */
+}
+
+.tabla {
+    height: 200px;
+    border-collapse: collapse; /* Unimos los bordes de las celdas */
+    width: 95%; /* Ancho de la tabla */
+    background-color: white; /* Fondo blanco */
+    margin: 0 auto; /* Centramos la tabla */
+    border-collapse: collapse;
+    table-layout: fixed;  /* Asegura que el tamaño de las celdas sea fijo */
+}
+
+.tabla th, td {
+    border: 2px solid #007BFF; /* Bordes azules */
+    padding: 12px;
+    height: 90px;
+    width: 10%;
+    text-align: center;
+    table-layout: fixed; /* Asegura que la tabla mantenga su tamaño */
+    overflow: hidden; /* Para asegurarse de que el contenido no se desborde */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.tabla th {
+    background-color: #007BFF; /* Fondo azul para el encabezado */
+    color: white; /* Texto blanco para el encabezado */
+}
+
+.tabla td {
+    background-color: #f9f9f9; /* Color de fondo para las celdas */
+}
+
+.container {
+    text-align: center;
+}
+
+button {
+    width: 170px;
+    height: 45px;
+    font-size: 15px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #0d65e4;
+    transition: background-color 0.35s ease-in-out;
+    color: white;
+}
+
+button:hover {
+    background-color: #0c51b1;
+}
+.error-message {
+    position: absolute;
+    background-color: white;
+    border: 2px solid red;
+    padding: 5px;
+    color: red;
+    margin-left: 5px;
+    z-index: 1000;
+}
+
+

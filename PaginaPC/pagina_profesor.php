@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
@@ -201,6 +201,9 @@
             });
             document.getElementById('cursos').addEventListener('click', function() { 
                 redirigir('cursos.php'); 
+            });
+            document.getElementById('notas').addEventListener('click', function() { 
+                redirigir('Notas.php'); 
             });
         }
 
