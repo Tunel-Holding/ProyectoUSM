@@ -184,7 +184,7 @@ $conn->close(); // Cerrar la conexión
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
                         <p>Cursos</p>
                     </div>
@@ -196,7 +196,7 @@ $conn->close(); // Cerrar la conexión
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
@@ -330,12 +330,15 @@ $conn->close(); // Cerrar la conexión
                 document.getElementById('datos').addEventListener('click', function() { 
                     redirigir('datos_profesor.php'); 
                 });
-                document.getElementById('inscripcion').addEventListener('click', function() { 
-                    redirigir('inscripcion.php'); 
+                document.getElementById('cursos').addEventListener('click', function() { 
+                redirigir('cursos.php'); 
                 });
-                document.getElementById('horario').addEventListener('click', function() { 
-                    redirigir('horario.php'); 
+                document.getElementById('chat').addEventListener('click', function() { 
+                redirigir('seleccionarmateria_profesor.php'); 
                 });
+                document.getElementById('notas').addEventListener('click', function() { 
+                redirigir('Notas.php'); 
+            });
             }
     </script>
 

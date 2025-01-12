@@ -60,7 +60,7 @@ session_start();
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
                         <p>Cursos</p>
                     </div>
@@ -72,7 +72,7 @@ session_start();
                     </div>
                 </div>
                 <div class="opción">
-                     <div class="intopcion">
+                     <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
@@ -262,6 +262,12 @@ session_start();
                 });
                 document.getElementById('chat').addEventListener('click', function() { 
                     redirigir('seleccionarmateria_profesor.php'); 
+                });
+                document.getElementById('notas').addEventListener('click', function() { 
+                redirigir('Notas.php'); 
+                });
+                document.getElementById('cursos').addEventListener('click', function() { 
+                redirigir('cursos.php'); 
                 });
             }
 
