@@ -209,11 +209,11 @@ session_start();
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td class='td'>" . $row['materia'] . "</td>";
-                        echo "<td class='td'>" . ($row['Parcial1'] ?? 'N/A') . "</td>";
-                        echo "<td class='td'>" . ($row['Parcial2'] ?? 'N/A') . "</td>";
-                        echo "<td class='td'>" . ($row['Parcial3'] ?? 'N/A') . "</td>";
-                        echo "<td class='td'>" . ($row['Parcial4'] ?? 'N/A') . "</td>";
-                        echo "<td class='td'>" . ($row['Final'] ?? 'N/A') . "</td>";
+                        echo "<td class='td'>" . ($row['Parcial1'] ?? 0) . "</td>";
+                        echo "<td class='td'>" . ($row['Parcial2'] ?? 0) . "</td>";
+                        echo "<td class='td'>" . ($row['Parcial3'] ?? 0) . "</td>";
+                        echo "<td class='td'>" . ($row['Parcial4'] ?? 0) . "</td>";
+                        echo "<td class='td'>" . ($row['Final'] ?? 0) . "</td>";
                         echo "<td class='td button-cell'><button class='button' onclick=\"obtenerYActualizarNotas('" . $row['materia'] . "')\">Ver Parcial</button></td>";
                         echo "</tr>";
                     }
