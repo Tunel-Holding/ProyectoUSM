@@ -58,12 +58,13 @@
             font-family: Arial, sans-serif;
             --background-color:#d4d4d4;
             --bg-container: #f9f9f9;
-            color: #333;
+            
         }
         body.dark-mode {
             --background-color: rgb(50,50,50);
             --text-color: white;
             --background-form: rgb(147, 136, 136);
+            --bg-container:rgb(90, 90, 90);
         }
         .wecontainer {
             font-family: "Poppins", sans-serif;
@@ -71,7 +72,6 @@
             width: 100%;
             max-width: 1000px;
             background-color: var(--bg-container);
-            background: #ffffff; /* Fondo blanco */
             padding: 40px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-radius: 8px;
@@ -84,10 +84,10 @@
             align-items: center;
             align-content: center;
             height: auto;
+            margin-top: 50px;
         }
         .wecontainer h1 {
             text-align: center;
-            color: #004c97; /* Azul oscuro */
             margin-bottom: 20px;
             font-size: 2em; /* Tamaño de fuente más grande */
         }
@@ -98,7 +98,7 @@
             margin: 20px 0;
             font-size: 18px; /* Tamaño de fuente más grande */
             text-align: left;
-            background-color: #e1ecf4; /* Fondo azul claro */
+            background-color: var(--bg-container); /* Fondo azul claro */
             overflow: hidden;
             transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
         }
