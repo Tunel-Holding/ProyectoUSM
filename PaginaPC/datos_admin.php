@@ -55,8 +55,6 @@
             color: #333;
             font-size: 16px;
             /* Tamaño del texto reducido */
-            margin-bottom: 18px;
-            /* Espaciado inferior */
             font-family: "Roboto", sans-serif;
             /* Fuente Roboto */
         }

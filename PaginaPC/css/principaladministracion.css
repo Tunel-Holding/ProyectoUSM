@@ -5,7 +5,9 @@
     display: flex;
     align-items: center;
     margin-bottom: 30px;
-    
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-end;
 }
 .cabecera button img{
     width: 70px;
@@ -23,9 +25,19 @@
     font-family: "Poppins", sans-serif;
     font-size: 38px;
     color: rgb(17, 39, 233);
-    position: absolute;
-    right: 20px;
     user-select: none;
+}
+.logoempresa img{
+    width: 70px;
+    height: auto;
+}
+
+.logoempresa{
+    display: flex;
+    flex-direction: row;
+    width: 225px;
+    height: auto;
+    align-items: center;
 }
 .menuopc{
     width: 94%;
@@ -135,6 +147,7 @@ body {
     margin: 0px;
     height: 100vh;
     transition: 1s background-color ease-in-out;
+    font-family: 'Roboto' , sans-serif;
 }
 
 body.dark-mode {
