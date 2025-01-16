@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conexion = mysqli_connect("localhost","root","","proyectousm");
+$conexion = mysqli_connect("localhost", "root", "", "proyectousm");
 $email = $_POST['email'];
 $_SESSION['email'] = $email;
 $consulta = $conexion->prepare("SELECT * FROM usuarios WHERE email = ?");
@@ -10,14 +10,15 @@ $result = $consulta->get_result();
 
 
 use PHPMailer\PHPMailer\PHPMailer;
-require 'vendor\autoload.php';
+
+require '..\vendor\autoload.php';
 
 if ($result->num_rows > 0) {
 
     $mail = new PHPMailer(true);
     $codigo = mt_rand(100000, 999999);
     $_SESSION['codigo'] = $codigo;
-    
+
     // Configuración del servidor
     $mail->isSMTP();
     $mail->isHTML(true);
@@ -32,7 +33,7 @@ if ($result->num_rows > 0) {
     $mail->setFrom('modulo11usm@gmail.com', 'Universidad Santa Maria');
     $mail->addAddress($email);
     $mail->Subject = 'Cambio de Clave';
-    $mail->Body    ="
+    $mail->Body    = "
     <!DOCTYPE html>
     <html lang='en'>
     <head>
@@ -70,8 +71,7 @@ if ($result->num_rows > 0) {
 
     // Enviar el correo
     $mail->send();
-}
-else {
+} else {
     $_SESSION['mensaje'] = "El correo ingresado no esta registrado.";
     header("Location: PaginaPC/");
 }
@@ -79,6 +79,7 @@ else {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="css/icono.png" type="image/png">
@@ -87,28 +88,33 @@ else {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap" rel="stylesheet">
-    
+
     <title>¿Olvido su Contraseña? - USM</title>
 </head>
+
 <body>
     <div class="container">
-        <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="uni">
-        <h1>Ingrese el código</h1>
+        <div class="logos">
+            <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
+            <div class="barravertical"></div>
+            <img src="css/logounihubazul.png" class="logo-uni1">
+        </div>
         <span>Hemos enviado un código a su correo. Por favor introduzcalo</span>
         <form action="olvidarcontraseña3.php" method="post">
             <div class="container-input">
                 <input type="text" name="codigo" placeholder="Codigo" required>
             </div>
-            <input type="submit" class="button">   
+            <input type="submit" class="button">
         </form>
     </div>
     <script>
-            document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             <?php if (isset($_SESSION['mensaje'])): ?>
                 alert('<?php echo $_SESSION['mensaje']; ?>');
                 <?php unset($_SESSION['mensaje']); ?>
             <?php endif; ?>
-            });
+        });
     </script>
 </body>
+
 </html>
