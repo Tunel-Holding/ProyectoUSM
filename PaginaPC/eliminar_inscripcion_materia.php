@@ -26,6 +26,20 @@ if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
     $stmt->bind_param("ii", $idMateria, $idUsuario);
 
     if ($stmt->execute()) {
+        // Eliminar los registros del horario del estudiante para la materia
+        $sqlHorario = "DELETE FROM Horarios WHERE id_materia = ? AND id_estudiante = ?";
+        $stmtHorario = $conn->prepare($sqlHorario);
+        $stmtHorario->bind_param("ii", $idMateria, $idUsuario);
+        $stmtHorario->execute();
+        $stmtHorario->close();
+
+        // Eliminar los registros de notas del estudiante para la materia
+        $sqlNotas = "DELETE FROM Notas WHERE materia_id = ? AND usuario_id = ?";
+        $stmtNotas = $conn->prepare($sqlNotas);
+        $stmtNotas->bind_param("ii", $idMateria, $idUsuario);
+        $stmtNotas->execute();
+        $stmtNotas->close();
+
         // Actualizar los créditos disponibles del estudiante
         $sqlUpdateCreditos = "UPDATE estudiantes SET creditosdisponibles = creditosdisponibles + ? WHERE id_usuario = ?";
         $stmtUpdateCreditos = $conn->prepare($sqlUpdateCreditos);
