@@ -68,7 +68,14 @@
                         $stmt_insert = $conn->prepare("INSERT INTO horarios (id_estudiante, id_materia, dia, hora_inicio, hora_fin) VALUES (?, ?, ?, ?, ?)"); 
                         $stmt_insert->bind_param("iisss", $id_estudiante, $id_materia, $row['dia'], $row['hora_inicio'], $row['hora_fin']); 
                         $stmt_insert->execute(); 
-                        }
+                    }
+                    
+                    // Insertar la información en la tabla notas
+                    $semestre = $_SESSION['semestre_usu']; // Asumiendo que el semestre está almacenado en la sesión
+                    $stmt_notas = $conn->prepare("INSERT INTO notas (usuario_id, Parcial1, Parcial2, Parcial3, Parcial4, Final, materia_id, semestre) VALUES (?, NULL, NULL, NULL, NULL, NULL, ?, ?)");
+                    $stmt_notas->bind_param("iii", $id_estudiante, $id_materia, $semestre);
+                    $stmt_notas->execute();
+
                     $creditos_nuevos= getAvailableCredits($id_estudiante) - getRequiredCredits($id_materia);
                     updateAvailableCredits($id_estudiante,$creditos_nuevos);
                     $_SESSION['mensaje'] = "Inscripción realizada con éxito.";

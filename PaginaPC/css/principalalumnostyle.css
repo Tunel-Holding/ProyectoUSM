@@ -4,6 +4,9 @@
     background: linear-gradient(to bottom, #174388 0%, #174388 80%, transparent 100%);
     display: flex;
     align-items: center;
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-end;
 }
 .cabecera button img{
     width: 70px;
@@ -24,6 +27,19 @@
     position: absolute;
     right: 20px;
     user-select: none;
+    font-weight: 700;
+}
+.logoempresa img{
+    width: 70px;
+    height: auto;
+}
+
+.logoempresa{
+    display: flex;
+    flex-direction: row;
+    width: 225px;
+    height: auto;
+    align-items: center;
 }
 .menuopc{
     width: 94%;

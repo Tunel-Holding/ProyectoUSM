@@ -2,6 +2,7 @@
 session_start();
 ?>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,15 +12,20 @@ session_start();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap" rel="stylesheet">
-    
+
     <title>Inicio de Sesión - USM</title>
 </head>
+
 <body class="body1">
 
     <div class="container">
         <div class="container-form">
             <form class="sign-in" id="sign-in" action="Ingreso.php" method="post">
-                <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
+                <div class="logos">
+                    <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
+                    <div class="barravertical"></div>
+                    <img src="css/logounihubazul.png" class="logo-uni1">
+                </div>
                 <h2>Iniciar Sesión</h2>
                 <span>Usa tu usuario y contraseña</span>
                 <div class="container-input">
@@ -39,7 +45,11 @@ session_start();
         </div>
         <div class="container-form">
             <form class="sign-up" id="sign-up" action="Registro.php" method="post">
-                <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni3">
+                <div class="logos">
+                    <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
+                    <div class="barravertical"></div>
+                    <img src="css/logounihubazul.png" class="logo-uni1">
+                </div>
                 <h2>Registrarse</h2>
                 <span>Ingrese su nombre, correo y contraseña para Registrarse</span>
                 <div class="container-input">
@@ -72,22 +82,23 @@ session_start();
                 <p>Registrese con sus datos para continuar</p>
                 <button class="button" id="btn-sign-in">Iniciar Sesión</button>
             </div>
-        </div>   
+        </div>
     </div>
     <div class="contenedorentrante1">
         <img src="css\logo.png">
     </div>
 
-<script src="js\script.js"></script>
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="js\script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
-            document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             <?php if (isset($_SESSION['mensaje'])): ?>
                 alert('<?php echo $_SESSION['mensaje']; ?>');
                 <?php unset($_SESSION['mensaje']); ?>
             <?php endif; ?>
-            });
+        });
     </script>
 </body>
+
 </html>
