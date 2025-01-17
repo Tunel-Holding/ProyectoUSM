@@ -25,6 +25,7 @@ body {
   );
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Asegura que los elementos estén en extremos opuestos */
   position: fixed; /* Fija la cabecera en la parte superior */
   top: 0; /* Asegura que esté pegada a la parte superior */
   left: 0; /* Asegura que esté alineada a la izquierda */
@@ -35,23 +36,26 @@ body {
   height: auto;
 }
 .cabecera button {
-  position: absolute;
   background-color: transparent;
   border: none;
-  left: 0px;
-  top: -10px;
-  width: 70px;
-  height: auto;
   cursor: pointer;
   user-select: none;
 }
-.cabecera p {
+.cabecera .logoempresa {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Asegura que esté alineado a la derecha */
+}
+.cabecera .logoempresa img {
+  width: 70px;
+  height: auto;
+}
+.cabecera .logoempresa p {
   font-family: "Poppins", sans-serif;
   font-size: 38px;
   color: white;
   text-shadow: 1px 1px 3px #000000; /* Sombra del texto */
-  position: absolute;
-  right: 20px;
+  margin-left: 10px;
   user-select: none;
 }
 

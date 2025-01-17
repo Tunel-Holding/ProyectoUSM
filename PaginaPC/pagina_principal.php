@@ -22,7 +22,6 @@ session_start();
         <img src="css\logo.png">
     </div>
     <div class="cabecera">
-
         <button type="button" id="logoButton">
             <img src="css/logo.png" alt="Logo">
         </button>

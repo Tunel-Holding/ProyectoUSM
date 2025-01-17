@@ -165,35 +165,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             </div>
         </div>
     </div>
+    <div class="divchat">
+        <h1><?php echo $_SESSION['nombremateria'] ?></h1>
 
-    <h1><?php echo $_SESSION['nombremateria'] ?></h1>
+        <div class="cont-chat">
 
-    <div class="cont-chat">
+            <div id="chat-box">
+                <!-- Aquí se cargarán los mensajes mediante AJAX -->
+            </div>
 
-        <div id="chat-box">
-            <!-- Aquí se cargarán los mensajes mediante AJAX -->
         </div>
+        <form id="message-form" method="POST" action="chat.php" class="form-entry" enctype="multipart/form-data">
+            <button type="button" id="uploadButton" onclick="toggleUploadDiv()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                </svg></button>
+            <input type="text" id="message" name="message" placeholder="Escribe un mensaje..." required>
+            <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                    <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
+                </svg></button>
+        </form>
+        <div id="SubirDiv">
+            <button class="button" onclick="document.getElementById('imageInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                    <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" />
+                </svg></button>
+            <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="uploadFile('image')">
 
-    </div>
-    <form id="message-form" method="POST" action="chat.php" class="form-entry" enctype="multipart/form-data">
-        <button type="button" id="uploadButton" onclick="toggleUploadDiv()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-            </svg></button>
-        <input type="text" id="message" name="message" placeholder="Escribe un mensaje..." required>
-        <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
-            </svg></button>
-    </form>
-    <div id="SubirDiv">
-        <button class="button" onclick="document.getElementById('imageInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" />
-            </svg></button>
-        <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="uploadFile('image')">
-
-        <button class="button" onclick="document.getElementById('docInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-                <path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-            </svg></button>
-        <input type="file" id="docInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display:none" onchange="uploadFile('document')">
+            <button class="button" onclick="document.getElementById('docInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+                    <path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+                </svg></button>
+            <input type="file" id="docInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display:none" onchange="uploadFile('document')">
+        </div>
     </div>
 
     <script>
