@@ -14,8 +14,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            --background-color: #d4d4d4;
-            --bg-container: #f9f9f9;
+            --background-color:rgb(255, 255, 255);
+            --bg-container:rgb(240, 240, 240);
             color: #333;
         }
 
