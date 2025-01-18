@@ -11,10 +11,14 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh; /* Asegura que el body ocupe todo el viewport */
+  --fondorespuesta: #f1f1f1;
+  --color-texto-reply: #333;
 }
 
 body.dark-mode {
   --fondo: rgb(60, 60, 60);
+  --fondorespuesta: #636363;
+  --color-texto-reply: #ccc;
 }
 
 #logoButton {
@@ -26,6 +30,7 @@ body.dark-mode {
   flex-grow: 1;
   text-align: center;
   margin-left: 0; /* Elimina el margen izquierdo */
+  color: white;
 }
 
 .logoempresa {
@@ -45,9 +50,8 @@ body.dark-mode {
 .divchat {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end; /* Asegura que el contenedor de entrada de mensajes esté al final */
   width: 100%;
-  border: 1px solid red;
   height: calc(100vh - 150px); /* Ajusta la altura para que no desborde */
 }
 
@@ -55,9 +59,8 @@ body.dark-mode {
   width: 100%;
   height: calc(100vh - 150px);
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between; /* Asegura que el contenedor de entrada de mensajes esté al final */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
@@ -75,7 +78,6 @@ body.dark-mode {
   border-radius: 10px;
   transition: background-color 0.5s ease-in-out;
   padding-bottom: 65px;
-  margin-top: 20px; /* Ajusta la posición para que esté más abajo */
 }
 
 /* Estiliza la barra lateral del chat-box */
@@ -112,15 +114,17 @@ body.dark-mode {
   flex-direction: column;
   padding: 15px;
   border-radius: 20px;
-  background: linear-gradient(#138808, #4caf50);
+  background: linear-gradient(#083f88, #4c60af);
   position: relative;
   max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
   word-wrap: break-word; /* Asegura que el texto largo se ajuste */
   color: rgb(77, 77, 77);
-  align-self: flex-end;
+  align-self: flex-end; /* Cambiar a flex-end para alinear a la derecha */
   text-align: start;
   font-size: 14px;
   margin-top: 10px;
+  margin-left: 10px; /* Añadir margen izquierdo para separación */
+  min-width: 12%;
 }
 
 .message-bubble-profesor {
@@ -133,10 +137,12 @@ body.dark-mode {
   word-wrap: break-word; /* Asegura que el texto largo se ajuste */
   max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
   color: rgb(70, 70, 70);
-  align-self: flex-start;
+  align-self: flex-start; /* Cambiar a flex-start para alinear a la izquierda */
   display: flex;
   flex-direction: column;
   font-size: 14px;
+  margin-top: 10px;
+  min-width: 12%;
 }
 
 .message-bubble-profesor img,
@@ -158,7 +164,8 @@ body.dark-mode {
 .message-bubble-profesor strong {
   color: #000;
   display: block; /* Hacer que el nombre del usuario esté en una línea separada */
-  margin-bottom: 5px;
+  margin-bottom: 2px;
+  margin-top: 10px;
 }
 
 .date-separator {
@@ -249,4 +256,240 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.message-bubble-usuario,
+.message-bubble-profesor {
+  position: relative;
+}
+
+.message-container-usuario,
+.message-container-profesor {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.message-container-usuario {
+  justify-content: flex-start; /* Alinear a la derecha */
+  flex-direction: row-reverse; /* Invertir el orden de los elementos */
+}
+
+.message-container-profesor {
+  justify-content: flex-start; /* Cambiar a flex-start para alinear a la izquierda */
+}
+
+.reply-button {
+  display: none;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.message-container-usuario:hover .reply-button,
+.message-container-profesor:hover .reply-button {
+  display: block;
+}
+
+.reply-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.message-container-usuario .reply-button {
+  order: 1; /* Asegura que el botón esté a la izquierda del mensaje */
+  margin-left: 10px; /* Ajustar el margen */
+}
+
+.message-container-profesor .reply-button {
+  order: 1; /* Asegura que el botón esté a la izquierda del mensaje */
+  margin-right: 10px;
+}
+
+.menu {
+  transform: translateX(-120%);
+  position: absolute;
+  top: 70px;
+}
+
+.message-entry {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background-color: var(--fondo);
+  width: 40%; /* Ajustar el ancho al 50% */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  position: fixed;
+  bottom: 0;
+  left: 50%; /* Centrar horizontalmente */
+  transform: translateX(-50%); /* Centrar horizontalmente */
+  justify-content: center; /* Centrar el contenido */
+  flex-direction: column; /* Cambiar la dirección del flex para acomodar la vista previa de la respuesta */
+  transition: all 0.3s ease-in-out;
+}
+
+.message-entry input[type="text"] {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-right: 20px;
+  margin-left: 20px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+  max-width: 70%; /* Hacer el campo de entrada más corto */
+  height: 55px;
+}
+
+.message-entry input[type="text"]:focus {
+  border-color: #007bff;
+}
+
+.message-entry .button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.message-entry .button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.message-entry .button img {
+  width: 30px; /* Ajustar el tamaño de la imagen */
+  height: 30px; /* Ajustar el tamaño de la imagen */
+}
+
+.message-entry .button:hover {
+  background-color: #0056b3;
+}
+
+#reply-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--fondorespuesta);
+  border-left: 4px solid #007bff;
+  padding: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  overflow-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  white-space: pre-wrap; /* Permite que el texto se ajuste automáticamente */
+  overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+#reply-message {
+  flex-grow: 1;
+  padding: 5px;
+  font-size: 14px;
+  color: var(--color-texto-reply);
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  overflow-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  white-space: pre-wrap; /* Permite que el texto se ajuste automáticamente */
+  overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+.reply-preview {
+  background-color: var(--fondorespuesta);
+  border-left: 4px solid #007bff;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--color-texto-reply);
+}
+
+.reply-preview img {
+  max-width: 50px;
+  max-height: auto;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+#upload-menu {
+  position: absolute;
+  bottom: 79px;
+  left: 33.5%;
+  transform: translateX(-50%);
+  background-color: var(--fondo);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+#upload-menu.show {
+  display: flex;
+}
+
+.upload-option {
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  border-radius: 10px 10px 0 0;
+}
+
+.upload-option:last-child {
+  border-bottom: none;
+  border-radius: 0 0 10px 10px;
+}
+
+.upload-option:hover {
+  background-color: #00bfff5d;
+}
+
+#imageInput {
+  display: none;
+}
+
+#fileInput {
+  display: none;
+}
+
+#cancel-reply {
+  background-color: transparent;
+  border: 1px solid #007bff;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 10px;
+  margin-left: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#cancel-reply:hover {
+  background-color: #007bff;
+  color: white;
 }
