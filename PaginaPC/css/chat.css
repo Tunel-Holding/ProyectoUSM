@@ -1,245 +1,252 @@
-body{
-    font-family: "Poppins", sans-serif;
-    --fondo: white;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
-body.dark-mode{
-    --fondo: rgb(60, 60, 60);
+body {
+  font-family: "Poppins", sans-serif;
+  --fondo: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Asegura que el body ocupe todo el viewport */
 }
 
-.cont-chat{
-    width: 60%;
-    height: 88vh;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: #0056b3;
-    justify-content: center;
-    border-radius: 10px; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;    
+body.dark-mode {
+  --fondo: rgb(60, 60, 60);
 }
 
-h1{
-    text-align: center;
-    margin: 30px;
-    font-size: 60px;
+#logoButton {
+  order: 1;
+}
+
+.nombremateria {
+  order: 2;
+  flex-grow: 1;
+  text-align: center;
+  margin-left: 0; /* Elimina el margen izquierdo */
+}
+
+.logoempresa {
+  order: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contenedorentrante3,
+.menu,
+.divchat,
+.cont-chat {
+  flex-shrink: 0; /* Evita que estos elementos se reduzcan */
+}
+
+.divchat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid red;
+  height: calc(100vh - 150px); /* Ajusta la altura para que no desborde */
+}
+
+.cont-chat {
+  width: 100%;
+  height: calc(100vh - 150px);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 #chat-box {
-    background-color: var(--fondo);
-    width: 99%;
-    padding: 10px; /* Reducido desde 20px */
-    height: 560px; /* Reducido desde 300px */
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Espacio entre burbujas reducido */
-    border-radius: 10px;
-    transition: background-color 0.5s ease-in-out;
-    padding-bottom: 65px;
+  background-color: var(--fondo);
+  width: 99%;
+  padding: 10px;
+  height: 100%; /* Ajusta la altura para que sea más pequeña */
+  overflow-y: auto; /* Permite el desplazamiento interno si es necesario */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 10px;
+  transition: background-color 0.5s ease-in-out;
+  padding-bottom: 65px;
+  margin-top: 20px; /* Ajusta la posición para que esté más abajo */
 }
-   
-.timestamp{
-    margin: 0;
-    font-size: 12px;
-    margin-bottom: 0!important;
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
+
+/* Estiliza la barra lateral del chat-box */
+#chat-box::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+#chat-box::-webkit-scrollbar-track {
+  background: #cecece; /* Color de fondo de la pista */
+  border-radius: 10px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+  background: #888; /* Color de la barra de desplazamiento */
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out; /* Transición de color al pasar el ratón */
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color de la barra de desplazamiento al pasar el ratón */
+}
+
+.timestamp {
+  margin: 0;
+  font-size: 12px;
+  margin-bottom: 0 !important;
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
 }
 
 .message-bubble-usuario {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    border-radius: 20px;
-    background: linear-gradient(#138808, #4CAF50);    
-    position: relative;
-    max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
-    word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-    color: rgb(77, 77, 77);
-    align-self: flex-end; 
-    text-align: start;
-    font-size: 14px;
-    margin-top: 10px;
-    
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-radius: 20px;
+  background: linear-gradient(#138808, #4caf50);
+  position: relative;
+  max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  color: rgb(77, 77, 77);
+  align-self: flex-end;
+  text-align: start;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .message-bubble-profesor {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    border-radius: 20px;
-    background: linear-gradient(#0093ff, #37bcff); 
-    position: relative;
-    word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-    max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
-    color: rgb(70, 70, 70);
-    align-self: flex-start; 
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-radius: 20px;
+  background: linear-gradient(#0093ff, #37bcff);
+  position: relative;
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+  max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
+  color: rgb(70, 70, 70);
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
 }
 
-
-
-.message-bubble-usuario p, .message-bubble-profesor p {
-    color: #000;
-    display: block; /* Hacer que el nombre del usuario esté en una línea separada */
-    margin-bottom: 5px;
-}
-.message-bubble-usuario strong, .message-bubble-profesor strong {
-    color: #000;
-    display: block; /* Hacer que el nombre del usuario esté en una línea separada */
-    margin-bottom: 5px;
+.message-bubble-profesor img,
+.message-bubble-usuario img {
+  width: 250px;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
-.message-form{
-    width: 90%; 
-    display: flex; 
-    background-color: rgb(88, 88, 88); /* Fondo gris oscuro */ 
-    border-radius: 5px; 
-    padding: 20px; 
-    margin-top: 10px;
+.message-bubble-usuario p,
+.message-bubble-profesor p {
+  color: #000;
+  display: block; /* Hacer que el nombre del usuario esté en una línea separada */
+  margin-bottom: 5px;
 }
-
-.form-entry{
-    width: 43%;
-    padding: 3px;
-    margin: 20px;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: #0330ac;
-    border-radius: 25px;
-    margin: 0 auto;
-    transform: translateY(-130%);    
-}
-
-input{
-    width: 80%;
-    height: 70%;
-    margin-right: 10px;
-    border: 1px solid rgb(160, 160, 160);
-    border-radius: 30px;
-    background-color: transparent;
-    color: white;
-    padding-left: 10px;
-    margin-left: 35px;
-    padding-right: 15px;
-}
-
-button{
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
-    background-color: #0045c5;
-    border-left: 10px;
-    color: white;
-    border: transparent;
-    transition: background-color 0.3s ease-in-out;
-    margin-right: 10px;
-    cursor: pointer;
-    
-}
-button:hover{
-    background-color: #00217c;
-}
-.btn-img{
-    width: 25px;
-    height: auto;
-    margin: 0 auto;
-}
-
-#uploadButton {
-    background-color: #0045c5;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: 10px;
-}
-
-#uploadButton:hover{
-    background-color: #00217c;
-}
-
-#uploadButton img{
-    width: 40px;
-    margin: 0 auto  ;
+.message-bubble-usuario strong,
+.message-bubble-profesor strong {
+  color: #000;
+  display: block; /* Hacer que el nombre del usuario esté en una línea separada */
+  margin-bottom: 5px;
 }
 
 .date-separator {
-    text-align: center;
-    margin: 0 auto;
-    padding: 10px;
-    background-color: #b8b8b85b;
-    border: 1px solid #9999996c;
-    border-radius: 10px;
-    font-weight: bold;
-    width: 40%;
-    margin-top: 40px;
-    margin-bottom: 40px;
-    
+  text-align: center;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #b8b8b85b;
+  border: 1px solid #9999996c;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 40%;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px 0;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 #SubirDiv {
-    position: absolute;
-    bottom: -50px;
-    left: 27%;
-    background-color: var(--fondo);
-    padding: 5px;
-    border: 1px solid #ccccccaf;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    max-width: 100px;
-    text-align: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  position: absolute;
+  bottom: -50px;
+  left: 27%;
+  background-color: var(--fondo);
+  padding: 5px;
+  border: 1px solid #ccccccaf;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 100px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
 #SubirDiv.show {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }
 
-#SubirDiv .button {
-    width: 80%;
+a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
 }
-.msg-foto{
-    margin-bottom: 20px;
-    border-radius: 20px;
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
-.file img{
-    width: 100px;
+
+.cabecera-chat {
+  justify-content: center;
 }
-a{
-    text-decoration: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    margin-right: 20px;
-    margin-bottom: 10px;
+
+.cabecera-chat #logoButton {
+  order: 1;
+}
+
+.cabecera-chat .nombremateria {
+  order: 2;
+  flex-grow: 1;
+  text-align: center;
+  margin-left: 0;
+}
+
+.cabecera-chat .logoempresa {
+  order: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

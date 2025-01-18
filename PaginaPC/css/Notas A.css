@@ -13,11 +13,8 @@ h1 {
 }
 
 .tabla {
-    height: 200px;
     border-collapse: collapse; /* Unimos los bordes de las celdas */
-    width: 95%; /* Ancho de la tabla */
-    
-    margin: auto; /* Centramos la tabla */
+    width: 80%; /* Ancho de la tabla */
     border-collapse: collapse;
     table-layout: fixed;  /* Asegura que el tamaño de las celdas sea fijo */
     transition: all 0.3s ease-in-out; /* Añadir transición a los cambios */
@@ -71,4 +68,13 @@ h1 {
     color: red;
     margin-left: 5px;
     z-index: 1000;
+}
+
+.divtabla{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
