@@ -44,13 +44,22 @@
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap'); /* Importa la fuente Roboto en negrita */
         
         .titulo {
-            font-size: 100px; /* Ajusta el tamaño de la fuente */
+            font-size: 85px; /* Ajusta el tamaño de la fuente */
             font-weight: bold; /* Aplica negrita */
             margin-bottom: 20px;
-            margin-top: 130px;
+            margin-top: 80px;
             color: #333333;
             font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
             text-align: center; /* Centra el título */
+        }
+        .bienvenida {
+            font-size: 100px; /* Ajusta el tamaño de la fuente */
+            font-weight: normal; /* Aplica negrita */
+            margin-bottom: 5px;
+            margin-top: 40px; /* Añade margen superior */
+            color: rgba(85, 85, 85, 0.5); /* Color transparente */
+            font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
+            text-align: center; /* Centra el mensaje */
         }
         .estadisticas {
             display: flex;
@@ -231,7 +240,7 @@
             </div>
         </div>
     </div>
-
+    <h1 class="bienvenida">Bienvenido al sistema UniHub</h1>
     <h1 class="titulo">Estadísticas del Sistema</h1>
     <div class="estadisticas">
         <div class="estadistica">
