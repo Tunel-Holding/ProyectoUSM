@@ -1,3 +1,32 @@
+<?php
+    include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
+
+    // Consulta para obtener la cantidad de profesores
+    $result_profesores = $conn->query("SELECT COUNT(*) as count FROM profesores");
+    if ($result_profesores === false) {
+        die("Error en la consulta de profesores: " . $conn->error);
+    }
+    $row_profesores = $result_profesores->fetch_assoc();
+    $cantidad_profesores = $row_profesores['count'];
+
+    // Consulta para obtener la cantidad de estudiantes
+    $result_estudiantes = $conn->query("SELECT COUNT(*) as count FROM estudiantes");
+    if ($result_estudiantes === false) {
+        die("Error en la consulta de estudiantes: " . $conn->error);
+    }
+    $row_estudiantes = $result_estudiantes->fetch_assoc();
+    $cantidad_estudiantes = $row_estudiantes['count'];
+
+    // Consulta para obtener la cantidad de materias únicas
+    $result_materias = $conn->query("SELECT COUNT(DISTINCT nombre) as count FROM materias");
+    if ($result_materias === false) {
+        die("Error en la consulta de materias: " . $conn->error);
+    }
+    $row_materias = $result_materias->fetch_assoc();
+    $cantidad_materias = $row_materias['count'];
+
+    $conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +39,73 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap'); /* Importa la fuente Roboto en negrita */
+        
+        .titulo {
+            font-size: 100px; /* Ajusta el tamaño de la fuente */
+            font-weight: bold; /* Aplica negrita */
+            margin-bottom: 20px;
+            margin-top: 130px;
+            color: #333333;
+            font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
+            text-align: center; /* Centra el título */
+        }
+        .estadisticas {
+            display: flex;
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+            gap: 20px; /* Espacio entre los elementos */
+            text-align: center;
+            max-width: 1000px;
+            margin: 20px auto; /* Centra el contenedor */
+        }
+        .estadistica {
+            margin: 20px;
+            padding: 20px;
+            flex: 1 1 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Centra horizontalmente */
+            transition: transform 0.3s, opacity 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .estadistica p {
+            font-size: 45px;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #e0f3ff;
+            transition: transform 0.3s;
+        }
+        .estadistica:hover p {
+            transform: scale(1.1);
+        }
+        .estadistica h2 {
+            font-size: 30px;
+            color: #555555;
+            margin-top: 10px;
+        }
+        .estadisticas .estadistica {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .dark-mode .titulo {
+            color: #ffffff;
+        }
+        .dark-mode .estadistica h2 {
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
 
@@ -128,6 +224,33 @@
             </div>
         </div>
     </div>
+
+    <h1 class="titulo">Estadísticas del Sistema</h1>
+    <div class="estadisticas">
+        <div class="estadistica">
+            <p><?php echo $cantidad_profesores; ?></p>
+            <h2>Profesores</h2>
+        </div>
+        <div class="estadistica">
+            <p><?php echo $cantidad_estudiantes; ?></p>
+            <h2>Estudiantes</h2>
+        </div>
+        <div class="estadistica">
+            <p><?php echo $cantidad_materias; ?></p>
+            <h2>Materias</h2>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const estadisticas = document.querySelectorAll('.estadistica');
+            estadisticas.forEach((element, index) => {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 300); // Delay between each element
+            });
+        });
+    </script>
 
     <script>
         const contenedor = document.getElementById('contenedor');
