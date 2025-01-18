@@ -43,9 +43,13 @@
         }
 
         h1 {
-            text-align: center;
-            font-family: 'Lobster', cursive;
-            font-size: 60px;
+            font-size: 68px; /* Ajusta el tamaño de la fuente */
+            font-weight: bold; /* Aplica negrita */
+            margin-bottom: 20px;
+            margin-top: 40px; /* Añade margen superior */
+            color: #333333;
+            font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
+            text-align: center; /* Centra el título */
         }
 
         .formulario-cedula {
