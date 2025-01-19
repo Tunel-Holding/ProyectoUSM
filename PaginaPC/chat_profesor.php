@@ -1,5 +1,5 @@
 <?php
-session_start()
+session_start();
 ?>
 
 <?php
@@ -12,15 +12,88 @@ if (!isset($_SESSION['idusuario'])) {
 
 // Enviar mensaje
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
+    echo 'POST recibido';
     $message = $_POST['message'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
+    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0; // Asignar 0 si no se proporciona reply_to
 
-    $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo) VALUES (?, ?, ?, 'texto')");
-    $stmt->bind_param("isi", $user_id, $message, $group_id);
-    $stmt->execute();
+    $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
+    if ($stmt === false) {
+        die('Prepare failed: ' . htmlspecialchars($conn->error));
+    }
+    $stmt->bind_param("isii", $user_id, $message, $group_id, $reply_to);
+    if ($stmt->execute() === false) {
+        die('Execute failed: ' . htmlspecialchars($stmt->error));
+    }
     $stmt->close();
     exit(); // Salir después de insertar el mensaje
+}
+
+// Enviar imagen
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
+    $image = $_FILES['image'];
+    $user_id = $_SESSION['idusuario'];
+    $group_id = $_SESSION['idmateria'];
+    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
+
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($image["name"]);
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check if image file is a actual image or fake image
+    $check = getimagesize($image["tmp_name"]);
+    if ($check !== false) {
+        if (move_uploaded_file($image["tmp_name"], $target_file)) {
+            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
+            if ($stmt === false) {
+                die('Prepare failed: ' . htmlspecialchars($conn->error));
+            }
+            $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
+            if ($stmt->execute() === false) {
+                die('Execute failed: ' . htmlspecialchars($stmt->error));
+            }
+            $stmt->close();
+        } else {
+            die('Error al subir la imagen.');
+        }
+    } else {
+        die('El archivo no es una imagen.');
+    }
+    exit();
+}
+
+// Enviar archivo
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
+    $file = $_FILES['file'];
+    $user_id = $_SESSION['idusuario'];
+    $group_id = $_SESSION['idmateria'];
+    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
+
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($file["name"]);
+    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    $validTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'];
+
+    if (in_array($fileType, $validTypes)) {
+        if (move_uploaded_file($file["tmp_name"], $target_file)) {
+            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
+            if ($stmt === false) {
+                die('Prepare failed: ' . htmlspecialchars($conn->error));
+            }
+            $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
+            if ($stmt->execute() === false) {
+                die('Execute failed: ' . htmlspecialchars($stmt->error));
+            }
+            $stmt->close();
+        } else {
+            die('Error al subir el archivo.');
+        }
+    } else {
+        die('Tipo de archivo no permitido.');
+    }
+    exit();
 }
 ?>
 
@@ -37,8 +110,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     <link rel="stylesheet" href="css/chat.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .message-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-icon-profesor,
+        .profile-icon-usuario {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+
+            align-self: flex-start;
+            margin-top: 10px;
+        }
+
+        .profile-icon-profesor {
+            border: 2px solid rgb(0, 208, 255);
+            /* Ejemplo de borde rojo para profesor */
+            margin-left: 80px;
+            margin-right: 20px;
+        }
+
+        .profile-icon-usuario {
+            border: 2px solid #0000ff;
+            /* Ejemplo de borde azul para alumno */
+            margin-right: 80px;
+            margin-left: 20px;
+        }
+
+        .message-content {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -46,14 +156,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     <div class="contenedorentrante3">
         <img src="css\logo.png">
     </div>
-    <div class="cabecera">
+    <div class="cabecera cabecera-chat">
 
         <button type="button" id="logoButton">
             <img src="css/logo.png" alt="Logo">
         </button>
+
+        <div class="nombremateria">
+            <h1><?php echo $_SESSION['nombremateria'] ?></h1>
+        </div>
+
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
+            <p>UH</p>
         </div>
     </div>
 
@@ -91,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
                         <p>Cursos</p>
                     </div>
@@ -103,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
@@ -165,36 +280,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             </div>
         </div>
     </div>
+
     <div class="divchat">
-        <h1><?php echo $_SESSION['nombremateria'] ?></h1>
-
         <div class="cont-chat">
-
             <div id="chat-box">
                 <!-- Aquí se cargarán los mensajes mediante AJAX -->
             </div>
-
         </div>
-        <form id="message-form" method="POST" action="chat.php" class="form-entry" enctype="multipart/form-data">
-            <button type="button" id="uploadButton" onclick="toggleUploadDiv()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                </svg></button>
-            <input type="text" id="message" name="message" placeholder="Escribe un mensaje..." required>
-            <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                    <path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
-                </svg></button>
-        </form>
-        <div id="SubirDiv">
-            <button class="button" onclick="document.getElementById('imageInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                    <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z" />
-                </svg></button>
-            <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="uploadFile('image')">
-
-            <button class="button" onclick="document.getElementById('docInput').click()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
-                    <path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-                </svg></button>
-            <input type="file" id="docInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display:none" onchange="uploadFile('document')">
+    </div>
+    <div class="message-entry">
+        <div id="reply-preview" style="display: none;">
+            <div id="reply-message"></div>
+            <button id="cancel-reply" class="buttoncancel">Cancelar</button>
         </div>
+        <div class="button-container">
+            <button id="upload-button" class="button">
+                <img src="css/plus-pequeno.png" alt="Upload" width="40" height="40">
+            </button>
+            <input type="text" id="message" placeholder="Escribe un mensaje..." />
+            <button id="send-button" class="button">
+                <img src="css/enviar-mensaje.png" alt="Send" width="40" height="40">
+            </button>
+            <input type="file" id="imageInput" accept="image/*">
+            <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
+        </div>
+    </div>
+
+    <div id="upload-menu">
+        <div class="upload-option" id="upload-image">Subir Imagen</div>
+        <div class="upload-option" id="upload-file">Subir Archivo</div>
     </div>
 
     <script>
@@ -265,6 +379,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             document.getElementById('chat').addEventListener('click', function() {
                 redirigir('seleccionarmateria_profesor.php');
             });
+            document.getElementById('cursos').addEventListener('click', function() {
+                redirigir('cursos.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('Notas.php');
+            });
         }
 
         $(document).ready(function() {
@@ -272,29 +392,160 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
             loadMessages();
 
             // Enviar mensaje
-            $('#message-form').on('submit', function(e) {
-                e.preventDefault(); // Evitar el envío del formulario tradicional
-
+            function sendMessage() {
                 var message = $('#message').val();
-                $.post('chat.php', {
-                    message: message
-                }, function(data) {
+                var replyTo = $('#reply-preview').data('reply-to') || 0; // Asignar 0 si no se proporciona reply_to
+                console.log('Sending message:', message); // Depuración
+                console.log('Reply to:', replyTo); // Depuración
+                if (message.trim() !== '') {
+                    $.post('chat.php', {
+                        message: message,
+                        reply_to: replyTo
+                    }, function(data) {
+                        console.log('Server response:', data); // Depuración
+                        $('#message').val(''); // Limpiar el campo de mensaje
+                        $('#reply-preview').hide(); // Ocultar la vista previa de la respuesta
+                        $('#reply-preview').data('reply-to', null); // Limpiar el ID de respuesta
+                        loadMessages(); // Cargar mensajes después de enviar
+                    }).fail(function(xhr, status, error) {
+                        console.error('Error sending message:', xhr.responseText); // Depuración
+                        alert('Error al enviar el mensaje: ' + xhr.responseText);
+                    });
+                }
+            }
 
-                    $('#message').val(''); // Limpiar el campo de mensaje
-                    loadMessages(); // Cargar mensajes después de enviar
-                });
+            $('#send-button').on('click', sendMessage);
+
+            $('#message').on('keypress', function(e) {
+                if (e.which === 13) { // Enter key pressed
+                    sendMessage();
+                    return false; // Prevent the default action (form submission)
+                }
+            });
+
+            $('#cancel-reply').on('click', function() {
+                $('#reply-preview').hide();
+                $('#reply-preview').data('reply-to', null);
             });
 
             // Función para cargar mensajes
             function loadMessages() {
+                console.log('Loading messages'); // Depuración
                 $.get('load_messages.php', function(data) {
+                    console.log('Messages loaded'); // Depuración
                     $('#chat-box').html(data);
                     autoScroll(); // Llamar a la función de desplazamiento automático
+                }).fail(function(xhr, status, error) {
+                    console.error('Error loading messages:', xhr.responseText); // Depuración
                 });
             }
 
             // Actualizar mensajes cada 2 segundos
-            setInterval(loadMessages, 2000);
+            setInterval(loadMessages, 2000000);
+
+            // Manejar el evento de clic del botón de respuesta
+            $(document).on('click', '.reply-button', function() {
+                console.log('Reply button clicked'); // Depuración
+                var messageId = $(this).data('message-id');
+                console.log('Message ID:', messageId); // Depuración
+                var messageContent = $('#message-text-' + messageId).text();
+                console.log('Message Content:', messageContent); // Depuración
+                var messageType = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('img').not('.reply-preview img').length ? 'imagen' : 'texto';
+                console.log('Message Type:', messageType); // Depuración
+                var userName = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('strong').first().text();
+                console.log('User Name:', userName); // Depuración
+
+                // Limpiar el contenido anterior del reply-preview
+                $('#reply-message').empty();
+
+                // Verificar si el mensaje al que se está respondiendo es una respuesta a otro mensaje
+                var originalMessage = $(this).closest('.message').find('.original-message');
+                if (originalMessage.length) {
+                    var originalMessageType = originalMessage.find('img').not('.reply-preview img').length ? 'imagen' : 'texto';
+                    if (originalMessageType === 'imagen') {
+                        var originalImageUrl = originalMessage.find('img').not('.reply-preview img').attr('src');
+                        messageContent = '<img src="' + originalImageUrl + '" alt="Imagen" style="max-width: 65px; max-height: auto; border-radius: 5px; margin-top: 5px;">';
+                    } else {
+                        messageContent = originalMessage.find('p').last().text();
+                    }
+                }
+
+                if (messageType === 'imagen') {
+                    var imageUrl = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('img').not('.reply-preview img').last().attr('src');
+                    $('#reply-message').html('<strong>' + userName + '</strong><br>' + messageContent + '<br><img src="' + imageUrl + '" alt="Imagen" style="max-width: 65px; max-height: auto; border-radius: 5px; margin-top: 5px;">');
+                } else {
+                    $('#reply-message').html('<strong>' + userName + '</strong><br>' + messageContent);
+                }
+
+                $('#reply-preview').show();
+                $('#reply-preview').data('reply-to', messageId);
+                $('#message').focus(); // Enfocar el campo de mensaje
+            });
+
+            document.getElementById('upload-button').addEventListener('click', function(event) {
+                var uploadMenu = document.getElementById('upload-menu');
+                if (uploadMenu.style.display === 'block') {
+                    uploadMenu.style.display = 'none';
+                } else {
+                    uploadMenu.style.display = 'block';
+                }
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', function(event) {
+                var uploadMenu = document.getElementById('upload-menu');
+                if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
+                    uploadMenu.style.display = 'none';
+                }
+            });
+
+            document.getElementById('upload-image').addEventListener('click', function() {
+                document.getElementById('imageInput').click();
+            });
+
+            document.getElementById('imageInput').addEventListener('change', function() {
+                var formData = new FormData();
+                formData.append('image', this.files[0]);
+                formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
+
+                fetch('chat.php', {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => response.text())
+                    .then(data => {
+                        console.log('Server response:', data); // Depuración
+                        $('#reply-preview').hide();
+                        $('#reply-preview').data('reply-to', null);
+                        loadMessages();
+                    }).catch(error => {
+                        console.error('Error uploading image:', error); // Depuración
+                        alert('Error al subir la imagen');
+                    });
+            });
+
+            document.getElementById('upload-file').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+
+            document.getElementById('fileInput').addEventListener('change', function() {
+                var formData = new FormData();
+                formData.append('file', this.files[0]);
+                formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
+
+                fetch('chat.php', {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => response.text())
+                    .then(data => {
+                        console.log('Server response:', data); // Depuración
+                        $('#reply-preview').hide();
+                        $('#reply-preview').data('reply-to', null);
+                        loadMessages();
+                    }).catch(error => {
+                        console.error('Error uploading file:', error); // Depuración
+                        alert('Error al subir el archivo');
+                    });
+            });
         });
 
         let isUserScrolling = false;
@@ -399,6 +650,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
                 }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('upload-button').addEventListener('click', function(event) {
+                var uploadMenu = document.getElementById('upload-menu');
+                if (uploadMenu.style.display === 'block') {
+                    uploadMenu.style.display = 'none';
+                } else {
+                    uploadMenu.style.display = 'block';
+                }
+                event.stopPropagation();
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            var uploadMenu = document.getElementById('upload-menu');
+            if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
+                uploadMenu.style.display = 'none';
+            }
+        });
+
+        document.getElementById('upload-image').addEventListener('click', function() {
+            // Lógica para subir imagen
+            document.getElementById('upload-menu').classList.remove('show');
+            alert('Subir Imagen');
+        });
+
+        document.getElementById('upload-file').addEventListener('click', function() {
+            // Lógica para subir archivo
+            document.getElementById('upload-menu').classList.remove('show');
+            alert('Subir Archivo');
+        });
+
+        document.addEventListener('click', function(event) {
+            var uploadMenu = document.getElementById('upload-menu');
+            if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
+                uploadMenu.classList.remove('show');
+            }
+        });
     </script>
 </body>
 
