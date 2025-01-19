@@ -1,9 +1,72 @@
 <?php
 session_start();
+include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
+$conn->set_charset("utf8mb4");
+
+// Habilitar la visualización de errores
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+date_default_timezone_set('America/Caracas');
+
+// Obtener la ID del usuario desde la sesión
+$user_id = $_SESSION['idusuario'];
+
+// Obtener el día actual en español para la región de Venezuela
+setlocale(LC_TIME, 'es_VE.UTF-8', 'es_VE', 'Spanish_Venezuela.1252');
+$dia_actual = utf8_encode(strftime('%A', time()));
+
+// Convertir el primer carácter del día a mayúscula
+$dia_actual = ucfirst($dia_actual);
+
+// Consulta para obtener el horario del día actual
+$query = "SELECT m.nombre AS materia, m.salon, h.hora_inicio, h.hora_fin 
+          FROM horarios h 
+          JOIN materias m ON h.id_materia = m.id 
+          WHERE h.id_estudiante = ? AND h.dia = ?";
+$stmt = $conn->prepare($query);
+if (!$stmt) {
+    die("Error en la preparación de la consulta: " . $conn->error);
+}
+$stmt->bind_param("is", $user_id, $dia_actual);
+if (!$stmt->execute()) {
+    die("Error en la ejecución de la consulta: " . $stmt->error);
+}
+$result = $stmt->get_result();
+if (!$result) {
+    die("Error al obtener el resultado: " . $stmt->error);
+}
+
+// Consulta para obtener las notas del estudiante
+$query_notas = "SELECT m.nombre AS materia, n.Parcial1, n.Parcial2, n.Parcial3, n.Parcial4, n.Final
+                FROM inscripciones i
+                JOIN materias m ON i.id_materia = m.id
+                JOIN notas n ON i.id_materia = n.materia_id
+                WHERE i.id_estudiante = ? AND n.usuario_id = ?";
+$stmt_notas = $conn->prepare($query_notas);
+if (!$stmt_notas) {
+    die("Error en la preparación de la consulta de notas: " . $conn->error);
+}
+$stmt_notas->bind_param("ii", $user_id, $user_id);
+if (!$stmt_notas->execute()) {
+    die("Error en la ejecución de la consulta de notas: " . $stmt_notas->error);
+}
+$result_notas = $stmt_notas->get_result();
+if (!$result_notas) {
+    die("Error al obtener el resultado de notas: " . $stmt_notas->error);
+}
+
+function getNotaClass($nota) {
+    if ($nota > 15) {
+        return 'nota-alta';
+    } elseif ($nota >= 10 && $nota <= 15) {
+        return 'nota-media';
+    } else {
+        return 'nota-baja';
+    }
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -11,6 +74,7 @@ session_start();
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/horario.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -147,6 +211,68 @@ session_start();
                     </div>
                 </label>
             </div>
+        </div>
+    </div>
+
+    <p class="bienvenido">Bienvenido a UniHub</p>
+
+    <div class="divprincipal">
+        <div class="contenedor-horario">
+            <h2 class="titulo-horario">Horario del día: <?php echo $dia_actual; ?></h2>
+            <table class="tabla-horario">
+                <thead>
+                    <tr>
+                        <th>Materia</th>
+                        <th>Salón</th>
+                        <th>Hora de Inicio</th>
+                        <th>Hora de Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo $row['materia']; ?></td>
+                                <td><?php echo $row['salon']; ?></td>
+                                <td><?php echo $row['hora_inicio']; ?></td>
+                                <td><?php echo $row['hora_fin']; ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td class="nohayclases" colspan="4"> ¡¡¡NO HAY CLASES!!! 🥳</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="contenedor-horario">
+            <h2 class="titulo-horario">Notas del Estudiante</h2>
+            <table class="tabla-horario">
+                <thead>
+                    <tr>
+                        <th>Materia</th>
+                        <th>Parcial 1</th>
+                        <th>Parcial 2</th>
+                        <th>Parcial 3</th>
+                        <th>Parcial 4</th>
+                        <th>Final</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row_notas = $result_notas->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $row_notas['materia']; ?></td>
+                            <td class="<?php echo getNotaClass($row_notas['Parcial1']); ?>"><?php echo $row_notas['Parcial1']; ?></td>
+                            <td class="<?php echo getNotaClass($row_notas['Parcial2']); ?>"><?php echo $row_notas['Parcial2']; ?></td>
+                            <td class="<?php echo getNotaClass($row_notas['Parcial3']); ?>"><?php echo $row_notas['Parcial3']; ?></td>
+                            <td class="<?php echo getNotaClass($row_notas['Parcial4']); ?>"><?php echo $row_notas['Parcial4']; ?></td>
+                            <td class="<?php echo getNotaClass($row_notas['Final']); ?>"><?php echo $row_notas['Final']; ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 
