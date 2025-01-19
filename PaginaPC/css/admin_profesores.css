@@ -18,7 +18,7 @@ body.dark-mode{
     width: 100%;
 }
 
-.btneditar, .addprof{
+.btneditar, .addprof, .btneliminar {
     background-color: #3200f8;
     color: white;
     border-radius: 15px;
@@ -32,7 +32,7 @@ body.dark-mode{
     border: transparent;
     font-size: 12px;
 }
-.btneditar:hover, .addprof:hover{
+.btneditar:hover, .addprof:hover, .btneliminar:hover {
     background-color: #1f009d;
 }
 

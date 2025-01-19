@@ -162,6 +162,7 @@
                             <th>Nombre del Profesor</th>
                             <th>Materias</th>
                             <th>  Añadir materias</th>
+                            <th>Eliminar</th>
                         </tr>";
 
             // Salida de cada fila
@@ -170,6 +171,7 @@
                             <td>" . htmlspecialchars($row['Nombre_Profesor']) . "</td>
                             <td>" . htmlspecialchars($row['Materias']) . "</td>
                             <td><a href='editar_profesor.php?id=" . $row['id_profesor'] . "' class='btneditar'>Añadir</a></td>
+                            <td><a href='eliminar_profesor.php?id=" . $row['id_profesor'] . "' class='btneliminar'>Eliminar</a></td>
                           </tr>";
             }
             echo "</table>";
