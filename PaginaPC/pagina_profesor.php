@@ -143,7 +143,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
-    <?php echo $_SESSION['idusuario'] ?>
+    
 
     <script>
         const contenedor = document.getElementById('contenedor');

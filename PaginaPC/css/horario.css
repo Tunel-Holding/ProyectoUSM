@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+.divprincipal{
+    display: flex;
+    justify-content: center;
+    height: 70vh;
+}
+
+.nohayclases{
+    font-family: 'Nunito', sans-serif;
+    font-size: 25px;
+    text-align: center;
+    font-weight: 800;
+    padding: 20px!important;
+}
+
+.bienvenido{
+    font-family: 'Nunito', sans-serif;
+    font-size: 100px;
+    color: #ffffff47;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 800;
+}
+
+.contenedor-horario {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #007BFF;
+    border-radius: 8px;
+    background-color: #E3F2FD;
+    width: 50%;
+    margin-top: 20px;
+}
+
+.titulo-horario {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #007BFF;
+}
+
+.hora-actual {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #007BFF;
+}
+
+.tabla-horario {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Nunito', sans-serif;
+}
+
+.tabla-horario th, .tabla-horario td {
+    border: 1px solid #007BFF;
+    padding: 8px;
+    text-align: center;
+}
+
+.tabla-horario th {
+    background-color: #BBDEFB;
+    color: #007BFF;
+}
+
+.tabla-horario tr{
+    color: #007BFF;
+}
+
+.tabla-horario tr:nth-child(even) {
+    background-color: #E3F2FD;
+}
+
+.tabla-horario tr:hover {
+    background-color: #BBDEFB;
+}
+
+.nota-alta {
+    background-color: #C8E6C9; /* Verde suave */
+}
+
+.nota-media {
+    background-color: #FFF9C4; /* Amarillo suave */
+}
+
+.nota-baja {
+    background-color: #FFCDD2; /* Rojo suave */
+}
