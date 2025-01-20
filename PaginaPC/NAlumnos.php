@@ -232,7 +232,7 @@ session_start();
                 <th class="th">Acción</th>
             </tr>
             <?php
-            session_start();
+            
             $servername = "localhost";
             $username = "root";
             $password = "";

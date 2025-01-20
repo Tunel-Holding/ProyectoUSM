@@ -1,77 +1,20 @@
 <?php
 session_start();
-if (!isset($_SESSION['idusuario'])) {
-    header('Location: index.php');
-    exit;
-}
+include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 
-include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
-$conn->set_charset("utf8mb4");
+$id_profesor = $_SESSION['idusuario'];
+$sql = "SELECT foto FROM fotousuario WHERE id_usuario = '$id_profesor'";
+$result = mysqli_query($conn, $sql);
+$foto = "css/perfil.png"; // Foto por defecto
 
-// Obtener la ID del usuario desde la sesión
-$user_id = $_SESSION['idusuario'];
-
-// Obtener la ID del profesor usando la ID del usuario
-$query_profesor = "SELECT id FROM profesores WHERE id_usuario = ?";
-$stmt_profesor = $conn->prepare($query_profesor);
-if (!$stmt_profesor) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt_profesor->bind_param("i", $user_id);
-if (!$stmt_profesor->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_profesor->error);
-}
-$result_profesor = $stmt_profesor->get_result();
-if ($result_profesor->num_rows === 0) {
-    die("No se encontró el profesor.");
-}
-$profesor = $result_profesor->fetch_assoc();
-$profesor_id = $profesor['id'];
-
-// Obtener el día actual en español para la región de Venezuela
-setlocale(LC_TIME, 'es_VE.UTF-8', 'es_VE', 'Spanish_Venezuela.1252');
-$dia_actual = utf8_encode(strftime('%A', time()));
-$dia_actual = ucfirst($dia_actual);
-
-// Consulta para obtener el horario del día actual del profesor
-$query_horario = "SELECT m.nombre AS materia, m.salon, h.hora_inicio, h.hora_fin 
-                  FROM horariosmateria h 
-                  JOIN materias m ON h.id_materia = m.id 
-                  WHERE m.id_profesor = ? AND h.dia = ?";
-$stmt_horario = $conn->prepare($query_horario);
-if (!$stmt_horario) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt_horario->bind_param("is", $profesor_id, $dia_actual);
-if (!$stmt_horario->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_horario->error);
-}
-$result_horario = $stmt_horario->get_result();
-if (!$result_horario) {
-    die("Error al obtener el resultado: " . $stmt_horario->error);
-}
-
-// Consulta para obtener las materias que da el profesor y la cantidad de estudiantes en cada una
-$query_materias = "SELECT m.nombre, COUNT(i.id_estudiante) AS num_estudiantes 
-                   FROM materias m 
-                   LEFT JOIN inscripciones i ON m.id = i.id_materia 
-                   WHERE m.id_profesor = ? 
-                   GROUP BY m.id";
-$stmt_materias = $conn->prepare($query_materias);
-if (!$stmt_materias) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt_materias->bind_param("i", $profesor_id);
-if (!$stmt_materias->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_materias->error);
-}
-$result_materias = $stmt_materias->get_result();
-if (!$result_materias) {
-    die("Error al obtener el resultado: " . $stmt_materias->error);
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $foto = $row['foto'];
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -97,7 +40,6 @@ if (!$result_materias) {
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
             <p>UniHub</p>
         </div>
-
     </div>
 
     <div class="menu" id="menu">
@@ -131,12 +73,6 @@ if (!$result_materias) {
                     <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
-                    </div>
-                </div>
-                <div class="opción" id="foto">
-                    <div class="intopcion">
-                        <img src="css\camera.png">
-                        <p>Foto</p>
                     </div>
                 </div>
                 <div class="opción">
@@ -215,64 +151,12 @@ if (!$result_materias) {
         </div>
     </div>
 
-    <p class="bienvenido">Bienvenido a UniHub</p>
-
-    <div class="divprincipal">
-        <div class="contenedor-horario">
-            <h2 class="titulo-horario">Horario del día: <?php echo $dia_actual; ?></h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Salón</th>
-                        <th>Hora de Inicio</th>
-                        <th>Hora de Fin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($result_horario->num_rows > 0): ?>
-                        <?php while ($row = $result_horario->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $row['materia']; ?></td>
-                                <td><?php echo $row['salon']; ?></td>
-                                <td><?php echo $row['hora_inicio']; ?></td>
-                                <td><?php echo $row['hora_fin']; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td class="nohayclases" colspan="4"> ¡¡¡NO HAY CLASES!!! 🥳</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="contenedor-horario">
-            <h2 class="titulo-horario">Materias</h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Número de Estudiantes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($result_materias->num_rows > 0): ?>
-                        <?php while ($row = $result_materias->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $row['nombre']; ?></td>
-                                <td><?php echo $row['num_estudiantes']; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td class="nohayclases" colspan="2">No hay materias asignadas.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+    <div class="perfil-container">
+        <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+        <form id="uploadForm" action="subir_foto_profesor.php" method="POST" enctype="multipart/form-data">
+            <input type="file" name="foto" id="fotoInput" style="display: none;">
+            <button type="button" class="perfil-boton" id="editarPerfilBoton">Editar Perfil</button>
+        </form>
     </div>
 
     <script>
@@ -346,12 +230,61 @@ if (!$result_materias) {
             document.getElementById('notas').addEventListener('click', function() {
                 redirigir('Notas.php');
             });
-            document.getElementById('foto').addEventListener('click', function() {
-                redirigir('foto_profesor.php');
-            });
         }
-    </script>
 
+        document.getElementById('editarPerfilBoton').addEventListener('click', function() {
+            alert('La foto debe ser cuadrada (igual de altura y anchura).');
+            document.getElementById('fotoInput').click();
+        });
+
+        document.getElementById('fotoInput').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function() {
+                    if (img.width !== img.height) {
+                        alert('La foto debe ser cuadrada (igual de altura y anchura).');
+                    } else {
+                        document.getElementById('uploadForm').submit();
+                    }
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+    <style>
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 80vh;
+        }
+
+        .perfil-foto {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            margin-right: 100px;
+        }
+
+        .perfil-boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 400px;
+            height: 150px;
+            transition: all 0.3s ease-in-out;
+            font-size: 40px;
+        }
+
+        .perfil-boton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </body>
 
 </html>
