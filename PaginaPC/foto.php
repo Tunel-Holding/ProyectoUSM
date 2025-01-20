@@ -32,6 +32,8 @@ session_start();
         </div>
     </div>
 
+    
+
     <div class="menu" id="menu">
         <div class="menuopc">
             <button class="boton" id="boton-izquierdo">
@@ -157,6 +159,14 @@ session_start();
         </div>
     </div>
 
+
+    <div class="perfil-container">
+        <img src="css/perfil.png" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+        <form id="uploadForm" action="subir_foto.php" method="POST" enctype="multipart/form-data">
+            <input type="file" name="foto" id="fotoInput" style="display: none;">
+            <button type="button" class="perfil-boton" id="editarPerfilBoton">Editar Perfil</button>
+        </form>
+    </div>
     
 
     <script>
@@ -237,7 +247,57 @@ session_start();
                 redirigir('NAlumnos.php');
             });
         }
+
+        document.getElementById('editarPerfilBoton').addEventListener('click', function() {
+            alert('La foto debe ser cuadrada (igual de altura y anchura).');
+            document.getElementById('fotoInput').click();
+        });
+
+        document.getElementById('fotoInput').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function() {
+                    if (img.width !== img.height) {
+                        alert('La foto debe ser cuadrada (igual de altura y anchura).');
+                    } else {
+                        document.getElementById('uploadForm').submit();
+                    }
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
     </script>
+    <style>
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 80vh;
+        }
+        .perfil-foto {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            margin-right: 100px;
+        }
+        .perfil-boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 400px;
+            height: 150px;
+            transition: all 0.3s ease-in-out;
+            font-size: 40px;
+        }
+        .perfil-boton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </body>
 
 </html>

@@ -53,6 +53,7 @@ $conn->close();
                 diaLabel.textContent = 'Día:';
                 const diaSelect = document.createElement('select');
                 diaSelect.name = `dia_${i}`;
+                diaSelect.required = true;
                 const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
                 dias.forEach(dia => {
                     const option = document.createElement('option');
@@ -66,12 +67,14 @@ $conn->close();
                 const inicioInput = document.createElement('input');
                 inicioInput.type = 'time';
                 inicioInput.name = `inicio_${i}`;
+                inicioInput.required = true;
 
                 const finLabel = document.createElement('label');
                 finLabel.textContent = 'Hora de Fin:';
                 const finInput = document.createElement('input');
                 finInput.type = 'time';
                 finInput.name = `fin_${i}`;
+                finInput.required = true;
 
                 claseDiv.appendChild(diaLabel);
                 claseDiv.appendChild(diaSelect);
@@ -222,7 +225,7 @@ $conn->close();
         <input type="hidden" name="id" value="<?php echo $id; ?>"> <!-- Pasar el ID de la sección -->
         <div>
             <label for="salon">Salón:</label>
-            <input type="text" name="salon" id="salon" value="<?php echo $seccion['salon']; ?>">
+            <input type="text" name="salon" id="salon" value="<?php echo $seccion['salon']; ?>" required>
         </div>
         <div>
             <label for="cantidadClases">Cantidad de Clases:</label>
