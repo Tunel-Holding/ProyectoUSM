@@ -68,7 +68,7 @@ session_start();
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion" id="datos">
+                    <div class="intopcion" id="foto">
                         <img src="css\camera.png">
                         <p>Foto</p>
                     </div>
@@ -258,6 +258,9 @@ session_start();
             });
             document.getElementById('notas').addEventListener('click', function() {
                 redirigir('NAlumnos.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto.php');
             });
         }
 
