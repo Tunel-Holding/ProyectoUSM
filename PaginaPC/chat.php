@@ -207,6 +207,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                     </div>
                 </div>
                 <div class="opción">
+                    <div class="intopcion" id="foto">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
+                <div class="opción">
                     <div class="intopcion" id="desempeño">
                         <img src="css/situacionacademica.png">
                         <p>Desempeño</p>
@@ -395,6 +401,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             });
             document.getElementById('chat').addEventListener('click', function() {
                 redirigir('seleccionarmateria.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto.php');
+            });
+            document.getElementById('desempeño').addEventListener('click', function() {
+                redirigir('desempeño.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('NAlumnos.php');
             });
         }
 
