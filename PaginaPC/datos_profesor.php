@@ -213,6 +213,12 @@ $conn->close(); // Cerrar la conexión
                     </div>
                 </div>
                 <div class="opción">
+                    <div class="intopcion" id="foto">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
+                <div class="opción">
                     <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
                         <p>Cursos</p>
@@ -375,6 +381,9 @@ $conn->close(); // Cerrar la conexión
             });
             document.getElementById('notas').addEventListener('click', function() {
                 redirigir('Notas.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto_profesor.php');
             });
         }
     </script>

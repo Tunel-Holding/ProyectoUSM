@@ -422,6 +422,12 @@ $materia_id = $_SESSION['materia_id'];
                         <p>Datos</p>
                     </div>
                 </div>
+                <div class="opción" id="foto">
+                    <div class="intopcion">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
                 <div class="opción">
                     <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
@@ -756,6 +762,9 @@ $materia_id = $_SESSION['materia_id'];
                 document.getElementById('notas').addEventListener('click', function() {
                     redirigir('Notas.php');
                 });
+                document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto_profesor.php');
+            });
             }
         </script>
 
