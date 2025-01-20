@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 
 $target_dir = "fotoperfil/";
 $target_file = $target_dir . basename($_FILES["foto"]["name"]);
@@ -39,7 +40,31 @@ if ($uploadOk == 0) {
 // Si todo está bien, intentar subir el archivo
 } else {
     if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
-        echo "<script>alert('El archivo ". basename($_FILES["foto"]["name"]). " ha sido subido.'); window.location.href = 'foto.php';</script>";
+        $id_usuario = $_SESSION['idusuario'];
+        $foto = $target_file;
+
+        // Verificar si el usuario ya tiene una foto
+        $sql = "SELECT foto FROM fotousuario WHERE id_usuario = '$id_usuario'";
+        $result = mysqli_query($conn, $sql);
+
+        if (mysqli_num_rows($result) > 0) {
+            // El usuario ya tiene una foto, actualizar la columna y borrar el archivo anterior
+            $row = mysqli_fetch_assoc($result);
+            $old_foto = $row['foto'];
+            if (file_exists($old_foto)) {
+                unlink($old_foto); // Borrar el archivo anterior
+            }
+            $sql = "UPDATE fotousuario SET foto = '$foto' WHERE id_usuario = '$id_usuario'";
+        } else {
+            // El usuario no tiene una foto, insertar un nuevo registro
+            $sql = "INSERT INTO fotousuario (id_usuario, foto) VALUES ('$id_usuario', '$foto')";
+        }
+
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>alert('El archivo ". basename($_FILES["foto"]["name"]). " ha sido subido y registrado en la base de datos.'); window.location.href = 'foto.php';</script>";
+        } else {
+            echo "<script>alert('Lo siento, hubo un error al registrar tu archivo en la base de datos.'); window.location.href = 'foto.php';</script>";
+        }
     } else {
         echo "<script>alert('Lo siento, hubo un error al subir tu archivo.'); window.location.href = 'foto.php';</script>";
     }

@@ -159,9 +159,22 @@ session_start();
         </div>
     </div>
 
+    <?php
+    include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
+
+    $id_usuario = $_SESSION['idusuario'];
+    $sql = "SELECT foto FROM fotousuario WHERE id_usuario = '$id_usuario'";
+    $result = mysqli_query($conn, $sql);
+    $foto = "css/perfil.png"; // Foto por defecto
+    
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $foto = $row['foto'];
+    }
+    ?>
 
     <div class="perfil-container">
-        <img src="css/perfil.png" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+        <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
         <form id="uploadForm" action="subir_foto.php" method="POST" enctype="multipart/form-data">
             <input type="file" name="foto" id="fotoInput" style="display: none;">
             <button type="button" class="perfil-boton" id="editarPerfilBoton">Editar Perfil</button>
