@@ -11,13 +11,13 @@ h1 {
     margin-bottom: 10px; /* Espacio entre el título y la tabla */
     text-align: center; /* Centramos el texto del título */
 }
-
 .tabla {
     border-collapse: collapse; /* Unimos los bordes de las celdas */
     width: 80%; /* Ancho de la tabla */
     border-collapse: collapse;
     table-layout: fixed;  /* Asegura que el tamaño de las celdas sea fijo */
     transition: all 0.3s ease-in-out; /* Añadir transición a los cambios */
+    margin: 0 auto; /* Centra la tabla en la página */
 }
 
 .tabla th, td {
