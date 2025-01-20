@@ -1,13 +1,14 @@
 <?php
 include 'conexion.php';
 
-$id = $_GET['id'];
+$id = $_GET['id'];  
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
-        // Obtener los detalles de la sección a eliminar
         $sql = "SELECT nombre, seccion FROM materias WHERE id='$id'";
         $result = $conn->query($sql);
+        
+    if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
+        // Obtener los detalles de la sección a eliminar
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $nombre = $row['nombre'];
@@ -50,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Sección no encontrada.";
         }
     } else {
+        $row = $result->fetch_assoc();
+        $nombre = $row['nombre'];
         echo "<script>
                 window.location.href = 'editar_materia.php?nombre=$nombre';
               </script>";
