@@ -7,12 +7,13 @@ if (!isset($_SESSION['idusuario'])) {
 }
 $idgrupo = $_SESSION['idmateria'];
 // Obtener mensajes
-$result = $conn->query("SELECT messages.id, messages.message, messages.created_at, messages.tipo, messages.reply_to, usuarios.nombre_usuario, usuarios.nivel_usuario FROM messages JOIN usuarios ON messages.user_id = usuarios.id WHERE messages.group_id = $idgrupo ORDER BY created_at ASC");
+$result = $conn->query("SELECT messages.id, messages.message, messages.created_at, messages.tipo, messages.reply_to, usuarios.id AS user_id, usuarios.nombre_usuario, usuarios.nivel_usuario FROM messages JOIN usuarios ON messages.user_id = usuarios.id WHERE messages.group_id = $idgrupo ORDER BY created_at ASC");
 if (!$result) {
     die("Error en la consulta: " . $conn->error);
 }
 
 $last_date = null;
+$last_user_id = null;
 
 // Devolver mensajes en formato HTML
 while ($row = $result->fetch_assoc()) {
@@ -21,6 +22,12 @@ while ($row = $result->fetch_assoc()) {
     $current_date = htmlspecialchars(date("Y-m-d", strtotime($row['created_at'])));
     $message_id = htmlspecialchars($row['id']); // Obtener la ID del mensaje
     $reply_to = $row['reply_to'];
+    $user_id = $row['user_id'];
+
+    // Obtener la foto de perfil del usuario
+    $foto_result = $conn->query("SELECT foto FROM fotousuario WHERE id_usuario = $user_id");
+    $foto_row = $foto_result ? $foto_result->fetch_assoc() : null;
+    $foto_perfil = $foto_row && $foto_row['foto'] ? htmlspecialchars($foto_row['foto']) : 'css/perfil.png';
 
     // Insertar una línea de fecha si es un nuevo día 
     if ($last_date !== $current_date) {
@@ -28,8 +35,16 @@ while ($row = $result->fetch_assoc()) {
         $last_date = $current_date;
     }
 
-    echo '<div class="message-container-' . $nivel_usuario . '">';
-    echo '<img src="css/perfil.png" alt="Perfil" class="profile-icon-' . $nivel_usuario . '">';
+    // Mostrar la foto de perfil solo si el mensaje es de un usuario diferente al anterior
+    if ($last_user_id !== $user_id) {
+        echo '<div class="message-container-' . $nivel_usuario . '">';
+        echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '">';
+        $last_user_id = $user_id;
+    } else {
+        echo '<div class="message-container-' . $nivel_usuario . '">';
+        echo '<img src="css/vacio.png" alt="" class="profile-icon-' . $nivel_usuario . '" style="border: none;">';
+    }
+
     echo '<button class="reply-button" data-message-id="' . $message_id . '">Responder</button>';
     echo '<div class="message-bubble-' . $nivel_usuario . '">';
 

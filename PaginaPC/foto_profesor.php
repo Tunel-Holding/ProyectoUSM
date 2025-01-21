@@ -1,151 +1,36 @@
 <?php
 session_start();
+include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 
-// Conectar a la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "proyectousm";
+$id_profesor = $_SESSION['idusuario'];
+$sql = "SELECT foto FROM fotousuario WHERE id_usuario = '$id_profesor'";
+$result = mysqli_query($conn, $sql);
+$foto = "css/perfil.png"; // Foto por defecto
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $foto = $row['foto'];
 }
-
-$user_id = $_SESSION['idusuario'];
-
-// Consultas SQL para seleccionar notas y nombres de materias
-$sql = "SELECT n.final, m.nombre, m.id AS materia_id 
-            FROM notas n 
-            INNER JOIN materias m ON n.materia_id = m.id 
-            WHERE n.usuario_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$materias = array();
-while ($row = $result->fetch_assoc()) {
-    $materias[$row['nombre']] = $row['final'];
-
-    // Insertar datos en la tabla historicoacademico
-    $sql_insert = "INSERT INTO historicoacademico (EstudianteID, MateriaID, Calificacion) VALUES (?, ?, ?)";
-    $stmt_insert = $conn->prepare($sql_insert);
-    $stmt_insert->bind_param("iii", $user_id, $row['materia_id'], $row['final']);
-    $stmt_insert->execute();
-    $stmt_insert->close();
-}
-
-$stmt->close();
-$conn->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/principalprofesor.css">
+    <link rel="stylesheet" href="css/horario.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Desempeño del Estudiante</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            --background-color: #d4d4d4;
-            --bg-container: #f9f9f9;
-
-        }
-
-        body.dark-mode {
-            --background-color: rgb(50, 50, 50);
-            --text-color: white;
-            --background-form: rgb(147, 136, 136);
-            --bg-container: rgb(90, 90, 90);
-        }
-
-        .wecontainer {
-            font-family: "Poppins", sans-serif;
-            margin: auto;
-            width: 100%;
-            max-width: 1000px;
-            background-color: var(--bg-container);
-            padding: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            border: 3px solid #ffd700;
-            /* Borde amarillo */
-            border-top-width: 10px;
-            /* Borde superior más grande */
-            border-bottom-width: 10px;
-            /* Borde inferior más grande */
-            transition: 1s background ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            align-content: center;
-            height: auto;
-            margin-top: 50px;
-        }
-
-        .wecontainer h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2em;
-            /* Tamaño de fuente más grande */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            margin: 20px 0;
-            font-size: 18px;
-            /* Tamaño de fuente más grande */
-            text-align: left;
-            background-color: var(--bg-container);
-            /* Fondo azul claro */
-            overflow: hidden;
-            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #ffd700;
-            /* Fondo amarillo */
-            color: #004c97;
-            /* Azul oscuro */
-            font-weight: bold;
-            /* Texto en negrita */
-        }
-
-        td {
-            background-color: #ffffff;
-            /* Fondo blanco */
-            color: #004c97;
-            /* Azul oscuro */
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <title>Inicio - USM</title>
 </head>
 
 <body>
-    <div class="contenedorentrante3">
-        <img src="css\logo.png">
-    </div>
+
     <div class="cabecera">
 
         <button type="button" id="logoButton">
@@ -169,7 +54,7 @@ $conn->close();
                                 <g id="-Round-/-Navigation-/-arrow_back_ios" transform="translate(442.000000, 54.000000)">
                                     <g>
                                         <polygon id="Path" opacity="0.87" points="0 0 24 0 24 24 0 24"></polygon>
-                                        <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
+                                        <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
                                     </g>
                                 </g>
                             </g>
@@ -178,44 +63,26 @@ $conn->close();
                 </svg>
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción">
-                    <div class="intopcion" id="inicio">
+                <div class="opción" id="inicio">
+                    <div class="intopcion">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="datos">
+                <div class="opción" id="datos">
+                    <div class="intopcion">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion" id="foto">
-                        <img src="css\camera.png">
-                        <p>Foto</p>
+                    <div class="intopcion" id="cursos">
+                        <img src="css/cursos.png">
+                        <p>Cursos</p>
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion" id="desempeño">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
-                    </div>
-                </div>
-                <div class="opción" id="inscripcion">
-                    <div class="intopcion">
-                        <img src="css/inscripción.png">
-                        <p>Inscripción</p>
-                    </div>
-                </div>
-                <div class="opción" id="horario">
-                    <div class="intopcion">
-                        <img src="css/horario.png">
-                        <p>Horario</p>
-                    </div>
-                </div>
-                <div class="opción" id="chat">
-                    <div class="intopcion">
+                    <div class="intopcion" id="chat">
                         <img src="css/muro.png">
                         <p>Chat</p>
                     </div>
@@ -237,7 +104,7 @@ $conn->close();
                                 <g id="-Round-/-Navigation-/-arrow_forward_ios" transform="translate(238.000000, 54.000000)">
                                     <g>
                                         <polygon id="Path" opacity="0.87" points="24 24 0 24 0 0 24 0"></polygon>
-                                        <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
+                                        <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
                                     </g>
                                 </g>
                             </g>
@@ -247,16 +114,18 @@ $conn->close();
             </button>
         </div>
         <div class="inferior">
-            <div class="logout">
-                <form action="logout.php" method="POST">
-                    <button class="Btn" type="submit">
+            <form action="logout.php" method="POST">
+                <div class="logout">
+                    <button class="Btn">
+
                         <div class="sign"><svg viewBox="0 0 512 512">
                                 <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
                             </svg></div>
+
                         <div class="text">Salir</div>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
             <div class="themeswitcher">
                 <label class="theme-switch">
                     <input type="checkbox" class="theme-switch__checkbox" id="switchtema">
@@ -282,20 +151,12 @@ $conn->close();
         </div>
     </div>
 
-    <div class="wecontainer">
-        <h1>Desempeño del Estudiante</h1>
-
-        <table>
-            <tr>
-                <th>Materia</th>
-                <th>Nota Final</th>
-            </tr>
-            <?php
-            foreach ($materias as $materia => $nota_final) {
-                echo "<tr><td>$materia</td><td>$nota_final</td></tr>";
-            }
-            ?>
-        </table>
+    <div class="perfil-container">
+        <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+        <form id="uploadForm" action="subir_foto_profesor.php" method="POST" enctype="multipart/form-data">
+            <input type="file" name="foto" id="fotoInput" style="display: none;">
+            <button type="button" class="perfil-boton" id="editarPerfilBoton">Editar Perfil</button>
+        </form>
     </div>
 
     <script>
@@ -340,7 +201,7 @@ $conn->close();
             }
         });
 
-        // Aplicar la preferencia guardada del usuario al cargar la página
+        // Aplicar la preferencia guardada del usuario al cargar la p谩gina
         window.addEventListener('load', function() {
             const theme = localStorage.getItem('theme');
             if (theme === 'dark') {
@@ -355,31 +216,75 @@ $conn->close();
         }
         window.onload = function() {
             document.getElementById('inicio').addEventListener('click', function() {
-                redirigir('pagina_principal.php');
+                redirigir('pagina_profesor.php');
             });
             document.getElementById('datos').addEventListener('click', function() {
-                redirigir('datos.php');
-            });
-            document.getElementById('inscripcion').addEventListener('click', function() {
-                redirigir('inscripcion.php');
-            });
-            document.getElementById('horario').addEventListener('click', function() {
-                redirigir('horario.php');
+                redirigir('datos_profesor.php');
             });
             document.getElementById('chat').addEventListener('click', function() {
-                redirigir('seleccionarmateria.php');
+                redirigir('seleccionarmateria_profesor.php');
             });
-            document.getElementById('desempeño').addEventListener('click', function() {
-                redirigir('desempeño.php');
+            document.getElementById('cursos').addEventListener('click', function() {
+                redirigir('cursos.php');
             });
             document.getElementById('notas').addEventListener('click', function() {
-                redirigir('NAlumnos.php');
-            });
-            document.getElementById('foto').addEventListener('click', function() {
-                redirigir('foto.php');
+                redirigir('Notas.php');
             });
         }
+
+        document.getElementById('editarPerfilBoton').addEventListener('click', function() {
+            alert('La foto debe ser cuadrada (igual de altura y anchura).');
+            document.getElementById('fotoInput').click();
+        });
+
+        document.getElementById('fotoInput').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function() {
+                    if (img.width !== img.height) {
+                        alert('La foto debe ser cuadrada (igual de altura y anchura).');
+                    } else {
+                        document.getElementById('uploadForm').submit();
+                    }
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
     </script>
+    <style>
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 80vh;
+        }
+
+        .perfil-foto {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            margin-right: 100px;
+        }
+
+        .perfil-boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 400px;
+            height: 150px;
+            transition: all 0.3s ease-in-out;
+            font-size: 40px;
+        }
+
+        .perfil-boton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </body>
 
 </html>
