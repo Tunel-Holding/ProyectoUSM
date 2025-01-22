@@ -1,6 +1,7 @@
 body{
     font-family: "Poppins", sans-serif;
 }
+
 .tabla input {
     width: 90%; /* Asegura que el input no exceda el ancho de la celda */
     box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
@@ -11,16 +12,7 @@ h1 {
     margin-bottom: 10px; /* Espacio entre el título y la tabla */
     text-align: center; /* Centramos el texto del título */
 }
-.tabla {
-    border-collapse: collapse; /* Unimos los bordes de las celdas */
-    width: 80%; /* Ancho de la tabla */
-    border-collapse: collapse;
-    table-layout: fixed;  /* Asegura que el tamaño de las celdas sea fijo */
-    transition: all 0.3s ease-in-out; /* Añadir transición a los cambios */
-    margin: 0 auto; /* Centra la tabla en la página */
-}
-
-.tabla th, td {
+.tabla td, th {
     border: 2px solid #007BFF; /* Bordes azules */
     padding: 12px;
     height: 90px;
@@ -30,33 +22,24 @@ h1 {
     overflow: hidden; /* Para asegurarse de que el contenido no se desborde */
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
-
-.tabla th {
+.tabla{
+    border-collapse: collapse; /* Unimos los bordes de las celdas */
+    table-layout: fixed;  /* Asegura que el tamaño de las celdas sea fijo */
+    transition: all 0.3s ease-in-out; /* Añadir transición a los cambios */
+    margin-left: 250px;
+    margin-right: 250px;
+}
+.th {
     background-color: #007BFF; /* Fondo azul para el encabezado */
     color: white; /* Texto blanco para el encabezado */
-}
-
-.container {
-    text-align: center;
-}
-
-.button{
-    width: 170px;
-    height: 45px;
-    font-size: 15px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    margin-top: 10px;
-    background-color: #0d65e4;
-    transition: background-color 0.35s ease-in-out;
-    color: white;
 }
 
 .button-cell button {
     margin: 5px; /* Espacio de 5 píxeles entre los botones */
 }
-
+.container {
+    text-align: center;
+}
 .button:hover {
     background-color: #0c51b1;
 }
@@ -68,13 +51,4 @@ h1 {
     color: red;
     margin-left: 5px;
     z-index: 1000;
-}
-
-.divtabla{
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
 }

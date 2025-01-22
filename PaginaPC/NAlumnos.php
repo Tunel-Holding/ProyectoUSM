@@ -12,77 +12,11 @@ session_start();
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/Notas A.css">
+    <link rel="stylesheet" href="css/Notas A2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Notas</title>
-    <style>
-        .no-datos {
-            text-align: center;
-            font-size: 18px;
-            color: #888;
-        }
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #ffffff;
-            margin: 15% auto; 
-            padding: 20px;
-            border: 2px solid #007bff; /* Borde azul */
-            width: 50%; 
-            border-radius: 10px;
-            color: #007bff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .close {
-            color: #007bff;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: #ccc;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .modal-content h2 {
-            margin-top: 0;
-        }
-        .modal-content p {
-            margin: 10px 0;
-        }
-        .modal-content a {
-            color: #007bff;
-            text-decoration: underline;
-        }
-        .modal-content a:hover {
-            color: #ccc;
-        }
-        .modal-content button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #007bff; /* Botones azules */
-            color: #ffffff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .modal-content button:hover {
-            background-color: #0056b3;
-            color: #ffffff;
-        }
-    </style>
 </head>
 
 <body>
@@ -236,6 +170,7 @@ session_start();
                 <th class="th">Parcial 4</th>
                 <th class="th">Final</th>
                 <th class="th">Acción</th>
+
             </tr>
             <?php
             
@@ -311,12 +246,13 @@ session_start();
                     }
                 }
                 $stmt->close();
-            }
 
+            }
             if (!$notasEncontradas) {
-                echo "<div class='no-datos'>No hay datos disponibles</div>";
+                echo "<tr>";
+                echo "<td class='td' colspan='7'>No hay datos disponibles</td>";
+                echo "</tr>";
             }
-
             $conn->close();
             ?>
         </table>
