@@ -234,6 +234,12 @@ $conn->close();
                     </div>
                 </div>
                 <div class="opción">
+                    <div class="intopcion" id="foto">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
+                <div class="opción" id="desempeño">
                     <div class="intopcion">
                         <img src="css/situacionacademica.png">
                         <p>Desempeño</p>
@@ -257,7 +263,7 @@ $conn->close();
                         <p>Chat</p>
                     </div>
                 </div>
-                <div class="opción">
+                <div class="opción" id="notas">
                     <div class="intopcion">
                         <img src="css/notas.png">
                         <p>Notas</p>
@@ -425,7 +431,6 @@ $conn->close();
             document.getElementById('datos').addEventListener('click', function() {
                 redirigir('datos.php');
             });
-
             document.getElementById('inscripcion').addEventListener('click', function() {
                 redirigir('inscripcion.php');
             });
@@ -434,6 +439,15 @@ $conn->close();
             });
             document.getElementById('chat').addEventListener('click', function() {
                 redirigir('seleccionarmateria.php');
+            });
+            document.getElementById('desempeño').addEventListener('click', function() {
+                redirigir('desempeño.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('NAlumnos.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto.php');
             });
         }
     </script>
