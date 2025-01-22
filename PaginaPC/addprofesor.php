@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="datos">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>

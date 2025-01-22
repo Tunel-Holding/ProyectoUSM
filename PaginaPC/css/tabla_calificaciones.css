@@ -1,0 +1,82 @@
+h1 {
+    text-align: center;
+    color: #007BFF; /* Azul */
+    font-family: 'Poppins', sans-serif;
+    margin-top: 20px;
+}
+
+.tabla {
+    margin: 20px auto;
+    width: 80%;
+    border-collapse: collapse;
+    font-family: 'Poppins', sans-serif;
+}
+
+.tabla table {
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+.tabla th, .tabla td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla th {
+    background-color: #007BFF; /* Azul */
+    color: white;
+}
+
+.tabla tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tabla tr:hover {
+    background-color: #ddd;
+}
+
+.tabla .button-cell button {
+    background-color: #007BFF; /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.tabla .button-cell button:hover {
+    background-color: #0056b3;
+}
+
+body.dark-mode h1 {
+    color: #1E90FF; /* Azul claro */
+}
+
+body.dark-mode .tabla {
+    color: #ddd;
+}
+
+body.dark-mode .tabla table {
+    border: 1px solid #444;
+}
+
+body.dark-mode .tabla th {
+    background-color: #1E90FF; /* Azul claro */
+}
+
+body.dark-mode .tabla tr:nth-child(even) {
+    background-color: #333;
+}
+
+body.dark-mode .tabla tr:hover {
+    background-color: #555;
+}
+
+body.dark-mode .tabla .button-cell button {
+    background-color: #1E90FF; /* Azul claro */
+}
+
+body.dark-mode .tabla .button-cell button:hover {
+    background-color: #1C86EE;
+}

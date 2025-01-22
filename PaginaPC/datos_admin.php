@@ -113,7 +113,7 @@
                     </g>
                 </svg>
             </button>
-            <div class="menuopciones">
+            <div class="menuopciones" id="contenedor">
                 <div class="opción">
                     <div class="intopcion" id="inicio">
                         <img src="css\home.png">

@@ -163,6 +163,7 @@ if (!isset($_SESSION['idusuario'])) {
                 FROM inscripciones i
                 JOIN datos_usuario du ON i.id_estudiante = du.id
                 WHERE i.id_materia = $id_materia
+                AND du.usuario_id NOT IN (SELECT id_usuario FROM profesores)
             ";
     $result_estudiantes = $conn->query($sql_estudiantes);
 
