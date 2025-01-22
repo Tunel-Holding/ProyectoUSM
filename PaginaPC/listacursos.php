@@ -69,6 +69,12 @@ if (!isset($_SESSION['idusuario'])) {
                         <p>Datos</p>
                     </div>
                 </div>
+                <div class="opción" id="foto">
+                    <div class="intopcion">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
                 <div class="opción">
                     <div class="intopcion" id="cursos">
                         <img src="css/cursos.png">
@@ -82,7 +88,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
@@ -248,6 +254,12 @@ if (!isset($_SESSION['idusuario'])) {
             });
             document.getElementById('cursos').addEventListener('click', function() {
                 redirigir('cursos.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto_profesor.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('Notas.php');
             });
         }
 
