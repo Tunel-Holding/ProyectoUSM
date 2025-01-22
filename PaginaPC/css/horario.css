@@ -2,6 +2,11 @@
 
 body {
     font-family: 'Nunito', sans-serif;
+    --color: #00000072;
+}
+
+body.dark-mode {
+    --color: #ffffff47;
 }
 
 .divprincipal{
@@ -21,7 +26,7 @@ body {
 .bienvenido{
     font-family: 'Nunito', sans-serif;
     font-size: 100px;
-    color: #ffffff47;
+    color: var(--color);
     text-align: center;
     margin-top: 20px;
     font-weight: 800;
