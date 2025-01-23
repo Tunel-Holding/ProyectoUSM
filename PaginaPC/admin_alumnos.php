@@ -12,19 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
     <style>
-        .titulo {
-            font-size: 48px; /* Tamaño del texto grande */
-            font-weight: bold; /* Negrita */
-            color: rgb(47, 47, 47);
-            text-align: center; /* Centrar el texto */
-            margin-top: 20px; /* Margen superior */
-            font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
-        }
-
-        body.dark-mode .titulo {
-            color: #ffffff; /* Color blanco para el modo oscuro */
-        }
-
         body {
             font-family: Arial, sans-serif;
             --background-color:rgb(255, 255, 255);
@@ -53,6 +40,21 @@
             align-items: center;
             align-content: center;
             height: auto;
+            margin-top: 80px;
+        }
+
+        .titulo {
+            font-size: 68px; /* Ajusta el tamaño de la fuente */
+            font-weight: bold; /* Aplica negrita */
+            margin-bottom: 20px;
+            margin-top: 40px; /* Añade margen superior */
+            color: #333333;
+            font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
+            text-align: center; /* Centra el título */
+        }
+
+        body.dark-mode .titulo {
+            color: #ffffff; /* Color blanco para el modo oscuro */
         }
 
         .formulario-cedula {
@@ -331,11 +333,9 @@
             </div>
         </div>
     </div>
-    
-    <h1 class="titulo">Búsqueda de Estudiantes</h1>
 
     <div class="container">
-        
+        <h1 class="titulo">Búsqueda de Estudiantes</h1>
         <?php
         require "conexion.php";
 
