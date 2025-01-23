@@ -11,7 +11,7 @@ session_start();
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
-    <link rel="stylesheet" href="css/Notas A.css">
+    <link rel="stylesheet" href="css/tabla_calificaciones.css">
     <link rel="stylesheet" href="css/Notas A2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

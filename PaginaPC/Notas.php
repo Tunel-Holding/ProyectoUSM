@@ -150,7 +150,6 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
-    <div class="container">
         <?php
         $servername = "localhost";
         $username = "root";
@@ -187,15 +186,20 @@ if (!isset($_SESSION['idusuario'])) {
                     echo "Error en la consulta: " . $conn->error;
                 } else {
                     if ($result_materias->num_rows > 0) {
+                        echo '<div class="materias">';
                         while ($row_materias = $result_materias->fetch_assoc()) {
                             $materia_id = $row_materias["id"];
                             $nombre = $row_materias["nombre"];
-                            // Usar un formulario para enviar la materia_id
+                            echo '<div class="div-materia">';
+                            echo '<img src="css/images.png">';
+                            echo '<h2>' . $nombre . '</h2>';
                             echo '<form method="POST" action="modificar_notas.php" style="display:inline;">
-                                        <input type="hidden" name="materia_id" value="' . $materia_id . '">
-                                        <button type="submit" aria-label="Ir a ' . $nombre . '">' . $nombre . '</button>
-                                    </form>';
+                                    <input type="hidden" name="materia_id" value="' . $materia_id . '">
+                                    <button type="submit" class="botoninscribir" aria-label="Ir a ' . $nombre . '">Ver Notas</button>
+                                  </form>';
+                            echo '</div>';
                         }
+                        echo '</div>';
                     } else {
                         echo "No se encontraron materias.";
                     }
@@ -207,7 +211,6 @@ if (!isset($_SESSION['idusuario'])) {
 
         $conn->close();
         ?>
-    </div>
 
     <script>
         const contenedor = document.getElementById('contenedor');

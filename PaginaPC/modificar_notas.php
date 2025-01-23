@@ -31,17 +31,24 @@ $materia_id = $_SESSION['materia_id'];
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalprofesor.css">
-    <link rel="stylesheet" href="css/NotasP.css">
+    
+    <link rel="stylesheet" href="css/tabla_calificaciones.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/Notas A2.css">
     <title>Modificar Notas</title>
     <style>
-        .content {
-            margin-top: 50px; /* Ajusta el valor según sea necesario */
-            width: 100%; /* Ajusta el valor para que la anchura sea mayor */
-            margin-left: auto;
-            margin-right: auto;
+        
+        .button-cell {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100px; /* Ajusta el tamaño según sea necesario */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
     </style>
     <script>
@@ -638,18 +645,18 @@ $materia_id = $_SESSION['materia_id'];
             }
 
             // Mostrar los datos en una tabla HTML
-            echo "<table border='1'>
+            echo "<table>
                 <tr>
-                    <th>Número de Lista</th>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
-                    <th>Cédula</th>
-                    <th>Parcial 1</th>
-                    <th>Parcial 2</th>
-                    <th>Parcial 3</th>
-                    <th>Parcial 4</th>
-                    <th>Final</th>
-                    <th>Acción</th>
+                    <th class='th'>Número de Lista</th>
+                    <th class='th'>Nombres</th>
+                    <th class='th'>Apellidos</th>
+                    <th class='th'>Cédula</th>
+                    <th class='th'>Parcial 1</th>
+                    <th class='th'>Parcial 2</th>
+                    <th class='th'>Parcial 3</th>
+                    <th class='th'>Parcial 4</th>
+                    <th class='th'>Final</th>
+                    <th class='th'>Acción</th>
                 </tr>";
 
         while ($row_datos = $result_datos->fetch_assoc()) {
@@ -669,7 +676,7 @@ $materia_id = $_SESSION['materia_id'];
             <td>$parcial3</td>
             <td>$parcial4</td>
             <td>$final</td>
-            <td>
+            <td class='td button-cell'>
                 <div>
                     <button onclick='editRow(" . htmlspecialchars($row_datos["usuario_id"]) . ")'>Editar</button>
                 </div>
