@@ -11,7 +11,7 @@ $result = $consulta->get_result();
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-require '..\vendor\autoload.php';
+require 'vendor\autoload.php';
 
 if ($result->num_rows > 0) {
 

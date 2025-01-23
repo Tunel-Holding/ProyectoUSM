@@ -158,7 +158,7 @@
 
     use PHPMailer\PHPMailer\PHPMailer;
 
-    require '../vendor/autoload.php';
+    require 'vendor/autoload.php';
     // Procesar el formulario al enviarlo
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nombre = $_POST['nombre'];
