@@ -450,7 +450,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             }
 
             // Actualizar mensajes cada 2 segundos
-            setInterval(loadMessages, 2000000);
+            setInterval(loadMessages, 2000);
 
             // Manejar el evento de clic del botón de respuesta
             $(document).on('click', '.reply-button', function() {

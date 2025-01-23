@@ -35,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $conn->close();
     } else {
+        echo $id_profesor;
+        echo $id_materia;
         echo "Datos inválidos. Por favor, rellena todos los campos.";
     }
 } else {

@@ -95,7 +95,7 @@ if (isset($_GET['valor'])) {
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
