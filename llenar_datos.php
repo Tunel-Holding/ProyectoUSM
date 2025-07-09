@@ -205,7 +205,13 @@ $conn->close();
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="foto">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
+                <div class="opción">
+                    <div class="intopcion" id="desempeño">
                         <img src="css/situacionacademica.png">
                         <p>Desempeño</p>
                     </div>
@@ -385,7 +391,7 @@ $conn->close();
             window.location.href = url;;
             // Cambia esta URL a la página de destino 
         }
-        window.onload = function() {
+         window.onload = function() {
             document.getElementById('inicio').addEventListener('click', function() {
                 redirigir('pagina_principal.php');
             });
@@ -400,6 +406,15 @@ $conn->close();
             });
             document.getElementById('chat').addEventListener('click', function() {
                 redirigir('seleccionarmateria.php');
+            });
+            document.getElementById('desempeño').addEventListener('click', function() {
+                redirigir('desempeño.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('NAlumnos.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto.php');
             });
         }
     </script>
