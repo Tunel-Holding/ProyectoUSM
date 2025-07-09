@@ -205,7 +205,13 @@ $conn->close();
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="foto">
+                        <img src="css\camera.png">
+                        <p>Foto</p>
+                    </div>
+                </div>
+                <div class="opción">
+                    <div class="intopcion" id="desempeño">
                         <img src="css/situacionacademica.png">
                         <p>Desempeño</p>
                     </div>
