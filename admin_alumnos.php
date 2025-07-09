@@ -394,14 +394,14 @@
 
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>
-                                    <td>" . htmlspecialchars($row['nombres']) . " " . htmlspecialchars($row['apellidos']) . "</td>
-                                    <td>" . htmlspecialchars($row['cedula']) . "</td>
-                                    <td>" . htmlspecialchars($row['materias']) . "</td>
-                                    <td>" . htmlspecialchars($row['semestre']) . "</td>
-                                    <td>" . htmlspecialchars($row['creditosdisponibles']) . "</td>
+                                    <td>" . htmlspecialchars($row['nombres'] ?? '', ENT_QUOTES, 'UTF-8') . " " . htmlspecialchars($row['apellidos'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
+                                    <td>" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
+                                    <td>" . htmlspecialchars($row['materias'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
+                                    <td>" . htmlspecialchars($row['semestre'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
+                                    <td>" . htmlspecialchars($row['creditosdisponibles'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
                                     <td class='acciones'>
-                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-modificar'>Modificar Sección</a>
-                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula']) . "' class='btn-ajustar'>Ajustar Créditos</a>
+                                        <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btn-modificar'>Modificar Sección</a>
+                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btn-ajustar'>Ajustar Créditos</a>
                                     </td>
                                 </tr>";
                         }

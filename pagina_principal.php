@@ -11,8 +11,8 @@ date_default_timezone_set('America/Caracas');
 $user_id = $_SESSION['idusuario'];
 
 // Obtener el día actual en español para la región de Venezuela
-setlocale(LC_TIME, 'es_VE.UTF-8', 'es_VE', 'Spanish_Venezuela.1252');
-$dia_actual = utf8_encode(strftime('%A', time()));
+$formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
+$dia_actual = $formatter->format(time());
 
 // Convertir el primer carácter del día a mayúscula
 $dia_actual = ucfirst($dia_actual);

@@ -29,8 +29,8 @@ $profesor = $result_profesor->fetch_assoc();
 $profesor_id = $profesor['id'];
 
 // Obtener el día actual en español para la región de Venezuela
-setlocale(LC_TIME, 'es_VE.UTF-8', 'es_VE', 'Spanish_Venezuela.1252');
-$dia_actual = utf8_encode(strftime('%A', time()));
+$formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
+$dia_actual = $formatter->format(time());
 $dia_actual = ucfirst($dia_actual);
 
 // Consulta para obtener el horario del día actual del profesor

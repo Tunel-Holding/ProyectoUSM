@@ -168,10 +168,10 @@
             // Salida de cada fila
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                            <td>" . htmlspecialchars($row['Nombre_Profesor']) . "</td>
-                            <td>" . htmlspecialchars($row['Materias']) . "</td>
-                            <td><a href='editar_profesor.php?id=" . $row['id_profesor'] . "' class='btneditar'>Añadir</a></td>
-                            <td><a href='eliminar_profesor.php?id=" . $row['id_profesor'] . "' class='btneliminar'>Eliminar</a></td>
+                            <td>" . htmlspecialchars($row['Nombre_Profesor'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
+                            <td>" . htmlspecialchars($row['Materias'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
+                            <td><a href='editar_profesor.php?id=" . htmlspecialchars($row['id_profesor'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btneditar'>Añadir</a></td>
+                            <td><a href='eliminar_profesor.php?id=" . htmlspecialchars($row['id_profesor'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btneliminar'>Eliminar</a></td>
                           </tr>";
             }
             echo "</table>";
