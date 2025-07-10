@@ -165,7 +165,6 @@ session_start();
                     <th>Créditos</th>
                     <th>Profesor</th>
                     <th>Salón</th>
-                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -189,7 +188,7 @@ session_start();
                         echo "<td>" . $fila['creditos'] . "</td>";
                         echo "<td>" . $fila['profesor'] . "</td>";
                         echo "<td>" . $fila['salon'] . "</td>";
-                        echo "<td><button class='btn-delete' data-id='" . $fila['id'] . "'>Eliminar</button></td>";
+                        
                         echo "</tr>";
                     }
                 } else {
@@ -390,13 +389,6 @@ session_start();
                 alert('<?php echo $_SESSION['mensaje']; ?>');
                 <?php unset($_SESSION['mensaje']); ?>
             <?php endif; ?>
-        });
-
-        document.querySelectorAll('.btn-delete').forEach(button => {
-            button.addEventListener('click', function() {
-                const idMateria = this.getAttribute('data-id');
-                window.location.href = `eliminar_inscripcion_materia.php?id=${idMateria}`;
-            });
         });
     </script>
 </body>
