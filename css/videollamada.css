@@ -1,0 +1,18 @@
+.jitsi-container {
+    width: 100vw;
+    height: calc(100vh - 70px); /* 70px es la altura de la cabecera */
+    max-width: 100vw;
+    max-height: calc(100vh - 70px);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.watermark leftwatermark {
+    display: none !important;
+}
+
+.watermark rightwatermark {
+    display: none !important;
+}

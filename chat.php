@@ -1,8 +1,5 @@
 <?php
 session_start();
-?>
-
-<?php
 require 'conexion.php';
 
 if (!isset($_SESSION['idusuario'])) {
@@ -10,28 +7,38 @@ if (!isset($_SESSION['idusuario'])) {
     exit();
 }
 
-// Enviar mensaje
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
-    echo 'POST recibido';
+// Obtener el nombre y sección de la materia
+$id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
+$stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
+$stmt->bind_param("i", $id_materia);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $_SESSION['nombre_materia'] = $row['nombre'];
+    $_SESSION['seccion_materia'] = $row['seccion'];
+} else {
+    $_SESSION['nombre_materia'] = "Materia no encontrada";
+    $_SESSION['seccion_materia'] = "";
+}
+$stmt->close();
+
+
+// 📨 Enviar mensaje de texto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     $message = $_POST['message'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
-    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0; // Asignar 0 si no se proporciona reply_to
+    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
 
     $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
-    if ($stmt === false) {
-        die('Prepare failed: ' . htmlspecialchars($conn->error));
-    }
     $stmt->bind_param("isii", $user_id, $message, $group_id, $reply_to);
-    if ($stmt->execute() === false) {
-        die('Execute failed: ' . htmlspecialchars($stmt->error));
-    }
+    $stmt->execute();
     $stmt->close();
-    exit(); // Salir después de insertar el mensaje
+    exit();
 }
 
-// Enviar imagen
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
+// 🖼️ Enviar imagen
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     $image = $_FILES['image'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
@@ -39,32 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
 
     $target_dir = "uploads/";
     $target_file = $target_dir . basename($image["name"]);
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-    // Check if image file is a actual image or fake image
     $check = getimagesize($image["tmp_name"]);
-    if ($check !== false) {
-        if (move_uploaded_file($image["tmp_name"], $target_file)) {
-            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
-            if ($stmt === false) {
-                die('Prepare failed: ' . htmlspecialchars($conn->error));
-            }
-            $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
-            if ($stmt->execute() === false) {
-                die('Execute failed: ' . htmlspecialchars($stmt->error));
-            }
-            $stmt->close();
-        } else {
-            die('Error al subir la imagen.');
-        }
-    } else {
-        die('El archivo no es una imagen.');
+
+    if ($check && move_uploaded_file($image["tmp_name"], $target_file)) {
+        $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
+        $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
+        $stmt->execute();
+        $stmt->close();
     }
     exit();
 }
 
-// Enviar archivo
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
+// 📁 Enviar archivo
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file = $_FILES['file'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
@@ -73,29 +67,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     $target_dir = "uploads/";
     $target_file = $target_dir . basename($file["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
     $validTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'];
 
-    if (in_array($fileType, $validTypes)) {
-        if (move_uploaded_file($file["tmp_name"], $target_file)) {
-            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
-            if ($stmt === false) {
-                die('Prepare failed: ' . htmlspecialchars($conn->error));
-            }
-            $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
-            if ($stmt->execute() === false) {
-                die('Execute failed: ' . htmlspecialchars($stmt->error));
-            }
-            $stmt->close();
-        } else {
-            die('Error al subir el archivo.');
-        }
-    } else {
-        die('Tipo de archivo no permitido.');
+    if (in_array($fileType, $validTypes) && move_uploaded_file($file["tmp_name"], $target_file)) {
+        $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
+        $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
+        $stmt->execute();
+        $stmt->close();
     }
     exit();
 }
+
+// 💬 Mostrar historial de mensajes
+$idgrupo = $_SESSION['idmateria'];
+
+$result = $conn->query("
+    SELECT 
+        messages.id, 
+        messages.message, 
+        messages.created_at, 
+        messages.tipo, 
+        messages.reply_to,
+        usuarios.id AS user_id, 
+        usuarios.nombre_usuario, 
+        usuarios.nivel_usuario,
+        foto
+    FROM messages
+    JOIN usuarios ON messages.user_id = usuarios.id
+    LEFT JOIN fotousuario ON usuarios.id = id_usuario
+    WHERE messages.group_id = $idgrupo
+    ORDER BY messages.created_at ASC
+");
+
+
+$last_date = null;
+$last_user_id = null;
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -112,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -263,7 +274,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     <div class="divchat">
         <div class="cont-chat">
             <div id="chat-box">
-                <!-- Aquí se cargarán los mensajes mediante AJAX -->
+
+
+
+
             </div>
         </div>
     </div>
@@ -325,24 +339,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 div.classList.remove('toggle');
             }
         });
-        document.getElementById('switchtema').addEventListener('change', function() {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+      document.getElementById('switchtema').addEventListener('change', function () {
+    const theme = this.checked ? 'dark' : 'light';
+
+    // 🌗 Aplicar clase visual
+    document.body.classList.toggle('dark-mode', theme === 'dark');
+
+    // 💾 Guardar en localStorage
+    localStorage.setItem('theme', theme);
+
+    // 🍪 Guardar en cookie para que PHP lo detecte
+    document.cookie = "theme=" + theme + "; path=/";
+
+    // 🔁 Enviar al backend si lo usas también vía POST
+    fetch('set_theme.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'theme=' + theme
+    });
+
+    // 🔄 Recargar mensajes (solo si usas AJAX)
+    // loadMessages(); // o location.reload(); si es HTML estático
+});
 
         // Aplicar la preferencia guardada del usuario al cargar la página
-        window.addEventListener('load', function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('switchtema').checked = true;
-            }
+ window.addEventListener('load', function () {
+    const theme = localStorage.getItem('theme') || 'light';
+
+    // 🧁 Aplicar visualmente el modo al cuerpo
+    if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('switchtema').checked = true;
+    } else {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('switchtema').checked = false;
+    }
+
+    // 🍪 Guardar el tema en una cookie para que PHP lo lea
+    document.cookie = "theme=" + theme + "; path=/";
+
+    // 🔁 Enviar también el tema al backend si usas POST (opcional)
+    fetch('set_theme.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'theme=' + theme
+    });
+});
+
+    document.getElementById('switchtema').addEventListener('change', function () {
+    if (this.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+
+        fetch('set_theme.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'theme=dark'
         });
+
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+
+        fetch('set_theme.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'theme=light'
+        });
+    }
+});
+
+
+
 
         function redirigir(url) {
             window.location.href = url;;
@@ -676,6 +750,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 uploadMenu.classList.remove('show');
             }
         });
+    
     </script>
 </body>
 
