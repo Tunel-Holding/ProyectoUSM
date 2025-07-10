@@ -233,10 +233,10 @@ $stmt->close();
         });
 
         function redirigir(url) {
-            window.location.href = url;;
+            window.location.href = url;
             // Cambia esta URL a la página de destino 
         }
-        window.onload = function() {
+        window.addEventListener('load', function() {
             document.getElementById('inicio').addEventListener('click', function() {
                 redirigir('pagina_profesor.php');
             });
@@ -255,7 +255,7 @@ $stmt->close();
             document.getElementById('foto').addEventListener('click', function() {
                 redirigir('foto_profesor.php');
             });
-        }
+        });
 
         // Configuración de Jitsi Meet
         const domain = "meet.jit.si";
@@ -278,37 +278,7 @@ $stmt->close();
         };
         const api = new JitsiMeetExternalAPI(domain, options);
     </script>
+    <script src="js/zoom_api.js"></script>
 
-    <style>
-        .record-btn {
-            position: fixed;
-            top: 8px; /* Justo debajo de la cabecera de 70px, con un poco de margen */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20000;
-            background: #fff;
-            color: #d32f2f;
-            border: none;
-            border-radius: 30px;
-            padding: 8px 30px 8px 14px;
-            font-size: 1.0rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
-        }
-        .record-btn:hover {
-            background: #d32f2f;
-            color: #fff;
-        }
-        .record-btn svg {
-            display: inline-block;
-        }
-    </style>
 </body>
-
 </html>
