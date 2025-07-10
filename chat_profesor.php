@@ -307,6 +307,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             <button id="send-button" class="button">
                 <img src="css/enviar-mensaje.png" alt="Send" width="40" height="40">
             </button>
+            <a id="video-call-button" class="button llamada" href="videollamada_profesor.php">
+                <ion-icon name="videocam-outline"></ion-icon>
+            </a>
             <input type="file" id="imageInput" accept="image/*">
             <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
         </div>
@@ -698,6 +701,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             }
         });
     </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

@@ -192,6 +192,7 @@ body.light-mode .message-bubble-profesor {
   margin-bottom: 40px;
 }
 
+
 .button {
   background-color: #007bff;
   color: white;
@@ -207,6 +208,7 @@ body.light-mode .message-bubble-profesor {
 .button:hover {
   background-color: #0056b3;
 }
+
 
 #SubirDiv {
   position: absolute;
@@ -342,7 +344,7 @@ a {
   position: fixed;
   bottom: 0;
   left: 50%; /* Centrar horizontalmente */
-  transform: translateX(-50%); /* Centrar horizontalmente */
+  transform: (-50%); /* Centrar horizontalmente */
   justify-content: center; /* Centrar el contenido */
   flex-direction: column; /* Cambiar la dirección del flex para acomodar la vista previa de la respuesta */
   transition: all 0.3s ease-in-out;
@@ -352,7 +354,7 @@ a {
   flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 25px;
   margin-right: 20px;
   margin-left: 20px;
   font-size: 16px;
@@ -387,6 +389,20 @@ a {
   justify-content: center;
   width: 50px;
   height: 50px;
+}
+
+.message-entry .button.llamada {
+  background-color: #28a745;
+  margin-left: 10px;
+}
+
+.message-entry .button.llamada ion-icon {
+  font-size: 48px; /* Ajustar el tamaño del icono */
+  color: white; /* Cambiar el color del icono */
+}
+
+.message-entry .button.llamada:hover {
+  background-color: #218838; /* Cambia el color al pasar el ratón */
 }
 
 .message-entry .button img {
