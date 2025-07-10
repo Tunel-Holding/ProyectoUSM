@@ -398,6 +398,9 @@ $conn->close();
             document.getElementById('datos').addEventListener('click', function() {
                 redirigir('datos.php');
             });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto.php');
+            });
             document.getElementById('inscripcion').addEventListener('click', function() {
                 redirigir('inscripcion.php');
             });
