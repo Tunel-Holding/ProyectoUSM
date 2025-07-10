@@ -210,12 +210,6 @@ $conn->close();
                         <p>Foto</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="desempeño">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
-                    </div>
-                </div>
                 <div class="opción" id="inscripcion">
                     <div class="intopcion">
                         <img src="css/inscripción.png">
@@ -235,7 +229,13 @@ $conn->close();
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion">
+                    <div class="intopcion" id="desempeño">
+                        <img src="css/situacionacademica.png">
+                        <p>Tareas</p>
+                    </div>
+                </div>
+                <div class="opción">
+                    <div class="intopcion" id="notas">
                         <img src="css/notas.png">
                         <p>Notas</p>
                     </div>
