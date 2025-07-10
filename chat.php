@@ -174,12 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                         <p>Foto</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="desempeño">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
-                    </div>
-                </div>
                 <div class="opción" id="inscripcion">
                     <div class="intopcion">
                         <img src="css/inscripción.png">
@@ -196,6 +190,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                     <div class="intopcion">
                         <img src="css/muro.png">
                         <p>Chat</p>
+                    </div>
+                </div>
+                <div class="opción">
+                    <div class="intopcion" id="desempeño">
+                        <img src="css/situacionacademica.png">
+                        <p>Tareas</p>
                     </div>
                 </div>
                 <div class="opción">

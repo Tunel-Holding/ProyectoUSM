@@ -212,12 +212,6 @@ $conn->close(); // Cerrar la conexión
                         <p>Foto</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="desempeño">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
-                    </div>
-                </div>
                 <div class="opción" id="inscripcion">
                     <div class="intopcion">
                         <img src="css/inscripción.png">
@@ -234,6 +228,12 @@ $conn->close(); // Cerrar la conexión
                     <div class="intopcion">
                         <img src="css/muro.png">
                         <p>Chat</p>
+                    </div>
+                </div>
+                <div class="opción">
+                    <div class="intopcion" id="desempeño">
+                        <img src="css/situacionacademica.png">
+                        <p>Tareas</p>
                     </div>
                 </div>
                 <div class="opción">
