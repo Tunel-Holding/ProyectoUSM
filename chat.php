@@ -112,44 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        .message-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .profile-icon-profesor,
-        .profile-icon-usuario {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-
-            align-self: flex-start;
-            margin-top: 10px;
-        }
-
-        .profile-icon-profesor {
-            border: 2px solid rgb(0, 208, 255);
-            /* Ejemplo de borde rojo para profesor */
-            margin-left: 80px;
-            margin-right: 20px;
-        }
-
-        .profile-icon-usuario {
-            border: 2px solid #0000ff;
-            /* Ejemplo de borde azul para alumno */
-            margin-right: 80px;
-            margin-left: 20px;
-        }
-
-        .message-content {
-            background-color: #f1f1f1;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        
-    </style>
 </head>
 
 <body>
