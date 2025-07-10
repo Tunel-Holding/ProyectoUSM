@@ -283,3 +283,50 @@
     margin: 0 17px;
     margin-right: 12px;
 }
+/* Aplica a todos los ion-icon */
+ion-icon {
+  font-size: 40px;         /* Controla el tamaño general del ícono */
+  width: 40px;             /* En caso de SVG interno que depende de esto */
+  height: 40px;
+  color: white;            /* Color visible sobre fondo oscuro */
+  display: inline-block;   /* Asegura que no colapse en el contenedor */
+  vertical-align: middle;  /* Centrado vertical si hay texto al lado */
+}
+
+/* Estilos específicos si estás en la clase .llamada */
+.message-entry .button.llamada ion-icon {
+  font-size: 40px;
+  color: white;
+}
+#video-call-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background-color: #48d252; /* tono violeta pastel */
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#video-call-button:hover {
+  background-color: #2d6a37; /* tono más oscuro en hover */
+  transform: scale(1.05);
+}
+
+/* 🎬 Ionicon dentro del botón */
+#video-call-button ion-icon {
+  font-size: 150px;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+   width: 40px;
+  height: 40px;
+}
+
+/* Zoom del ícono al hacer hover */
+#video-call-button:hover ion-icon {
+  transform: scale(1.2);
+}

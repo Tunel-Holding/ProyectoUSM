@@ -260,7 +260,7 @@ $stmt->close();
         // Configuración de Jitsi Meet
         const domain = "meet.jit.si";
         const options = {
-            roomName: "<?php echo $_SESSION['nombremateria']; ?>",
+        roomName: "<?php echo $_SESSION['nombremateria'] . ' Sección ' . $_SESSION['seccion_materia']; ?>",
             parentNode: document.querySelector("#jitsi-container"),
             width: "100%",
             height: "100%",

@@ -1,5 +1,23 @@
+
+
 <?php
 session_start();
+require 'conexion.php';
+
+// Obtener el nombre y sección de la materia
+$id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
+$stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
+$stmt->bind_param("i", $id_materia);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $_SESSION['nombremateria'] = $row['nombre'];
+    $_SESSION['seccion_materia'] = $row['seccion'];
+} else {
+    $_SESSION['nombremateria'] = "Materia no encontrada";
+    $_SESSION['seccion_materia'] = "";
+}
+$stmt->close();
 ?>
 
 <?php
@@ -321,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     </div>
 
     <script>
-        function goBack() {
+       function goBack() {
             window.history.back();
         }
         const contenedor = document.getElementById('contenedor');
@@ -355,24 +373,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 div.classList.remove('toggle');
             }
         });
-        document.getElementById('switchtema').addEventListener('change', function() {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+      document.getElementById('switchtema').addEventListener('change', function () {
+    const theme = this.checked ? 'dark' : 'light';
+
+    // 🌗 Aplicar clase visual
+    document.body.classList.toggle('dark-mode', theme === 'dark');
+
+    // 💾 Guardar en localStorage
+    localStorage.setItem('theme', theme);
+
+    // 🍪 Guardar en cookie para que PHP lo detecte
+    document.cookie = "theme=" + theme + "; path=/";
+
+    // 🔁 Enviar al backend si lo usas también vía POST
+    fetch('set_theme.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'theme=' + theme
+    });
+
+    // 🔄 Recargar mensajes (solo si usas AJAX)
+    // loadMessages(); // o location.reload(); si es HTML estático
+});
 
         // Aplicar la preferencia guardada del usuario al cargar la página
-        window.addEventListener('load', function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('switchtema').checked = true;
-            }
+ window.addEventListener('load', function () {
+    const theme = localStorage.getItem('theme') || 'light';
+
+    // 🧁 Aplicar visualmente el modo al cuerpo
+    if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('switchtema').checked = true;
+    } else {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('switchtema').checked = false;
+    }
+
+    // 🍪 Guardar el tema en una cookie para que PHP lo lea
+    document.cookie = "theme=" + theme + "; path=/";
+
+    // 🔁 Enviar también el tema al backend si usas POST (opcional)
+    fetch('set_theme.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'theme=' + theme
+    });
+});
+
+    document.getElementById('switchtema').addEventListener('change', function () {
+    if (this.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+
+        fetch('set_theme.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'theme=dark'
         });
+
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+
+        fetch('set_theme.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'theme=light'
+        });
+    }
+});
+
+
+
 
         function redirigir(url) {
             window.location.href = url;;
@@ -380,22 +458,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         }
         window.onload = function() {
             document.getElementById('inicio').addEventListener('click', function() {
-                redirigir('pagina_profesor.php');
+                redirigir('pagina_principal.php');
             });
             document.getElementById('datos').addEventListener('click', function() {
-                redirigir('datos_profesor.php');
+                redirigir('datos.php');
+            });
+            document.getElementById('inscripcion').addEventListener('click', function() {
+                redirigir('inscripcion.php');
+            });
+            document.getElementById('horario').addEventListener('click', function() {
+                redirigir('horario.php');
             });
             document.getElementById('chat').addEventListener('click', function() {
-                redirigir('seleccionarmateria_profesor.php');
-            });
-            document.getElementById('cursos').addEventListener('click', function() {
-                redirigir('cursos.php');
-            });
-            document.getElementById('notas').addEventListener('click', function() {
-                redirigir('Notas.php');
+                redirigir('seleccionarmateria.php');
             });
             document.getElementById('foto').addEventListener('click', function() {
-                redirigir('foto_profesor.php');
+                redirigir('foto.php');
+            });
+            document.getElementById('desempeño').addEventListener('click', function() {
+                redirigir('desempeño.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('NAlumnos.php');
             });
         }
 
@@ -521,18 +605,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
 
                 fetch('chat.php', {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => response.text())
-                    .then(data => {
-                        console.log('Server response:', data); // Depuración
-                        $('#reply-preview').hide();
-                        $('#reply-preview').data('reply-to', null);
-                        loadMessages();
-                    }).catch(error => {
-                        console.error('Error uploading image:', error); // Depuración
-                        alert('Error al subir la imagen');
-                    });
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.text())
+                .then(data => {
+                    console.log('Server response:', data); // Depuración
+                    $('#reply-preview').hide();
+                    $('#reply-preview').data('reply-to', null);
+                    loadMessages();
+                }).catch(error => {
+                    console.error('Error uploading image:', error); // Depuración
+                    alert('Error al subir la imagen');
+                });
             });
 
             document.getElementById('upload-file').addEventListener('click', function() {
@@ -545,18 +629,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
 
                 fetch('chat.php', {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => response.text())
-                    .then(data => {
-                        console.log('Server response:', data); // Depuración
-                        $('#reply-preview').hide();
-                        $('#reply-preview').data('reply-to', null);
-                        loadMessages();
-                    }).catch(error => {
-                        console.error('Error uploading file:', error); // Depuración
-                        alert('Error al subir el archivo');
-                    });
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.text())
+                .then(data => {
+                    console.log('Server response:', data); // Depuración
+                    $('#reply-preview').hide();
+                    $('#reply-preview').data('reply-to', null);
+                    loadMessages();
+                }).catch(error => {
+                    console.error('Error uploading file:', error); // Depuración
+                    alert('Error al subir el archivo');
+                });
             });
         });
 
