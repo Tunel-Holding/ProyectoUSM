@@ -39,23 +39,17 @@ if (!$result) {
 $query_materias_profesor = "
 SELECT 
     m.nombre AS materia,
-    p.nombre AS profesor
+    p.nombre AS profesor,
+    fu.foto
 FROM inscripciones i
 JOIN materias m ON i.id_materia = m.id
 JOIN profesores p ON m.id_profesor = p.id
+LEFT JOIN fotousuario fu ON p.id_usuario = fu.id_usuario
 WHERE i.id_estudiante = ?
 ";
-
 $stmt = $conn->prepare($query_materias_profesor);
-if (!$stmt) {
-    die("Error preparando la consulta: " . $conn->error);
-}
-
-$stmt->bind_param("i", $user_id); // $user_id es el ID del estudiante
-if (!$stmt->execute()) {
-    die("Error ejecutando la consulta: " . $stmt->error);
-}
-
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
 $resultado = $stmt->get_result();
 
 ?>
@@ -75,21 +69,87 @@ $resultado = $stmt->get_result();
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
     <style>
+        .contenedor-materias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            padding: 30px;
+        }
+
+        .tarjeta-materia {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: visible;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .nombre-materia {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .profesor-img {
+            width: 89px;
+            height: 89px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profesor-img:hover {
+            transform: scale(1.05);
+        }
+
         .hover-container {
             position: relative;
             display: inline-block;
-            cursor: pointer;
         }
+
         .hover-box {
             max-height: 0;
-            overflow: hidden;
             opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 240px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 6px;
             transition: max-height 0.5s ease, opacity 0.5s ease;
+            z-index: 100;
         }
+
         .hover-container:hover .hover-box {
-            max-height: 200px; /* ajusta según el contenido */
+            max-height: 300px;
             opacity: 1;
         }
+
+        .info-lista {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .info-lista li {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
     </style>
 </head>
 
@@ -266,30 +326,25 @@ $resultado = $stmt->get_result();
         </div>
         <div class="contenedor-horario">
             <h2 class="titulo-horario">Materias Inscritas</h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Profesor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $resultado->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['materia']); ?></td>
-                            <td>
-                                <div class="hover-container">
-                                    <?php echo htmlspecialchars($row['profesor']); ?>
-                                    <div class="hover-box">
-                                        <p><strong>Teléfono:</strong> 0414-1234567</p>
-                                        <p><strong>Email:</strong> profe@usm.edu.ve</p>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+            <div class="contenedor-materias-grid">
+                <?php while ($row = $resultado->fetch_assoc()): ?>
+                    <div class="tarjeta-materia">
+                        <p class="nombre-materia"><?php echo htmlspecialchars($row['materia']); ?></p>
+                        <div class="hover-container">
+                            <img src="<?php echo $row['foto'] ?: 'https://cdn-icons-png.flaticon.com/512/6073/6073873.png'; ?>" alt="Foto del profesor" class="profesor-img">
+                            <div class="hover-box">
+                                <ul class="info-lista">
+                                    <li><strong>Nombre:</strong> <?php echo htmlspecialchars($row['profesor']); ?></li>
+                                    <li><strong>Cédula:</strong> V-12345678</li>
+                                    <li><strong>Teléfono:</strong> 0414-1234567</li>
+                                    <li><strong>Email:</strong> profe@usm.edu.ve</li>
+                                    <li><strong>Oficina:</strong> Edif. A, Piso 2</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
         </div>
     </div>
 
