@@ -10,6 +10,21 @@ if (!isset($_SESSION['idusuario'])) {
     exit();
 }
 
+// Obtener el nombre y sección de la materia
+$id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
+$stmt = $conn->prepare("SELECT nombre, seccion FROM materia WHERE id = ?");
+$stmt->bind_param("i", $id_materia);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $_SESSION['nombre_materia'] = $row['nombre'];
+    $_SESSION['seccion_materia'] = $row['seccion'];
+} else {
+    $_SESSION['nombre_materia'] = "Materia no encontrada";
+    $_SESSION['seccion_materia'] = "";
+}
+$stmt->close();
+
 // Enviar mensaje
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     echo 'POST recibido';
