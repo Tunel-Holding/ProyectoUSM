@@ -353,6 +353,10 @@ a {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
 }
+body.dark-mode .message-entry .button-container {
+  background-color: #2c2c2c; /* Color para modo oscuro */
+  color: #fff;
+}
 
 
 .message-entry input[type="text"] {
