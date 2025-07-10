@@ -158,7 +158,7 @@ session_start();
         </div>
     </div>
 
-    <h1>Seleccionar Materia</h1>
+    <h1>Seleccionar Curso</h1>
     <div class="materias">
         <?php
         require 'conexion.php';

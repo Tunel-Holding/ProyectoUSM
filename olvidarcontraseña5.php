@@ -18,7 +18,7 @@ $consulta->bind_param("ss", $new_password, $email);
 
 if ($consulta->execute()) {
     $_SESSION['mensaje'] = "La contraseña se ha establecido con éxito. Inicie sesión con su nueva contraseña";
-     header("Location: PaginaPC/");
+     header("Location: inicio.php"); // Redirigir a la página de inicio o de éxito
      exit(); // Redirigir a una página de éxito
 }
 

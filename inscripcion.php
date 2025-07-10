@@ -155,7 +155,7 @@ session_start();
         </div>
     </div>
 
-    <h1>Materias Inscritas</h1>
+    <h1>Cursos Inscritos</h1>
     <div class="contenedormaterias">
         <table>
             <thead>
@@ -200,7 +200,7 @@ session_start();
             </tbody>
         </table>
     </div>
-    <h1>Materias Disponibles</h1>
+    <h1>Cursos Disponibles</h1>
     <?php
     require 'conexion.php';
     function getAvailableCredits($id_usuario)
@@ -216,7 +216,7 @@ session_start();
         return $creditosdisponibles;
     }
     ?>
-    <h2 class="h2">Creditos disponibles: <?php echo getAvailableCredits($_SESSION['idusuario']) ?></h2>
+    <h2 class="h2">Cursos disponibles: <?php echo getAvailableCredits($_SESSION['idusuario']) ?></h2>
     <div class="materias">
         <?php
         // Conexión a la base de datos
@@ -280,7 +280,7 @@ session_start();
         <?php
                 }
             } else {
-                echo "No hay materias disponibles para inscribir.";
+                echo "No hay cursos disponibles para inscribir.";
             }
 
             $stmtMaterias->close();
