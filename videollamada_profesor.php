@@ -173,6 +173,13 @@ $stmt->close();
     <div class="jitsi-container" id="jitsi-container">        
     </div>
 
+    <button id="record-btn" class="record-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8"/>
+        </svg>
+        Grabar
+    </button>
+
     <script src="https://meet.jit.si/external_api.js"></script>
     <script>
         const contenedor = document.getElementById('contenedor');
@@ -256,11 +263,14 @@ $stmt->close();
             roomName: "<?php echo $_SESSION['nombremateria']; ?>",
             parentNode: document.querySelector("#jitsi-container"),
             width: "100%",
-            height: 600,
+            height: "100%",
             userInfo: {
                 displayName: "<?php echo isset($_SESSION['nombreusuario']) ? $_SESSION['nombreusuario'] : 'Prep. Invitado'; ?>"
             },
             interfaceConfigOverwrite: {
+                SHOW_JITSI_WATERMARK: false,
+                SHOW_WATERMARK_FOR_GUESTS: false,
+                BRAND_WATERMARK_LINK: '',
                 TOOLBAR_BUTTONS: [
                     "microphone", "camera", "chat", "desktop", "hangup"
                 ]
@@ -268,6 +278,37 @@ $stmt->close();
         };
         const api = new JitsiMeetExternalAPI(domain, options);
     </script>
+
+    <style>
+        .record-btn {
+            position: fixed;
+            top: 8px; /* Justo debajo de la cabecera de 70px, con un poco de margen */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20000;
+            background: #fff;
+            color: #d32f2f;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 30px 8px 14px;
+            font-size: 1.0rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .record-btn:hover {
+            background: #d32f2f;
+            color: #fff;
+        }
+        .record-btn svg {
+            display: inline-block;
+        }
+    </style>
 </body>
 
 </html>

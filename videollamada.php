@@ -270,7 +270,7 @@ $stmt->close();
             roomName: "<?php echo $_SESSION['nombremateria']?>",
             parentNode: document.querySelector("#jitsi-container"),
             width: "100%",
-            height: 600,
+            height: "100%",
             userInfo: {
                 displayName: "<?php echo isset($_SESSION['nombreusuario']) ? $_SESSION['nombreusuario'] : 'Invitado'; ?>"
             },
