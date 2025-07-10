@@ -334,29 +334,32 @@ a {
 }
 
 .message-entry {
+  position: relative;
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding: 5px;
-  background-color: var(--fondo);
-  width: 40%; /* Ajustar el ancho al 50% */
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  position: fixed;
-  bottom: 0;
-  left: 50%; /* Centrar horizontalmente */
-  transform: (-50%); /* Centrar horizontalmente */
-  justify-content: center; /* Centrar el contenido */
-  flex-direction: column; /* Cambiar la dirección del flex para acomodar la vista previa de la respuesta */
-  transition: all 0.3s ease-in-out;
 }
+.message-entry .button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  width: 100%;
+  max-width: 480px;        /* Puedes ajustar el ancho máximo */
+  background-color: #f0f0f0;
+  border-radius: 50px;     /* 🎯 Lo hace redondeado */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
 
 .message-entry input[type="text"] {
   flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 25px;
-  margin-right: 20px;
-  margin-left: 20px;
   font-size: 16px;
   outline: none;
   transition: border-color 0.3s;
@@ -368,12 +371,8 @@ a {
   border-color: #007bff;
 }
 
-.message-entry .button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
+
+
 
 .message-entry .button {
   background-color: #007bff;
