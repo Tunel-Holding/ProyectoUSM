@@ -1,3 +1,30 @@
+<?php
+session_start();
+require 'conexion.php';
+
+// Definir nombre de la materia si no está definida
+$_SESSION['nombremateria'] = isset($_SESSION['nombremateria']) ? $_SESSION['nombremateria'] : 'SalaProfesor';
+
+$idusuario = $_SESSION['idusuario'];
+// Consulta SQL para obtener solo el primer nombre y primer apellido
+date_default_timezone_set('America/Caracas');
+$sql = "SELECT nombres, apellidos FROM datos_usuario WHERE usuario_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $idusuario);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $primer_nombre = explode(' ', trim($row['nombres']))[0];
+    $primer_apellido = explode(' ', trim($row['apellidos']))[0];
+    // Prefijo para profesores
+    $_SESSION['nombreusuario'] = 'Prep. ' . $primer_nombre . ' ' . $primer_apellido;
+} else {
+    echo "<script>alert('Debes llenar tus datos personales antes de continuar.'); window.location.href='llenar_datos_profesor.php';</script>";
+    exit();
+}
+$stmt->close();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -226,14 +253,17 @@
         // Configuración de Jitsi Meet
         const domain = "meet.jit.si";
         const options = {
-            roomName: "MiSalaPrivada123",
+            roomName: "<?php echo $_SESSION['nombremateria']; ?>",
             parentNode: document.querySelector("#jitsi-container"),
             width: "100%",
             height: 600,
+            userInfo: {
+                displayName: "<?php echo isset($_SESSION['nombreusuario']) ? $_SESSION['nombreusuario'] : 'Prep. Invitado'; ?>"
+            },
             interfaceConfigOverwrite: {
-            TOOLBAR_BUTTONS: [
-                "microphone", "camera", "chat", "desktop", "hangup"
-            ]
+                TOOLBAR_BUTTONS: [
+                    "microphone", "camera", "chat", "desktop", "hangup"
+                ]
             }
         };
         const api = new JitsiMeetExternalAPI(domain, options);

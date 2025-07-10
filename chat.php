@@ -12,7 +12,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 // Obtener el nombre y sección de la materia
 $id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
-$stmt = $conn->prepare("SELECT nombre, seccion FROM materia WHERE id = ?");
+$stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
 $stmt->bind_param("i", $id_materia);
 $stmt->execute();
 $result = $stmt->get_result();

@@ -1,6 +1,27 @@
 <?php
 session_start();
+require 'conexion.php';
+
 $_SESSION['nombremateria'] = isset($_SESSION['nombremateria']) ? $_SESSION['nombremateria'] : 'Materia no definida';
+
+$idusuario = $_SESSION['idusuario'];
+// Consulta SQL para obtener solo el primer nombre y primer apellido
+date_default_timezone_set('America/Caracas'); // Ajusta la zona horaria si es necesario
+$sql = "SELECT nombres, apellidos FROM datos_usuario WHERE usuario_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $idusuario);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $primer_nombre = explode(' ', trim($row['nombres']))[0];
+    $primer_apellido = explode(' ', trim($row['apellidos']))[0];
+    // Puedes usar $primer_nombre y $primer_apellido donde lo necesites
+    $_SESSION['nombreusuario'] = $primer_nombre . ' ' . $primer_apellido;
+} else {
+    echo "<script>alert('Debes llenar tus datos personales antes de continuar.'); window.location.href='llenar_datos.php';</script>";
+    exit();
+}
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -250,6 +271,9 @@ $_SESSION['nombremateria'] = isset($_SESSION['nombremateria']) ? $_SESSION['nomb
             parentNode: document.querySelector("#jitsi-container"),
             width: "100%",
             height: 600,
+            userInfo: {
+                displayName: "<?php echo isset($_SESSION['nombreusuario']) ? $_SESSION['nombreusuario'] : 'Invitado'; ?>"
+            },
             interfaceConfigOverwrite: {
             TOOLBAR_BUTTONS: [
                 "microphone", "camera", "chat", "desktop", "raisehand", "recording", "hangup"
