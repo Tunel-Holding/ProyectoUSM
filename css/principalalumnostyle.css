@@ -514,3 +514,29 @@ body.dark-mode {
   border-radius: 50px;
   color: white;
 }
+.hover-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.hover-box {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 240px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    z-index: 1000;
+    font-size: 14px;
+    color: #333;
+    white-space: normal;
+}
+
+.hover-container:hover .hover-box {
+    display: block;
+}

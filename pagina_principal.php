@@ -36,33 +36,28 @@ if (!$result) {
 }
 
 // Consulta para obtener las notas del estudiante
-$query_notas = "SELECT m.nombre AS materia, n.Parcial1, n.Parcial2, n.Parcial3, n.Parcial4, n.Final
-                FROM inscripciones i
-                JOIN materias m ON i.id_materia = m.id
-                JOIN notas n ON i.id_materia = n.materia_id
-                WHERE i.id_estudiante = ? AND n.usuario_id = ?";
-$stmt_notas = $conn->prepare($query_notas);
-if (!$stmt_notas) {
-    die("Error en la preparación de la consulta de notas: " . $conn->error);
-}
-$stmt_notas->bind_param("ii", $user_id, $user_id);
-if (!$stmt_notas->execute()) {
-    die("Error en la ejecución de la consulta de notas: " . $stmt_notas->error);
-}
-$result_notas = $stmt_notas->get_result();
-if (!$result_notas) {
-    die("Error al obtener el resultado de notas: " . $stmt_notas->error);
+$query_materias_profesor = "
+SELECT 
+    m.nombre AS materia,
+    p.nombre AS profesor
+FROM inscripciones i
+JOIN materias m ON i.id_materia = m.id
+JOIN profesores p ON m.id_profesor = p.id
+WHERE i.id_estudiante = ?
+";
+
+$stmt = $conn->prepare($query_materias_profesor);
+if (!$stmt) {
+    die("Error preparando la consulta: " . $conn->error);
 }
 
-function getNotaClass($nota) {
-    if ($nota > 15) {
-        return 'nota-alta';
-    } elseif ($nota >= 10 && $nota <= 15) {
-        return 'nota-media';
-    } else {
-        return 'nota-baja';
-    }
+$stmt->bind_param("i", $user_id); // $user_id es el ID del estudiante
+if (!$stmt->execute()) {
+    die("Error ejecutando la consulta: " . $stmt->error);
 }
+
+$resultado = $stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
@@ -79,6 +74,26 @@ function getNotaClass($nota) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - USM</title>
+
+    <style>
+        .hover-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        }
+
+        .hover-box {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+
+        .hover-container:hover .hover-box {
+            max-height: 200px; /* ajusta según el contenido */
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body>
@@ -252,29 +267,28 @@ function getNotaClass($nota) {
                 </tbody>
             </table>
         </div>
-
         <div class="contenedor-horario">
-            <h2 class="titulo-horario">Notas del Estudiante</h2>
+            <h2 class="titulo-horario">Materias Inscritas</h2>
             <table class="tabla-horario">
                 <thead>
                     <tr>
                         <th>Materia</th>
-                        <th>Parcial 1</th>
-                        <th>Parcial 2</th>
-                        <th>Parcial 3</th>
-                        <th>Parcial 4</th>
-                        <th>Final</th>
+                        <th>Profesor</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row_notas = $result_notas->fetch_assoc()): ?>
+                    <?php while ($row = $resultado->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $row_notas['materia']; ?></td>
-                            <td class="<?php echo getNotaClass($row_notas['Parcial1']); ?>"><?php echo $row_notas['Parcial1']; ?></td>
-                            <td class="<?php echo getNotaClass($row_notas['Parcial2']); ?>"><?php echo $row_notas['Parcial2']; ?></td>
-                            <td class="<?php echo getNotaClass($row_notas['Parcial3']); ?>"><?php echo $row_notas['Parcial3']; ?></td>
-                            <td class="<?php echo getNotaClass($row_notas['Parcial4']); ?>"><?php echo $row_notas['Parcial4']; ?></td>
-                            <td class="<?php echo getNotaClass($row_notas['Final']); ?>"><?php echo $row_notas['Final']; ?></td>
+                            <td><?php echo htmlspecialchars($row['materia']); ?></td>
+                            <td>
+                                <div class="hover-container">
+                                    <?php echo htmlspecialchars($row['profesor']); ?>
+                                    <div class="hover-box">
+                                        <p><strong>Teléfono:</strong> 0414-1234567</p>
+                                        <p><strong>Email:</strong> profe@usm.edu.ve</p>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
