@@ -1,3 +1,8 @@
+<?php
+session_start();
+$_SESSION['nombremateria'] = isset($_SESSION['nombremateria']) ? $_SESSION['nombremateria'] : 'Materia no definida';
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -241,13 +246,13 @@
 
         const domain = "meet.jit.si";
         const options = {
-            roomName: "MiSalaPrivada123",
+            roomName: "<?php echo $_SESSION['nombremateria']?>",
             parentNode: document.querySelector("#jitsi-container"),
             width: "100%",
             height: 600,
             interfaceConfigOverwrite: {
             TOOLBAR_BUTTONS: [
-                "microphone", "camera", "chat", "desktop", "hangup"
+                "microphone", "camera", "chat", "desktop", "raisehand", "recording", "hangup"
             ]
             }
         };
