@@ -114,7 +114,7 @@ body.dark-mode {
   flex-direction: column;
   padding: 15px;
   border-radius: 20px;
-  background: linear-gradient(#083f88, #4c60af);
+  
   position: relative;
   max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
   word-wrap: break-word; /* Asegura que el texto largo se ajuste */
@@ -127,23 +127,34 @@ body.dark-mode {
   min-width: 12%;
 }
 
+/* Estilos base que aplican en ambos modos */
 .message-bubble-profesor {
   display: flex;
   flex-direction: column;
   padding: 15px;
   border-radius: 20px;
-  background: linear-gradient(#0093ff, #37bcff);
   position: relative;
-  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
-  max-width: 50%; /* Esto permite que el contenedor se ajuste automáticamente */
-  color: rgb(70, 70, 70);
-  align-self: flex-start; /* Cambiar a flex-start para alinear a la izquierda */
-  display: flex;
-  flex-direction: column;
+  word-wrap: break-word;
+  max-width: 50%;
+  min-width: 12%;
   font-size: 14px;
   margin-top: 10px;
-  min-width: 12%;
+  align-self: flex-start;
+  transition: background 0.3s ease, color 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, #ffd166, #fcbf49); /* dorado cálido */
+  color: #213555; /* azul oscuro institucional */
 }
+
+/* Modo oscuro activado con clase */
+body.dark-mode .message-bubble-profesor {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: #f9fafb;
+}
+body.light-mode .message-bubble-profesor {
+  
+}
+
 
 .message-bubble-profesor img,
 .message-bubble-usuario img {
