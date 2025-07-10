@@ -1,5 +1,23 @@
+
+
 <?php
 session_start();
+require 'conexion.php';
+
+// Obtener el nombre y sección de la materia
+$id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
+$stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
+$stmt->bind_param("i", $id_materia);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($row = $result->fetch_assoc()) {
+    $_SESSION['nombremateria'] = $row['nombre'];
+    $_SESSION['seccion_materia'] = $row['seccion'];
+} else {
+    $_SESSION['nombremateria'] = "Materia no encontrada";
+    $_SESSION['seccion_materia'] = "";
+}
+$stmt->close();
 ?>
 
 <?php
