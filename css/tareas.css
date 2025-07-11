@@ -1,0 +1,621 @@
+/* Variables de colores */
+body{
+    --bg-color: #F8FAFC; /* Fondo muy claro, casi blanco-azulado */
+    --card-bg-color: #ffffff;
+    --border-color: #E2E8F0; /* Bordes de inputs y cards */
+    --text-color-dark: #1E293B; /* Títulos y texto principal */
+    --text-color-medium: #64748B; /* Subtítulos, labels, placeholders */
+    --accent-blue: #3B82F6; /* Botones, progreso general */
+    --accent-blue-dark: #2563EB;
+    --green-completed: #22C55E;
+    --yellow-pending: #FACC15;
+    --red-overdue: #EF4444;
+    --red-deficient: #DC2626; /* Rojo más oscuro para calificación E */
+    --orange-regular: #F97316; /* Naranja para calificación D */
+
+    --border-radius-card: 12px;
+    --border-radius-btn: 8px;
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --bg-color-modal: #ffffff; /* Fondo del modal en modo claro */
+}
+
+body.dark-mode {
+    --bg-color: #F8FAFC; /* Fondo muy claro, casi blanco-azulado */
+    --card-bg-color: #4e4e4e;
+    --border-color: #E2E8F0; /* Bordes de inputs y cards */
+    --text-color-dark: #ffffff; /* Títulos y texto principal */
+    --text-color-medium: #a6aeb9; /* Subtítulos, labels, placeholders */
+    --accent-blue: #3B82F6; /* Botones, progreso general */
+    --accent-blue-dark: #2563EB;
+    --green-completed: #22C55E;
+    --yellow-pending: #FACC15;
+    --red-overdue: #EF4444;
+    --red-deficient: #DC2626; /* Rojo más oscuro para calificación E */
+    --orange-regular: #F97316; /* Naranja para calificación D */
+
+    --border-radius-card: 12px;
+    --border-radius-btn: 8px;
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --bg-color-modal: #333333; /* Fondo del modal en dark mode */
+}
+
+.contenido{
+    width: 90%;
+    margin: 0 auto;
+}
+
+h1{
+    text-align: center;
+    font-size: 3.5rem;
+    margin-top: 20px;
+    margin-bottom: 40px
+}
+
+.container {
+    min-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Encabezado */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.header-left h1 {
+    font-size: 30px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.semestre-actual {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    border-radius: var(--border-radius-btn);
+    text-align: right;
+    box-shadow: var(--shadow-card);
+}
+
+.semestre-actual span {
+    font-size: 13px;
+    color: var(--text-color-medium);
+    display: block;
+    margin-bottom: 0px;
+}
+
+.semestre-actual p {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--text-color-dark);
+}
+
+/* Estilos de las tarjetas (cards base) */
+.card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-card);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+}
+
+/* Sección de Progreso del Semestre */
+.semester-progress-section {
+    margin-bottom: 24px;
+}
+
+.semester-progress-section h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+.progress-metrics {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap; /* Para responsividad */
+    gap: 20px;
+}
+
+.metric-item {
+    text-align: center;
+    flex-basis: 200px; /* Base para el tamaño de cada ítem */
+}
+
+.metric-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 10px auto;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff; /* Color de los iconos y texto dentro del círculo */
+}
+
+/* Colores de los círculos */
+.metric-circle.blue { background-color: var(--accent-blue); }
+.metric-circle.green { background-color: var(--green-completed); }
+.metric-circle.yellow { background-color: var(--yellow-pending); }
+.metric-circle.red { background-color: var(--red-overdue); }
+
+/* Estilo para el progreso circular (SVG) */
+.circular-chart {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    overflow: visible; /* Asegura que el stroke se vea completo */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.circle-bg {
+    stroke: rgba(255, 255, 255, 0.3); /* Color de fondo del círculo de progreso */
+    stroke-width: 3;
+    fill: none;
+}
+
+.circle {
+    stroke: #fff; /* Color del progreso */
+    stroke-width: 3;
+    fill: none;
+    transition: stroke-dasharray .3s ease-out;
+}
+
+.metric-circle .metric-value {
+    position: relative; /* Para que el porcentaje se vea encima del SVG */
+    z-index: 1;
+}
+
+.metric-label {
+    font-size: 15px;
+    color: var(--text-color-dark);
+    font-weight: 500;
+}
+
+
+/* Sección de Filtros y Búsqueda */
+.task-filters-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap; /* Para responsividad */
+    gap: 15px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-btn);
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent-blue);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-btn:hover {
+    background-color: var(--accent-blue);
+    color: #fff;
+    border-color: var(--accent-blue);
+}
+
+.filter-btn.active {
+    background-color: var(--accent-blue);
+    color: #fff;
+    border-color: var(--accent-blue);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2); /* Sombra para el botón activo */
+}
+
+.search-bar {
+    position: relative;
+    flex-grow: 1;
+    max-width: 300px; /* Limita el ancho de la barra de búsqueda */
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 15px 10px 40px; /* Espacio para el icono */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-btn);
+    font-size: 15px;
+    color: var(--text-color-dark);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.search-bar .fas {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color-medium);
+    font-size: 16px;
+}
+
+
+/* Sección de Lista de Tareas */
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 300px es un buen tamaño mínimo */
+    gap: 24px; /* Espacio entre tarjetas */
+}
+
+.task-card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden; /* Para contener los footers de color */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.task-card:hover {
+    transform: translateY(-5px); /* Eleva ligeramente al pasar el cursor */
+    box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada */
+}
+
+.task-card-content {
+    padding: 24px;
+    flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
+}
+
+.task-card .task-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: var(--text-color-dark);
+}
+
+.task-card .task-description {
+    font-size: 15px;
+    color: var(--text-color-medium);
+    margin-bottom: 15px;
+    /* Para manejar descripciones largas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita a 2 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-details p {
+    font-size: 14px;
+    color: var(--text-color-dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.task-details p:last-child {
+    margin-bottom: 0;
+}
+
+.task-details i {
+    color: var(--text-color-medium);
+    width: 18px; /* Ancho fijo para alinear iconos */
+    text-align: center;
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.pending {
+    background-color: #FEF3C7; /* Amarillo claro */
+    color: #D97706; /* Naranja oscuro */
+}
+
+.status-badge.completed {
+    background-color: #D1FAE5; /* Verde claro */
+    color: #059669; /* Verde oscuro */
+}
+
+.time-status.overdue {
+    color: var(--red-overdue);
+    font-weight: 600;
+}
+
+.time-status.completed { /* Para "Tiempo de Entrega Terminado" pero completado */
+    color: var(--text-color-medium); /* Menos prominente si ya está calificado */
+}
+
+
+/* Pie de tarjeta (sección de color) */
+.task-card-footer {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto; /* Empuja el footer hacia abajo */
+    border-top: 1px solid rgba(0, 0, 0, 0.05); /* Separador sutil */
+    gap: 10px; /* Espacio si los elementos se envuelven */
+    flex-wrap: wrap; /* Para responsividad en el footer */
+}
+
+/* Colores de los footers según el estado/calificación */
+.task-card-footer.status-overdue {
+    background-color: var(--orange-regular); /* Naranja para "Tiempo Agotado" */
+    color: #fff;
+}
+
+.task-card-footer.status-deficient {
+    background-color: var(--red-deficient); /* Rojo oscuro para Calificación E */
+    color: #fff;
+}
+
+.task-card-footer.status-completed {
+    background-color: var(--green-completed); /* Verde para tareas completadas y bien calificadas */
+    color: #fff;
+}
+
+.task-card-footer.status-pending {
+    background-color: var(--accent-blue); /* Azul para tareas pendientes sin calificación ni tiempo agotado */
+    color: #fff;
+}
+
+
+/* Botones y mensajes dentro del footer */
+.grade-btn {
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo semitransparente */
+    border: none;
+    border-radius: var(--border-radius-btn);
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: default; /* No es un botón clicable, es un indicador */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Colores específicos para los grade-btn si el texto lo indica */
+.grade-btn.red { background-color: rgba(255, 255, 255, 0.3); } /* Ligeramente más translúcido */
+.grade-btn.red-dark { background-color: rgba(255, 255, 255, 0.3); } /* para combinar con rojo oscuro */
+.grade-btn.green { background-color: rgba(255, 255, 255, 0.3); }
+
+.submit-task-btn {
+    background-color: rgba(255, 255, 255, 0.3); /* Fondo semitransparente */
+    border: none;
+    border-radius: var(--border-radius-btn);
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.submit-task-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.task-completed-message {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0; /* Eliminar margen predeterminado de p */
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 992px) {
+    .task-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 15px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .semestre-actual {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .semester-progress-section .card {
+        padding: 20px;
+    }
+
+    .progress-metrics {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .metric-item {
+        flex-basis: 100%;
+    }
+
+    .task-filters-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .filter-buttons {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    .filter-btn {
+        flex: 1; /* Permite que los botones ocupen el espacio equitativamente */
+        justify-content: center; /* Centra el contenido en el botón */
+        padding: 10px 10px;
+    }
+
+    .search-bar {
+        width: 100%;
+        max-width: none;
+    }
+
+    .task-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .task-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+.hover-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+.hover-box {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+.hover-container:hover .hover-box {
+    max-height: 200px; /* ajusta según el contenido */
+    opacity: 1;
+}
+/* Estilos para el modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.modal-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-content.modal-alumno {
+    background: linear-gradient(135deg, var(--bg-color-modal) 60%, #e0e7ef 100%);
+    border-radius: 22px;
+    max-width: 520px;
+    width: 95vw;
+    padding: 2.8em 2.2em 2.2em 2.2em;
+    box-shadow: 0 12px 40px 0 rgba(59,130,246,0.10), 0 2px 8px 0 rgba(0,0,0,0.08);
+    font-size: 1.18em;
+    position: relative;
+    border: 1.5px solid #e0e7ef;
+    animation: modalPopIn 0.25s cubic-bezier(.4,1.6,.6,1) both;
+}
+body.dark-mode .modal-content.modal-alumno {
+    background: linear-gradient(135deg, var(--bg-color-modal) 60%, #44495a 100%);
+    /* El gradiente usa el fondo modal oscuro y un tono más oscuro para el extremo */
+    border: 1.5px solid #44495a;
+}
+@keyframes modalPopIn {
+    0% { transform: scale(0.92) translateY(30px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid #e3e6eb;
+    margin-bottom: 1.2em;
+    padding-bottom: 0.7em;
+}
+.modal-header h2 {
+    font-size: 2.1em;
+    margin: 0;
+    color: var(--accent-blue-dark, #2563EB);
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 2.2em;
+    color: #b0b6c3;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.close-btn:hover {
+    color: #2563EB;
+}
+.modal-body {
+    color: var(--text-color-dark);
+    font-size: 1.15em;
+    line-height: 1.7;
+    padding-top: 0.5em;
+}
+.modal-body p {
+    margin-bottom: 0.7em;
+    font-size: 1.08em;
+}
+#modal-descripcion {
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 1.1em 1em;
+    color: #334155;
+    font-size: 1.13em;
+    box-shadow: 0 1px 4px 0 rgba(59,130,246,0.04);
+    margin-bottom: 0.5em;
+    word-break: break-word;
+}
+@media (max-width: 600px) {
+    .modal-content.modal-alumno {
+        padding: 1.2em 0.5em;
+        font-size: 1em;
+    }
+    .modal-header h2 {
+        font-size: 1.2em;
+    }
+}

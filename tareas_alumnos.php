@@ -73,7 +73,10 @@ $resultado = $stmt->get_result();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Inicio - USM</title>
+    <link rel="stylesheet" href="css/tareas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Mis Tareas - Plataforma de Estudiantes</title>
     <style>
         .hover-container {
             position: relative;
@@ -170,6 +173,12 @@ $resultado = $stmt->get_result();
                         <p>Tareas</p>
                     </div>
                 </div>
+                <div class="opción">
+                    <div class="intopcion" id="notas">
+                        <img src="css/notas.png">
+                        <p>Notas</p>
+                    </div>
+                </div>
             </div>
             <button class="boton" id="boton-derecho">
                 <svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -226,67 +235,226 @@ $resultado = $stmt->get_result();
         </div>
     </div>
 
-    <p class="bienvenido">Bienvenido a UniHub</p>
+    
+        
+    <div class="contenido">
+        <section class="semester-progress-section card">
+            <h1>Mis Tareas - Nombre Materia</h1>
+            <div class="progress-metrics">
+                
 
-    <div class="divprincipal">
-        <div class="contenedor-horario">
-            <h2 class="titulo-horario">Horario del día: <?php echo $dia_actual; ?></h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Salón</th>
-                        <th>Hora de Inicio</th>
-                        <th>Hora de Fin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($result->num_rows > 0): ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $row['materia']; ?></td>
-                                <td><?php echo $row['salon']; ?></td>
-                                <td><?php echo $row['hora_inicio']; ?></td>
-                                <td><?php echo $row['hora_fin']; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td class="nohayclases" colspan="4"> ¡¡¡NO HAY CLASES!!! 🥳</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-        <div class="contenedor-horario">
-            <h2 class="titulo-horario">Materias Inscritas</h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Profesor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $resultado->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['materia']); ?></td>
-                            <td>
-                                <div class="hover-container">
-                                    <?php echo htmlspecialchars($row['profesor']); ?>
-                                    <div class="hover-box">
-                                        <p><strong>Teléfono:</strong> 0414-1234567</p>
-                                        <p><strong>Email:</strong> profe@usm.edu.ve</p>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
+                <div class="metric-item">
+                    <div class="metric-circle green">
+                        <i class="fas fa-check"></i>
+                        <span class="metric-value">3</span>
+                    </div>
+                    <p class="metric-label">Tareas Completadas</p>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-circle yellow">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span class="metric-value">2</span>
+                    </div>
+                    <p class="metric-label">Tareas Pendientes</p>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-circle red">
+                        <i class="fas fa-exclamation"></i>
+                        <span class="metric-value">1</span>
+                    </div>
+                    <p class="metric-label">Tareas Vencidas</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="task-filters-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> Todas las Tareas
+                </button>
+                <button class="filter-btn" data-filter="pending">
+                    <i class="fas fa-hourglass-half"></i> Pendientes
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <i class="fas fa-check-circle"></i> Completadas
+                </button>
+            </div>
+            
+        </section>
+
+        <section class="tasks-list-section">
+            <div class="task-grid">
+                <div class="task-card" data-status="pending">
+                    <div class="task-card-content">
+                        <h4 class="task-title">Ensayo de Historia</h4>
+                        <p class="task-description">Escribir un ensayo de 1500 palabras sobre la Revolución Industrial</p>
+                        <div class="task-details">
+                            <p><i class="fas fa-book"></i> Materia: Historia Universal</p>
+                            <p><i class="far fa-calendar-alt"></i> Fecha: 25/12/2024</p>
+                            <p><i class="far fa-clock"></i> Hora: 23:59</p>
+                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
+                            <p><i class="fas fa-weight-hanging"></i> Peso: 25% del total</p>
+                            <p><i class="fas fa-exclamation-triangle"></i> Tiempo: <span class="time-status overdue">Tiempo Agotado</span></p>
+                        </div>
+                    </div>
+                    <div class="task-card-footer status-overdue">
+                        <button class="grade-btn red">
+                            <i class="fas fa-star"></i> Calificación: D (Regular)
+                        </button>
+                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
+                    </div>
+                </div>
+
+                <div class="task-card" data-status="pending">
+                    <div class="task-card-content">
+                        <h4 class="task-title">Proyecto de Matemáticas</h4>
+                        <p class="task-description">Resolver ejercicios del capítulo 5 sobre derivadas e integrales</p>
+                        <div class="task-details">
+                            <p><i class="fas fa-book"></i> Materia: Cálculo I</p>
+                            <p><i class="far fa-calendar-alt"></i> Fecha: 28/12/2024</p>
+                            <p><i class="far fa-clock"></i> Hora: 18:00</p>
+                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
+                            <p><i class="fas fa-weight-hanging"></i> Peso: 30% del total</p>
+                            <p><i class="fas fa-calendar-times"></i> Tiempo: <span class="time-status completed">Tiempo de Entrega Terminado</span></p>
+                        </div>
+                    </div>
+                    <div class="task-card-footer status-deficient">
+                        <button class="grade-btn red-dark">
+                            <i class="fas fa-star"></i> Calificación: E (Deficiente)
+                        </button>
+                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
+                    </div>
+                </div>
+
+                <div class="task-card" data-status="completed">
+                    <div class="task-card-content">
+                        <h4 class="task-title">Laboratorio de Química</h4>
+                        <p class="task-description">Completar el reporte del experimento sobre reacciones ácido-base</p>
+                        <div class="task-details">
+                            <p><i class="fas fa-book"></i> Materia: Química Orgánica</p>
+                            <p><i class="far fa-calendar-alt"></i> Fecha: 20/12/2024</p>
+                            <p><i class="far fa-clock"></i> Hora: 14:30</p>
+                            <p><i class="fas fa-check-double"></i> Estado: <span class="status-badge completed">Completada</span></p>
+                            <p><i class="fas fa-weight-hanging"></i> Peso: 20% del total</p>
+                        </div>
+                    </div>
+                    <div class="task-card-footer status-completed">
+                        <button class="grade-btn green">
+                            <i class="fas fa-star"></i> Calificación: B (Muy Bueno)
+                        </button>
+                        <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Completada</p>
+                    </div>
+                </div>
+
+                <div class="task-card" data-status="pending">
+                    <div class="task-card-content">
+                        <h4 class="task-title">Presentación de Literatura</h4>
+                        <p class="task-description">Preparar presentación de 30 minutos sobre Gabriel García Márquez.</p>
+                        <div class="task-details">
+                            <p><i class="fas fa-book"></i> Materia: Literatura Española</p>
+                            <p><i class="far fa-calendar-alt"></i> Fecha: 05/01/2025</p>
+                            <p><i class="far fa-clock"></i> Hora: 10:00</p>
+                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
+                            <p><i class="fas fa-weight-hanging"></i> Peso: 15% del total</p>
+                        </div>
+                    </div>
+                    <div class="task-card-footer status-pending">
+                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
+                    </div>
+                </div>
+
+                <div class="task-card" data-status="completed">
+                    <div class="task-card-content">
+                        <h4 class="task-title">Examen de Física</h4>
+                        <p class="task-description">Estudiar capítulos 1-3 sobre mecánica clásica y cinemática.</p>
+                        <div class="task-details">
+                            <p><i class="fas fa-book"></i> Materia: Física Básica</p>
+                            <p><i class="far fa-calendar-alt"></i> Fecha: 15/11/2024</p>
+                            <p><i class="far fa-clock"></i> Hora: 09:00</p>
+                            <p><i class="fas fa-check-double"></i> Estado: <span class="status-badge completed">Completada</span></p>
+                            <p><i class="fas fa-weight-hanging"></i> Peso: 40% del total</p>
+                        </div>
+                    </div>
+                    <div class="task-card-footer status-completed">
+                        <button class="grade-btn green">
+                            <i class="fas fa-star"></i> Calificación: A (Excelente)
+                        </button>
+                        <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Completada</p>
+                    </div>
+                </div>
+
+                <div class="task-card" data-status="pending">
+                    <div class="task-card-content">
+                        <h4 class="task-title">Quiz de Inglés</h4>
+                        <p class="task-description">Evaluación sobre gramática y vocabulario del capítulo 3.</p>
+                        <div class="task-details">
+                            <p><i class="fas fa-book"></i> Materia: Inglés Avanzado</p>
+                            <p><i class="far fa-calendar-alt"></i> Fecha: 01/01/2025</p>
+                            <p><i class="far fa-clock"></i> Hora: 11:00</p>
+                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
+                            <p><i class="fas fa-weight-hanging"></i> Peso: 10% del total</p>
+                        </div>
+                    </div>
+                    <div class="task-card-footer status-pending">
+                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
     </div>
 
+    <script>
+        // Script para la fecha actual del semestre
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateElement = document.getElementById('current-semester-date');
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateElement.textContent = now.toLocaleDateString('es-ES', options);
+
+            // Funcionalidad de filtros (ejemplo simple)
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const taskCards = document.querySelectorAll('.task-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const filter = button.dataset.filter;
+
+                    taskCards.forEach(card => {
+                        const status = card.dataset.status;
+                        if (filter === 'all' || filter === status) {
+                            card.style.display = 'block'; // Mostrar
+                        } else {
+                            card.style.display = 'none'; // Ocultar
+                        }
+                    });
+                });
+            });
+
+            // Funcionalidad de búsqueda (ejemplo simple)
+            const searchInput = document.querySelector('.search-bar input');
+            searchInput.addEventListener('keyup', (event) => {
+                const searchTerm = event.target.value.toLowerCase();
+                taskCards.forEach(card => {
+                    const title = card.querySelector('.task-title').textContent.toLowerCase();
+                    const description = card.querySelector('.task-description').textContent.toLowerCase();
+                    const materia = card.querySelector('.task-details p:nth-child(1)').textContent.toLowerCase(); // Suponiendo el orden
+
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || materia.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    
     <script>
         const contenedor = document.getElementById('contenedor');
         const botonIzquierdo = document.getElementById('boton-izquierdo');
@@ -359,7 +527,7 @@ $resultado = $stmt->get_result();
                 redirigir('seleccionarmateria.php');
             });
             document.getElementById('desempeño').addEventListener('click', function() {
-                redirigir('Seleccion_de_materias_tareas.php');
+                redirigir('desempeño.php');
             });
             document.getElementById('notas').addEventListener('click', function() {
                 redirigir('NAlumnos.php');
