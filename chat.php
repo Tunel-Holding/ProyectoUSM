@@ -292,7 +292,7 @@ $last_user_id = null;
             <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
             <button id="call-button" class="button">
                 <img src="css/llamada_alumno.png" alt="Send" width="40" height="40">
-                <span style="vertical-align: middle; margin-left: 8px;">Contestar</span>
+                
             </button>
         </div>
     </div>
