@@ -1,75 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['idusuario'])) {
-    header('Location: index.php');
-    exit;
-}
-
-include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
-$conn->set_charset("utf8mb4");
-
-// Obtener la ID del usuario desde la sesión
-$user_id = $_SESSION['idusuario'];
-
-// Obtener la ID del profesor usando la ID del usuario
-$query_profesor = "SELECT id FROM profesores WHERE id_usuario = ?";
-$stmt_profesor = $conn->prepare($query_profesor);
-if (!$stmt_profesor) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt_profesor->bind_param("i", $user_id);
-if (!$stmt_profesor->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_profesor->error);
-}
-$result_profesor = $stmt_profesor->get_result();
-if ($result_profesor->num_rows === 0) {
-    die("No se encontró el profesor.");
-}
-$profesor = $result_profesor->fetch_assoc();
-$profesor_id = $profesor['id'];
-
-// Obtener el día actual en español para la región de Venezuela
-$formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
-$dia_actual = $formatter->format(time());
-$dia_actual = ucfirst($dia_actual);
-
-// Consulta para obtener el horario del día actual del profesor
-$query_horario = "SELECT m.nombre AS materia, m.salon, h.hora_inicio, h.hora_fin 
-                  FROM horariosmateria h 
-                  JOIN materias m ON h.id_materia = m.id 
-                  WHERE m.id_profesor = ? AND h.dia = ?";
-$stmt_horario = $conn->prepare($query_horario);
-if (!$stmt_horario) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt_horario->bind_param("is", $profesor_id, $dia_actual);
-if (!$stmt_horario->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_horario->error);
-}
-$result_horario = $stmt_horario->get_result();
-if (!$result_horario) {
-    die("Error al obtener el resultado: " . $stmt_horario->error);
-}
-
-// Consulta para obtener las materias que da el profesor y la cantidad de estudiantes en cada una
-$query_materias = "SELECT m.nombre, COUNT(i.id_estudiante) AS num_estudiantes 
-                   FROM materias m 
-                   LEFT JOIN inscripciones i ON m.id = i.id_materia 
-                   WHERE m.id_profesor = ? 
-                   GROUP BY m.id";
-$stmt_materias = $conn->prepare($query_materias);
-if (!$stmt_materias) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt_materias->bind_param("i", $profesor_id);
-if (!$stmt_materias->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_materias->error);
-}
-$result_materias = $stmt_materias->get_result();
-if (!$result_materias) {
-    die("Error al obtener el resultado: " . $stmt_materias->error);
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -78,8 +10,8 @@ if (!$result_materias) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principalprofesor.css">
-    <link rel="stylesheet" href="css/horario.css">
+    <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -87,7 +19,9 @@ if (!$result_materias) {
 </head>
 
 <body>
-
+    <div class="contenedorentrante3">
+        <img src="css\logo.png">
+    </div>
     <div class="cabecera">
 
         <button type="button" id="logoButton">
@@ -97,7 +31,6 @@ if (!$result_materias) {
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
             <p>UniHub</p>
         </div>
-
     </div>
 
     <div class="menu" id="menu">
@@ -112,7 +45,7 @@ if (!$result_materias) {
                                 <g id="-Round-/-Navigation-/-arrow_back_ios" transform="translate(442.000000, 54.000000)">
                                     <g>
                                         <polygon id="Path" opacity="0.87" points="0 0 24 0 24 24 0 24"></polygon>
-                                        <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
+                                        <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
                                     </g>
                                 </g>
                             </g>
@@ -121,38 +54,44 @@ if (!$result_materias) {
                 </svg>
             </button>
             <div class="menuopciones" id="contenedor">
-                <div class="opción" id="inicio">
-                    <div class="intopcion">
+                <div class="opción">
+                    <div class="intopcion" id="inicio">
                         <img src="css\home.png">
                         <p>Inicio</p>
                     </div>
                 </div>
-                <div class="opción" id="datos">
-                    <div class="intopcion">
+                <div class="opción">
+                    <div class="intopcion" id="datos">
                         <img src="css\person.png">
                         <p>Datos</p>
                     </div>
                 </div>
-                <div class="opción" id="foto">
-                    <div class="intopcion">
+                <div class="opción">
+                    <div class="intopcion" id="foto">
                         <img src="css\camera.png">
                         <p>Foto</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="cursos">
-                        <img src="css/cursos.png">
-                        <p>Cursos</p>
+                <div class="opción" id="inscripcion">
+                    <div class="intopcion">
+                        <img src="css/inscripción.png">
+                        <p>Inscripción</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="chat">
+                <div class="opción" id="horario">
+                    <div class="intopcion">
+                        <img src="css/horario.png">
+                        <p>Horario</p>
+                    </div>
+                </div>
+                <div class="opción" id="chat">
+                    <div class="intopcion">
                         <img src="css/muro.png">
                         <p>Chat</p>
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion" id="tareas">
+                    <div class="intopcion" id="desempeño">
                         <img src="css/situacionacademica.png">
                         <p>Tareas</p>
                     </div>
@@ -168,7 +107,7 @@ if (!$result_materias) {
                                 <g id="-Round-/-Navigation-/-arrow_forward_ios" transform="translate(238.000000, 54.000000)">
                                     <g>
                                         <polygon id="Path" opacity="0.87" points="24 24 0 24 0 0 24 0"></polygon>
-                                        <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
+                                        <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="🔹-Icon-Color" fill="#1D1D1D"></path>
                                     </g>
                                 </g>
                             </g>
@@ -178,18 +117,16 @@ if (!$result_materias) {
             </button>
         </div>
         <div class="inferior">
-            <form action="logout.php" method="POST">
-                <div class="logout">
-                    <button class="Btn">
-
+            <div class="logout">
+                <form action="logout.php" method="POST">
+                    <button class="Btn" type="submit">
                         <div class="sign"><svg viewBox="0 0 512 512">
                                 <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
                             </svg></div>
-
                         <div class="text">Salir</div>
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
             <div class="themeswitcher">
                 <label class="theme-switch">
                     <input type="checkbox" class="theme-switch__checkbox" id="switchtema">
@@ -215,67 +152,51 @@ if (!$result_materias) {
         </div>
     </div>
 
-    <p class="bienvenido">Bienvenido a UniHub</p>
+    <h1>Seleccionar Curso</h1>
+    <div class="materias">
+        <?php
+        require 'conexion.php';
 
-    <div class="divprincipal">
-        <div class="contenedor-horario">
-            <h2 class="titulo-horario">Horario del día: <?php echo $dia_actual; ?></h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Salón</th>
-                        <th>Hora de Inicio</th>
-                        <th>Hora de Fin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($result_horario->num_rows > 0): ?>
-                        <?php while ($row = $result_horario->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $row['materia']; ?></td>
-                                <td><?php echo $row['salon']; ?></td>
-                                <td><?php echo $row['hora_inicio']; ?></td>
-                                <td><?php echo $row['hora_fin']; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td class="nohayclases" colspan="4"> ¡¡¡NO HAY CLASES!!! 🥳</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+        // Suponiendo que tienes el ID del estudiante
+        $estudiante_id = $_SESSION['idusuario']; // Cambia esto por el ID del estudiante real
 
-        <div class="contenedor-horario">
-            <h2 class="titulo-horario">Materias</h2>
-            <table class="tabla-horario">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Número de Estudiantes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($result_materias->num_rows > 0): ?>
-                        <?php while ($row = $result_materias->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $row['nombre']; ?></td>
-                                <td><?php echo $row['num_estudiantes']; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td class="nohayclases" colspan="2">No hay materias asignadas.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+        // Consulta para obtener las materias inscritas
+        $sql = "SELECT m.nombre, m.id FROM inscripciones i 
+                JOIN materias m ON i.id_materia = m.id 
+                WHERE i.id_estudiante = ?";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Error en la preparación de la consulta: " . $conn->error);
+        }
+        $stmt->bind_param("i", $estudiante_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Verificar si hay materias inscritas
+        if ($result->num_rows > 0) {
+            // Imprimir las materias
+            while ($fila = $result->fetch_assoc()) {
+        ?>
+                <div class="div-materia">
+                    <img src="css/images.png">
+                    <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
+                    <a class="botoninscribir" data-valor="<?php $_SESSION['nombremateria']= $fila['nombre']; echo htmlspecialchars($fila['id']); ?>">Tareas</a>
+                </div>
+        <?php
+            }
+        } else {
+            echo "No tienes materias inscritas.";
+        }
+
+        // Cerrar conexión
+        $stmt->close();
+        $conn->close();
+        ?>
     </div>
-
     <script>
+        function goBack() {
+            window.history.back();
+        }
         const contenedor = document.getElementById('contenedor');
         const botonIzquierdo = document.getElementById('boton-izquierdo');
         const botonDerecho = document.getElementById('boton-derecho');
@@ -292,13 +213,19 @@ if (!$result_materias) {
             });
         });
 
-        document.getElementById('logoButton').addEventListener("click", (event) => {
+        document.getElementById('logoButton').addEventListener("click", () => {
             document.getElementById('menu').classList.toggle('toggle');
             event.stopPropagation();
         });
         document.addEventListener('click', function(event) {
-            if (!menu.contains(event.target) && menu.classList.contains('toggle')) {
-                menu.classList.remove('toggle');
+            if (!container.contains(event.target) && container.classList.contains('toggle')) {
+                container.classList.remove('toggle');
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var div = document.getElementById('menu');
+            if (!div.contains(event.target)) {
+                div.classList.remove('toggle');
             }
         });
         document.getElementById('switchtema').addEventListener('change', function() {
@@ -318,34 +245,46 @@ if (!$result_materias) {
                 document.body.classList.add('dark-mode');
                 document.getElementById('switchtema').checked = true;
             }
+        });
 
-            // Inicialización de eventos de los botones del menú
-            document.getElementById('inicio').addEventListener('click', function() {
-                redirigir('pagina_profesor.php');
-            });
-            document.getElementById('datos').addEventListener('click', function() {
-                redirigir('datos_profesor.php');
-            });
-            document.getElementById('chat').addEventListener('click', function() {
-                redirigir('seleccionarmateria_profesor.php');
-            });
-            document.getElementById('cursos').addEventListener('click', function() {
-                redirigir('cursos.php');
-            });
-            document.getElementById('foto').addEventListener('click', function() {
-                redirigir('foto_profesor.php');
-            });
-            // Asegúrate de que el id 'tareas' existe y apunta a la página correcta
-            document.getElementById('tareas').addEventListener('click', function() {
-                redirigir('Seleccion_de_materias_tareas_profesor.php'); // Cambia aquí si la página es diferente
+        document.querySelectorAll('.botoninscribir').forEach(button => {
+            button.addEventListener('click', function() {
+                const valor = this.getAttribute('data-valor');
+                window.location.href = `dirigir_tarea.php?valor=${valor}`;
             });
         });
 
-        function redirigir(pagina) {
-            window.location.href = pagina;
+        function redirigir(url) {
+            window.location.href = url;;
+            // Cambia esta URL a la página de destino 
+        }
+        window.onload = function() {
+            document.getElementById('inicio').addEventListener('click', function() {
+                redirigir('pagina_principal.php');
+            });
+            document.getElementById('datos').addEventListener('click', function() {
+                redirigir('datos.php');
+            });
+            document.getElementById('inscripcion').addEventListener('click', function() {
+                redirigir('inscripcion.php');
+            });
+            document.getElementById('horario').addEventListener('click', function() {
+                redirigir('horario.php');
+            });
+            document.getElementById('chat').addEventListener('click', function() {
+                redirigir('seleccionarmateria.php');
+            });
+            document.getElementById('desempeño').addEventListener('click', function() {
+                redirigir('Seleccion_de_materias_tareas.php');
+            });
+            document.getElementById('notas').addEventListener('click', function() {
+                redirigir('NAlumnos.php');
+            });
+            document.getElementById('foto').addEventListener('click', function() {
+                redirigir('foto.php');
+            });
         }
     </script>
-
 </body>
 
-</html>_de
+</html>

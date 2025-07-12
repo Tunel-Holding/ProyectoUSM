@@ -69,12 +69,6 @@ session_start();
                         <p>Foto</p>
                     </div>
                 </div>
-                <div class="opción">
-                    <div class="intopcion" id="desempeño">
-                        <img src="css/situacionacademica.png">
-                        <p>Desempeño</p>
-                    </div>
-                </div>
                 <div class="opción" id="inscripcion">
                     <div class="intopcion">
                         <img src="css/inscripción.png">
@@ -94,9 +88,9 @@ session_start();
                     </div>
                 </div>
                 <div class="opción">
-                    <div class="intopcion" id="notas">
-                        <img src="css/notas.png">
-                        <p>Notas</p>
+                    <div class="intopcion" id="desempeño">
+                        <img src="css/situacionacademica.png">
+                        <p>Tareas</p>
                     </div>
                 </div>
             </div>
@@ -374,7 +368,7 @@ session_start();
                 redirigir('seleccionarmateria.php');
             });
             document.getElementById('desempeño').addEventListener('click', function() {
-                redirigir('desempeño.php');
+                redirigir('Seleccion_de_materias_tareas.php');
             });
             document.getElementById('notas').addEventListener('click', function() {
                 redirigir('NAlumnos.php');
