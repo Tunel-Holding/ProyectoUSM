@@ -67,7 +67,7 @@ session_start();
                     <i class='bx bx-show' id="icons"></i>
                 </div>
                 <span id="spancontraseña"></span>
-                <button type="button" id="boton" class="button">Registrarse</button>
+                <button type="submit" id="boton" class="button">Registrarse</button>
             </form>
         </div>
 

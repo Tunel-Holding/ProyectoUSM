@@ -166,24 +166,9 @@ $conn->close(); // Cerrar la conexión
 </head>
 
 <body>
-    <div class="contenedorentrante3">
-        <img src="css\logo.png">
-    </div>
-    <div class="cabecera">
+<?php include 'navAdmin.php'; ?>
 
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
-        </div>
-
-    </div>
-
-    <?php include 'menu_profesor.php'; ?>
-
-    <div class="contenedor-principal">
+    <div class="pagina">
         <div class="wecontainer">
             <h1>Datos del Profesor</h1>
             <ul>

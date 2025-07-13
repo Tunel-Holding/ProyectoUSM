@@ -18,42 +18,102 @@
 
 <body>
 
-    <div class="cabecera">
+    <?php include 'navAdmin.php'; ?>
 
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
-        </div>
-
-    </div>
-
-    <?php include 'menu_administrador.php'; ?>
-
-    <div class="contenedor-principal">
-        <h1>Materias</h1>
-        <?php
-        require 'conexion.php';
-        $sql = "SELECT DISTINCT nombre FROM materias";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            echo "<table><tr><th>Nombre de la Materia</th><th></th><th></th></tr>";
-            // Salida de datos de cada fila
-            while ($row = $result->fetch_assoc()) {
-                $nombreMateria = $row["nombre"];
-                echo "<tr><td>" . $nombreMateria . "</td>";
-                echo "<td class='button-cell'><button onclick=\"window.location.href='editar_materia.php?nombre=$nombreMateria'\">Editar</button></td>";
-                echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_materia.php?nombre=$nombreMateria'\">Eliminar</button></td></tr>";
-            }
-            echo "</table>";
-            echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";
-        } else {
-            echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";
+    <h1>Materias</h1>
+    <?php
+    require 'conexion.php';
+    $sql = "SELECT DISTINCT nombre FROM materias";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        echo "<table><tr><th>Nombre de la Materia</th><th></th><th></th></tr>";
+        // Salida de datos de cada fila
+        while ($row = $result->fetch_assoc()) {
+            $nombreMateria = $row["nombre"];
+            echo "<tr><td>" . $nombreMateria . "</td>";
+            echo "<td class='button-cell'><button onclick=\"window.location.href='editar_materia.php?nombre=$nombreMateria'\">Editar</button></td>";
+            echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_materia.php?nombre=$nombreMateria'\">Eliminar</button></td></tr>";
         }
-        $conn->close();
-        ?>
+        echo "</table>";
+        echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";
+    } else {
+        echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";
+    }
+    $conn->close();
+    ?>
+    <script>
+        const contenedor = document.getElementById('contenedor');
+        const botonIzquierdo = document.getElementById('boton-izquierdo');
+        const botonDerecho = document.getElementById('boton-derecho');
+        botonIzquierdo.addEventListener('click', () => {
+            contenedor.scrollBy({
+                left: -94,
+                behavior: 'smooth'
+            });
+        });
+        botonDerecho.addEventListener('click', () => {
+            contenedor.scrollBy({
+                left: 94,
+                behavior: 'smooth'
+            });
+        });
+
+        document.getElementById('logoButton').addEventListener("click", () => {
+            document.getElementById('menu').classList.toggle('toggle');
+            event.stopPropagation();
+        });
+        document.addEventListener('click', function(event) {
+            if (!contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
+                contenedor.classList.remove('toggle');
+            }
+        });
+        document.addEventListener('click', function(event) {
+            var div = document.getElementById('menu');
+            if (!div.contains(event.target)) {
+                div.classList.remove('toggle');
+            }
+        });
+        document.getElementById('switchtema').addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Aplicar la preferencia guardada del usuario al cargar la p谩gina
+        window.addEventListener('load', function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('switchtema').checked = true;
+            }
+        });
+
+        function redirigir(url) {
+            window.location.href = url;;
+            // Cambia esta URL a la página de destino
+        }
+        window.onload = function() {
+            document.getElementById('inicio').addEventListener('click', function() {
+                redirigir('pagina_administracion.php');
+            });
+            document.getElementById('datos').addEventListener('click', function() {
+                redirigir('buscar_datos_admin.html');
+            });
+            document.getElementById('profesor').addEventListener('click', function() {
+                redirigir('admin_profesores.php');
+            });
+            document.getElementById('alumno').addEventListener('click', function() {
+                redirigir('admin_alumnos.php');
+            });
+            document.getElementById('materias').addEventListener('click', function() {
+                redirigir('admin_materias.php');
+            });
+        }
+    </script>
 
 </body>
 

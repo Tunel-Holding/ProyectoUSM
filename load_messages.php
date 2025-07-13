@@ -37,6 +37,8 @@ function idToColor($id, $palette) {
 }
 
 $idgrupo = $_SESSION['idmateria'];
+$current_user_id = $_SESSION['idusuario'];
+$current_user_level = $_SESSION['nivel_usuario'] ?? 'usuario';
 
 // 🔍 Consulta de mensajes con JOIN
 $query = "
@@ -47,11 +49,15 @@ $query = "
     FROM messages m
     JOIN usuarios u ON m.user_id = u.id
     LEFT JOIN fotousuario f ON u.id = f.id_usuario
-    WHERE m.group_id = $idgrupo
+    WHERE m.group_id = ?
     ORDER BY m.created_at ASC
 ";
 
-$result = $conn->query($query);
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $idgrupo);
+$stmt->execute();
+$result = $stmt->get_result();
+
 if (!$result) {
     die("Error en la consulta: " . $conn->error);
 }
@@ -82,10 +88,40 @@ while ($row = $result->fetch_assoc()) {
         $last_date = $current_date;
     }
 
+    // 🔐 Verificar permisos de eliminación
+    $can_delete = false;
+    if ($user_id == $current_user_id) {
+        $can_delete = true; // El usuario puede eliminar su propio mensaje
+    } elseif (in_array($current_user_level, ['administrador', 'profesor'])) {
+        $can_delete = true; // Administradores y profesores pueden eliminar cualquier mensaje
+    }
+
     // 🧱 Contenedor del mensaje
     echo '<div class="message-container-' . $nivel_usuario . '">';
     echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
-    echo '<button class="reply-button" data-message-id="' . $message_id . '">Responder</button>';
+    
+    // 🎛️ Botones de acción
+    echo '<div class="message-actions">';
+    // Botón para responder
+    // Usar SVG directamente para el icono de respuesta
+    echo '<button class="reply-button" data-message-id="' . $message_id . '" title="Responder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-responder" viewBox="0 0 16 16">
+                <path d="M6.854 4.146a.5.5 0 0 0-.708.708L8.293 7H1.5a.5.5 0 0 0 0 1h6.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/>
+                <path d="M13.5 8a.5.5 0 0 1-.5.5H9a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5z"/>
+            </svg>
+        </button>';
+    
+    // Botón para eliminar (solo si tiene permiso)
+    if ($can_delete) {
+        // Usar SVG directamente para el icono de eliminar
+        echo '<button class="delete-button" data-message-id="' . $message_id . '" onclick="deleteMessage(' . $message_id . ')" title="Eliminar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-eliminar" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1 0-2h3.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1H14.5a1 1 0 0 1 1 1zm-11 1v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4h-8z"/>
+                </svg>
+            </button>';
+    }
+    echo '</div>';
     echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
 
     // 🔁 Mostrar vista previa si es respuesta
@@ -94,9 +130,13 @@ while ($row = $result->fetch_assoc()) {
             SELECT m.message, u.nombre_usuario, m.tipo 
             FROM messages m 
             JOIN usuarios u ON m.user_id = u.id 
-            WHERE m.id = $reply_to
+            WHERE m.id = ?
         ";
-        $reply_result = $conn->query($reply_query);
+        $reply_stmt = $conn->prepare($reply_query);
+        $reply_stmt->bind_param("i", $reply_to);
+        $reply_stmt->execute();
+        $reply_result = $reply_stmt->get_result();
+        
         if ($reply_result && $reply_row = $reply_result->fetch_assoc()) {
             $reply_nombre  = htmlspecialchars($reply_row['nombre_usuario']);
             $reply_mensaje = htmlspecialchars($reply_row['message']);
@@ -106,6 +146,7 @@ while ($row = $result->fetch_assoc()) {
                 echo "<div class='reply-preview'><strong>$reply_nombre:</strong> $reply_mensaje</div>";
             }
         }
+        $reply_stmt->close();
     }
 
     // 📨 Contenido del mensaje
@@ -128,4 +169,83 @@ while ($row = $result->fetch_assoc()) {
 
     echo '</div></div>'; // Cierre de burbuja y contenedor
 }
+
+$stmt->close();
 ?>
+
+<style>
+.message-actions {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.reply-button, .delete-button {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reply-button:hover {
+    background: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.delete-button {
+    background: rgba(255, 255, 255, 0.9);
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.delete-button:hover {
+    background: #ffebee;
+    border-color: #c62828;
+}
+
+.dark-mode .reply-button,
+.dark-mode .delete-button {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-color: #555;
+}
+
+.dark-mode .reply-button:hover {
+    background: rgba(33, 150, 243, 0.3);
+    border-color: #2196f3;
+}
+
+.dark-mode .delete-button:hover {
+    background: rgba(211, 47, 47, 0.3);
+    border-color: #d32f2f;
+}
+</style>
+
+<script>
+function deleteMessage(messageId) {
+    if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
+        $.post('delete_message.php', {
+            message_id: messageId
+        })
+        .done(function(data) {
+            try {
+                const response = JSON.parse(data);
+                if (response.success) {
+                    // Recargar mensajes para mostrar el cambio
+                    loadMessages();
+                } else {
+                    alert('Error: ' + response.error);
+                }
+            } catch (e) {
+                alert('Error al procesar la respuesta del servidor');
+            }
+        })
+        .fail(function(xhr, status, error) {
+            alert('Error de conexión: ' + error);
+        });
+    }
+}
+</script>

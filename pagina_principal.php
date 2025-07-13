@@ -36,15 +36,23 @@ if (!$result) {
 }
 
 // Consulta para obtener las notas del estudiante
+// Consulta para obtener las materias inscritas y los datos completos del profesor usando el id_usuario del profesor asignado a la materia
 $query_materias_profesor = "
 SELECT 
     m.nombre AS materia,
-    p.nombre AS profesor,
-    fu.foto
+    fu.foto,
+    p.id_usuario AS profesor_usuario_id,
+    du.cedula,
+    du.nombres,
+    du.apellidos,
+    du.telefono,
+    du.correo,
+    du.direccion
 FROM inscripciones i
 JOIN materias m ON i.id_materia = m.id
 JOIN profesores p ON m.id_profesor = p.id
 LEFT JOIN fotousuario fu ON p.id_usuario = fu.id_usuario
+LEFT JOIN datos_usuario du ON du.usuario_id = p.id_usuario
 WHERE i.id_estudiante = ?
 ";
 $stmt = $conn->prepare($query_materias_profesor);
@@ -172,59 +180,56 @@ $resultado = $stmt->get_result();
 
     <?php include 'menu_alumno.php'; ?>
 
-    <div class="contenedor-principal">
-        <div class="divprincipal">
-            <div class="contenedor-horario">
-                <h2 class="titulo-horario">Horario del día: <?php echo $dia_actual; ?></h2>
-                <table class="tabla-horario">
-                    <thead>
-                        <tr>
-                            <th>Materia</th>
-                            <th>Salón</th>
-                            <th>Hora de Inicio</th>
-                            <th>Hora de Fin</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($result->num_rows > 0): ?>
-                            <?php while ($row = $result->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?php echo $row['materia']; ?></td>
-                                    <td><?php echo $row['salon']; ?></td>
-                                    <td><?php echo $row['hora_inicio']; ?></td>
-                                    <td><?php echo $row['hora_fin']; ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
+    <div class="divprincipal">
+        <div class="contenedor-horario">
+            <h2 class="titulo-horario">Horario del día: <?php echo $dia_actual; ?></h2>
+            <table class="tabla-horario">
+                <thead>
+                    <tr>
+                        <th>Materia</th>
+                        <th>Salón</th>
+                        <th>Hora de Inicio</th>
+                        <th>Hora de Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td class="nohayclases" colspan="4"> ¡¡¡NO HAY CLASES!!! 🥳</td>
+                                <td><?php echo $row['materia']; ?></td>
+                                <td><?php echo $row['salon']; ?></td>
+                                <td><?php echo $row['hora_inicio']; ?></td>
+                                <td><?php echo $row['hora_fin']; ?></td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="contenedor-horario">
-                <h2 class="titulo-horario">Materias Inscritas</h2>
-                <div class="contenedor-materias-grid">
-                    <?php while ($row = $resultado->fetch_assoc()): ?>
-                        <div class="tarjeta-materia">
-                            <p class="nombre-materia"><?php echo htmlspecialchars($row['materia']); ?></p>
-                            <div class="hover-container">
-                                <img src="<?php echo $row['foto'] ?: 'https://cdn-icons-png.flaticon.com/512/6073/6073873.png'; ?>"
-                                    alt="Foto del profesor" class="profesor-img">
-                                <div class="hover-box">
-                                    <ul class="info-lista">
-                                        <li><strong>Nombre:</strong> <?php echo htmlspecialchars($row['profesor']); ?></li>
-                                        <li><strong>Cédula:</strong> V-12345678</li>
-                                        <li><strong>Teléfono:</strong> 0414-1234567</li>
-                                        <li><strong>Email:</strong> profe@usm.edu.ve</li>
-                                        <li><strong>Oficina:</strong> Edif. A, Piso 2</li>
-                                    </ul>
-                                </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td class="nohayclases" colspan="4"> ¡¡¡NO HAY CLASES!!! 🥳</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="contenedor-horario">
+            <h2 class="titulo-horario">Materias Inscritas</h2>
+            <div class="contenedor-materias-grid">
+                <?php while ($row = $resultado->fetch_assoc()): ?>
+                    <div class="tarjeta-materia">
+                        <p class="nombre-materia"><?php echo htmlspecialchars($row['materia']); ?></p>
+                        <div class="hover-container">
+                            <img src="<?php echo $row['foto'] ?: 'https://cdn-icons-png.flaticon.com/512/6073/6073873.png'; ?>" alt="Foto del profesor" class="profesor-img">
+                            <div class="hover-box">
+                                <ul class="info-lista">
+                                    <li><strong>Nombre:</strong> <?php echo (!empty($row['nombres']) || !empty($row['apellidos'])) ? htmlspecialchars(trim($row['nombres'] . ' ' . $row['apellidos'])) : 'No disponible'; ?></li>
+                                    <li><strong>Cédula:</strong> <?php echo !empty($row['cedula']) ? htmlspecialchars($row['cedula']) : 'No disponible'; ?></li>
+                                    <li><strong>Teléfono:</strong> <?php echo !empty($row['telefono']) ? htmlspecialchars($row['telefono']) : 'No disponible'; ?></li>
+                                    <li><strong>Email:</strong> <?php echo !empty($row['correo']) ? htmlspecialchars($row['correo']) : 'No disponible'; ?></li>
+                                    <li><strong>Dirección:</strong> <?php echo !empty($row['direccion']) ? htmlspecialchars($row['direccion']) : 'No disponible'; ?></li>
+                                </ul>
                             </div>
                         </div>
-                    <?php endwhile; ?>
-                </div>
+                    </div>
+                <?php endwhile; ?>
             </div>
         </div>
     </div>

@@ -221,21 +221,7 @@
 
 <body>
 
-    <div class="cabecera">
-
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
-        </div>
-
-    </div>
-
-    <?php include 'menu_administrador.php'; ?>
-
-    <div class="contenedor-principal">
+    <?php include 'navAdmin.php'; ?>
 
         <div class="container">
             <h1 class="titulo">Búsqueda de Estudiantes</h1>

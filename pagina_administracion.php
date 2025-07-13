@@ -34,12 +34,12 @@ if ($result_profesores) {
     }
 }
 
-$result_estudiantes = $conn->query("SELECT id, nombre, 'estudiante' AS tipo FROM estudiantes ORDER BY id DESC LIMIT 1");
-if ($result_estudiantes) {
-    while ($row = $result_estudiantes->fetch_assoc()) {
-        $registros[] = $row;
+    $result_estudiantes = $conn->query("SELECT id, carrera, 'carrera' AS tipo FROM estudiantes ORDER BY id DESC LIMIT 1");
+    if ($result_estudiantes) {
+        while ($row = $result_estudiantes->fetch_assoc()) {
+            $registros[] = $row;
+        }
     }
-}
 
 $result_materias = $conn->query("SELECT id, nombre, 'materia' AS tipo FROM materias ORDER BY id DESC LIMIT 1");
 if ($result_materias) {
@@ -55,307 +55,187 @@ usort($registros, function ($a, $b) {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principaladministracion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <title>Inicio - USM</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
-        /* Importa la fuente Roboto en negrita */
-
-        .titulo {
-            font-size: 85px;
-            /* Ajusta el tamaño de la fuente */
-            font-weight: bold;
-            /* Aplica negrita */
-            margin-bottom: 20px;
-            margin-top: 80px;
-            color: #333333;
-            font-family: 'Roboto', sans-serif;
-            /* Aplica la fuente Roboto */
-            text-align: center;
-            /* Centra el título */
-        }
-
-        .bienvenida {
-            font-size: 100px;
-            /* Ajusta el tamaño de la fuente */
-            font-weight: normal;
-            /* Aplica negrita */
-            margin-bottom: 5px;
-            margin-top: 40px;
-            /* Añade margen superior */
-            color: rgba(85, 85, 85, 0.5);
-            /* Color transparente */
-            font-family: 'Roboto', sans-serif;
-            /* Aplica la fuente Roboto */
-            text-align: center;
-            /* Centra el mensaje */
-        }
-
-        .dark-mode .titulo {
-            color: #ffffff;
-        }
-
-        .contenedor-dashboard {
-            display: flex;
-            gap: 30px;
-            margin: 30px;
-            align-items: stretch;
-            flex-wrap: wrap;
-        }
-
-        .cuadro-panel,
-        .cuadro-actividad {
-            background-color: #d6d6d6a1;
-            padding: 55px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            width: 48%;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .titulo-seccion {
-            font-size: 40px;
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-        }
-
-        .panel-resumen {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .panel-item {
-            flex: 1;
-            background-color: #f0f4f8;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .panel-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-        }
-
-        .icono-contenedor {
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .panel-icono {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .panel-item:hover .panel-icono {
-            transform: scale(1.1);
-        }
-
-        .panel-item h4 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .contador {
-            font-size: 28px;
-            font-weight: bold;
-            color: #007ACC;
-        }
-
-        .lista-actividad {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .lista-actividad li {
-            margin-bottom: 10px;
-            padding: 14px;
-            background-color: #f9f9f9;
-            border-radius: 6px;
-            border-left: 4px solid #007ACC;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-            font-size: 18px;
-            transition: transform 0.4s ease, background-color 0.4s ease;
-            cursor: default;
-        }
-
-        .lista-actividad li:hover {
-            transform: translateX(5px);
-            background-color: #eef6ff;
-        }
-
-        /* Responsivo */
-        @media screen and (max-width: 768px) {
-            .contenedor-dashboard {
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            .cuadro-panel,
-            .cuadro-actividad {
-                width: 100%;
-            }
-
-            .panel-resumen {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .panel-item {
-                width: 100%;
-            }
-        }
-
-        /* Modo oscuro */
-        body.dark-mode .cuadro-panel,
-        body.dark-mode .cuadro-actividad {
-            background-color: #1e1e1e;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.06);
-        }
-
-        body.dark-mode .titulo-seccion {
-            color: #f0f0f0;
-        }
-
-        body.dark-mode .panel-item {
-            background-color: #2a2a2a;
-            color: #f0f0f0;
-        }
-
-        body.dark-mode .panel-item h4 {
-            background-color: #2a2a2a;
-            color: #f0ececff;
-        }
-
-        body.dark-mode .contador {
-            color: #4ea1ff;
-        }
-
-        body.dark-mode .lista-actividad li {
-            background-color: #2a2a2a;
-            color: #f0f0f0;
-            border-left: 4px solid #4ea1ff;
-            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
-        }
-
-        body.dark-mode .lista-actividad li:hover {
-            background-color: #333c4d;
-        }
-
-        body.dark-mode .panel-icono {
-            filter: brightness(1.1);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin-general.css">
+    <title>UniHub - Panel de Administración</title>
 </head>
 
 <body>
-
-    <div class="cabecera">
-
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
+    <!-- Navbar -->
+    <?php include 'navAdmin.php'; ?>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title">Bienvenido al administrador del Sistema UniHub</h1>
+            <p class="hero-subtitle">Panel de administración completo para gestionar estudiantes, profesores y materias de manera eficiente</p>
+            <div class="hero-cta">
+                <a href="admin_profesores.php" class="btn-primary">
+                    <img src="css/profesor.png" alt="Profesores" style="width: 20px; height: 20px; filter: none;">
+                    Gestionar Profesores
+                </a>
+                <a href="admin_alumnos.php" class="btn-primary">
+                    <img src="css/alumno.png" alt="Alumnos" style="width: 20px; height: 20px; filter: none;">
+                    Gestionar Alumnos
+                </a>
+                <a href="admin_materias.php" class="btn-primary">
+                    <img src="css/horario.png" alt="Materias" style="width: 20px; height: 20px; filter: none;">
+                    Gestionar Materias
+                </a>
+            </div>
         </div>
+    </section>
 
-    </div>
-
-    <?php include 'menu_administrador.php'; ?>
-
-    <div class="contenedor-principal">
-        <h1 class="bienvenida">Bienvenido al sistema UniHub</h1>
-        <h1 class="titulo">Estadísticas del Sistema</h1>
-        <div class="contenedor-dashboard">
-            <div class="cuadro-panel">
-                <h3 class="titulo-seccion">Panel de Administración</h3>
-                <div class="panel-resumen">
-                    <div class="panel-item">
-                        <div class="icono-contenedor">
-                            <img src="https://cdn-icons-png.freepik.com/512/5526/5526504.png" alt="Estudiantes"
-                                class="panel-icono">
-                        </div>
-                        <h4>Estudiantes</h4>
-                        <p class="contador"><?php echo $cantidad_estudiantes; ?></p>
-                    </div>
-
-                    <div class="panel-item">
-                        <div class="icono-contenedor">
-                            <img src="https://cdn-icons-png.flaticon.com/256/6454/6454364.png" alt="Profesores"
-                                class="panel-icono">
-                        </div>
-                        <h4>Profesores</h4>
-                        <p class="contador"><?php echo $cantidad_profesores; ?></p>
-                    </div>
-
-                    <div class="panel-item">
-                        <div class="icono-contenedor">
-                            <img src="https://cdn-icons-png.flaticon.com/512/5780/5780875.png" alt="Materias"
-                                class="panel-icono">
-                        </div>
-                        <h4>Materias</h4>
-                        <p class="contador"><?php echo $cantidad_materias; ?></p>
-                    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <h2 class="section-title">Estadísticas del Sistema</h2>
+        
+        <!-- Statistics Cards -->
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎓</div>
+                    <h3 class="card-title">Estudiantes</h3>
                 </div>
+                <div class="card-number"><?php echo $cantidad_estudiantes; ?></div>
+                <p class="card-description">Total de estudiantes registrados en el sistema</p>
             </div>
-            <!-- Actividad reciente -->
-            <div class="cuadro-actividad">
-                <h3 class="titulo-seccion">Actividad Reciente</h3>
-                <ul class="lista-actividad">
-                    <?php foreach ($registros as $r): ?>
-                        <?php if ($r['tipo'] == 'profesor'): ?>
-                            <li>🧑‍🏫 Nuevo profesor: <?php echo htmlspecialchars($r['nombre']); ?></li>
-                        <?php elseif ($r['tipo'] == 'estudiante'): ?>
-                            <li>🎓 Nuevo estudiante: <?php echo htmlspecialchars($r['nombre']); ?></li>
-                        <?php elseif ($r['tipo'] == 'materia'): ?>
-                            <li>📘 Materia añadida: <?php echo htmlspecialchars($r['nombre']); ?></li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👨‍🏫</div>
+                    <h3 class="card-title">Profesores</h3>
+                </div>
+                <div class="card-number"><?php echo $cantidad_profesores; ?></div>
+                <p class="card-description">Total de profesores activos en el sistema</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <h3 class="card-title">Materias</h3>
+                </div>
+                <div class="card-number"><?php echo $cantidad_materias; ?></div>
+                <p class="card-description">Total de materias únicas disponibles</p>
             </div>
         </div>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const estadisticas = document.querySelectorAll('.estadistica');
-                estadisticas.forEach((element, index) => {
-                    setTimeout(() => {
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                    }, index * 300); // Delay between each element
+        <!-- Recent Activity -->
+        <div class="activity-section">
+            <h3 class="section-title" style="font-size: 2rem; margin-bottom: 2rem;">Actividad Reciente</h3>
+            <ul class="activity-list">
+                <?php foreach ($registros as $r): ?>
+                    <?php if ($r['tipo'] == 'profesor'): ?>
+                    <li class="activity-item">
+                        🧑‍🏫 <strong>Nuevo profesor registrado:</strong> <?php echo htmlspecialchars($r['nombre']); ?>
+                    </li>
+                    <?php elseif ($r['tipo'] == 'carrera'): ?>
+                    <li class="activity-item">
+                        🎓 <strong>Nuevo estudiante registrado:</strong> <?php echo htmlspecialchars($r['carrera']); ?>
+                    </li>
+                    <?php elseif ($r['tipo'] == 'materia'): ?>
+                    <li class="activity-item">
+                        📘 <strong>Nueva materia añadida:</strong> <?php echo htmlspecialchars($r['nombre']); ?>
+                    </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        // Funcionalidad del cambio de tema
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIconLight = document.querySelector('.theme-icon-light');
+        const themeIconDark = document.querySelector('.theme-icon-dark');
+
+        // Función para cambiar el tema
+        function toggleTheme() {
+            const body = document.body;
+            const isDarkMode = body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                // Cambiar a modo claro
+                body.classList.remove('dark-mode');
+                themeIconLight.style.display = 'block';
+                themeIconDark.style.display = 'none';
+                localStorage.setItem('theme', 'light');
+            } else {
+                // Cambiar a modo oscuro
+                body.classList.add('dark-mode');
+                themeIconLight.style.display = 'none';
+                themeIconDark.style.display = 'block';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Aplicar tema guardado al cargar la página
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIconLight.style.display = 'none';
+                themeIconDark.style.display = 'block';
+            } else {
+                body.classList.remove('dark-mode');
+                themeIconLight.style.display = 'block';
+                themeIconDark.style.display = 'none';
+            }
+        }
+
+        // Event listeners
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Aplicar tema al cargar la página
+        document.addEventListener('DOMContentLoaded', applySavedTheme);
+
+        // Smooth scrolling para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
                 });
             });
-        </script>
-</body>
+        });
 
+        // Animación de entrada para las cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Efecto hover mejorado para las cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
 </html>

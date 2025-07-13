@@ -151,9 +151,6 @@ body.dark-mode .message-bubble-profesor {
   background: linear-gradient(135deg, #60a5fa, #3b82f6);
   color: #f9fafb;
 }
-body.light-mode .message-bubble-profesor {
-  
-}
 
 
 .message-bubble-profesor img,
@@ -327,18 +324,19 @@ a {
   margin-right: 10px;
 }
 
-.menu {
-  transform: translateX(-120%);
-  position: absolute;
-  top: 70px;
-}
+
 
 .message-entry {
-  position: relative;
-  width: 100%;
+  position: fixed;
+  width: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000000000000000;
+  flex-direction: column;
+  bottom: 0;
+  left: 50%;                  /* Añadido */
+  transform: translateX(-50%);/* Añadido */
 }
 .message-entry .button-container {
   display: flex;

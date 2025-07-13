@@ -2,10 +2,14 @@
 session_start();
 require 'conexion.php';
 
+
+// 🔐 Validación de sesión
 if (!isset($_SESSION['idusuario'])) {
-    header("Location: login.php");
+    header("Location: inicio.php");
     exit();
 }
+
+$advertencia = "";
 
 // Obtener el nombre y sección de la materia
 $id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
@@ -22,18 +26,34 @@ if ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
-
 // 📨 Enviar mensaje de texto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
-    $message = $_POST['message'];
+    
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
-    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
+    $reply_to = isset($_POST['reply_to']) ? (int)$_POST['reply_to'] : 0;
+    $message = trim($_POST['message']);
 
-    $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
-    $stmt->bind_param("isii", $user_id, $message, $group_id, $reply_to);
-    $stmt->execute();
-    $stmt->close();
+    if (strlen($message) > 0 && strlen($message) <= 1000) {
+        // Permitir letras, números, espacios, puntuación básica y emojis
+        if (preg_match('/^[\p{L}\p{N}\s\.,!?;:()@#$%*+\-=_<>\/\\\\]+$/u', $message)) {
+            // Mensaje válido, puedes procesarlo con confianza
+        
+            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
+            $stmt->bind_param("isii", $user_id, $message, $group_id, $reply_to);
+            
+            if ($stmt->execute()) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['error' => 'Error al guardar el mensaje']);
+            }
+            $stmt->close();
+        } else {
+            echo json_encode(['error' => 'El mensaje contiene caracteres no permitidos']);
+        }
+    } else {
+        echo json_encode(['error' => 'El mensaje debe tener entre 1 y 1000 caracteres']);
+    }
     exit();
 }
 
@@ -42,17 +62,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     $image = $_FILES['image'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
-    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
+    $reply_to = isset($_POST['reply_to']) ? (int)$_POST['reply_to'] : 0;
+
+    // ✅ Validación de imagen
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $max_size = 5 * 1024 * 1024; // 5MB
+
+    if (!in_array($image['type'], $allowed_types)) {
+        echo json_encode(['error' => 'Tipo de imagen no permitido']);
+        exit();
+    }
+
+    if ($image['size'] > $max_size) {
+        echo json_encode(['error' => 'La imagen es demasiado grande (máximo 5MB)']);
+        exit();
+    }
 
     $target_dir = "uploads/";
-    $target_file = $target_dir . basename($image["name"]);
-    $check = getimagesize($image["tmp_name"]);
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
 
-    if ($check && move_uploaded_file($image["tmp_name"], $target_file)) {
+    // ✅ Sanitizar nombre de archivo
+    $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));
+    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
+    $target_file = $target_dir . $new_filename;
+
+    if (move_uploaded_file($image["tmp_name"], $target_file)) {
         $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
         $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
-        $stmt->execute();
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'file' => $target_file]);
+        } else {
+            echo json_encode(['error' => 'Error al guardar la imagen']);
+        }
         $stmt->close();
+    } else {
+        echo json_encode(['error' => 'Error al subir la imagen']);
     }
     exit();
 }
@@ -62,18 +109,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file = $_FILES['file'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
-    $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
+    $reply_to = isset($_POST['reply_to']) ? (int)$_POST['reply_to'] : 0;
+
+    // ✅ Validación de archivo
+    $allowed_types = [
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/pdf'
+    ];
+    $max_size = 10 * 1024 * 1024; // 10MB
+
+    if (!in_array($file['type'], $allowed_types)) {
+        echo json_encode(['error' => 'Tipo de archivo no permitido']);
+        exit();
+    }
+
+    if ($file['size'] > $max_size) {
+        echo json_encode(['error' => 'El archivo es demasiado grande (máximo 10MB)']);
+        exit();
+    }
 
     $target_dir = "uploads/";
-    $target_file = $target_dir . basename($file["name"]);
-    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    $validTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'];
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
 
-    if (in_array($fileType, $validTypes) && move_uploaded_file($file["tmp_name"], $target_file)) {
+    // ✅ Sanitizar nombre de archivo
+    $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
+    $target_file = $target_dir . $new_filename;
+
+    if (move_uploaded_file($file["tmp_name"], $target_file)) {
         $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
         $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
-        $stmt->execute();
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'file' => $target_file]);
+        } else {
+            echo json_encode(['error' => 'Error al guardar el archivo']);
+        }
         $stmt->close();
+    } else {
+        echo json_encode(['error' => 'Error al subir el archivo']);
     }
     exit();
 }
@@ -81,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 // 💬 Mostrar historial de mensajes
 $idgrupo = $_SESSION['idmateria'];
 
-$result = $conn->query("
+$stmt = $conn->prepare("
     SELECT 
         messages.id, 
         messages.message, 
@@ -95,17 +176,17 @@ $result = $conn->query("
     FROM messages
     JOIN usuarios ON messages.user_id = usuarios.id
     LEFT JOIN fotousuario ON usuarios.id = id_usuario
-    WHERE messages.group_id = $idgrupo
+    WHERE messages.group_id = ?
     ORDER BY messages.created_at ASC
 ");
 
+$stmt->bind_param("i", $idgrupo);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $last_date = null;
 $last_user_id = null;
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -118,6 +199,7 @@ $last_user_id = null;
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/chat_actions.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -139,7 +221,7 @@ $last_user_id = null;
         </button>
 
         <div class="nombremateria">
-            <h1><?php echo $_SESSION['nombremateria'] ?></h1>
+            <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>
         </div>
 
         <div class="logoempresa">
@@ -153,13 +235,11 @@ $last_user_id = null;
     <div class="divchat">
         <div class="cont-chat">
             <div id="chat-box">
-
-
-
-
+                <!-- Los mensajes se cargan aquí dinámicamente -->
             </div>
         </div>
     </div>
+    
     <div class="message-entry">
         <div id="reply-preview" style="display: none;">
             <div id="reply-message"></div>
@@ -169,322 +249,376 @@ $last_user_id = null;
             <button id="upload-button" class="button">
                 <img src="css/plus-pequeno.png" alt="Upload" width="40" height="40">
             </button>
-            <input type="text" id="message" placeholder="Escribe un mensaje..." />
+            <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="1000" />
             <button id="send-button" class="button">
                 <img src="css/enviar-mensaje.png" alt="Send" width="40" height="40">
             </button>
-            <input type="file" id="imageInput" accept="image/*">
-            <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display: none;">
             <button id="call-button" class="button">
-                <img src="css/llamada_alumno.png" alt="Send" width="40" height="40">
-
+                <img src="css/llamada_alumno.png" alt="Call" width="40" height="40">
             </button>
         </div>
     </div>
 
-    <div id="upload-menu">
+    <?php if ($advertencia) { ?>
+        <div class="advertencia-flotante" style="position: fixed; top: 30px; right: 30px; z-index: 9999; background: #ffdddd; color: #a94442; border: 1px solid #a94442; border-radius: 8px; padding: 16px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-weight: bold;">
+            <p style="margin:0;"><?php echo htmlspecialchars($advertencia); ?></p>
+        </div>
+        <script>
+            setTimeout(function() {
+                var adv = document.querySelector('.advertencia-flotante');
+                if (adv) adv.style.display = 'none';
+            }, 3500);
+        </script>
+    <?php } ?>
+
+    <div id="upload-menu" style="display: none;">
         <div class="upload-option" id="upload-image">Subir Imagen</div>
         <div class="upload-option" id="upload-file">Subir Archivo</div>
     </div>
 
     <script>
-        function goBack() {
-            window.history.back();
-        }
-        const contenedor = document.getElementById('contenedor');
-        const botonIzquierdo = document.getElementById('boton-izquierdo');
-        const botonDerecho = document.getElementById('boton-derecho');
-        botonIzquierdo.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: -94,
-                behavior: 'smooth'
-            });
-        });
-        botonDerecho.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: 94,
-                behavior: 'smooth'
-            });
-        });
+        // 🔧 Configuración global
+        const CONFIG = {
+            maxMessageLength: 1000,
+            maxImageSize: 5 * 1024 * 1024, // 5MB
+            maxFileSize: 10 * 1024 * 1024, // 10MB
+            allowedImageTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+            allowedFileTypes: [
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-powerpoint',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/pdf'
+            ]
+        };
 
-        document.getElementById('logoButton').addEventListener("click", () => {
-            document.getElementById('menu').classList.toggle('toggle');
-            event.stopPropagation();
-        });
-        document.addEventListener('click', function (event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
+        // 🎨 Gestión de tema
+        function initTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            const switchElement = document.getElementById('switchtema');
+            
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                switchElement.checked = true;
+            } else {
+                document.body.classList.remove('dark-mode');
+                switchElement.checked = false;
             }
-        });
-        document.addEventListener('click', function (event) {
-            var div = document.getElementById('menu');
-            if (!div.contains(event.target)) {
-                div.classList.remove('toggle');
-            }
-        });
-        document.getElementById('switchtema').addEventListener('change', function () {
-            const theme = this.checked ? 'dark' : 'light';
-
-            // 🌗 Aplicar clase visual
-            document.body.classList.toggle('dark-mode', theme === 'dark');
-
-            // 💾 Guardar en localStorage
-            localStorage.setItem('theme', theme);
-
-            // 🍪 Guardar en cookie para que PHP lo detecte
+            
             document.cookie = "theme=" + theme + "; path=/";
+        }
 
-            // 🔁 Enviar al backend si lo usas también vía POST
+        function setTheme(theme) {
+            localStorage.setItem('theme', theme);
+            document.cookie = "theme=" + theme + "; path=/";
+            
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            
+            // Enviar al backend
             fetch('set_theme.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'theme=' + theme
-            });
+            }).catch(error => console.error('Error setting theme:', error));
+        }
 
-            // 🔄 Recargar mensajes (solo si usas AJAX)
-            // loadMessages(); // o location.reload(); si es HTML estático
-        });
+        // 📱 Navegación
+        function goBack() {
+            window.history.back();
+        }
 
-        // Aplicar la preferencia guardada del usuario al cargar la página
-        window.addEventListener('load', function () {
-            const theme = localStorage.getItem('theme') || 'light';
+        function redirigir(url) {
+            window.location.href = url;
+        }
 
-            // 🧁 Aplicar visualmente el modo al cuerpo
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('switchtema').checked = true;
-            } else {
-                document.body.classList.remove('dark-mode');
-                document.getElementById('switchtema').checked = false;
-            }
-
-            // 🍪 Guardar el tema en una cookie para que PHP lo lea
-            document.cookie = "theme=" + theme + "; path=/";
-
-            // 🔁 Enviar también el tema al backend si usas POST (opcional)
-            fetch('set_theme.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'theme=' + theme
-            });
-        });
-
-        document.getElementById('switchtema').addEventListener('change', function () {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-
-                fetch('set_theme.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'theme=dark'
-                });
-
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-
-                fetch('set_theme.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'theme=light'
-                });
-            }
-        });
-
-
-
-
-
-
-        $(document).ready(function () {
-            // Cargar mensajes al cargar la página
+        // 🎯 Event Listeners principales
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
             loadMessages();
+            setupEventListeners();
+            setupNavigation();
+        });
 
-            // Enviar mensaje
-            function sendMessage() {
-                var message = $('#message').val();
-                var replyTo = $('#reply-preview').data('reply-to') || 0; // Asignar 0 si no se proporciona reply_to
-                console.log('Sending message:', message); // Depuración
-                console.log('Reply to:', replyTo); // Depuración
-                if (message.trim() !== '') {
-                    $.post('chat.php', {
-                        message: message,
-                        reply_to: replyTo
-                    }, function (data) {
-                        console.log('Server response:', data); // Depuración
-                        $('#message').val(''); // Limpiar el campo de mensaje
-                        $('#reply-preview').hide(); // Ocultar la vista previa de la respuesta
-                        $('#reply-preview').data('reply-to', null); // Limpiar el ID de respuesta
-                        loadMessages(); // Cargar mensajes después de enviar
-                    }).fail(function (xhr, status, error) {
-                        console.error('Error sending message:', xhr.responseText); // Depuración
-                        alert('Error al enviar el mensaje: ' + xhr.responseText);
-                    });
-                }
-            }
+        // 🔗 Configurar navegación
+        function setupNavigation() {
+            const navItems = {
+                'inicio': 'pagina_principal.php',
+                'datos': 'datos.php',
+                'inscripcion': 'inscripcion.php',
+                'horario': 'horario.php',
+                'chat': 'seleccionarmateria.php',
+                'foto': 'foto.php',
+                'desempeño': 'Seleccion_de_materias_tareas.php'
+            };
 
-            $('#send-button').on('click', sendMessage);
-
-            $('#message').on('keypress', function (e) {
-                if (e.which === 13) { // Enter key pressed
-                    sendMessage();
-                    return false; // Prevent the default action (form submission)
+            Object.keys(navItems).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('click', () => redirigir(navItems[id]));
                 }
             });
+        }
 
-            $('#cancel-reply').on('click', function () {
-                $('#reply-preview').hide();
-                $('#reply-preview').data('reply-to', null);
-            });
-
-            // Función para cargar mensajes
-            function loadMessages() {
-                console.log('Loading messages'); // Depuración
-                $.get('load_messages.php', function (data) {
-                    console.log('Messages loaded'); // Depuración
-                    $('#chat-box').html(data);
-                    autoScroll(); // Llamar a la función de desplazamiento automático
-                }).fail(function (xhr, status, error) {
-                    console.error('Error loading messages:', xhr.responseText); // Depuración
+        // 🎛️ Configurar event listeners
+        function setupEventListeners() {
+            
+            // Tema
+            const themeSwitch = document.getElementById('switchtema');
+            if (themeSwitch) {
+                themeSwitch.addEventListener('change', function() {
+                    setTheme(this.checked ? 'dark' : 'light');
                 });
             }
 
-            // Actualizar mensajes cada 2 segundos
-            setInterval(loadMessages, 2000);
-
-            // Manejar el evento de clic del botón de respuesta
-            $(document).on('click', '.reply-button', function () {
-                console.log('Reply button clicked'); // Depuración
-                var messageId = $(this).data('message-id');
-                console.log('Message ID:', messageId); // Depuración
-                var messageContent = $('#message-text-' + messageId).text();
-                console.log('Message Content:', messageContent); // Depuración
-                var messageType = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('img').not('.reply-preview img').length ? 'imagen' : 'texto';
-                console.log('Message Type:', messageType); // Depuración
-                var userName = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('strong').first().text();
-                console.log('User Name:', userName); // Depuración
-
-                // Limpiar el contenido anterior del reply-preview
-                $('#reply-message').empty();
-
-                // Verificar si el mensaje al que se está respondiendo es una respuesta a otro mensaje
-                var originalMessage = $(this).closest('.message').find('.original-message');
-                if (originalMessage.length) {
-                    var originalMessageType = originalMessage.find('img').not('.reply-preview img').length ? 'imagen' : 'texto';
-                    if (originalMessageType === 'imagen') {
-                        var originalImageUrl = originalMessage.find('img').not('.reply-preview img').attr('src');
-                        messageContent = '<img src="' + originalImageUrl + '" alt="Imagen" style="max-width: 65px; max-height: auto; border-radius: 5px; margin-top: 5px;">';
-                    } else {
-                        messageContent = originalMessage.find('p').last().text();
-                    }
-                }
-
-                if (messageType === 'imagen') {
-                    var imageUrl = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('img').not('.reply-preview img').last().attr('src');
-                    $('#reply-message').html('<strong>' + userName + '</strong><br>' + messageContent + '<br><img src="' + imageUrl + '" alt="Imagen" style="max-width: 65px; max-height: auto; border-radius: 5px; margin-top: 5px;">');
-                } else {
-                    $('#reply-message').html('<strong>' + userName + '</strong><br>' + messageContent);
-                }
-
-                $('#reply-preview').show();
-                $('#reply-preview').data('reply-to', messageId);
-                $('#message').focus(); // Enfocar el campo de mensaje
-            });
-
-            document.getElementById('upload-button').addEventListener('click', function (event) {
-                var uploadMenu = document.getElementById('upload-menu');
-                if (uploadMenu.style.display === 'block') {
-                    uploadMenu.style.display = 'none';
-                } else {
-                    uploadMenu.style.display = 'block';
-                }
+            // Navegación del menú
+            document.getElementById('logoButton').addEventListener("click", () => {
+                document.getElementById('menu').classList.toggle('toggle');
                 event.stopPropagation();
             });
 
-            document.addEventListener('click', function (event) {
-                var uploadMenu = document.getElementById('upload-menu');
-                if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
+            // Scroll del menú
+            const contenedor = document.getElementById('contenedor');
+            const botonIzquierdo = document.getElementById('boton-izquierdo');
+            const botonDerecho = document.getElementById('boton-derecho');
+            
+            botonIzquierdo.addEventListener('click', () => {
+                contenedor.scrollBy({ left: -94, behavior: 'smooth' });
+            });
+            
+            botonDerecho.addEventListener('click', () => {
+                contenedor.scrollBy({ left: 94, behavior: 'smooth' });
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(event) {
+                var div = document.getElementById('menu');
+                if (!div.contains(event.target)) {
+                    div.classList.remove('toggle');
+                }
+            });
+
+            // Mensajes
+            setupMessageHandlers();
+            setupFileHandlers();
+        }
+
+        // 💬 Configurar manejo de mensajes
+        function setupMessageHandlers() {
+            const sendButton = document.getElementById('send-button');
+            const messageInput = document.getElementById('message');
+            const cancelReplyButton = document.getElementById('cancel-reply');
+
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.which === 13) {
+                    sendMessage();
+                    return false;
+                }
+            });
+
+            cancelReplyButton.addEventListener('click', function() {
+                hideReplyPreview();
+            });
+
+            // Respuestas
+            $(document).on('click', '.reply-button', function() {
+                const messageId = $(this).data('message-id');
+                const messageContent = $('#message-text-' + messageId).text();
+                const userName = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('strong').first().text();
+                
+                showReplyPreview(userName, messageContent, messageId);
+            });
+        }
+
+        // 📁 Configurar manejo de archivos
+        function setupFileHandlers() {
+            const uploadButton = document.getElementById('upload-button');
+            const uploadMenu = document.getElementById('upload-menu');
+            const uploadImage = document.getElementById('upload-image');
+            const uploadFile = document.getElementById('upload-file');
+            const imageInput = document.getElementById('imageInput');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadButton.addEventListener('click', function(event) {
+                uploadMenu.style.display = uploadMenu.style.display === 'block' ? 'none' : 'block';
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!uploadMenu.contains(event.target) && !uploadButton.contains(event.target)) {
                     uploadMenu.style.display = 'none';
                 }
             });
 
-            document.getElementById('upload-image').addEventListener('click', function () {
-                document.getElementById('imageInput').click();
-            });
+            uploadImage.addEventListener('click', () => imageInput.click());
+            uploadFile.addEventListener('click', () => fileInput.click());
 
-            document.getElementById('imageInput').addEventListener('change', function () {
-                var formData = new FormData();
-                formData.append('image', this.files[0]);
-                formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
+            imageInput.addEventListener('change', handleImageUpload);
+            fileInput.addEventListener('change', handleFileUpload);
+        }
 
-                fetch('chat.php', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.text())
-                    .then(data => {
-                        console.log('Server response:', data); // Depuración
-                        $('#reply-preview').hide();
-                        $('#reply-preview').data('reply-to', null);
+        // 📤 Enviar mensaje
+        function sendMessage() {
+            const message = $('#message').val().trim();
+            const replyTo = $('#reply-preview').data('reply-to') || 0;
+            
+            if (message.length === 0) {
+                showError('El mensaje no puede estar vacío');
+                return;
+            }
+            
+            if (message.length > CONFIG.maxMessageLength) {
+                showError('El mensaje es demasiado largo');
+                return;
+            }
+
+            $.post('chat.php', {
+                message: message,
+                reply_to: replyTo
+            })
+            .done(function(data) {
+                try {
+                    const response = JSON.parse(data);
+                    if (response.success) {
+                        $('#message').val('');
+                        hideReplyPreview();
                         loadMessages();
-                    }).catch(error => {
-                        console.error('Error uploading image:', error); // Depuración
-                        alert('Error al subir la imagen');
-                    });
+                    } else {
+                        showError(response.error || 'Error al enviar el mensaje');
+                    }
+                } catch (e) {
+                    showError('Error al procesar la respuesta del servidor');
+                }
+            })
+            .fail(function(xhr, status, error) {
+                showError('Error de conexión: ' + error);
             });
+        }
 
-            document.getElementById('upload-file').addEventListener('click', function () {
-                document.getElementById('fileInput').click();
-            });
+        // 🖼️ Manejar subida de imagen
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            document.getElementById('fileInput').addEventListener('change', function () {
-                var formData = new FormData();
-                formData.append('file', this.files[0]);
-                formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
+            if (!CONFIG.allowedImageTypes.includes(file.type)) {
+                showError('Tipo de imagen no permitido');
+                return;
+            }
 
-                fetch('chat.php', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.text())
-                    .then(data => {
-                        console.log('Server response:', data); // Depuración
-                        $('#reply-preview').hide();
-                        $('#reply-preview').data('reply-to', null);
+            if (file.size > CONFIG.maxImageSize) {
+                showError('La imagen es demasiado grande (máximo 5MB)');
+                return;
+            }
+
+            uploadFile(file, 'image');
+        }
+
+        // 📄 Manejar subida de archivo
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!CONFIG.allowedFileTypes.includes(file.type)) {
+                showError('Tipo de archivo no permitido');
+                return;
+            }
+
+            if (file.size > CONFIG.maxFileSize) {
+                showError('El archivo es demasiado grande (máximo 10MB)');
+                return;
+            }
+
+            uploadFile(file, 'file');
+        }
+
+        // 📤 Subir archivo genérico
+        function uploadFile(file, type) {
+            const formData = new FormData();
+            formData.append(type, file);
+            formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
+
+            fetch('chat.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                try {
+                    const response = JSON.parse(data);
+                    if (response.success) {
+                        hideReplyPreview();
                         loadMessages();
-                    }).catch(error => {
-                        console.error('Error uploading file:', error); // Depuración
-                        alert('Error al subir el archivo');
-                    });
+                        document.getElementById('upload-menu').style.display = 'none';
+                    } else {
+                        showError(response.error || 'Error al subir el archivo');
+                    }
+                } catch (e) {
+                    showError('Error al procesar la respuesta del servidor');
+                }
+            })
+            .catch(error => {
+                showError('Error de conexión: ' + error);
             });
-        });
+        }
 
+        // 🔄 Cargar mensajes
+        function loadMessages() {
+            $.get('load_messages.php')
+                .done(function(data) {
+                    $('#chat-box').html(data);
+                    autoScroll();
+                })
+                .fail(function(xhr, status, error) {
+                    console.error('Error loading messages:', error);
+                });
+        }
+
+        // 🗑️ Eliminar mensaje
+        function deleteMessage(messageId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
+                $.post('delete_message.php', {
+                    message_id: messageId
+                })
+                .done(function(data) {
+                    try {
+                        const response = JSON.parse(data);
+                        if (response.success) {
+                            loadMessages(); // Recargar mensajes para mostrar el cambio
+                        } else {
+                            showError(response.error || 'Error al eliminar el mensaje');
+                        }
+                    } catch (e) {
+                        showError('Error al procesar la respuesta del servidor');
+                    }
+                })
+                .fail(function(xhr, status, error) {
+                    showError('Error de conexión: ' + error);
+                });
+            }
+        }
+
+        // 📍 Auto-scroll
         let isUserScrolling = false;
-        let userScrolledUp = false; // Flag para indicar si el usuario ha desplazado hacia arriba
+        let userScrolledUp = false;
 
-        // Detectar cuando el usuario está desplazándose
-        $('#chat-box').on('scroll', function () {
+        $('#chat-box').on('scroll', function() {
             isUserScrolling = true;
-
-            // Verificar si el usuario ha desplazado hacia arriba
             if ($(this).scrollTop() < $(this)[0].scrollHeight - $(this).innerHeight()) {
-                userScrolledUp = true; // El usuario ha desplazado hacia arriba
+                userScrolledUp = true;
             } else {
-                userScrolledUp = false; // El usuario está en la parte inferior
+                userScrolledUp = false;
             }
         });
 
-        // Detectar cuando el usuario deja de desplazarse
-        $('#chat-box').on('scrollstop', function () {
-            isUserScrolling = false;
-        });
-
-        // Desplazamiento automático solo si el usuario no está desplazándose y no ha desplazado hacia arriba
         function autoScroll() {
             if (!isUserScrolling && !userScrolledUp) {
                 $('#chat-box').animate({
@@ -493,119 +627,26 @@ $last_user_id = null;
             }
         }
 
-        // Añadir un evento para detectar cuando el usuario deja de desplazarse
-        let scrollTimeout;
-        $('#chat-box').on('scroll', function () {
-            clearTimeout(scrollTimeout);
-            isUserScrolling = true;
-            scrollTimeout = setTimeout(function () {
-                isUserScrolling = false;
-            }, 100); // Cambia el tiempo de espera según sea necesario
-        });
-        $('#send-image').on('click', function () {
-            $('#image').click(); // Simula un clic en el input de archivo
-        });
+        // 🔄 Actualizar mensajes cada 2 segundos
+        setInterval(loadMessages, 2000);
 
-        document.getElementById('uploadButton').addEventListener("click", () => {
-            document.getElementById('SubirDiv').classList.toggle('show');
-            event.stopPropagation();
-        });
-        document.addEventListener('click', function (event) {
-            if (!container.contains(event.target) && container.classList.contains('show')) {
-                container.classList.remove('show');
-            }
-        });
-        document.addEventListener('click', function (event) {
-            var div = document.getElementById('SubirDiv');
-            if (!div.contains(event.target)) {
-                div.classList.remove('show');
-            }
-        });
-
-        function uploadFile(type) {
-            var fileInput;
-            var validTypes;
-
-            if (type === 'image') {
-                fileInput = document.getElementById('imageInput');
-                validTypes = ['image/gif', 'image/jpeg', 'image/png'];
-            } else {
-                fileInput = document.getElementById('docInput');
-                validTypes = [
-                    'application/msword',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'application/vnd.ms-excel',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'application/vnd.ms-powerpoint',
-                    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                    'application/pdf'
-                ];
-            }
-
-            var file = fileInput.files[0];
-            if (file) {
-                if (validTypes.includes(file.type)) {
-                    var formData = new FormData();
-                    formData.append('file', file);
-
-                    fetch('upload.php', {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => {
-                        if (response.ok) {
-                            alert('Archivo subido exitosamente');
-                        } else {
-                            alert('Error al subir el archivo');
-                        }
-                    }).catch(error => {
-                        console.error('Error:', error);
-                        alert('Error al subir el archivo');
-                    });
-                } else {
-                    alert('Tipo de archivo no permitido.');
-                }
-            }
+        // 🎯 Funciones auxiliares
+        function showReplyPreview(userName, messageContent, messageId) {
+            $('#reply-message').html('<strong>' + userName + ':</strong> ' + messageContent);
+            $('#reply-preview').show().data('reply-to', messageId);
+            $('#message').focus();
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('upload-button').addEventListener('click', function (event) {
-                var uploadMenu = document.getElementById('upload-menu');
-                if (uploadMenu.style.display === 'block') {
-                    uploadMenu.style.display = 'none';
-                } else {
-                    uploadMenu.style.display = 'block';
-                }
-                event.stopPropagation();
-            });
-        });
+        function hideReplyPreview() {
+            $('#reply-preview').hide().data('reply-to', null);
+        }
 
-        document.addEventListener('click', function (event) {
-            var uploadMenu = document.getElementById('upload-menu');
-            if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
-                uploadMenu.style.display = 'none';
-            }
-        });
-
-        document.getElementById('upload-image').addEventListener('click', function () {
-            // Lógica para subir imagen
-            document.getElementById('upload-menu').classList.remove('show');
-            alert('Subir Imagen');
-        });
-
-        document.getElementById('upload-file').addEventListener('click', function () {
-            // Lógica para subir archivo
-            document.getElementById('upload-menu').classList.remove('show');
-            alert('Subir Archivo');
-        });
-
-        document.addEventListener('click', function (event) {
-            var uploadMenu = document.getElementById('upload-menu');
-            if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
-                uploadMenu.classList.remove('show');
-            }
-        });
-
+        function showError(message) {
+            alert(message); // Mejorar con una notificación más elegante
+        }
     </script>
+
+
 </body>
 
 </html>
