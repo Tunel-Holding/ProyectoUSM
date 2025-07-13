@@ -1,3 +1,8 @@
+<?php 
+    session_start(); 
+?>
+
+
 
 <html lang="en">
 
@@ -92,7 +97,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             <?php if (isset($_SESSION['mensaje'])): ?>
-                alert('<?php echo $_SESSION['mensaje']; ?>');
+                alert(<?php echo json_encode($_SESSION['mensaje']); ?>);
                 <?php unset($_SESSION['mensaje']); ?>
             <?php endif; ?>
         });
