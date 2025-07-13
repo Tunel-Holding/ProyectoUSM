@@ -1,6 +1,5 @@
 <?php
-
-session_start();
+include 'comprobar_sesion.php';
 require 'conexion.php';
 
 if (isset($_GET['valor'])) { 

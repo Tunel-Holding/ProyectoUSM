@@ -1,12 +1,7 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
+include 'conexion.php';
 // Conexión a la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "proyectousm";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Verificar la conexión
 if ($conn->connect_error) {

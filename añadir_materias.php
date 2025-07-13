@@ -1,3 +1,6 @@
+<?php
+include 'comprobar_sesion.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -17,20 +20,7 @@
 </head>
 
 <body>
-
-    <div class="cabecera">
-
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
-        </div>
-
-    </div>
-
-    <?php include 'menu_administrador.php'; ?>
+    <?php include 'navAdmin.php'; ?>
 
     <h1>Añadir Materia</h1>
 

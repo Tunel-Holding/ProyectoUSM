@@ -1,4 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
+
 require_once "conexion.php";
 
 /**
@@ -60,6 +62,9 @@ class ProfesoresManager {
     /**
      * Aplica filtros de búsqueda a la consulta usando prepared statements
      */
+    /**
+     * Aplica filtros de búsqueda a la consulta usando prepared statements
+     */
     private function aplicarFiltros($sql, $busqueda = null) {
         if ($busqueda && !empty(trim($busqueda))) {
             $busqueda = trim($busqueda);
@@ -67,16 +72,22 @@ class ProfesoresManager {
             if (preg_match('/^[a-zA-Z0-9\s]+$/', $busqueda)) {
                 // Limitar longitud para prevenir ataques
                 if (strlen($busqueda) <= 100) {
-                    $sql .= " WHERE p.nombre LIKE ?";
-                    return ['sql' => $sql, 'params' => ['%' . $busqueda . '%']];
+                    // Buscar tanto por nombre como por cédula
+                    $sql .= " WHERE p.nombre LIKE ? OR p.cedula LIKE ?";
+                    return [
+                        'sql' => $sql,
+                        'params' => [
+                            '%' . $busqueda . '%',
+                            '%' . $busqueda . '%'
+                        ]
+                    ];
                 } else {
                     throw new Exception('La búsqueda es demasiado larga. Máximo 100 caracteres.');
                 }
-                            } else {
-                    throw new Exception('La búsqueda debe contener solo letras, números y espacios.');
-                }
+            } else {
+                throw new Exception('La búsqueda debe contener solo letras, números y espacios.');
+            }
         }
-        
         return ['sql' => $sql, 'params' => []];
     }
     
@@ -211,7 +222,7 @@ class ProfesoresView {
                         name="buscar" 
                         id="buscar-input"
                         value="' . $busquedaEscapada . '" 
-                        placeholder="🔍 Buscar profesores por nombre..." 
+                        placeholder="🔍 Buscar profesores por nombre o cedula..." 
                         class="search-input"
                         autocomplete="off"
                         maxlength="100"

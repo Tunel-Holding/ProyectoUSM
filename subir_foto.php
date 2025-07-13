@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
 include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 
 $target_dir = "fotoperfil/";

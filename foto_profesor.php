@@ -1,4 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
+
 session_start();
 include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 

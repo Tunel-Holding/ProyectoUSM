@@ -19,7 +19,6 @@ $palette_light = [
     "#E2F0CB", "#FFABAB", "#B5EAD7", "#DADFF7", "#FFDEF0", "#D5E2FF"
 ];
 
-
 $palette_dark = [
     "#CC9095", "#CCA98C", "#CCCC8A", "#95C7A5", "#95B4CC", "#B496B8",
     "#A8C3B2", "#D9AEB2", "#C9BD96", "#A3BCD4", "#D0A3CC", "#94CDAA",
@@ -97,14 +96,12 @@ while ($row = $result->fetch_assoc()) {
     }
 
     // 🧱 Contenedor del mensaje
-    echo '<div class="message-container-' . $nivel_usuario . '">';
-    echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
+    echo '<div class="message-container-flex">';
     
-    // 🎛️ Botones de acción
-    echo '<div class="message-actions">';
+    // Botones a la izquierda
+    echo '<div class="message-actions-left">';
     // Botón para responder
-    // Usar SVG directamente para el icono de respuesta
-    echo '<button class="reply-button" data-message-id="' . $message_id . '" title="Responder">
+    echo '<button class="reply-button" data-message-id="' . $message_id . '" data-username="' . $nombre_usuario . '" title="Responder">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-responder" viewBox="0 0 16 16">
                 <path d="M6.854 4.146a.5.5 0 0 0-.708.708L8.293 7H1.5a.5.5 0 0 0 0 1h6.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/>
                 <path d="M13.5 8a.5.5 0 0 1-.5.5H9a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5z"/>
@@ -113,7 +110,6 @@ while ($row = $result->fetch_assoc()) {
     
     // Botón para eliminar (solo si tiene permiso)
     if ($can_delete) {
-        // Usar SVG directamente para el icono de eliminar
         echo '<button class="delete-button" data-message-id="' . $message_id . '" onclick="deleteMessage(' . $message_id . ')" title="Eliminar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-eliminar" viewBox="0 0 16 16">
                     <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6z"/>
@@ -122,9 +118,32 @@ while ($row = $result->fetch_assoc()) {
             </button>';
     }
     echo '</div>';
+    
+    // Avatar
+    echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
+    // Burbuja a la derecha
     echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
 
-    // 🔁 Mostrar vista previa si es respuesta
+    // 📨 Contenido del mensaje
+    echo "<strong>$nombre_usuario:</strong> ";
+    if ($tipo === "texto") {
+        echo "<p id='message-text-$message_id'>$mensaje</p>";
+    } elseif ($tipo === "imagen") {
+        echo "<img class='msg-foto' src='$mensaje' alt='Imagen'>";
+    } elseif ($tipo === "archivo") {
+        $file_name = basename($mensaje);
+        $ext       = pathinfo($mensaje, PATHINFO_EXTENSION);
+        $icon_map  = [
+            'doc' => 'word.png', 'docx' => 'word.png',
+            'xls' => 'excel.png', 'xlsx' => 'excel.png',
+            'ppt' => 'powerpoint.png', 'pptx' => 'powerpoint.png',
+            'pdf' => 'pdf.png'
+        ];
+        $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
+        echo "<a class='file' href='$mensaje' target='_blank'><img src='$icon' alt=''>$file_name</a>";
+    }
+
+    // Mostrar la respuesta dentro de la burbuja, debajo del mensaje
     if ($reply_to) {
         $reply_query = "
             SELECT m.message, u.nombre_usuario, m.tipo 
@@ -140,87 +159,152 @@ while ($row = $result->fetch_assoc()) {
         if ($reply_result && $reply_row = $reply_result->fetch_assoc()) {
             $reply_nombre  = htmlspecialchars($reply_row['nombre_usuario']);
             $reply_mensaje = htmlspecialchars($reply_row['message']);
+            
+            echo "<div class='reply-preview-inside'>";
+            echo "<span class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></span>";
+            
             if ($reply_row['tipo'] === 'imagen') {
-                echo "<div class='reply-preview'><strong>$reply_nombre:</strong> <img src='$reply_mensaje' class='reply-image' alt='Imagen'></div>";
+                echo "<div class='reply-content'><img src='$reply_mensaje' class='reply-image' alt='Imagen'></div>";
             } else {
-                echo "<div class='reply-preview'><strong>$reply_nombre:</strong> $reply_mensaje</div>";
+                echo "<div class='reply-content'>$reply_mensaje</div>";
             }
+            echo "</div>";
         }
         $reply_stmt->close();
     }
 
-    // 📨 Contenido del mensaje
-    if ($tipo === "texto") {
-        echo "<strong>$nombre_usuario:</strong> <p id='message-text-$message_id'>$mensaje</p><p class='timestamp'>$timestamp</p>";
-    } elseif ($tipo === "imagen") {
-        echo "<strong>$nombre_usuario:</strong> <img class='msg-foto' src='$mensaje' alt='Imagen'><p class='timestamp'>$timestamp</p>";
-    } elseif ($tipo === "archivo") {
-        $file_name = basename($mensaje);
-        $ext       = pathinfo($mensaje, PATHINFO_EXTENSION);
-        $icon_map  = [
-            'doc' => 'word.png', 'docx' => 'word.png',
-            'xls' => 'excel.png', 'xlsx' => 'excel.png',
-            'ppt' => 'powerpoint.png', 'pptx' => 'powerpoint.png',
-            'pdf' => 'pdf.png'
-        ];
-        $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
-        echo "<strong>$nombre_usuario:</strong> <a class='file' href='$mensaje' target='_blank'><img src='$icon' alt=''>$file_name</a><p class='timestamp'>$timestamp</p>";
-    }
-
-    echo '</div></div>'; // Cierre de burbuja y contenedor
+    echo "<p class='timestamp'>$timestamp</p>";
+    echo '</div>'; // Cierre de burbuja
+    echo '</div>'; // Cierre de contenedor flex
 }
 
 $stmt->close();
 ?>
 
 <style>
-.message-actions {
+.message-container-flex {
     display: flex;
-    gap: 5px;
-    margin-bottom: 5px;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    position: relative;
+    justify-content: flex-end;
 }
-
+.message-actions-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: flex-end;
+    margin-right: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.message-container-flex:hover .message-actions-left {
+    opacity: 1;
+    pointer-events: auto;
+}
+.profile-icon-alumno, .profile-icon-profesor, .profile-icon-administrador {
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+.message-bubble-alumno, .message-bubble-profesor, .message-bubble-administrador {
+    border-radius: 16px;
+    padding: 12px 18px;
+    min-width: 80px;
+    max-width: 400px;
+    word-break: break-word;
+    position: relative;
+    margin-right: 0;
+    margin-left: 10px;
+}
 .reply-button, .delete-button {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    padding: 5px 10px;
-    font-size: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1.5px solid #bbb;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 0;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
 }
-
 .reply-button:hover {
     background: #e3f2fd;
     border-color: #2196f3;
+    transform: scale(1.1);
 }
-
 .delete-button {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     color: #d32f2f;
     border-color: #d32f2f;
 }
-
 .delete-button:hover {
     background: #ffebee;
     border-color: #c62828;
+    transform: scale(1.1);
 }
-
-.dark-mode .reply-button,
-.dark-mode .delete-button {
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    border-color: #555;
+.reply-preview-inside {
+    background: rgba(33, 150, 243, 0.10);
+    border-left: 4px solid #2196f3;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 1em;
+    color: #222;
+    font-weight: 500;
+    box-shadow: 0 1px 6px rgba(33,150,243,0.07);
 }
-
-.dark-mode .reply-button:hover {
-    background: rgba(33, 150, 243, 0.3);
-    border-color: #2196f3;
+.dark-mode .reply-preview-inside {
+    background: rgba(33, 150, 243, 0.18);
+    border-left-color: #90caf9;
+    color: #e3e3e3;
 }
-
-.dark-mode .delete-button:hover {
-    background: rgba(211, 47, 47, 0.3);
-    border-color: #d32f2f;
+.reply-to-text {
+    font-size: 0.95em;
+    font-style: italic;
+    color: #1976d2;
+    margin-bottom: 2px;
+    display: block;
+    opacity: 1;
+}
+.reply-content {
+    opacity: 0.9;
+    word-break: break-word;
+}
+.reply-image {
+    max-width: 100px;
+    max-height: 60px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+@media (max-width: 768px) {
+    .profile-icon-alumno, .profile-icon-profesor, .profile-icon-administrador {
+        width: 32px;
+        height: 32px;
+    }
+    .message-bubble-alumno, .message-bubble-profesor, .message-bubble-administrador {
+        max-width: 90vw;
+        padding: 8px 10px;
+    }
+    .reply-button, .delete-button {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+    .reply-preview-inside {
+        padding: 6px 10px;
+        font-size: 0.95em;
+    }
+    .reply-image {
+        max-width: 80px;
+        max-height: 50px;
+    }
 }
 </style>
 

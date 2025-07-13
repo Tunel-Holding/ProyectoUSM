@@ -1,5 +1,6 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
+
 if (!isset($_SESSION['idusuario'])) {
     header('Location: index.php');
     exit;

@@ -1,4 +1,5 @@
 <?php
+include 'comprobar_sesion.php';
 include 'conexion.php';
 
 $nombre = $_GET['nombre'];

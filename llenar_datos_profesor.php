@@ -1,5 +1,6 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
+
 // Conexión a la base de datos
 $servername = "localhost";
 $username = "root";

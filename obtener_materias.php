@@ -1,4 +1,5 @@
 <?php
+include 'comprobar_sesion.php';
 header('Content-Type: application/json');
 require "conexion.php";
 

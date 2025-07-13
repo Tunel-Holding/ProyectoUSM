@@ -1,4 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_profesor = $_POST['id_profesor'];
     $id_materia = $_POST['id_materia'];

@@ -1,10 +1,5 @@
 <?php
-session_start();
-if (!isset($_SESSION['idusuario'])) {
-    header('Location: index.php');
-    exit;
-}
-
+include 'comprobar_sesion.php';
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 $conn->set_charset("utf8mb4");
 

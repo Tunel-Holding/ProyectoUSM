@@ -1,6 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
 include 'conexion.php';
-
 $id = $_GET['id'];
 
 // Obtener los detalles de la sección a editar
@@ -25,10 +25,8 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="css/icono.png" type="image/png">
-    <link rel="stylesheet" href="css/admin_materias.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principaladministracion.css">
+            <link rel="icon" href="css/icono.png" type="image/png">
+    <link rel="stylesheet" href="css/admin-general.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -102,18 +100,9 @@ $conn->close();
 </head>
 
 <body>
-
-    <div class="cabecera">
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
-        </div>
-    </div>
-
-    <?php include 'menu_administrador.php'; ?>
+    <!-- Navbar -->
+    <?php include 'navAdmin.php'; ?>
+    
 
     <h1>Editar Sección</h1>
 

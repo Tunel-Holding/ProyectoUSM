@@ -1,7 +1,6 @@
 <?php
-session_start();
-// Conectar a la base de datos
-$conn = new mysqli("localhost", "root", "", "proyectousm");
+include 'comprobar_sesion.php';
+include 'conexion.php';
 
 // Verificar la conexión
 if ($conn->connect_error) {

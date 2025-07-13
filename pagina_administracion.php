@@ -1,5 +1,6 @@
 <?php
-include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
+include 'comprobar_sesion.php';
+    include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
 
 // Consulta para obtener la cantidad de profesores
 $result_profesores = $conn->query("SELECT COUNT(*) as count FROM profesores");

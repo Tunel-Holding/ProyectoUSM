@@ -1,12 +1,15 @@
+<?php
+include 'comprobar_sesion.php';
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principaladministracion.css">
+    
+    <link rel="stylesheet" href="css/admin-general.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -176,8 +179,8 @@
 </head>
 
 <body>
-
-    <?php include 'menu_administrador.php'; ?>
+    <!-- Navbar -->
+    <?php include 'navAdmin.php'; ?>
 
     <div class="container">
         <h1>Ajustar Créditos</h1>

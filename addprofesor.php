@@ -1,4 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
+
 require_once "conexion.php";
 require 'vendor/autoload.php';
 
