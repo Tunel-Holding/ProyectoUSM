@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test LogoButton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/principalalumnostyle.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-container {
+            position: relative;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="cabecera cabecera-chat">
+            <button type="button" id="logoButton">
+                <img src="css/logo.png" alt="Logo" style="width: 50px; height: 50px;">
+            </button>
+            <div class="nombremateria">
+                <h1>Test LogoButton</h1>
+            </div>
+            <div class="logoempresa">
+                <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
+                <p>UH</p>
+            </div>
+        </div>
+
+        <div class="menu" id="menu">
+            <div class="menuopc">
+                <div class="menuopciones" id="contenedor">
+                    <div class="opción">
+                        <div class="intopcion" id="inicio">
+                            <img src="css/home.png">
+                            <p>Inicio</p>
+                        </div>
+                    </div>
+                    <div class="opción">
+                        <div class="intopcion" id="datos">
+                            <img src="css/person.png">
+                            <p>Datos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inferior">
+                <div class="logout">
+                    <button class="Btn" type="button">
+                        <div class="sign">🚪</div>
+                        <div class="text">Salir</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 100px; padding: 20px;">
+            <h2>Prueba del LogoButton</h2>
+            <p>Haz clic en el logo de la cabecera para abrir/cerrar el menú.</p>
+            <p>Estado del menú: <span id="menu-status">Cerrado</span></p>
+            <button onclick="toggleMenuManually()">Alternar menú manualmente</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== PRUEBA SIMPLE DEL LOGOBUTTON ===');
+            
+            const logoButton = document.getElementById('logoButton');
+            const menu = document.getElementById('menu');
+            const menuStatus = document.getElementById('menu-status');
+            
+            console.log('LogoButton:', logoButton);
+            console.log('Menu:', menu);
+            
+            if (logoButton && menu) {
+                logoButton.addEventListener('click', function() {
+                    console.log('CLICK EN LOGOBUTTON!');
+                    console.log('Clases antes:', menu.classList.toString());
+                    
+                    menu.classList.toggle('toggle');
+                    
+                    console.log('Clases después:', menu.classList.toString());
+                    menuStatus.textContent = menu.classList.contains('toggle') ? 'Abierto' : 'Cerrado';
+                });
+                
+                console.log('Evento agregado correctamente');
+            } else {
+                console.error('Elementos no encontrados');
+            }
+        });
+
+        function toggleMenuManually() {
+            const menu = document.getElementById('menu');
+            const menuStatus = document.getElementById('menu-status');
+            
+            menu.classList.toggle('toggle');
+            menuStatus.textContent = menu.classList.contains('toggle') ? 'Abierto' : 'Cerrado';
+            
+            console.log('Menú alternado manualmente');
+        }
+    </script>
+</body>
+</html> 
