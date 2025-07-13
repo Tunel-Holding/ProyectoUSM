@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 12-07-2025 a las 22:56:30
+-- Tiempo de generación: 13-07-2025 a las 03:36:39
 -- Versión del servidor: 8.3.0
 -- Versión de PHP: 8.3.6
 
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `estudiantes` (
 --
 
 INSERT INTO `estudiantes` (`id`, `id_usuario`, `cedula`, `carrera`, `semestre`, `creditosdisponibles`) VALUES
-(1, 1, NULL, 'Ingeniería de Sistemas', 1, 20),
+(1, 1, 165712321, 'Ingeniería de Sistemas', 1, 20),
 (2, 6, NULL, 'Ingeniería de Sistemas', 1, 20),
 (3, 24, NULL, 'Ingenieria en Sistemas', 1, 1),
 (4, 25, NULL, 'Ingenieria en Sistemas', 1, 15),
@@ -396,18 +396,18 @@ CREATE TABLE IF NOT EXISTS `materias` (
 --
 
 INSERT INTO `materias` (`id`, `nombre`, `salon`, `id_profesor`, `creditos`, `semestre`, `seccion`) VALUES
-(84, 'Herramientas de Apoyo', '902', 6, 2, 1, 'A'),
-(83, 'Matematicas 1', '702', 6, 5, 1, 'D'),
-(80, 'Matematicas 1', '902', 1, 5, 1, 'A'),
-(81, 'Matematicas 1', '902', 3, 5, 1, 'B'),
-(82, 'Matematicas 1', '901', 2, 5, 1, 'C'),
-(85, 'Herramientas de Apoyo', '902', NULL, 2, 1, 'B'),
+(84, 'Herramientas de Apoyo', '902', 1, 2, 1, 'A'),
+(83, 'Matematicas 1', '702', NULL, 5, 1, 'D'),
+(80, 'Matematicas 1', '902', NULL, 5, 1, 'A'),
+(81, 'Matematicas 1', '902', 4, 5, 1, 'B'),
+(82, 'Matematicas 1', '901', NULL, 5, 1, 'C'),
+(85, 'Herramientas de Apoyo', '902', 2, 2, 1, 'B'),
 (86, 'Fisica 1', '901', 1, 5, 1, 'A'),
-(87, 'Fisica 1', '901', 5, 5, 1, 'B'),
-(88, 'Lenguaje y Comunicacion', '702', 1, 2, 1, 'A'),
-(89, 'Ingles 1', '702', 1, 2, 1, 'A'),
-(90, 'Daniela Garcia', '902', 6, 20, 1, 'A'),
-(91, 'Daniela Garcia', '902', NULL, 20, 1, 'B');
+(87, 'Fisica 1', '901', 6, 5, 1, 'B'),
+(88, 'Lenguaje y Comunicacion', '702', NULL, 2, 1, 'A'),
+(89, 'Ingles 1', '702', 5, 2, 1, 'A'),
+(90, 'Daniela Garcia', '902', NULL, 20, 1, 'A'),
+(91, 'Daniela Garcia', '902', 3, 20, 1, 'B');
 
 -- --------------------------------------------------------
 
@@ -499,22 +499,23 @@ DROP TABLE IF EXISTS `profesores`;
 CREATE TABLE IF NOT EXISTS `profesores` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_usuario` int DEFAULT NULL,
+  `cedula` int NOT NULL,
   `nombre` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `profesores`
 --
 
-INSERT INTO `profesores` (`id`, `id_usuario`, `nombre`) VALUES
-(1, 5, 'Angel Cepeda'),
-(2, 4, 'Hector Hurtado'),
-(3, 6, 'Sebastian Sanchez'),
-(4, 7, 'Saul Mendoza'),
-(5, 29, 'Tomas Reveron'),
-(6, 30, 'Daniela Garcia');
+INSERT INTO `profesores` (`id`, `id_usuario`, `cedula`, `nombre`) VALUES
+(1, 5, 0, 'Angel Cepeda'),
+(2, 4, 0, 'Hector Hurtado'),
+(3, 6, 0, 'Sebastian Sanchez'),
+(4, 7, 0, 'Saul Mendoza'),
+(5, 29, 0, 'Tomas Reveron'),
+(6, 30, 0, 'Daniela Garcia');
 
 -- --------------------------------------------------------
 
@@ -557,25 +558,27 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `contrasena` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `nivel_usuario` enum('administrador','profesor','usuario') CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `session` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_usuario`) VALUES
-(1, 'TReveron', 'tomyreveroncito@gmail.com', '$2y$10$MjHASuz/bqzOFoh5Jqe2M.rqKfUmTSf9L//6YRLTVFaholnfZ9MKm', 'usuario'),
-(25, 'Daniela', 'daniela.aleja2021@gmail.com', '$2y$10$PhXZBCya4WmmRuC4JrTex.p5hmhh5Zi9o25EiWgdb7x/K2cCU4/kq', 'usuario'),
-(24, 'Mvicky0505', 'mvggarcia05@gmail.com', '$2y$10$8JCIh4b6v825FwFfeLHrjumhmgMDsS4V7Eo2pVGwyXIjQRNNQtwl6', 'administrador'),
-(5, 'ACepeda', 'angelcepeda@gmail.com', '$2y$10$G8fS6qQCpqXyfJ/US95Sl.MGqtwSD4jQ1oymMoYrLcqkEfvDiNEKm', 'profesor'),
-(6, 'Sebastian', 'sebastiansanchezar3@gmail.com', '$2y$10$pKa.Q0FKgIjEDG/lHHeaz./Al8.FD0h5iT9ZekPugh5S37rNobuDO', 'usuario'),
-(27, 'Marivgc19', 'mvgc1133@gmail.com', '$2y$10$vtm/d2SqSwxSIiS.p00hPej7UBUBg3SCQwKS47KtzbzV5RDq.I32O', 'usuario'),
-(28, 'Jpipi', 'janpipi@gmail.com', '$2y$10$dfQJGv63KFl9irf8NC04ZeiMddn/buoDgFHGW0lnTduyhJ9nRmfI.', 'administrador'),
-(29, 'Tprofesor', 'reveron29989547@usm.edu.ve', '$2y$10$WMsYx2.0SweZ9QFFhCvFuOVkHOT//2wfMQNnv/alJSVqvSmPa8SDm', 'profesor'),
-(30, 'DGarcia', 'danielagarciaprof@gmail.com', '$2y$10$l2QfBJE/NbuwJJ3VYqR6DuWlbiaEeze0oTaM7fQqoH0LF66GsSN.u', 'profesor'),
-(31, 'andreamejia', 'avictoria1501@gmail.com', '$2y$10$WlkX1OO3iCbZBILRi3mZ..c27q2reJfXIfg5/WVDD2oBnFHx1y/qG', 'administrador');
+INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_usuario`, `session`) VALUES
+(1, 'TReveron', 'tomyreveroncito@gmail.com', '$2y$10$MjHASuz/bqzOFoh5Jqe2M.rqKfUmTSf9L//6YRLTVFaholnfZ9MKm', 'usuario', 0),
+(25, 'Daniela', 'daniela.aleja2021@gmail.com', '$2y$10$PhXZBCya4WmmRuC4JrTex.p5hmhh5Zi9o25EiWgdb7x/K2cCU4/kq', 'usuario', 0),
+(24, 'Mvicky0505', 'mvggarcia05@gmail.com', '$2y$10$8JCIh4b6v825FwFfeLHrjumhmgMDsS4V7Eo2pVGwyXIjQRNNQtwl6', 'administrador', 0),
+(5, 'ACepeda', 'angelcepeda@gmail.com', '$2y$10$G8fS6qQCpqXyfJ/US95Sl.MGqtwSD4jQ1oymMoYrLcqkEfvDiNEKm', 'profesor', 0),
+(6, 'Sebastian', 'sebastiansanchezar3@gmail.com', '$2y$10$pKa.Q0FKgIjEDG/lHHeaz./Al8.FD0h5iT9ZekPugh5S37rNobuDO', 'usuario', 0),
+(27, 'Marivgc19', 'mvgc1133@gmail.com', '$2y$10$vtm/d2SqSwxSIiS.p00hPej7UBUBg3SCQwKS47KtzbzV5RDq.I32O', 'usuario', 0),
+(28, 'Jpipi', 'janpipi@gmail.com', '$2y$10$dfQJGv63KFl9irf8NC04ZeiMddn/buoDgFHGW0lnTduyhJ9nRmfI.', 'administrador', 0),
+(29, 'Tprofesor', 'reveron29989547@usm.edu.ve', '$2y$10$WMsYx2.0SweZ9QFFhCvFuOVkHOT//2wfMQNnv/alJSVqvSmPa8SDm', 'profesor', 0),
+(30, 'DGarcia', 'danielagarciaprof@gmail.com', '$2y$10$l2QfBJE/NbuwJJ3VYqR6DuWlbiaEeze0oTaM7fQqoH0LF66GsSN.u', 'profesor', 0),
+(31, 'andreamejia', 'avictoria1501@gmail.com', '$2y$10$WlkX1OO3iCbZBILRi3mZ..c27q2reJfXIfg5/WVDD2oBnFHx1y/qG', 'administrador', 0),
+(32, 'andreameji', 'lectores.cerrados@gmail.com', '$2y$10$PbIgzvkOeqomf9naZl7S5eiPNLU7g3Bp1Drjq6qBFcR1h/qb4CCLO', 'profesor', 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
