@@ -256,6 +256,17 @@ textarea {
     background-color: #d1d5db;
 }
 
+.btn-evaluar {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn-evaluar:disabled {
+    background-color: var(--text-color-secondary);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 /* Sección "Tareas Creadas" */
 .created-tasks-section h3 {
     font-size: 1.2rem;
@@ -291,9 +302,15 @@ textarea {
 
 .task-card {
     position: relative;
-    border-radius: 12px;
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
+    justify-content: space-between; /* Distribuye el contenido uniformemente */
+    min-height: 200px; /* Establece una altura mínima para las tarjetas */
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--border-radius);
     padding: 20px;
-    color: #fff;
+    color: var(--text-color-primary);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -328,13 +345,21 @@ textarea {
     font-weight: 500;
     margin-bottom: 15px;
     text-transform: capitalize;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el contenido desbordado */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+    width: fit-content; /* Ajusta estrictamente al tamaño del texto */
+    max-width: 150px; /* Limita el ancho máximo para evitar desbordes */
 }
 
 .task-card .task-description {
+    flex-grow: 1; /* Permite que la descripción ocupe el espacio disponible */
     font-size: 0.95rem;
     line-height: 1.5;
     margin-bottom: 15px;
     opacity: 0.9;
+    overflow: hidden; /* Oculta el contenido desbordado */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
 }
 
 .task-card .task-due-date {
@@ -346,10 +371,6 @@ textarea {
     background-color: rgba(0, 0, 0, 0.1);
     padding: 8px 12px;
     border-radius: 8px;
-}
-
-.task-due-date i {
-    margin-right: 5px;
 }
 
 /* Botones de acción en la tarjeta */
@@ -464,6 +485,53 @@ textarea {
     margin-top: 30px;
 }
 
+/* Estilos para la tabla de evaluación en el modal */
+.evaluation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.evaluation-table th,
+.evaluation-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.evaluation-table th {
+    background-color: #f2f2f2;
+}
+
+body.dark-mode .evaluation-table th {
+    background-color: #555;
+    color: #fff;
+}
+
+body.dark-mode .evaluation-table td {
+    border-color: #444;
+}
+
+.evaluation-table .input-calificacion {
+    width: 100%;
+    padding: 5px;
+}
+
+.evaluation-table .input-retro {
+    width: 98%;
+    padding: 5px;
+}
+
+.modal-actions {
+    text-align: right;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+body.dark-mode .modal-actions {
+    border-top-color: #444;
+}
 
 /* Media Queries para responsividad */
 @media (max-width: 768px) {
