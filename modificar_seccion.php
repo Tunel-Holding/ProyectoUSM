@@ -90,7 +90,7 @@ include 'comprobar_sesion.php';
             padding: 8px 16px;
             border: 1px solid #ccc;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            background-color: rgb(69, 160, 160);
+            background-color: rgba(68, 106, 211, 1);
             color: white;
             cursor: pointer;
             margin-top: 10px;
@@ -99,7 +99,7 @@ include 'comprobar_sesion.php';
         }
 
         .btn-modificar:hover {
-            background-color: rgb(69, 160, 160);
+            background-color: rgba(68, 106, 211, 1);
             transform: scale(1.05);
         }
 
@@ -131,12 +131,12 @@ include 'comprobar_sesion.php';
         }
 
         th {
-            background-color: rgb(69, 160, 160);
+            background-color: rgba(68, 106, 211, 1);
             color: white;
         }
 
         body.dark-mode th {
-            background-color: rgb(45, 120, 120);
+            background-color: rgba(68, 106, 211, 1);
         }
 
         td {

@@ -34,6 +34,7 @@ include 'comprobar_sesion.php';
             max-width: 1000px;
             /* Ajustar el ancho del contenedor */
             margin: auto;
+            text-align: center;
             background-color: var(--bg-container);
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -46,21 +47,26 @@ include 'comprobar_sesion.php';
             align-content: center;
             height: auto;
             margin-top: 80px;
+            margin-bottom: 30px;
         }
-
+        td:first-child {
+            font-weight: bold;
+            color: #007ACC;
+        }
         .titulo {
             font-size: 68px;
             /* Ajusta el tamaño de la fuente */
             font-weight: bold;
             /* Aplica negrita */
-            margin-bottom: 20px;
-            margin-top: 40px;
+            margin-bottom: 10px;
+            margin-top: 30px;
             /* Añade margen superior */
             color: #333333;
             font-family: 'Roboto', sans-serif;
             /* Aplica la fuente Roboto */
             text-align: center;
             /* Centra el título */
+            
         }
 
         body.dark-mode .titulo {
@@ -70,20 +76,67 @@ include 'comprobar_sesion.php';
 
         .formulario-cedula {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* 🔄 antes era column */
             align-items: center;
             gap: 10px;
             margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
             width: 100%;
+            max-width: 700px;
         }
 
         .error-message {
             color: red;
-            text-align: center;
-            margin-top: 10px;
+            background-color: #fff0f0;
+            border: 1px solid red;
+            border-radius: 6px;
+            padding: 8px 16px;
+            max-width: 600px;
             font-weight: bold;
+            margin-top: 10px;
+            animation: fadeInError 0.4s ease;
             display: none;
-            /* Inicialmente oculto */
+        }
+
+        @keyframes fadeInError {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mensaje-vacio {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px 25px;
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.5s ease;
+            animation: fadeVacio 0.5s ease;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .icono-error {
+            font-size: 24px;
+        }
+
+        @keyframes fadeVacio {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .search-container {
@@ -100,16 +153,20 @@ include 'comprobar_sesion.php';
         }
 
         .search-box {
-            width: 100%;
-            /* Permite que la barra de búsqueda ocupe todo el espacio disponible */
-            max-width: 600px;
-            /* Ajusta el ancho máximo de la barra de búsqueda */
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
+            flex: 1;
+            padding: 12px 20px;
             border-radius: 40px;
-            transition: box-shadow 0.3s ease;
-            /* Animación al pasar el cursor */
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #446ad3;
+            box-shadow: 0 0 10px rgba(68, 106, 211, 0.3);
+            outline: none;
         }
 
         .search-box:hover {
@@ -118,34 +175,50 @@ include 'comprobar_sesion.php';
         }
 
         .search-button {
-            padding: 10px;
-            background-color: rgb(69, 160, 160);
+            padding: 12px 24px;
+            border-radius: 40px;
+            background-color: rgba(68, 106, 211, 1);
             color: white;
             border: none;
-            border-radius: 40px;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* Centra el texto vertical y horizontalmente */
-            font-size: 14px;
-            /* Reduce el tamaño de la letra */
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            /* Añade transición para animación */
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            animation: botonEntrada 0.6s ease forwards;
+            animation-delay: 0.3s;
         }
 
         .search-button:hover {
-            background-color: rgb(45, 120, 120);
-            /* Cambia el color de fondo al pasar el cursor */
+            background-color: #365ac0;
             transform: scale(1.05);
-            /* Escala ligeramente el botón */
+        }
+
+        @keyframes botonEntrada {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .formulario-cedula {
+                flex-direction: column;
+            }
+
+            .search-box,
+            .search-button {
+                width: 100%;
+            }
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 950px;
             background-color: var(--bg-container);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
@@ -161,12 +234,12 @@ include 'comprobar_sesion.php';
         }
 
         th {
-            background-color: rgb(69, 160, 160);
+            background-color: rgba(68, 106, 211, 1);
             color: white;
         }
 
         body.dark-mode th {
-            background-color: rgb(45, 120, 120);
+            background-color: rgba(68, 106, 211, 1);
         }
 
         td {
@@ -194,37 +267,52 @@ include 'comprobar_sesion.php';
         }
 
         .acciones {
-            display: flex direction column;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .acciones a.btn-modificar,
         .acciones a.btn-ajustar {
             display: inline-block;
-            padding: 8px 16px;
-            background-color: rgb(69, 160, 160);
+            padding: 10px 20px;
+            background-color: rgba(68, 106, 211, 0.74);
             color: white;
             text-decoration: none;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
             text-align: center;
-            display: flex direction column;
-            align-items: center;
-            justify-content: center;
+            border-radius: 40px;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             font-size: 14px;
-            margin: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+            animation: fadeSlide 0.6s ease;
+        }
+
+        .acciones a.btn-modificar:active,
+        .acciones a.btn-ajustar:active {
+            transform: scale(0.95);
         }
 
         .acciones a.btn-modificar:hover,
         .acciones a.btn-ajustar:hover {
-            background-color: rgb(45, 120, 120);
+            background-color: rgba(68, 106, 211, 1);
         }
     </style>
 </head>
 
 <body>
     <?php include 'navAdmin.php'; ?>
-
         <div class="container">
             <h1 class="titulo">Búsqueda de Estudiantes</h1>
             <?php
@@ -298,7 +386,12 @@ include 'comprobar_sesion.php';
                             }
                             echo "</table>";
                         } else {
-                            echo "<p>No se encontraron resultados.</p>";
+                            echo '
+                                <div class="mensaje-vacio">
+                                <span class="icono-error">🔍</span>
+                                No se encontraron resultados para la cédula ingresada.
+                                </div>
+                                ';
                         }
                     }
 
@@ -314,7 +407,7 @@ include 'comprobar_sesion.php';
                         <button type="submit" class="search-button">Buscar</button>
                     </form>
                 </div>
-                <p id="error-message" class="error-message">' . $errorMensaje . '</p>
+                <p id="error-message" class="error-message">⚠️ Cedula no ingresada' . $errorMensaje . '</p>
             ';
             }
             ?>
