@@ -12,13 +12,15 @@ include 'comprobar_sesion.php';
     <link rel="stylesheet" href="css/principaladministracion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <title>Alumnos - USM</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            --background-color:rgb(255, 255, 255);
-            --bg-container:rgb(240, 240, 240);
+            --background-color: rgb(255, 255, 255);
+            --bg-container: rgb(240, 240, 240);
             color: #333;
         }
 
@@ -47,17 +49,23 @@ include 'comprobar_sesion.php';
         }
 
         .titulo {
-            font-size: 68px; /* Ajusta el tamaño de la fuente */
-            font-weight: bold; /* Aplica negrita */
+            font-size: 68px;
+            /* Ajusta el tamaño de la fuente */
+            font-weight: bold;
+            /* Aplica negrita */
             margin-bottom: 20px;
-            margin-top: 40px; /* Añade margen superior */
+            margin-top: 40px;
+            /* Añade margen superior */
             color: #333333;
-            font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
-            text-align: center; /* Centra el título */
+            font-family: 'Roboto', sans-serif;
+            /* Aplica la fuente Roboto */
+            text-align: center;
+            /* Centra el título */
         }
 
         body.dark-mode .titulo {
-            color: #ffffff; /* Color blanco para el modo oscuro */
+            color: #ffffff;
+            /* Color blanco para el modo oscuro */
         }
 
         .formulario-cedula {
@@ -217,29 +225,29 @@ include 'comprobar_sesion.php';
 <body>
     <?php include 'navAdmin.php'; ?>
 
-    <div class="container">
-        <h1 class="titulo">Búsqueda de Estudiantes</h1>
-        <?php
-        require "conexion.php";
+        <div class="container">
+            <h1 class="titulo">Búsqueda de Estudiantes</h1>
+            <?php
+            require "conexion.php";
 
-        $mostrarBusqueda = true;
-        $errorMensaje = '';
+            $mostrarBusqueda = true;
+            $errorMensaje = '';
 
-        if (isset($_GET['query'])) {
-            $busqueda = trim($_GET['query']);
+            if (isset($_GET['query'])) {
+                $busqueda = trim($_GET['query']);
 
             if ($busqueda === '') {
                 $errorMensaje = 'Por favor, ingrese una cédula para buscar.';
             } else {
                 require 'conexion.php';
 
-                if ($conn->connect_error) {
-                    die("Conexión fallida: " . $conn->connect_error);
-                }
+                    if ($conn->connect_error) {
+                        die("Conexión fallida: " . $conn->connect_error);
+                    }
 
-                $conn->set_charset("utf8");
+                    $conn->set_charset("utf8");
 
-                $sql = "
+                    $sql = "
                     SELECT
                         du.cedula, du.nombres, du.apellidos,
                         e.semestre, e.creditosdisponibles,
@@ -258,14 +266,14 @@ include 'comprobar_sesion.php';
                         du.cedula, du.nombres, du.apellidos, e.semestre, e.creditosdisponibles
                 ";
 
-                $result = $conn->query($sql);
+                    $result = $conn->query($sql);
 
-                if ($result === false) {
-                    echo "<p>Error en la consulta SQL: " . $conn->error . "</p>";
-                } else {
-                    if ($result->num_rows > 0) {
-                        $mostrarBusqueda = false;
-                        echo "<table border='1'>
+                    if ($result === false) {
+                        echo "<p>Error en la consulta SQL: " . $conn->error . "</p>";
+                    } else {
+                        if ($result->num_rows > 0) {
+                            $mostrarBusqueda = false;
+                            echo "<table border='1'>
                                 <tr>
                                     <th>Nombre y Apellido</th>
                                     <th>Cédula</th>
@@ -275,8 +283,8 @@ include 'comprobar_sesion.php';
                                     <th>Acciones</th>
                                 </tr>";
 
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>
                                     <td>" . htmlspecialchars($row['nombres'] ?? '', ENT_QUOTES, 'UTF-8') . " " . htmlspecialchars($row['apellidos'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
                                     <td>" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
                                     <td>" . htmlspecialchars($row['materias'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
@@ -287,19 +295,19 @@ include 'comprobar_sesion.php';
                                         <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btn-ajustar'>Ajustar Créditos</a>
                                     </td>
                                 </tr>";
+                            }
+                            echo "</table>";
+                        } else {
+                            echo "<p>No se encontraron resultados.</p>";
                         }
-                        echo "</table>";
-                    } else {
-                        echo "<p>No se encontraron resultados.</p>";
                     }
+
+                    $conn->close();
                 }
-
-                $conn->close();
             }
-        }
 
-        if ($mostrarBusqueda) {
-            echo '
+            if ($mostrarBusqueda) {
+                echo '
                 <div class="search-container">
                     <form action="admin_alumnos.php" method="get" class="formulario-cedula" onsubmit="return validateForm()">
                         <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
@@ -308,110 +316,33 @@ include 'comprobar_sesion.php';
                 </div>
                 <p id="error-message" class="error-message">' . $errorMensaje . '</p>
             ';
-        }
-        ?>
+            }
+            ?>
 
-        <script>
-            function validateForm() {
-                var query = document.querySelector('.search-box').value.trim();
-                var errorMessage = document.getElementById('error-message');
+            <script>
+                function validateForm() {
+                    var query = document.querySelector('.search-box').value.trim();
+                    var errorMessage = document.getElementById('error-message');
 
-                if (query === '') {
-                    errorMessage.style.display = 'block';
-                    setTimeout(function() {
-                        errorMessage.style.display = 'none';
-                    }, 3000);
-                    return false;
+                    if (query === '') {
+                        errorMessage.style.display = 'block';
+                        setTimeout(function () {
+                            errorMessage.style.display = 'none';
+                        }, 3000);
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
-            }
 
-            if ('<?php echo $errorMensaje; ?>' !== '') {
-                document.getElementById('error-message').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('error-message').style.display = 'none';
-                }, 3000);
-            }
-        </script>
-    </div>
+                if ('<?php echo $errorMensaje; ?>' !== '') {
+                    document.getElementById('error-message').style.display = 'block';
+                    setTimeout(function () {
+                        document.getElementById('error-message').style.display = 'none';
+                    }, 3000);
+                }
+            </script>
+        </div>
 
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-        const contenedor = document.getElementById('contenedor');
-        const botonIzquierdo = document.getElementById('boton-izquierdo');
-        const botonDerecho = document.getElementById('boton-derecho');
-        botonIzquierdo.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: -94,
-                behavior: 'smooth'
-            });
-        });
-        botonDerecho.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: 94,
-                behavior: 'smooth'
-            });
-        });
-
-        document.getElementById('logoButton').addEventListener("click", () => {
-            document.getElementById('menu').classList.toggle('toggle');
-            event.stopPropagation();
-        });
-        document.addEventListener('click', function(event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
-            }
-        });
-        document.addEventListener('click', function(event) {
-            var div = document.getElementById('menu');
-            if (!div.contains(event.target)) {
-                div.classList.remove('toggle');
-            }
-        });
-        document.getElementById('switchtema').addEventListener('change', function() {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        });
-
-        // Aplicar la preferencia guardada del usuario al cargar la p谩gina
-        window.addEventListener('load', function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('switchtema').checked = true;
-            }
-        });
-
-        function redirigir(url) {
-            window.location.href = url;;
-            // Cambia esta URL a la página de destino 
-        }
-        window.onload = function() {
-            document.getElementById('inicio').addEventListener('click', function() {
-                redirigir('pagina_administracion.php');
-            });
-            document.getElementById('datos').addEventListener('click', function() {
-                redirigir('buscar_datos_admin.html');
-            });
-            document.getElementById('profesor').addEventListener('click', function() {
-                redirigir('admin_profesores.php');
-            });
-            document.getElementById('alumno').addEventListener('click', function() {
-                redirigir('admin_alumnos.php');
-            });
-            document.getElementById('materias').addEventListener('click', function() {
-                redirigir('admin_materias.php');
-            });
-        }
-    </script>
-
-</body>
+    </body>
 
 </html>

@@ -2,38 +2,38 @@
 include 'comprobar_sesion.php';
     include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
 
-    // Consulta para obtener la cantidad de profesores
-    $result_profesores = $conn->query("SELECT COUNT(*) as count FROM profesores");
-    if ($result_profesores === false) {
-        die("Error en la consulta de profesores: " . $conn->error);
-    }
-    $row_profesores = $result_profesores->fetch_assoc();
-    $cantidad_profesores = $row_profesores['count'];
+// Consulta para obtener la cantidad de profesores
+$result_profesores = $conn->query("SELECT COUNT(*) as count FROM profesores");
+if ($result_profesores === false) {
+    die("Error en la consulta de profesores: " . $conn->error);
+}
+$row_profesores = $result_profesores->fetch_assoc();
+$cantidad_profesores = $row_profesores['count'];
 
-    // Consulta para obtener la cantidad de estudiantes
-    $result_estudiantes = $conn->query("SELECT COUNT(*) as count FROM estudiantes");
-    if ($result_estudiantes === false) {
-        die("Error en la consulta de estudiantes: " . $conn->error);
-    }
-    $row_estudiantes = $result_estudiantes->fetch_assoc();
-    $cantidad_estudiantes = $row_estudiantes['count'];
+// Consulta para obtener la cantidad de estudiantes
+$result_estudiantes = $conn->query("SELECT COUNT(*) as count FROM estudiantes");
+if ($result_estudiantes === false) {
+    die("Error en la consulta de estudiantes: " . $conn->error);
+}
+$row_estudiantes = $result_estudiantes->fetch_assoc();
+$cantidad_estudiantes = $row_estudiantes['count'];
 
-    // Consulta para obtener la cantidad de materias únicas
-    $result_materias = $conn->query("SELECT COUNT(DISTINCT nombre) as count FROM materias");
-    if ($result_materias === false) {
-        die("Error en la consulta de materias: " . $conn->error);
-    }
-    $row_materias = $result_materias->fetch_assoc();
-    $cantidad_materias = $row_materias['count'];
+// Consulta para obtener la cantidad de materias únicas
+$result_materias = $conn->query("SELECT COUNT(DISTINCT nombre) as count FROM materias");
+if ($result_materias === false) {
+    die("Error en la consulta de materias: " . $conn->error);
+}
+$row_materias = $result_materias->fetch_assoc();
+$cantidad_materias = $row_materias['count'];
 
-    $registros = [];
+$registros = [];
 
-    $result_profesores = $conn->query("SELECT id, nombre, 'profesor' AS tipo FROM profesores ORDER BY id DESC LIMIT 1");
-    if ($result_profesores) {
-        while ($row = $result_profesores->fetch_assoc()) {
-            $registros[] = $row;
-        }
+$result_profesores = $conn->query("SELECT id, nombre, 'profesor' AS tipo FROM profesores ORDER BY id DESC LIMIT 1");
+if ($result_profesores) {
+    while ($row = $result_profesores->fetch_assoc()) {
+        $registros[] = $row;
     }
+}
 
     $result_estudiantes = $conn->query("SELECT id, carrera, 'carrera' AS tipo FROM estudiantes ORDER BY id DESC LIMIT 1");
     if ($result_estudiantes) {
@@ -42,18 +42,18 @@ include 'comprobar_sesion.php';
         }
     }
 
-    $result_materias = $conn->query("SELECT id, nombre, 'materia' AS tipo FROM materias ORDER BY id DESC LIMIT 1");
-    if ($result_materias) {
-        while ($row = $result_materias->fetch_assoc()) {
-            $registros[] = $row;
-        }
+$result_materias = $conn->query("SELECT id, nombre, 'materia' AS tipo FROM materias ORDER BY id DESC LIMIT 1");
+if ($result_materias) {
+    while ($row = $result_materias->fetch_assoc()) {
+        $registros[] = $row;
     }
+}
 
-    usort($registros, function ($a, $b) {
-     return $b['id'] - $a['id'];
-    });
+usort($registros, function ($a, $b) {
+    return $b['id'] - $a['id'];
+});
 
-    $conn->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="es">

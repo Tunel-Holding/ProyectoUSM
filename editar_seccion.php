@@ -29,9 +29,12 @@ $conn->close();
     <link rel="stylesheet" href="css/admin-general.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <title>Editar Sección</title>
     <script>
+        // Solo JS exclusivo para la funcionalidad de edición de secciones
         function generarClases() {
             const cantidadClases = document.getElementById('cantidadClases').value;
             const contenedorClases = document.getElementById('contenedorClases');
@@ -89,7 +92,7 @@ $conn->close();
             }
         }
 
-        window.onload = function() {
+        window.onload = function () {
             document.getElementById('cantidadClases').value = 1;
             generarClases();
         };
@@ -126,71 +129,68 @@ $conn->close();
     </form>
 
     <script>
-        const contenedor = document.getElementById('contenedor');
-        const botonIzquierdo = document.getElementById('boton-izquierdo');
-        const botonDerecho = document.getElementById('boton-derecho');
-        botonIzquierdo.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: -94,
-                behavior: 'smooth'
-            });
-        });
-        botonDerecho.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: 94,
-                behavior: 'smooth'
-            });
-        });
+        // Solo JS exclusivo para la funcionalidad de edición de secciones
+        function generarClases() {
+            const cantidadClases = document.getElementById('cantidadClases').value;
+            const contenedorClases = document.getElementById('contenedorClases');
+            contenedorClases.innerHTML = '';
 
-        document.getElementById('logoButton').addEventListener("click", () => {
-            document.getElementById('menu').classList.toggle('toggle');
-            event.stopPropagation();
-        });
-        document.addEventListener('click', function(event) {
-            if (!contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
-                contenedor.classList.remove('toggle');
-            }
-        });
-        document.addEventListener('click', function(event) {
-            var div = document.getElementById('menu');
-            if (!div.contains(event.target)) {
-                div.classList.remove('toggle');
-            }
-        });
-        document.getElementById('switchtema').addEventListener('change', function() {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        });
+            for (let i = 0; i < cantidadClases; i++) {
+                // Agregar línea divisora al principio del primer grupo
+                if (i === 0) {
+                    const hr = document.createElement('hr');
+                    contenedorClases.appendChild(hr);
+                }
 
-        // Aplicar la preferencia guardada del usuario al cargar la p谩gina
-        window.addEventListener('load', function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('switchtema').checked = true;
-            }
-        });
+                const claseDiv = document.createElement('div');
+                claseDiv.classList.add('clase');
 
-        function redirigir(url) {
-            window.location.href = url;;
-            // Cambia esta URL a la página de destino
+                const diaLabel = document.createElement('label');
+                diaLabel.textContent = 'Día:';
+                const diaSelect = document.createElement('select');
+                diaSelect.name = `dia_${i}`;
+                diaSelect.required = true;
+                const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+                dias.forEach(dia => {
+                    const option = document.createElement('option');
+                    option.value = dia;
+                    option.textContent = dia;
+                    diaSelect.appendChild(option);
+                });
+
+                const inicioLabel = document.createElement('label');
+                inicioLabel.textContent = 'Hora de Inicio:';
+                const inicioInput = document.createElement('input');
+                inicioInput.type = 'time';
+                inicioInput.name = `inicio_${i}`;
+                inicioInput.required = true;
+
+                const finLabel = document.createElement('label');
+                finLabel.textContent = 'Hora de Fin:';
+                const finInput = document.createElement('input');
+                finInput.type = 'time';
+                finInput.name = `fin_${i}`;
+                finInput.required = true;
+
+                claseDiv.appendChild(diaLabel);
+                claseDiv.appendChild(diaSelect);
+                claseDiv.appendChild(inicioLabel);
+                claseDiv.appendChild(inicioInput);
+                claseDiv.appendChild(finLabel);
+                claseDiv.appendChild(finInput);
+
+                contenedorClases.appendChild(claseDiv);
+
+                // Agregar línea divisora entre cada grupo
+                const hr = document.createElement('hr');
+                contenedorClases.appendChild(hr);
+            }
         }
-        window.onload = function() {
-            document.getElementById('inicio').addEventListener('click', function() {
-                redirigir('pagina_administracion.php');
-            });
-            document.getElementById('datos').addEventListener('click', function() {
-                redirigir('buscar_datos_admin.html');
-            });
-            document.getElementById('profesor').addEventListener('click', function() {
-                redirigir('admin_profesores.php');
-            });
-        }
+
+        window.onload = function () {
+            document.getElementById('cantidadClases').value = 1;
+            generarClases();
+        };
     </script>
 
 </body>
