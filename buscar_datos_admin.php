@@ -23,13 +23,13 @@ include 'comprobar_sesion.php';
       .container {
         max-width: 1200px; /* Ancho máximo aumentado */
         width: 90%; /* Ancho del contenedor ajustado al 90% de la pantalla */
-        background-color: #b5edf5; /* Fondo celeste del cuadro */
+        background-color: rgba(68, 106, 211, 1); /* Fondo celeste del cuadro */
         padding: 60px; /* Espaciado interno aumentado */
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border-width: 10px 2px 10px 2px; /* Bordes superiores e inferiores gruesos, laterales finos */
         border-style: solid;
-        border-color: #ffd700; /* Borde amarillo */
+        border-color: rgba(255, 255, 255, 1);; /* Borde amarillo */
         margin: 20px auto; /* Margen superior e inferior aumentados */
         display: flex;
         flex-direction: column;
@@ -37,7 +37,7 @@ include 'comprobar_sesion.php';
       }
 
       h1 {
-        color: #0056b3; /* Color celeste oscuro para el título */
+        color: rgba(255, 255, 255, 1); /* Color celeste oscuro para el título */
         text-align: center;
         margin-bottom: 24px;
         font-size: 70px; /* Tamaño del texto aumentado */
@@ -49,7 +49,7 @@ include 'comprobar_sesion.php';
         display: block;
         margin-bottom: 12px; /* Espaciado inferior aumentado */
         font-weight: 700; /* Negrita */
-        color: #0056b3; /* Color celeste para las etiquetas */
+        color: rgba(255, 255, 255, 1);; /* Color celeste para las etiquetas */
         font-size: 24px; /* Tamaño del texto aumentado */
       }
 
