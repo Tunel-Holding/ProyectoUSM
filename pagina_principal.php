@@ -36,15 +36,23 @@ if (!$result) {
 }
 
 // Consulta para obtener las notas del estudiante
+// Consulta para obtener las materias inscritas y los datos completos del profesor usando el id_usuario del profesor asignado a la materia
 $query_materias_profesor = "
 SELECT 
     m.nombre AS materia,
-    p.nombre AS profesor,
-    fu.foto
+    fu.foto,
+    p.id_usuario AS profesor_usuario_id,
+    du.cedula,
+    du.nombres,
+    du.apellidos,
+    du.telefono,
+    du.correo,
+    du.direccion
 FROM inscripciones i
 JOIN materias m ON i.id_materia = m.id
 JOIN profesores p ON m.id_profesor = p.id
 LEFT JOIN fotousuario fu ON p.id_usuario = fu.id_usuario
+LEFT JOIN datos_usuario du ON du.usuario_id = p.id_usuario
 WHERE i.id_estudiante = ?
 ";
 $stmt = $conn->prepare($query_materias_profesor);
@@ -328,11 +336,11 @@ $resultado = $stmt->get_result();
                             <img src="<?php echo $row['foto'] ?: 'https://cdn-icons-png.flaticon.com/512/6073/6073873.png'; ?>" alt="Foto del profesor" class="profesor-img">
                             <div class="hover-box">
                                 <ul class="info-lista">
-                                    <li><strong>Nombre:</strong> <?php echo htmlspecialchars($row['profesor']); ?></li>
-                                    <li><strong>Cédula:</strong> V-12345678</li>
-                                    <li><strong>Teléfono:</strong> 0414-1234567</li>
-                                    <li><strong>Email:</strong> profe@usm.edu.ve</li>
-                                    <li><strong>Oficina:</strong> Edif. A, Piso 2</li>
+                                    <li><strong>Nombre:</strong> <?php echo (!empty($row['nombres']) || !empty($row['apellidos'])) ? htmlspecialchars(trim($row['nombres'] . ' ' . $row['apellidos'])) : 'No disponible'; ?></li>
+                                    <li><strong>Cédula:</strong> <?php echo !empty($row['cedula']) ? htmlspecialchars($row['cedula']) : 'No disponible'; ?></li>
+                                    <li><strong>Teléfono:</strong> <?php echo !empty($row['telefono']) ? htmlspecialchars($row['telefono']) : 'No disponible'; ?></li>
+                                    <li><strong>Email:</strong> <?php echo !empty($row['correo']) ? htmlspecialchars($row['correo']) : 'No disponible'; ?></li>
+                                    <li><strong>Dirección:</strong> <?php echo !empty($row['direccion']) ? htmlspecialchars($row['direccion']) : 'No disponible'; ?></li>
                                 </ul>
                             </div>
                         </div>

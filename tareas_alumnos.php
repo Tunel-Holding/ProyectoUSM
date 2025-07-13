@@ -1,63 +1,23 @@
 <?php
 session_start();
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
-$conn->set_charset("utf8mb4");
 
-// Habilitar la visualización de errores
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-date_default_timezone_set('America/Caracas');
+// Consultar tareas desde la base de datos
+$idMateria = $_SESSION['idmateria'];
+$id_alumno = $_SESSION['idusuario'];
 
-// Obtener la ID del usuario desde la sesión
-$user_id = $_SESSION['idusuario'];
+// Modificado para incluir id_tarea y verificar entregas
+$sql = "SELECT t.id, t.titulo_tarea, t.descripcion, t.fecha_entrega, t.hora_entrega, t.categoria, et.id_entrega 
+        FROM tareas t 
+        LEFT JOIN entregas_tareas et ON t.id = et.id_tarea AND et.id_alumno = ?
+        WHERE t.id_materia = ?";
 
-// Obtener el día actual en español para la región de Venezuela
-$formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
-$dia_actual = $formatter->format(time());
-
-// Convertir el primer carácter del día a mayúscula
-$dia_actual = ucfirst($dia_actual);
-
-// Consulta para obtener el horario del día actual
-$query = "SELECT m.nombre AS materia, m.salon, h.hora_inicio, h.hora_fin 
-          FROM horarios h 
-          JOIN materias m ON h.id_materia = m.id 
-          WHERE h.id_estudiante = ? AND h.dia = ?";
-$stmt = $conn->prepare($query);
-if (!$stmt) {
-    die("Error en la preparación de la consulta: " . $conn->error);
-}
-$stmt->bind_param("is", $user_id, $dia_actual);
-if (!$stmt->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt->error);
-}
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $id_alumno, $idMateria);
+$stmt->execute();
 $result = $stmt->get_result();
-if (!$result) {
-    die("Error al obtener el resultado: " . $stmt->error);
-}
-
-// Consulta para obtener las notas del estudiante
-$query_materias_profesor = "
-SELECT 
-    m.nombre AS materia,
-    p.nombre AS profesor
-FROM inscripciones i
-JOIN materias m ON i.id_materia = m.id
-JOIN profesores p ON m.id_profesor = p.id
-WHERE i.id_estudiante = ?
-";
-
-$stmt = $conn->prepare($query_materias_profesor);
-if (!$stmt) {
-    die("Error preparando la consulta: " . $conn->error);
-}
-
-$stmt->bind_param("i", $user_id); // $user_id es el ID del estudiante
-if (!$stmt->execute()) {
-    die("Error ejecutando la consulta: " . $stmt->error);
-}
-
-$resultado = $stmt->get_result();
-
+$tareas = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +34,32 @@ $resultado = $stmt->get_result();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/tareas.css">
+    <style>
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .task-card {
+            min-height: 340px;
+            max-height: 340px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+        .task-card-content {
+            flex: 1 1 auto;
+        }
+        .task-card-footer {
+            flex-shrink: 0;
+        }
+        @media (max-width: 600px) {
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Mis Tareas - Plataforma de Estudiantes</title>
@@ -239,14 +225,14 @@ $resultado = $stmt->get_result();
         
     <div class="contenido">
         <section class="semester-progress-section card">
-            <h1>Mis Tareas - Nombre Materia</h1>
+            <h1>Mis Tareas - <?php echo $_SESSION['nombremateria']; ?></h1>
             <div class="progress-metrics">
                 
 
                 <div class="metric-item">
                     <div class="metric-circle green">
                         <i class="fas fa-check"></i>
-                        <span class="metric-value">3</span>
+                        <span class="metric-value" id="completadas-count"></span>
                     </div>
                     <p class="metric-label">Tareas Completadas</p>
                 </div>
@@ -254,15 +240,15 @@ $resultado = $stmt->get_result();
                 <div class="metric-item">
                     <div class="metric-circle yellow">
                         <i class="fas fa-hourglass-half"></i>
-                        <span class="metric-value">2</span>
+                        <span class="metric-value" id="pendientes-count"></span>
                     </div>
                     <p class="metric-label">Tareas Pendientes</p>
                 </div>
 
                 <div class="metric-item">
                     <div class="metric-circle red">
-                        <i class="fas fa-exclamation"></i>
-                        <span class="metric-value">1</span>
+                        <i class="fas fa-times"></i>
+                        <span class="metric-value" id="vencidas-count"></span>
                     </div>
                     <p class="metric-label">Tareas Vencidas</p>
                 </div>
@@ -280,144 +266,159 @@ $resultado = $stmt->get_result();
                 <button class="filter-btn" data-filter="completed">
                     <i class="fas fa-check-circle"></i> Completadas
                 </button>
+                <button class="filter-btn" data-filter="overdue">
+                    <i class="fas fa-times"></i> Vencidas
+                </button>
             </div>
             
         </section>
 
         <section class="tasks-list-section">
-            <div class="task-grid">
-                <div class="task-card" data-status="pending">
-                    <div class="task-card-content">
-                        <h4 class="task-title">Ensayo de Historia</h4>
-                        <p class="task-description">Escribir un ensayo de 1500 palabras sobre la Revolución Industrial</p>
-                        <div class="task-details">
-                            <p><i class="fas fa-book"></i> Materia: Historia Universal</p>
-                            <p><i class="far fa-calendar-alt"></i> Fecha: 25/12/2024</p>
-                            <p><i class="far fa-clock"></i> Hora: 23:59</p>
-                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
-                            <p><i class="fas fa-weight-hanging"></i> Peso: 25% del total</p>
-                            <p><i class="fas fa-exclamation-triangle"></i> Tiempo: <span class="time-status overdue">Tiempo Agotado</span></p>
-                        </div>
-                    </div>
-                    <div class="task-card-footer status-overdue">
-                        <button class="grade-btn red">
-                            <i class="fas fa-star"></i> Calificación: D (Regular)
-                        </button>
-                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
-                    </div>
-                </div>
+            <div class="task-grid" style="padding-bottom: 40px;">
+                <?php if (empty($tareas)): ?>
+                    <p>No hay tareas asignadas para esta materia.</p>
+                <?php else: ?>
+                    <?php 
+                    foreach ($tareas as $tarea): 
+    $tz_ve = new DateTimeZone('America/Caracas');
+    $fecha_entrega = new DateTime($tarea['fecha_entrega'] . ' ' . $tarea['hora_entrega'], $tz_ve);
+    $ahora = new DateTime('now', $tz_ve);
+    $status = '';
+    $status_class = '';
+    $entregada = !is_null($tarea['id_entrega']);
 
-                <div class="task-card" data-status="pending">
-                    <div class="task-card-content">
-                        <h4 class="task-title">Proyecto de Matemáticas</h4>
-                        <p class="task-description">Resolver ejercicios del capítulo 5 sobre derivadas e integrales</p>
-                        <div class="task-details">
-                            <p><i class="fas fa-book"></i> Materia: Cálculo I</p>
-                            <p><i class="far fa-calendar-alt"></i> Fecha: 28/12/2024</p>
-                            <p><i class="far fa-clock"></i> Hora: 18:00</p>
-                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
-                            <p><i class="fas fa-weight-hanging"></i> Peso: 30% del total</p>
-                            <p><i class="fas fa-calendar-times"></i> Tiempo: <span class="time-status completed">Tiempo de Entrega Terminado</span></p>
-                        </div>
-                    </div>
-                    <div class="task-card-footer status-deficient">
-                        <button class="grade-btn red-dark">
-                            <i class="fas fa-star"></i> Calificación: E (Deficiente)
-                        </button>
-                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
-                    </div>
-                </div>
+    // Obtener calificación y retroalimentación de la entrega si existe
+    $calificacion = null;
+    $retroalimentacion = null;
+    if ($entregada) {
+        $stmtCalif = $conn->prepare("SELECT calificacion, retroalimentacion FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ? ORDER BY id_entrega DESC LIMIT 1");
+        $stmtCalif->bind_param("ii", $tarea['id'], $id_alumno);
+        $stmtCalif->execute();
+        $stmtCalif->bind_result($califRes, $retroRes);
+        if ($stmtCalif->fetch()) {
+            $calificacion = $califRes;
+            $retroalimentacion = $retroRes;
+        }
+        $stmtCalif->close();
+    }
 
-                <div class="task-card" data-status="completed">
-                    <div class="task-card-content">
-                        <h4 class="task-title">Laboratorio de Química</h4>
-                        <p class="task-description">Completar el reporte del experimento sobre reacciones ácido-base</p>
-                        <div class="task-details">
-                            <p><i class="fas fa-book"></i> Materia: Química Orgánica</p>
-                            <p><i class="far fa-calendar-alt"></i> Fecha: 20/12/2024</p>
-                            <p><i class="far fa-clock"></i> Hora: 14:30</p>
-                            <p><i class="fas fa-check-double"></i> Estado: <span class="status-badge completed">Completada</span></p>
-                            <p><i class="fas fa-weight-hanging"></i> Peso: 20% del total</p>
-                        </div>
-                    </div>
-                    <div class="task-card-footer status-completed">
-                        <button class="grade-btn green">
-                            <i class="fas fa-star"></i> Calificación: B (Muy Bueno)
-                        </button>
-                        <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Completada</p>
-                    </div>
-                </div>
-
-                <div class="task-card" data-status="pending">
-                    <div class="task-card-content">
-                        <h4 class="task-title">Presentación de Literatura</h4>
-                        <p class="task-description">Preparar presentación de 30 minutos sobre Gabriel García Márquez.</p>
-                        <div class="task-details">
-                            <p><i class="fas fa-book"></i> Materia: Literatura Española</p>
-                            <p><i class="far fa-calendar-alt"></i> Fecha: 05/01/2025</p>
-                            <p><i class="far fa-clock"></i> Hora: 10:00</p>
-                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
-                            <p><i class="fas fa-weight-hanging"></i> Peso: 15% del total</p>
-                        </div>
-                    </div>
-                    <div class="task-card-footer status-pending">
-                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
-                    </div>
-                </div>
-
-                <div class="task-card" data-status="completed">
-                    <div class="task-card-content">
-                        <h4 class="task-title">Examen de Física</h4>
-                        <p class="task-description">Estudiar capítulos 1-3 sobre mecánica clásica y cinemática.</p>
-                        <div class="task-details">
-                            <p><i class="fas fa-book"></i> Materia: Física Básica</p>
-                            <p><i class="far fa-calendar-alt"></i> Fecha: 15/11/2024</p>
-                            <p><i class="far fa-clock"></i> Hora: 09:00</p>
-                            <p><i class="fas fa-check-double"></i> Estado: <span class="status-badge completed">Completada</span></p>
-                            <p><i class="fas fa-weight-hanging"></i> Peso: 40% del total</p>
-                        </div>
-                    </div>
-                    <div class="task-card-footer status-completed">
-                        <button class="grade-btn green">
-                            <i class="fas fa-star"></i> Calificación: A (Excelente)
-                        </button>
-                        <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Completada</p>
-                    </div>
-                </div>
-
-                <div class="task-card" data-status="pending">
-                    <div class="task-card-content">
-                        <h4 class="task-title">Quiz de Inglés</h4>
-                        <p class="task-description">Evaluación sobre gramática y vocabulario del capítulo 3.</p>
-                        <div class="task-details">
-                            <p><i class="fas fa-book"></i> Materia: Inglés Avanzado</p>
-                            <p><i class="far fa-calendar-alt"></i> Fecha: 01/01/2025</p>
-                            <p><i class="far fa-clock"></i> Hora: 11:00</p>
-                            <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge pending">Pendiente</span></p>
-                            <p><i class="fas fa-weight-hanging"></i> Peso: 10% del total</p>
-                        </div>
-                    </div>
-                    <div class="task-card-footer status-pending">
-                        <button class="submit-task-btn"><i class="fas fa-upload"></i> Subir Tarea</button>
-                    </div>
-                </div>
-
+    if ($entregada) {
+        $status = 'Entregada';
+        $status_class = 'completed';
+    } elseif ($ahora > $fecha_entrega) {
+        $status = 'Vencida';
+        $status_class = 'overdue';
+    } else {
+        $status = 'Pendiente';
+        $status_class = 'pending';
+    }
+                    ?>
+    <div class="task-card" data-status="<?php echo $status_class; ?>">
+        <div class="task-card-content">
+            <h4 class="task-title"><?php echo htmlspecialchars($tarea['titulo_tarea']); ?></h4>
+            <p class="task-description"><?php echo htmlspecialchars($tarea['descripcion']); ?></p>
+            <div class="task-details">
+                <p><i class="fas fa-book"></i> Categoría: <?php echo htmlspecialchars($tarea['categoria']); ?></p>
+                <p><i class="far fa-calendar-alt"></i> Fecha: <?php echo htmlspecialchars(date("d/m/Y", strtotime($tarea['fecha_entrega']))); ?></p>
+                <p><i class="far fa-clock"></i> Hora: <?php echo htmlspecialchars(date("h:i A", strtotime($tarea['hora_entrega']))); ?></p>
+                <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge <?php echo $status_class; ?>"><?php echo $status; ?></span></p>
+            </div>
+        </div>
+        <div class="task-card-footer status-<?php echo $status_class; ?>">
+            <button class="grade-btn"
+                data-calificacion="<?php echo htmlspecialchars(($calificacion !== null && $calificacion !== '') ? $calificacion : 'N/A'); ?>"
+                data-retroalimentacion="<?php echo htmlspecialchars(($retroalimentacion !== null && $retroalimentacion !== '') ? $retroalimentacion : 'Sin retroalimentación.'); ?>"
+                <?php if ($calificacion === null || $calificacion === '') echo 'disabled'; ?>
+            >
+                <i class="fas fa-star"></i> Calificación: <?php echo ($calificacion !== null && $calificacion !== '') ? htmlspecialchars($calificacion) : 'N/A'; ?>
+            </button>
+            <?php if ($entregada): ?>
+                <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Entregada</p>
+            <?php else: ?>
+                <button class="submit-task-btn" data-idtarea="<?php echo $tarea['id']; ?>" <?php if ($status === 'Vencida') echo 'disabled'; ?>>
+                    <i class="fas fa-upload"></i> Subir Tarea
+                </button>
+            <?php endif; ?>
+        </div>
+    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </section>
     </div>
 
+    <!-- Modal para ver calificación y retroalimentación -->
+    <div id="gradeModal" class="modal-overlay">
+        <div class="modal-content modal-alumno">
+            <div class="modal-header">
+                <h2>Detalles de la Calificación</h2>
+                <button id="closeGradeModal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Calificación</h4>
+                <p id="modal_calificacion" style="font-size: 1.2em; font-weight: bold; color: var(--accent-blue);"></p>
+                <h4 style="margin-top: 20px;">Retroalimentación del Profesor</h4>
+                <p id="modal_retroalimentacion" style="line-height: 1.6;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para subir tarea -->
+<div id="uploadModal" class="modal-overlay">
+    <div class="modal-content modal-alumno">
+        <div class="modal-header">
+            <h2>Subir Tarea</h2>
+            <button id="closeModal" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="uploadForm" action="subir_tarea.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id_tarea" id="modal_id_tarea">
+                <p>Selecciona el archivo que deseas subir. El formato debe ser PDF, DOCX, o ZIP.</p>
+                <div id="uploadErrorMsg" style="color: #d32f2f; margin-bottom: 10px; display: none;"></div>
+                <input type="file" name="archivo_tarea" id="archivo_tarea" required accept=".pdf,.docx,.zip" style="display:none;">
+                <button type="button" id="archivo_tarea_btn" class="upload_button">
+                    <i class="fas fa-file-upload"></i> Seleccionar Archivo
+                </button>
+                <span id="archivo_tarea_nombre" style="margin-left:10px;color:var(--accent-blue);"></span>
+                <div id="archivo_tarea_size_error" style="color: #d32f2f; margin-top: 10px; display: none;"></div>
+                <button type="submit" class="submit-task-btn" style="background-color: var(--accent-blue); margin-top: 20px;">Enviar Tarea</button>
+            </form>
+        </div>
+    </div>
+</div>
+
     <script>
-        // Script para la fecha actual del semestre
+        // Script para la fecha actual del semestre y métricas de tareas
         document.addEventListener('DOMContentLoaded', () => {
             const dateElement = document.getElementById('current-semester-date');
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            dateElement.textContent = now.toLocaleDateString('es-ES', options);
+            if (dateElement) {
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateElement.textContent = now.toLocaleDateString('es-ES', options);
+            }
+
+            // Contar tareas por estado
+            let pendientes = 0;
+            let completadas = 0;
+            let vencidas = 0;
+            const taskCards = document.querySelectorAll('.task-card');
+            taskCards.forEach(card => {
+                const status = card.dataset.status;
+                // Si tienes una lógica para completadas, ajústala aquí
+                if (status === 'pending') {
+                    pendientes++;
+                } else if (status === 'overdue') {
+                    vencidas++;
+                } else if (status === 'completed') {
+                    completadas++;
+                }
+            });
+            document.getElementById('pendientes-count').textContent = pendientes;
+            document.getElementById('completadas-count').textContent = completadas;
+            document.getElementById('vencidas-count').textContent = vencidas;
 
             // Funcionalidad de filtros (ejemplo simple)
             const filterButtons = document.querySelectorAll('.filter-btn');
-            const taskCards = document.querySelectorAll('.task-card');
-
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -428,9 +429,11 @@ $resultado = $stmt->get_result();
                     taskCards.forEach(card => {
                         const status = card.dataset.status;
                         if (filter === 'all' || filter === status) {
-                            card.style.display = 'block'; // Mostrar
+                            card.style.visibility = 'visible';
+                            card.style.position = 'static';
                         } else {
-                            card.style.display = 'none'; // Ocultar
+                            card.style.visibility = 'hidden';
+                            card.style.position = 'absolute';
                         }
                     });
                 });
@@ -438,19 +441,149 @@ $resultado = $stmt->get_result();
 
             // Funcionalidad de búsqueda (ejemplo simple)
             const searchInput = document.querySelector('.search-bar input');
-            searchInput.addEventListener('keyup', (event) => {
-                const searchTerm = event.target.value.toLowerCase();
-                taskCards.forEach(card => {
-                    const title = card.querySelector('.task-title').textContent.toLowerCase();
-                    const description = card.querySelector('.task-description').textContent.toLowerCase();
-                    const materia = card.querySelector('.task-details p:nth-child(1)').textContent.toLowerCase(); // Suponiendo el orden
+            if (searchInput) {
+                searchInput.addEventListener('keyup', (event) => {
+                    const searchTerm = event.target.value.toLowerCase();
+                    taskCards.forEach(card => {
+                        const title = card.querySelector('.task-title').textContent.toLowerCase();
+                        const description = card.querySelector('.task-description').textContent.toLowerCase();
+                        const materia = card.querySelector('.task-details p:nth-child(1)').textContent.toLowerCase(); // Suponiendo el orden
 
-                    if (title.includes(searchTerm) || description.includes(searchTerm) || materia.includes(searchTerm)) {
-                        card.style.display = 'block';
+                        if (title.includes(searchTerm) || description.includes(searchTerm) || materia.includes(searchTerm)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            const uploadModal = document.getElementById('uploadModal');
+            const closeModal = document.getElementById('closeModal');
+            const uploadForm = document.getElementById('uploadForm');
+            const modalIdTarea = document.getElementById('modal_id_tarea');
+            const uploadErrorMsg = document.getElementById('uploadErrorMsg');
+
+            document.querySelectorAll('.submit-task-btn[data-idtarea]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const idTarea = this.getAttribute('data-idtarea');
+                    modalIdTarea.value = idTarea;
+                    uploadModal.classList.add('visible');
+                    uploadErrorMsg.style.display = 'none';
+                    uploadErrorMsg.textContent = '';
+                });
+            });
+
+            function hideModal() {
+                uploadModal.classList.remove('visible');
+                uploadErrorMsg.style.display = 'none';
+                uploadErrorMsg.textContent = '';
+            }
+
+            closeModal.addEventListener('click', hideModal);
+            uploadModal.addEventListener('click', function(event) {
+                if (event.target === uploadModal) {
+                    hideModal();
+                }
+            });
+            // Estilo y nombre para el input de archivo
+            const archivoInput = document.getElementById('archivo_tarea');
+            const archivoBtn = document.getElementById('archivo_tarea_btn');
+            const archivoNombre = document.getElementById('archivo_tarea_nombre');
+            archivoBtn.addEventListener('click', function() {
+                archivoInput.value = '';
+                archivoInput.click();
+            });
+            archivoInput.addEventListener('change', function() {
+                const sizeError = document.getElementById('archivo_tarea_size_error');
+                sizeError.style.display = 'none';
+                sizeError.textContent = '';
+                if (archivoInput.files.length > 0) {
+                    archivoNombre.textContent = archivoInput.files[0].name;
+                    // Validar tamaño (por ejemplo, 10MB)
+                    const maxSize = 10 * 1024 * 1024; // 10MB
+                    if (archivoInput.files[0].size > maxSize) {
+                        sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
+                        sizeError.style.display = 'block';
+                        archivoInput.value = '';
+                        archivoNombre.textContent = '';
+                    }
+                } else {
+                    archivoNombre.textContent = '';
+                }
+            });
+            uploadForm.addEventListener('reset', function() {
+                archivoNombre.textContent = '';
+                uploadErrorMsg.style.display = 'none';
+                uploadErrorMsg.textContent = '';
+                const sizeError = document.getElementById('archivo_tarea_size_error');
+                sizeError.style.display = 'none';
+                sizeError.textContent = '';
+            });
+
+            // Interceptar el submit para mostrar error si ocurre
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                uploadErrorMsg.style.display = 'none';
+                uploadErrorMsg.textContent = '';
+                const sizeError = document.getElementById('archivo_tarea_size_error');
+                sizeError.style.display = 'none';
+                sizeError.textContent = '';
+                if (archivoInput.files.length > 0) {
+                    const maxSize = 10 * 1024 * 1024; // 10MB
+                    if (archivoInput.files[0].size > maxSize) {
+                        sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
+                        sizeError.style.display = 'block';
+                        return;
+                    }
+                }
+                const formData = new FormData(uploadForm);
+                fetch(uploadForm.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        hideModal();
+                        // Opcional: recargar la página o actualizar tareas
+                        location.reload();
                     } else {
-                        card.style.display = 'none';
+                        uploadErrorMsg.textContent = data.error || 'Ocurrió un error al subir el archivo.';
+                        uploadErrorMsg.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    uploadErrorMsg.textContent = 'No se pudo conectar con el servidor.';
+                    uploadErrorMsg.style.display = 'block';
+                });
+            });
+            // Modal de calificación y retroalimentación
+            const gradeModal = document.getElementById('gradeModal');
+            const closeGradeModal = document.getElementById('closeGradeModal');
+            const modalCalificacion = document.getElementById('modal_calificacion');
+            const modalRetroalimentacion = document.getElementById('modal_retroalimentacion');
+
+            document.querySelectorAll('.grade-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const calificacion = this.getAttribute('data-calificacion');
+                    const retroalimentacion = this.getAttribute('data-retroalimentacion');
+                    if (calificacion !== 'N/A') {
+                        modalCalificacion.textContent = calificacion;
+                        modalRetroalimentacion.textContent = retroalimentacion || 'Sin retroalimentación.';
+                        gradeModal.classList.add('visible');
                     }
                 });
+            });
+
+            function hideGradeModal() {
+                gradeModal.classList.remove('visible');
+            }
+            closeGradeModal.addEventListener('click', hideGradeModal);
+            gradeModal.addEventListener('click', function(event) {
+                if (event.target === gradeModal) {
+                    hideGradeModal();
+                }
             });
         });
     </script>

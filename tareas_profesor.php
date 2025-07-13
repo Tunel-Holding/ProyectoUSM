@@ -391,7 +391,15 @@ if (isset($_POST['update_task_id'])) {
                 <?php else: ?>
                     <div id="task-list">
                         <?php foreach ($tareas as $tarea): ?>
+                            <?php
+                                $fecha_entrega_str = $tarea['fecha_entrega'] . ' ' . $tarea['hora_entrega'];
+                                $tz_ve = new DateTimeZone('America/Caracas');
+                                $fecha_entrega_dt = new DateTime($fecha_entrega_str, $tz_ve);
+                                $ahora_dt = new DateTime('now', $tz_ve);
+                                $ha_pasado_fecha = $ahora_dt >= $fecha_entrega_dt;
+                            ?>
                             <div class="task-card gradient-<?php echo rand(1,6); ?>" data-task-id="<?php echo $tarea['id']; ?>">
+                                <?php if (!$ha_pasado_fecha): ?>
                                 <div class="task-actions">
                                     <button class="task-action-btn edit-btn" title="Editar Tarea">
                                         <i class="fas fa-pencil-alt"></i>
@@ -403,6 +411,7 @@ if (isset($_POST['update_task_id'])) {
                                         </button>
                                     </form>
                                 </div>
+                                <?php endif; ?>
                                 <h4 class="task-title"><?php echo htmlspecialchars($tarea['titulo_tarea']); ?></h4>
                                 <p class="task-category"><?php echo htmlspecialchars($tarea['categoria']); ?></p>
                                 <p class="task-description"><?php echo htmlspecialchars($tarea['descripcion'] ?: 'Sin descripción.'); ?></p>
@@ -412,16 +421,18 @@ if (isset($_POST['update_task_id'])) {
                                     <span class="task-due-date-data" data-date="<?php echo $tarea['fecha_entrega']; ?>" data-time="<?php echo $tarea['hora_entrega']; ?>">
                                         <?php 
                                             $hora = $tarea['hora_entrega'];
-                                            $horaObj = DateTime::createFromFormat('H:i:s', $hora);
+                                            $tz_ve = new DateTimeZone('America/Caracas');
+                                            $horaObj = DateTime::createFromFormat('H:i:s', $hora, $tz_ve);
                                             if ($horaObj) {
                                                 echo $horaObj->format('g:i A');
                                             } else {
-                                                $horaObj = DateTime::createFromFormat('H:i', $hora);
+                                                $horaObj = DateTime::createFromFormat('H:i', $hora, $tz_ve);
                                                 echo $horaObj ? $horaObj->format('g:i A') : htmlspecialchars($hora);
                                             }
                                         ?>
                                     </span>
                                 </p>
+                                <button class="btn btn-primary btn-evaluar" onclick="openEvaluateModal(<?php echo $tarea['id']; ?>)" <?php echo !$ha_pasado_fecha ? 'disabled' : ''; ?>>Evaluar Tarea</button>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -478,6 +489,21 @@ if (isset($_POST['update_task_id'])) {
         </div>
     </div>
 
+    <!-- ================================= -->
+    <!-- MODAL PARA EVALUAR TAREA          -->
+    <!-- ================================= -->
+    <div id="evaluate-task-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Evaluar Tarea</h2>
+                <button id="close-evaluate-modal-btn" class="close-btn">&times;</button>
+            </div>
+            <div id="student-list-container">
+                <!-- La lista de estudiantes se cargará aquí -->
+            </div>
+        </div>
+    </div>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -516,18 +542,15 @@ if (isset($_POST['update_task_id'])) {
                 if (editBtn) {
                     event.preventDefault(); // Prevenir cualquier acción por defecto
                     const taskCard = editBtn.closest('.task-card');
-                    
                     // Extraer datos de la tarjeta
                     const taskId = taskCard.dataset.taskId;
                     const title = taskCard.querySelector('.task-title').textContent.trim();
                     const category = taskCard.querySelector('.task-category').textContent.trim().toLowerCase();
                     const description = taskCard.querySelector('.task-description').textContent.trim();
-                    
                     // Extraer fecha y hora de los atributos data-*
                     const dateDataElem = taskCard.querySelector('.task-due-date-data');
                     const dateMatch = dateDataElem.dataset.date;
                     const timeMatch = dateDataElem.dataset.time;
-
                     // Poblar el formulario del modal
                     editTaskIdInput.value = taskId;
                     editTaskTitleInput.value = title;
@@ -535,9 +558,139 @@ if (isset($_POST['update_task_id'])) {
                     editDeliveryDateInput.value = dateMatch; // Formato YYYY-MM-DD
                     editDeliveryTimeInput.value = timeMatch ? timeMatch.substring(0, 5) : ''; // Formato HH:MM
                     editTaskDescriptionInput.value = description === 'Sin descripción.' ? '' : description;
-
                     // Mostrar el modal
                     editTaskModal.classList.add('visible');
+                }
+            });
+        }
+
+        // --- MANEJO DEL MODAL DE EVALUACIÓN ---
+        const evaluateTaskModal = document.getElementById('evaluate-task-modal');
+        const closeEvaluateModalBtn = document.getElementById('close-evaluate-modal-btn');
+        const studentListContainer = document.getElementById('student-list-container');
+
+        // Definir la función global para abrir el modal de evaluación
+        window.openEvaluateModal = function(taskId) {
+            if (!evaluateTaskModal) return;
+            fetch(`get_students.php?task_id=${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        let debugMsg = data.debug ? JSON.stringify(data.debug, null, 2) : '';
+                        alert('Error: ' + data.error + (debugMsg ? '\nDebug:\n' + debugMsg : ''));
+                        studentListContainer.innerHTML = `<p>${data.error}</p>`;
+                        if (data.debug) {
+                            studentListContainer.innerHTML += `<pre style='text-align:left;font-size:12px;'>${debugMsg}</pre>`;
+                        }
+                    } else if (data.students) {
+                        // DEPURACIÓN: Mostrar en consola los datos crudos
+                        console.log('Estudiantes recibidos:', data.students);
+                        let studentListHTML = `<table class="evaluation-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Estudiante</th>
+                                    <th>Calificación</th>
+                                    <th>Retroalimentación</th>
+                                    <th>Entrega</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                        data.students.forEach(student => {
+                            studentListHTML += `<tr>
+                                <td>${student.nombres} ${student.apellidos}</td>
+                                <td>
+                                    <select data-student-id="${student.id}" class="input-calificacion">
+                                        <option value="">-</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                        <option value="E">E</option>
+                                        <option value="F">F</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" placeholder="Escribe una retroalimentación..." data-student-id="${student.id}" class="input-retro">
+                                </td>
+                                <td style='text-align:center;'>
+                                    ${student.archivo_entregado ? `<button class='btn btn-primary' onclick=\"window.open('${student.archivo_entregado.replace(/'/g, '%27')}', '_blank');return false;\">Ver Archivo</button>` : '<span style=\"color:#888;\">No entregado</span>'}
+                                </td>
+                            </tr>`;
+                        });
+                        studentListHTML += `</tbody></table>
+                        <div class="modal-actions">
+                            <button id="save-grades-btn" class="btn btn-primary">Guardar Calificaciones</button>
+                        </div>`;
+                        studentListContainer.innerHTML = studentListHTML;
+                        // Cargar valores existentes de calificación y retroalimentación
+                        data.students.forEach(student => {
+                            const select = studentListContainer.querySelector(`select[data-student-id='${student.id}']`);
+                            if (select) {
+                                // Si la calificación es cadena vacía o null, selecciona '-'
+                                select.value = (student.calificacion !== undefined && student.calificacion !== null && student.calificacion !== '') ? student.calificacion : '';
+                            }
+                            const input = studentListContainer.querySelector(`input.input-retro[data-student-id='${student.id}']`);
+                            if (input) input.value = (student.retroalimentacion !== undefined && student.retroalimentacion !== null) ? student.retroalimentacion : '';
+                        });
+
+                        // Guardar calificaciones y retroalimentaciones
+                        const saveBtn = document.getElementById('save-grades-btn');
+                        if (saveBtn) {
+                            saveBtn.onclick = function() {
+                                const rows = studentListContainer.querySelectorAll('tbody tr');
+                                const calificaciones = [];
+                                rows.forEach(row => {
+                                    const studentId = row.querySelector('select.input-calificacion').getAttribute('data-student-id');
+                                    const calificacion = row.querySelector('select.input-calificacion').value;
+                                    const retro = row.querySelector('input.input-retro').value;
+                                    calificaciones.push({
+                                        student_id: studentId,
+                                        calificacion: calificacion,
+                                        retroalimentacion: retro
+                                    });
+                                });
+                                fetch('guardar_calificaciones.php', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        task_id: taskId,
+                                        calificaciones: calificaciones
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(res => {
+                                    if (res.success) {
+                                        alert('Calificaciones guardadas correctamente.');
+                                        evaluateTaskModal.classList.remove('visible');
+                                    } else {
+                                        alert('Error al guardar: ' + (res.error || 'Error desconocido.'));
+                                    }
+                                })
+                                .catch(() => alert('Error de red al guardar calificaciones.'));
+                            };
+                        }
+                    } else {
+                        alert('No se recibieron datos de estudiantes.');
+                        studentListContainer.innerHTML = '<p>No se recibieron datos de estudiantes.</p>';
+                    }
+                    evaluateTaskModal.classList.add('visible');
+                })
+                .catch(error => {
+                    alert('Error al cargar los estudiantes: ' + error);
+                    studentListContainer.innerHTML = `<p>Error al cargar los estudiantes.</p>`;
+                    console.error('Error:', error);
+                });
+        };
+
+        if (evaluateTaskModal) {
+            const closeEvaluateModal = () => {
+                evaluateTaskModal.classList.remove('visible');
+            };
+
+            closeEvaluateModalBtn.addEventListener('click', closeEvaluateModal);
+            evaluateTaskModal.addEventListener('click', (event) => {
+                if (event.target === evaluateTaskModal) {
+                    closeEvaluateModal();
                 }
             });
         }
