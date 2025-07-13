@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 13-07-2025 a las 03:36:39
--- Versión del servidor: 8.3.0
--- Versión de PHP: 8.3.6
+-- Tiempo de generación: 13-07-2025 a las 16:54:21
+-- Versión del servidor: 9.1.0
+-- Versión de PHP: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -389,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `materias` (
   `seccion` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_profesor` (`id_profesor`)
-) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `materias`
@@ -406,7 +406,7 @@ INSERT INTO `materias` (`id`, `nombre`, `salon`, `id_profesor`, `creditos`, `sem
 (87, 'Fisica 1', '901', 6, 5, 1, 'B'),
 (88, 'Lenguaje y Comunicacion', '702', NULL, 2, 1, 'A'),
 (89, 'Ingles 1', '702', 5, 2, 1, 'A'),
-(90, 'Daniela Garcia', '902', NULL, 20, 1, 'A'),
+(90, 'Daniela Garcia', '902', 6, 20, 1, 'A'),
 (91, 'Daniela Garcia', '902', 3, 20, 1, 'B');
 
 -- --------------------------------------------------------
@@ -426,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `reply_to` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=162 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `messages`
@@ -448,7 +448,11 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `created_at`, `group_id`, `t
 (155, 29, 'sd', '2025-07-10 17:49:12', 87, 'texto', '0'),
 (156, 29, 'asd', '2025-07-10 17:49:13', 87, 'texto', '0'),
 (157, 29, 'asdas', '2025-07-10 18:33:55', 87, 'texto', '0'),
-(161, 31, 'uploads/6872a5595fc63_1752343897.jpg', '2025-07-12 18:11:37', 84, 'imagen', '0');
+(161, 31, 'uploads/6872a5595fc63_1752343897.jpg', '2025-07-12 18:11:37', 84, 'imagen', '0'),
+(165, 29, 'goas', '2025-07-13 14:57:56', 89, 'texto', '0'),
+(164, 1, 'dasd', '2025-07-13 14:57:26', 90, 'texto', '0'),
+(167, 29, 'hola', '2025-07-13 15:07:42', 89, 'texto', '0'),
+(168, 1, 'hola', '2025-07-13 15:51:44', 87, 'texto', '0');
 
 -- --------------------------------------------------------
 
@@ -568,7 +572,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_usuario`, `session`) VALUES
-(1, 'TReveron', 'tomyreveroncito@gmail.com', '$2y$10$MjHASuz/bqzOFoh5Jqe2M.rqKfUmTSf9L//6YRLTVFaholnfZ9MKm', 'usuario', 0),
+(1, 'TReveron', 'tomyreveroncito@gmail.com', '$2y$10$MjHASuz/bqzOFoh5Jqe2M.rqKfUmTSf9L//6YRLTVFaholnfZ9MKm', 'administrador', 1),
 (25, 'Daniela', 'daniela.aleja2021@gmail.com', '$2y$10$PhXZBCya4WmmRuC4JrTex.p5hmhh5Zi9o25EiWgdb7x/K2cCU4/kq', 'usuario', 0),
 (24, 'Mvicky0505', 'mvggarcia05@gmail.com', '$2y$10$8JCIh4b6v825FwFfeLHrjumhmgMDsS4V7Eo2pVGwyXIjQRNNQtwl6', 'administrador', 0),
 (5, 'ACepeda', 'angelcepeda@gmail.com', '$2y$10$G8fS6qQCpqXyfJ/US95Sl.MGqtwSD4jQ1oymMoYrLcqkEfvDiNEKm', 'profesor', 0),

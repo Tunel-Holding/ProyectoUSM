@@ -1,7 +1,7 @@
 <?php
 session_start();
 require 'conexion.php';
-require 'reviewData.php';
+
 
 // 🔐 Validación de sesión
 if (!isset($_SESSION['idusuario'])) {
