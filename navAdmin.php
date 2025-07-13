@@ -27,7 +27,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="buscar_datos_admin.html" class="nav-link">
+                    <a href="buscar_datos_admin.php" class="nav-link">
                         <img src="css/person.png" alt="Datos">
                         Datos
                     </a>

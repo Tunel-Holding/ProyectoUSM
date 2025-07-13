@@ -48,7 +48,7 @@ $busqueda = $_GET['query'] ?? '';
 $resultados = [];
 $error = null;
 
-if (!empty($busqueda) && isset($_GET['query']) && isset($_GET['submit']) && ctype_digit($_GET['query'])) {
+if (!empty($busqueda) && isset($busqueda) && ctype_digit($busqueda)) {
     try {
         $cedula = $conn->real_escape_string($busqueda);
         $sql = "SELECT * FROM datos_usuario WHERE cedula LIKE '%$cedula%'";
