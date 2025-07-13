@@ -380,12 +380,6 @@ $last_user_id = null;
                 });
             }
 
-            // Navegación del menú
-            document.getElementById('logoButton').addEventListener("click", () => {
-                document.getElementById('menu').classList.toggle('toggle');
-                event.stopPropagation();
-            });
-
             // Scroll del menú
             const contenedor = document.getElementById('contenedor');
             const botonIzquierdo = document.getElementById('boton-izquierdo');

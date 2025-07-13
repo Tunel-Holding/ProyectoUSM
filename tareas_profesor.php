@@ -627,10 +627,6 @@ if (isset($_POST['update_task_id'])) {
             });
         });
 
-        document.getElementById('logoButton').addEventListener("click", () => {
-            document.getElementById('menu').classList.toggle('toggle');
-            event.stopPropagation();
-        });
         document.addEventListener('click', function(event) {
             if (!container.contains(event.target) && container.classList.contains('toggle')) {
                 container.classList.remove('toggle');

@@ -1,6 +1,5 @@
 <?php
 include 'comprobar_sesion.php';
-session_start(); // Inicia la sesión :D
 
 // Conexión a la base de datos
 include 'conexion.php';
@@ -59,18 +58,18 @@ $conn->close(); // Cerrar la conexión
         rel="stylesheet">
     <title>Datos - USM</title>
     <style>
-        .pagina {
+        .contenedor-principal {
             margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: auto;
             color: #fff;
             /* Blanco */
         }
 
         .wecontainer {
+            margin-top: 20px;
             font-family: "Poppins", sans-serif;
             max-width: 1400px;
             /* Aumenté aún más el ancho máximo */
@@ -156,9 +155,7 @@ $conn->close(); // Cerrar la conexión
 </head>
 
 <body>
-    <div class="contenedorentrante3">
-        <img src="css\logo.png">
-    </div>
+    
     <div class="cabecera">
 
         <button type="button" id="logoButton">
