@@ -207,7 +207,7 @@
             redirigir('horario.php');
         });
         document.getElementById('chat').addEventListener('click', function () {
-            redirigir('chat.php');
+            redirigir('seleccionarmateria.php');
         });
         document.getElementById('desempeño').addEventListener('click', function () {
             redirigir('Seleccion_de_materias_tareas.php');
