@@ -21,6 +21,16 @@ if (mysqli_num_rows($result) == 1) {
         // Contraseña válida
         $_SESSION['idusuario'] = $row['id'];
         $_SESSION['nivelusu'] = $row['nivel_usuario'];
+        // Actualizar la sesión del usuario de forma segura usando consulta preparada
+        $sql_update = "UPDATE usuarios SET session = 1 WHERE id = ?";
+        if ($stmt_update = $db->prepare($sql_update)) {
+            $stmt_update->bind_param("i", $row['id']);
+            $stmt_update->execute();
+            $stmt_update->close();
+        } else {
+            // Si ocurre un error al preparar la consulta, registrar el error (opcional)
+            error_log("Error al preparar la actualización de sesión: " . $db->error);
+        }
         $sql = "SELECT semestre FROM estudiantes WHERE id_usuario = ?"; 
         $stmt = $db->prepare($sql); 
         $stmt->bind_param("i", $_SESSION['idusuario']); 

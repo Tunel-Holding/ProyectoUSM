@@ -1,0 +1,165 @@
+/* 🎛️ Estilos para botones de acción del chat */
+
+.message-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.message-container-usuario:hover .message-actions,
+.message-container-profesor:hover .message-actions,
+.message-container-administrador:hover .message-actions {
+    opacity: 1;
+}
+
+.reply-button, .delete-button {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reply-button {
+    color: #1976d2;
+    border-color: #1976d2;
+}
+
+.reply-button:hover {
+    background: #e3f2fd;
+    border-color: #1565c0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(25, 118, 210, 0.2);
+}
+
+.delete-button {
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.delete-button:hover {
+    background: #ffebee;
+    border-color: #c62828;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+}
+
+/* 🌙 Modo oscuro */
+.dark-mode .reply-button,
+.dark-mode .delete-button {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-color: #555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .reply-button {
+    color: #64b5f6;
+    border-color: #64b5f6;
+}
+
+.dark-mode .reply-button:hover {
+    background: rgba(100, 181, 246, 0.2);
+    border-color: #42a5f5;
+    box-shadow: 0 4px 8px rgba(100, 181, 246, 0.3);
+}
+
+.dark-mode .delete-button {
+    color: #ef5350;
+    border-color: #ef5350;
+}
+
+.dark-mode .delete-button:hover {
+    background: rgba(239, 83, 80, 0.2);
+    border-color: #e53935;
+    box-shadow: 0 4px 8px rgba(239, 83, 80, 0.3);
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .message-actions {
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+    
+    .reply-button, .delete-button {
+        padding: 4px 8px;
+        font-size: 10px;
+        border-radius: 15px;
+    }
+}
+
+/* 🎨 Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-actions {
+    animation: fadeIn 0.3s ease;
+}
+
+/* 🔍 Estados de foco para accesibilidad */
+.reply-button:focus,
+.delete-button:focus {
+    outline: 2px solid #2196f3;
+    outline-offset: 2px;
+}
+
+.delete-button:focus {
+    outline-color: #d32f2f;
+}
+
+/* ⚡ Estados activos */
+.reply-button:active,
+.delete-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 🚫 Estados deshabilitados */
+.reply-button:disabled,
+.delete-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 🎯 Indicadores de carga */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 
