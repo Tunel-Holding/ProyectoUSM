@@ -5,14 +5,8 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "proyectousm";
-
-// Crear conexión
-$db = mysqli_connect($servername, $username, $password, $dbname);
-
+include 'conexion.php';
+$db=$conn;
 // Verificar conexión
 if (!$db) {
     $_SESSION['mensaje'] = "Error de conexión a la base de datos: " . mysqli_connect_error();

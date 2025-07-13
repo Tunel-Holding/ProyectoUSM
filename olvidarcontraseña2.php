@@ -1,9 +1,9 @@
 <?php
 session_start();
-$conexion = mysqli_connect("localhost", "root", "", "proyectousm");
+include 'conexion.php';
 $email = $_POST['email'];
 $_SESSION['email'] = $email;
-$consulta = $conexion->prepare("SELECT * FROM usuarios WHERE email = ?");
+$consulta = $con->prepare("SELECT * FROM usuarios WHERE email = ?");
 $consulta->bind_param("s", $email);
 $consulta->execute();
 $result = $consulta->get_result();

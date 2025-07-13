@@ -1,4 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
+
 $servername = "localhost";
 $username = "root";
 $password = "";

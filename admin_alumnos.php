@@ -1,3 +1,6 @@
+<?php
+include 'comprobar_sesion.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -212,7 +215,6 @@
 </head>
 
 <body>
-
     <?php include 'navAdmin.php'; ?>
 
     <div class="container">
@@ -229,7 +231,7 @@
             if ($busqueda === '') {
                 $errorMensaje = 'Por favor, ingrese una cédula para buscar.';
             } else {
-                $conn = new mysqli("localhost", "root", "", "proyectousm");
+                require 'conexion.php';
 
                 if ($conn->connect_error) {
                     die("Conexión fallida: " . $conn->connect_error);

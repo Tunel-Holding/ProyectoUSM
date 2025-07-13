@@ -1,3 +1,6 @@
+<?php
+include 'comprobar_sesion.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,257 +8,819 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="css/icono.png" type="image/png">
-    <link rel="stylesheet" href="css/admin_materias.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/principaladministracion.css">
+    <link rel="stylesheet" href="css/admin-general.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Inicio - USM</title>
+    <title>Editar Materia - USM</title>
+    <style>
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .admin-table th {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-table tr:hover {
+            background-color: var(--gray-100);
+            transition: var(--transition);
+        }
+
+        .button-cell {
+            text-align: center;
+        }
+
+        .btn-edit {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-right: 0.5rem;
+        }
+
+        .btn-edit:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-add {
+            background: var(--primary-yellow);
+            color: var(--gray-900);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-add:hover {
+            background: #f0d742;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .admin-form {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(97, 183, 255, 0.2);
+        }
+
+        .form-submit {
+            background: var(--primary-yellow);
+            color: var(--gray-900);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-submit:hover {
+            background: #f0d742;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-600);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-800);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .close {
+            color: var(--gray-600);
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close:hover {
+            color: var(--gray-800);
+        }
+
+        .clase {
+            background: var(--gray-100);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .clase label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .clase select,
+        .clase input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .clase select:focus,
+        .clase input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(97, 183, 255, 0.2);
+        }
+
+        /* Dark mode adjustments */
+        body.dark-mode .content-section {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .section-title {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .admin-table {
+            background: #1e293b;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .admin-table th {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: #ffffff;
+        }
+
+        body.dark-mode .admin-table td {
+            border-bottom-color: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .admin-table tr:hover {
+            background-color: #334155;
+        }
+
+        body.dark-mode .admin-form {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .form-label {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .form-input {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .form-input:focus {
+            border-color: #61b7ff;
+            box-shadow: 0 0 0 3px rgba(97, 183, 255, 0.2);
+        }
+
+        body.dark-mode .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .modal-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        body.dark-mode .modal-title {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .modal-header {
+            border-bottom-color: #334155;
+        }
+
+        body.dark-mode .close {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .close:hover {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .clase {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        body.dark-mode .clase label {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .clase select,
+        body.dark-mode .clase input {
+            background: #475569;
+            border-color: #64748b;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .clase select:focus,
+        body.dark-mode .clase input:focus {
+            border-color: #61b7ff;
+            box-shadow: 0 0 0 2px rgba(97, 183, 255, 0.2);
+        }
+
+        body.dark-mode .clase select option {
+            background: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .btn-edit {
+            background: #3b82f6;
+        }
+
+        body.dark-mode .btn-edit:hover {
+            background: #2563eb;
+        }
+
+        body.dark-mode .btn-delete {
+            background: #ef4444;
+        }
+
+        body.dark-mode .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        body.dark-mode .btn-add {
+            background: #f59e0b;
+            color: #1e293b;
+        }
+
+        body.dark-mode .btn-add:hover {
+            background: #d97706;
+        }
+
+        body.dark-mode .form-submit {
+            background: #f59e0b;
+            color: #1e293b;
+        }
+
+        body.dark-mode .form-submit:hover {
+            background: #d97706;
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #6b7280;
+            color: #ffffff;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        /* Mejoras adicionales para modo oscuro */
+        body.dark-mode .page-header {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .page-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .page-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        body.dark-mode hr {
+            border-color: #334155;
+        }
+
+        /* Mejoras para el modal backdrop en modo oscuro */
+        body.dark-mode .modal {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Mejoras para los mensajes de notificación */
+        body.dark-mode .notification-success {
+            background: #1e4d2b !important;
+            color: #a7f3d0 !important;
+            border-color: #059669 !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .notification-error {
+            background: #4c1d1d !important;
+            color: #fca5a5 !important;
+            border-color: #dc2626 !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Mejoras de legibilidad para modo oscuro */
+        body.dark-mode {
+            color-scheme: dark;
+        }
+
+        body.dark-mode input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        body.dark-mode select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+
+
+        /* Transiciones para mensajes de notificación */
+        .notification-success,
+        .notification-error {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+                margin-top: 80px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .admin-table {
+                font-size: 0.875rem;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Navbar -->
+    <?php include 'navAdmin.php'; ?>
+    
+    <div class="main-content">
+        <?php
+        require 'conexion.php';
+        $nombre = $_GET['nombre'];
+        $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre='$nombre' ORDER BY m.seccion ASC";
+        $result = $conn->query($sql);
+        
+        // Obtener información de la materia para el formulario de edición
+        $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre='$nombre' LIMIT 1";
+        $resultMateria = $conn->query($sqlMateria);
+        $materia = $resultMateria->fetch_assoc();
+        ?>
 
-    <div class="cabecera">
-
-        <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
-        </button>
-        <div class="logoempresa">
-            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
+        <!-- Header de la página -->
+        <div class="page-header">
+            <h1 class="page-title">Editar Materia</h1>
+            <p class="page-subtitle">Gestiona las secciones y configuración de "<?php echo htmlspecialchars($nombre); ?>"</p>
         </div>
 
-    </div>
-
-    <div class="menu" id="menu">
-        <div class="menuopc">
-            <button class="boton" id="boton-izquierdo">
-                <svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <title>arrow_back_ios</title>
-                    <desc>Created with Sketch.</desc>
-                    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="Rounded" transform="translate(-548.000000, -3434.000000)">
-                            <g id="Navigation" transform="translate(100.000000, 3378.000000)">
-                                <g id="-Round-/-Navigation-/-arrow_back_ios" transform="translate(442.000000, 54.000000)">
-                                    <g>
-                                        <polygon id="Path" opacity="0.87" points="0 0 24 0 24 24 0 24"></polygon>
-                                        <path d="M16.62,2.99 C16.13,2.5 15.34,2.5 14.85,2.99 L6.54,11.3 C6.15,11.69 6.15,12.32 6.54,12.71 L14.85,21.02 C15.34,21.51 16.13,21.51 16.62,21.02 C17.11,20.53 17.11,19.74 16.62,19.25 L9.38,12 L16.63,4.75 C17.11,4.27 17.11,3.47 16.62,2.99 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
-                                    </g>
-                                </g>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
-            </button>
-            <div class="menuopciones" id="contenedor">
-                <div class="opción">
-                    <div class="intopcion" id="inicio">
-                        <img src="css\home.png">
-                        <p>Inicio</p>
-                    </div>
-                </div>
-                <div class="opción">
-                    <div class="intopcion" id="datos">
-                        <img src="css\person.png">
-                        <p>Datos</p>
-                    </div>
-                </div>
-                <div class="opción">
-                    <div class="intopcion" id="profesor">
-                        <img src="css/profesor.png">
-                        <p>Profesores</p>
-                    </div>
-                </div>
-                <div class="opción">
-                    <div class="intopcion" id="alumno">
-                        <img src="css/alumno.png">
-                        <p>Alumnos</p>
-                    </div>
-                </div>
-                <div class="opción">
-                    <div class="intopcion" id="materias">
-                        <img src="css/horario.png">
-                        <p>Materias</p>
-                    </div>
-                </div>
+        <!-- Mensajes de notificación -->
+        <?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
+            <div class="notification-success" style="background: #d4edda; color: #155724; padding: 1rem; border-radius: var(--border-radius); margin-bottom: 1rem; border: 1px solid #c3e6cb;">
+                ✅ Sección actualizada correctamente
             </div>
-            <button class="boton" id="boton-derecho">
-                <svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <title>arrow_forward_ios</title>
-                    <desc>Created with Sketch.</desc>
-                    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="Rounded" transform="translate(-345.000000, -3434.000000)">
-                            <g id="Navigation" transform="translate(100.000000, 3378.000000)">
-                                <g id="-Round-/-Navigation-/-arrow_forward_ios" transform="translate(238.000000, 54.000000)">
-                                    <g>
-                                        <polygon id="Path" opacity="0.87" points="24 24 0 24 0 0 24 0"></polygon>
-                                        <path d="M7.38,21.01 C7.87,21.5 8.66,21.5 9.15,21.01 L17.46,12.7 C17.85,12.31 17.85,11.68 17.46,11.29 L9.15,2.98 C8.66,2.49 7.87,2.49 7.38,2.98 C6.89,3.47 6.89,4.26 7.38,4.75 L14.62,12 L7.37,19.25 C6.89,19.73 6.89,20.53 7.38,21.01 Z" id="馃敼-Icon-Color" fill="#1D1D1D"></path>
-                                    </g>
-                                </g>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <div class="notification-error" style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: var(--border-radius); margin-bottom: 1rem; border: 1px solid #f5c6cb;">
+                ❌ Error al actualizar la sección. Por favor, inténtalo de nuevo.
+            </div>
+        <?php endif; ?>
+
+        <!-- Sección de secciones -->
+        <div class="content-section">
+            <h2 class="section-title">
+                📚 Secciones de la Materia
+            </h2>
+            
+            <?php if ($result->num_rows > 0): ?>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre de la Materia</th>
+                            <th>Profesor</th>
+                            <th>Salón</th>
+                            <th>Créditos</th>
+                            <th>Semestre</th>
+                            <th>Sección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row["nombre"]); ?></td>
+                                <td><?php echo htmlspecialchars($row["profesor_nombre"] ?? 'Sin asignar'); ?></td>
+                                <td><?php echo htmlspecialchars($row["salon"]); ?></td>
+                                <td><?php echo htmlspecialchars($row["creditos"]); ?></td>
+                                <td><?php echo htmlspecialchars($row["semestre"]); ?></td>
+                                <td><?php echo htmlspecialchars($row["seccion"]); ?></td>
+                                <td class="button-cell">
+                                    <button class="btn-edit" onclick="abrirModalEditar(<?php echo $row["id"]; ?>)">Editar</button>
+                                    <button class="btn-delete" onclick="eliminarSeccion(<?php echo $row["id"]; ?>)">Eliminar</button>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p style="text-align: center; color: var(--gray-600); padding: 2rem;">No se encontraron secciones para la materia seleccionada.</p>
+            <?php endif; ?>
+
+            <button class="btn-add" onclick="window.location.href='añadir_seccion.php?nombre=<?php echo urlencode($nombre); ?>'">
+                ➕ Añadir Nueva Sección
             </button>
         </div>
-        <div class="inferior">
-            <form action="logout.php" method="POST">
-                <div class="logout">
-                    <button class="Btn">
 
-                        <div class="sign"><svg viewBox="0 0 512 512">
-                                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
-                            </svg></div>
-
-                        <div class="text">Salir</div>
-                    </button>
+        <!-- Sección de edición de materia -->
+        <div class="content-section">
+            <h2 class="section-title">
+                ⚙️ Configuración General de la Materia
+            </h2>
+            
+            <form class="admin-form" action="procesar_editar_materia.php" method="POST">
+                <input type="hidden" name="nombreOriginal" value="<?php echo htmlspecialchars($materia['nombre']); ?>">
+                
+                <div class="form-group">
+                    <label class="form-label" for="nombre">Nombre de la Materia:</label>
+                    <input class="form-input" type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($materia['nombre']); ?>" required>
                 </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="creditos">Número de Créditos:</label>
+                    <input class="form-input" type="number" id="creditos" name="creditos" value="<?php echo htmlspecialchars($materia['creditos']); ?>" required>
+                </div>
+                
+                <button type="submit" class="form-submit">💾 Guardar Cambios</button>
             </form>
-            <div class="themeswitcher">
-                <label class="theme-switch">
-                    <input type="checkbox" class="theme-switch__checkbox" id="switchtema">
-                    <div class="theme-switch__container">
-                        <div class="theme-switch__clouds"></div>
-                        <div class="theme-switch__stars-container">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
-                            </svg>
-                        </div>
-                        <div class="theme-switch__circle-container">
-                            <div class="theme-switch__sun-moon-container">
-                                <div class="theme-switch__moon">
-                                    <div class="theme-switch__spot"></div>
-                                    <div class="theme-switch__spot"></div>
-                                    <div class="theme-switch__spot"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </label>
-            </div>
         </div>
     </div>
 
-    <h1>Secciones de la Materia</h1>
-    <?php
-    require 'conexion.php';
-    $nombre = $_GET['nombre'];
-    $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre='$nombre' ORDER BY m.seccion ASC";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        echo "<table><tr><th>Nombre de la Materia</th><th>Profesor</th><th>Salón</th><th>Créditos</th><th>Semestre</th><th>Sección</th><th></th><th></th></tr>";
-        // Salida de datos de cada fila
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr><td>" . $row["nombre"] . "</td>";
-            echo "<td>" . $row["profesor_nombre"] . "</td>";
-            echo "<td>" . $row["salon"] . "</td>";
-            echo "<td>" . $row["creditos"] . "</td>";
-            echo "<td>" . $row["semestre"] . "</td>";
-            echo "<td>" . $row["seccion"] . "</td>";
-            echo "<td class='button-cell'><button onclick=\"window.location.href='editar_seccion.php?id=" . $row["id"] . "'\">Editar</button></td>";
-            echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_seccion.php?id=" . $row["id"] . "'\">Eliminar</button></td></tr>";
-        }
-        echo "</table>";
-    } else {
-        echo "No se encontraron secciones para la materia seleccionada.";
-    }
-
-    // Obtener información de la materia para el formulario de edición
-    $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre='$nombre' LIMIT 1";
-    $resultMateria = $conn->query($sqlMateria);
-    $materia = $resultMateria->fetch_assoc();
-    $conn->close();
-    ?>
-
-    <a href='añadir_seccion.php?nombre=<?php echo $nombre; ?>'><button id='agregar'>Añadir Sección</button></a>
-
-    <h1>Editar Materia</h1>
-    <form class="form-materia" action="procesar_editar_materia.php" method="POST">
-        <input type="hidden" name="nombreOriginal" value="<?php echo $materia['nombre']; ?>">
-        <div>
-            <label for="nombre">Nombre de la Materia:</label>
-            <input type="text" id="nombre" name="nombre" value="<?php echo $materia['nombre']; ?>" required>
+    <!-- Modal para editar sección -->
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Sección</h3>
+                <span class="close" onclick="cerrarModal()">&times;</span>
+            </div>
+            <div id="modalBody">
+                <!-- El contenido del modal se cargará dinámicamente -->
+            </div>
         </div>
-        <div>
-            <label for="creditos">Número de Créditos:</label>
-            <input type="number" id="creditos" name="creditos" value="<?php echo $materia['creditos']; ?>" required>
-        </div>
-        <div>
-            <button type="submit" id="editar">Editar Materia</button>
-        </div>
-    </form>
+    </div>
 
     <script>
+        // Funciones del navbar (mantener las existentes)
         const contenedor = document.getElementById('contenedor');
         const botonIzquierdo = document.getElementById('boton-izquierdo');
         const botonDerecho = document.getElementById('boton-derecho');
-        botonIzquierdo.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: -94,
-                behavior: 'smooth'
+        
+        if (botonIzquierdo && botonDerecho) {
+            botonIzquierdo.addEventListener('click', () => {
+                contenedor.scrollBy({
+                    left: -94,
+                    behavior: 'smooth'
+                });
             });
-        });
-        botonDerecho.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: 94,
-                behavior: 'smooth'
+            botonDerecho.addEventListener('click', () => {
+                contenedor.scrollBy({
+                    left: 94,
+                    behavior: 'smooth'
+                });
             });
-        });
+        }
 
-        document.getElementById('logoButton').addEventListener("click", () => {
-            document.getElementById('menu').classList.toggle('toggle');
-            event.stopPropagation();
-        });
+        // Funciones del modal
+        function abrirModalEditar(id) {
+            const modal = document.getElementById('modalEditar');
+            const modalBody = document.getElementById('modalBody');
+            
+            // Mostrar loading
+            modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">Cargando...</p>';
+            modal.style.display = 'block';
+            
+            // Cargar contenido del modal
+            fetch(`cargar_seccion_modal.php?id=${id}`)
+                .then(response => response.text())
+                .then(html => {
+                    modalBody.innerHTML = html;
+                })
+                .catch(error => {
+                    modalBody.innerHTML = '<p style="text-align: center; color: red; padding: 2rem;">Error al cargar la sección</p>';
+                });
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+
+        function eliminarSeccion(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta sección?')) {
+                window.location.href = `eliminar_seccion.php?id=${id}`;
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalEditar');
+            if (event.target === modal) {
+                cerrarModal();
+            }
+        }
+
+        // Funciones del navbar (mantener las existentes)
+        if (document.getElementById('logoButton')) {
+            document.getElementById('logoButton').addEventListener("click", () => {
+                document.getElementById('menu').classList.toggle('toggle');
+                event.stopPropagation();
+            });
+        }
+
         document.addEventListener('click', function(event) {
-            if (!contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
+            if (contenedor && !contenedor.contains(event.target) && contenedor.classList.contains('toggle')) {
                 contenedor.classList.remove('toggle');
             }
         });
+
         document.addEventListener('click', function(event) {
             var div = document.getElementById('menu');
-            if (!div.contains(event.target)) {
+            if (div && !div.contains(event.target)) {
                 div.classList.remove('toggle');
             }
         });
-        document.getElementById('switchtema').addEventListener('change', function() {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        });
 
-        // Aplicar la preferencia guardada del usuario al cargar la p谩gina
+        if (document.getElementById('switchtema')) {
+            document.getElementById('switchtema').addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+
+        // Aplicar la preferencia guardada del usuario al cargar la página
         window.addEventListener('load', function() {
             const theme = localStorage.getItem('theme');
             if (theme === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.getElementById('switchtema').checked = true;
+                if (document.getElementById('switchtema')) {
+                    document.getElementById('switchtema').checked = true;
+                }
             }
+
+                    // Auto-ocultar mensajes de notificación después de 5 segundos
+        const notifications = document.querySelectorAll('.notification-success, .notification-error');
+        notifications.forEach(notification => {
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        });
+
+        // Detectar cambios en el modo oscuro y actualizar elementos dinámicos
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    // Actualizar líneas divisoras en el modal si está abierto
+                    const modal = document.getElementById('modalEditar');
+                    if (modal && modal.style.display === 'block') {
+                        const hrs = modal.querySelectorAll('hr');
+                        hrs.forEach(hr => {
+                            hr.style.background = document.body.classList.contains('dark-mode') ? '#334155' : '#e5e7eb';
+                        });
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
         });
 
         function redirigir(url) {
-            window.location.href = url;;
-            // Cambia esta URL a la página de destino
+            window.location.href = url;
         }
+
         window.onload = function() {
-            document.getElementById('inicio').addEventListener('click', function() {
-                redirigir('pagina_administracion.php');
-            });
-            document.getElementById('datos').addEventListener('click', function() {
-                redirigir('buscar_datos_admin.html');
-            });
-            document.getElementById('profesor').addEventListener('click', function() {
-                redirigir('admin_profesores.php');
-            });
-            document.getElementById('materias').addEventListener('click', function() {
-                redirigir('admin_materias.php');
-            });
-            document.getElementById('alumno').addEventListener('click', function() {
-                redirigir('admin_alumnos.php');
+            const elementos = ['inicio', 'datos', 'profesor', 'materias', 'alumno'];
+            const urls = [
+                'pagina_administracion.php',
+                'buscar_datos_admin.html',
+                'admin_profesores.php',
+                'admin_materias.php',
+                'admin_alumnos.php'
+            ];
+
+            elementos.forEach((elemento, index) => {
+                const element = document.getElementById(elemento);
+                if (element) {
+                    element.addEventListener('click', function() {
+                        redirigir(urls[index]);
+                    });
+                }
             });
         }
     </script>

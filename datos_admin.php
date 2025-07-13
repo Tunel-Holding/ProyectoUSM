@@ -1,4 +1,5 @@
 <?php
+include 'comprobar_sesion.php';
 require_once "conexion.php";
 
 // Función para obtener el nivel de usuario

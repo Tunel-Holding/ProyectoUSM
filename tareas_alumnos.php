@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 
 // Consultar tareas desde la base de datos

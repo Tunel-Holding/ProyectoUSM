@@ -1,4 +1,6 @@
 <?php
+include 'comprobar_sesion.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = 'uploads/'; // Directorio donde se guardarán los archivos
