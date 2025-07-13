@@ -1,5 +1,6 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
+
 require 'conexion.php';
 
 
@@ -357,6 +358,7 @@ $last_user_id = null;
     
     <div class="message-entry">
         <div id="reply-preview" style="display: none;">
+            <div id="reply-to-user" style="font-weight:bold; color:#2196f3; margin-bottom:2px;"></div>
             <div id="reply-message"></div>
             <button id="cancel-reply" class="buttoncancel">Cancelar</button>
         </div>
@@ -547,9 +549,8 @@ $last_user_id = null;
             // Respuestas
             $(document).on('click', '.reply-button', function() {
                 const messageId = $(this).data('message-id');
+                const userName = $(this).data('username');
                 const messageContent = $('#message-text-' + messageId).text();
-                const userName = $(this).siblings('.message-bubble-usuario, .message-bubble-profesor').find('strong').first().text();
-                
                 showReplyPreview(userName, messageContent, messageId);
             });
         }
@@ -747,7 +748,8 @@ $last_user_id = null;
 
         // 🎯 Funciones auxiliares
         function showReplyPreview(userName, messageContent, messageId) {
-            $('#reply-message').html('<strong>' + userName + ':</strong> ' + messageContent);
+            $('#reply-to-user').text('Respondiendo a: ' + userName);
+            $('#reply-message').html(messageContent);
             $('#reply-preview').show().data('reply-to', messageId);
             $('#message').focus();
         }

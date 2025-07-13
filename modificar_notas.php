@@ -1,5 +1,5 @@
 <?php
-session_start(); // Iniciar la sesión al principio del archivo
+include 'comprobar_sesion.php';
 
 // Verificar si 'idusuario' está definido en la sesión
 if (!isset($_SESSION['idusuario'])) {

@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
 require 'conexion.php';
 
 // Definir nombre de la materia si no está definida

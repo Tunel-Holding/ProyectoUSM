@@ -1,3 +1,6 @@
+<?php
+include 'comprobar_sesion.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,7 +18,6 @@
 </head>
 
 <body>
-
     <?php include 'navAdmin.php'; ?>
 
     <h1>Materias</h1>

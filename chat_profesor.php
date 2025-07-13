@@ -1,6 +1,6 @@
-
-
 <?php
+include 'comprobar_sesion.php';
+
 session_start();
 require 'conexion.php';
 

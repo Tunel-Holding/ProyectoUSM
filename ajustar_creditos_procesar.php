@@ -1,4 +1,5 @@
 <?php
+include 'comprobar_sesion.php';
 require 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

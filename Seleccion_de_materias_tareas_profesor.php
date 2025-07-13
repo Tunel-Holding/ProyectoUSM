@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'comprobar_sesion.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
