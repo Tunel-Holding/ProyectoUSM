@@ -19,6 +19,11 @@
                 <img src="css/logounihubblanco.png" alt="UniHub">
                 UniHub
             </a>
+            <button class="navbar-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a href="pagina_administracion.php" class="nav-link">
@@ -77,6 +82,14 @@
     </nav>
 
     <script>
+        // Funcionalidad del menú responsive
+        const navbarToggle = document.querySelector('.navbar-toggle');
+        const navbarNav = document.querySelector('.navbar-nav');
+
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarNav.classList.toggle('open');
+        });
         // Funcionalidad del tema oscuro
         document.addEventListener('DOMContentLoaded', function() {
             const themeToggle = document.getElementById('themeToggle');

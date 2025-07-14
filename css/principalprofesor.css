@@ -151,9 +151,46 @@ body.dark-mode {
     --text-color: white;
 }
 .themeswitcher{
-    position: absolute;
-    width: 17%;
-    margin-left: 67%;
+    position: relative;
+    width: auto;
+    margin-left: auto;
+    margin-right: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 10px;
+}
+
+/* Responsive adjustments for the theme switcher */
+@media (max-width: 1200px) {
+    .themeswitcher {
+        width: 25%;
+        padding: 0 8px;
+    }
+}
+
+@media (max-width: 900px) {
+    .themeswitcher {
+        width: 35%;
+        padding: 0 6px;
+    }
+}
+
+@media (max-width: 600px) {
+    .themeswitcher {
+        width: 50%;
+        padding: 0 4px;
+        justify-content: flex-end;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .themeswitcher {
+        width: 70%;
+        padding: 0 2px;
+        justify-content: flex-end;
+        margin-right: 0;
+    }
 }
 .logout{
     margin-left: 0px;

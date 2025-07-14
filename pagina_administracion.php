@@ -54,6 +54,8 @@ usort($registros, function ($a, $b) {
 });
 
 $conn->close();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -151,52 +153,49 @@ $conn->close();
     </main>
 
     <script>
-        // Funcionalidad del cambio de tema
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIconLight = document.querySelector('.theme-icon-light');
-        const themeIconDark = document.querySelector('.theme-icon-dark');
+document.addEventListener('DOMContentLoaded', function() {
+    // Funcionalidad del cambio de tema
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIconLight = document.querySelector('.theme-icon-light');
+    const themeIconDark = document.querySelector('.theme-icon-dark');
 
-        // Función para cambiar el tema
-        function toggleTheme() {
-            const body = document.body;
-            const isDarkMode = body.classList.contains('dark-mode');
-            
-            if (isDarkMode) {
-                // Cambiar a modo claro
-                body.classList.remove('dark-mode');
-                themeIconLight.style.display = 'block';
-                themeIconDark.style.display = 'none';
-                localStorage.setItem('theme', 'light');
-            } else {
-                // Cambiar a modo oscuro
-                body.classList.add('dark-mode');
-                themeIconLight.style.display = 'none';
-                themeIconDark.style.display = 'block';
-                localStorage.setItem('theme', 'dark');
-            }
+    // Aplicar tema guardado al cargar la página
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeIconLight.style.display = 'none';
+        themeIconDark.style.display = 'block';
+    } else {
+        document.body.classList.remove('dark-mode');
+        themeIconLight.style.display = 'block';
+        themeIconDark.style.display = 'none';
+    }
+
+    // Función para cambiar el tema
+    function toggleTheme() {
+        const body = document.body;
+        const isDarkMode = body.classList.contains('dark-mode');
+        
+        if (isDarkMode) {
+            // Cambiar a modo claro
+            body.classList.remove('dark-mode');
+            themeIconLight.style.display = 'block';
+            themeIconDark.style.display = 'none';
+            localStorage.setItem('theme', 'light');
+        } else {
+            // Cambiar a modo oscuro
+            body.classList.add('dark-mode');
+            themeIconLight.style.display = 'none';
+            themeIconDark.style.display = 'block';
+            localStorage.setItem('theme', 'dark');
         }
+    }
 
-        // Aplicar tema guardado al cargar la página
-        function applySavedTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const body = document.body;
-            
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-                themeIconLight.style.display = 'none';
-                themeIconDark.style.display = 'block';
-            } else {
-                body.classList.remove('dark-mode');
-                themeIconLight.style.display = 'block';
-                themeIconDark.style.display = 'none';
-            }
-        }
+    // Event listeners
+    themeToggle.addEventListener('click', toggleTheme);
 
-        // Event listeners
-        themeToggle.addEventListener('click', toggleTheme);
-
-        // Aplicar tema al cargar la página
-        document.addEventListener('DOMContentLoaded', applySavedTheme);
+    // Aplicar tema al cargar la página
+    applySavedTheme();
 
         // Smooth scrolling para enlaces internos
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
