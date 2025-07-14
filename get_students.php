@@ -35,7 +35,7 @@ $query = "SELECT d.id, d.nombres, d.apellidos, et.archivo AS archivo_entregado, 
                   WHERE id_tarea = ?
                   GROUP BY id_alumno
               ) t2 ON t1.id_alumno = t2.id_alumno AND t1.id_entrega = t2.max_id
-          ) et ON et.id_alumno = d.id
+          ) et ON et.id_alumno = d.usuario_id
           WHERE i.id_materia = ?";
 $debug['query'] = $query;
 

@@ -485,6 +485,11 @@ if (isset($_POST['update_task_id'])) {
                             </thead>
                             <tbody>`;
                         data.students.forEach(student => {
+                            let archivoUrl = '';
+                            if (student.archivo_entregado) {
+                                // Si ya contiene 'uploads/' no lo duplicamos
+                                archivoUrl = student.archivo_entregado.startsWith('uploads/') ? student.archivo_entregado : ('uploads/' + student.archivo_entregado);
+                            }
                             studentListHTML += `<tr>
                                 <td>${student.nombres} ${student.apellidos}</td>
                                 <td>
@@ -502,7 +507,7 @@ if (isset($_POST['update_task_id'])) {
                                     <input type="text" placeholder="Escribe una retroalimentación..." data-student-id="${student.id}" class="input-retro">
                                 </td>
                                 <td style='text-align:center;'>
-                                    ${student.archivo_entregado ? `<button class='btn btn-primary' onclick=\"window.open('${student.archivo_entregado.replace(/'/g, '%27')}', '_blank');return false;\">Ver Archivo</button>` : '<span style=\"color:#888;\">No entregado</span>'}
+                                    ${archivoUrl ? `<button class='btn btn-primary' onclick=\"window.open('${archivoUrl.replace(/'/g, '%27')}', '_blank');return false;\">Ver Archivo</button>` : '<span style=\"color:#888;\">No entregado</span>'}
                                 </td>
                             </tr>`;
                         });

@@ -29,10 +29,27 @@ foreach ($calificaciones as $item) {
         continue;
     }
 
+    // Obtener usuario_id real (id_alumno) desde datos_usuario
+    $stmt_userid = $conn->prepare("SELECT usuario_id FROM datos_usuario WHERE id = ?");
+    if ($stmt_userid) {
+        $stmt_userid->bind_param("i", $student_id);
+        $stmt_userid->execute();
+        $stmt_userid->bind_result($usuario_id);
+        $stmt_userid->fetch();
+        $stmt_userid->close();
+        if (!$usuario_id) {
+            $errores[] = "No se encontró usuario_id para estudiante $student_id";
+            continue;
+        }
+    } else {
+        $errores[] = "Error al obtener usuario_id para estudiante $student_id: " . $conn->error;
+        continue;
+    }
+
     // Verificar si existe entrega para este estudiante y tarea
-    $stmt_check = $conn->prepare("SELECT archivo FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ?");
+    $stmt_check = $conn->prepare("SELECT archivo FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ? ORDER BY id_entrega DESC LIMIT 1");
     if ($stmt_check) {
-        $stmt_check->bind_param("ii", $task_id, $student_id);
+        $stmt_check->bind_param("ii", $task_id, $usuario_id);
         $stmt_check->execute();
         $result_check = $stmt_check->get_result();
         $row = $result_check->fetch_assoc();
@@ -45,10 +62,19 @@ foreach ($calificaciones as $item) {
     }
 
     if ($row) {
-        // Ya existe entrega, actualizar calificación y retroalimentación
-        $stmt = $conn->prepare("UPDATE entregas_tareas SET calificacion = ?, retroalimentacion = ? WHERE id_tarea = ? AND id_alumno = ?");
+        // Ya existe entrega (con o sin archivo), actualizar calificación y retroalimentación
+        $query_update = "UPDATE entregas_tareas SET calificacion = ?, retroalimentacion = ? WHERE id_tarea = ? AND id_alumno = ?";
+        // Si hay archivo, filtrar por archivo específico
+        if (!empty($row['archivo'])) {
+            $query_update .= " AND archivo = ?";
+        }
+        $stmt = $conn->prepare($query_update);
         if ($stmt) {
-            $stmt->bind_param("ssii", $calificacion, $retro, $task_id, $student_id);
+            if (!empty($row['archivo'])) {
+                $stmt->bind_param("ssiss", $calificacion, $retro, $task_id, $usuario_id, $row['archivo']);
+            } else {
+                $stmt->bind_param("ssis", $calificacion, $retro, $task_id, $usuario_id);
+            }
             if (!$stmt->execute()) {
                 $errores[] = "Error con estudiante $student_id: " . $stmt->error;
                 error_log("Error UPDATE estudiante $student_id: " . $stmt->error);
@@ -57,16 +83,16 @@ foreach ($calificaciones as $item) {
             }
             $stmt->close();
         } else {
-            $errores[] = "Error en prepare para estudiante $student_id: " . $conn->error;
+            $errores[] = "Error en prepare UPDATE para estudiante $student_id: " . $conn->error;
             error_log("Error en prepare UPDATE para estudiante $student_id: " . $conn->error);
         }
     } else {
-        // No existe entrega, registrar como vencido
+        // No existe entrega previa, registrar como vencido
         $estado = 'vencido';
         $archivo = '';
         $stmt_insert = $conn->prepare("INSERT INTO entregas_tareas (id_tarea, id_alumno, archivo, estado, calificacion, retroalimentacion) VALUES (?, ?, ?, ?, ?, ?)");
         if ($stmt_insert) {
-            $stmt_insert->bind_param("iissss", $task_id, $student_id, $archivo, $estado, $calificacion, $retro);
+            $stmt_insert->bind_param("iissss", $task_id, $usuario_id, $archivo, $estado, $calificacion, $retro);
             if (!$stmt_insert->execute()) {
                 $errores[] = "Error insertando vencido para estudiante $student_id: " . $stmt_insert->error;
                 error_log("Error INSERT estudiante $student_id: " . $stmt_insert->error);
