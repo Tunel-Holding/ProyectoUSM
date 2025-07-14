@@ -588,7 +588,7 @@ if (isset($_POST['update_task_id'])) {
     window.addEventListener('load', function() {
         // --- MANEJO DE LA NAVEGACIÓN DEL MENÚ ---
         document.getElementById('inicio').addEventListener('click', function() {
-            window.location.href = 'inicio_profesor.php';
+            window.location.href = 'pagina_profesor.php';
         });
 
         document.getElementById('datos').addEventListener('click', function() {

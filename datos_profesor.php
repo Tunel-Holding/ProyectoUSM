@@ -1,6 +1,5 @@
 <?php
 include 'comprobar_sesion.php';
-session_start();
 
 // Conexión a la base de datos
 include 'conexion.php';
@@ -164,7 +163,19 @@ $conn->close(); // Cerrar la conexión
 </head>
 
 <body>
-<?php include 'navAdmin.php'; ?>
+    <div class="cabecera">
+
+        <button type="button" id="logoButton">
+            <img src="css/logoazul.png" alt="Logo">
+        </button>
+        <div class="logoempresa">
+            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
+            <p>UniHub</p>
+        </div>
+
+    </div>
+    
+    <?php include 'menu_profesor.php'; ?>
 
     <div class="pagina">
         <div class="wecontainer">

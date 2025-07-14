@@ -10,6 +10,20 @@ date_default_timezone_set('America/Caracas');
 // Obtener la ID del usuario desde la sesión
 $user_id = $_SESSION['idusuario'];
 
+// Validar si el usuario tiene datos registrados en datos_usuario
+$sql_check = "SELECT 1 FROM datos_usuario WHERE usuario_id = ? LIMIT 1";
+$stmt_check = $conn->prepare($sql_check);
+if ($stmt_check) {
+    $stmt_check->bind_param("i", $user_id);
+    $stmt_check->execute();
+    $stmt_check->store_result();
+    if ($stmt_check->num_rows === 0) {
+        header("Location: datos.php");
+        exit();
+    }
+    $stmt_check->close();
+}
+
 // Obtener el día actual en español para la región de Venezuela
 $formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
 $dia_actual = $formatter->format(time());

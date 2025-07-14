@@ -1,28 +1,28 @@
 <?php
 include 'comprobar_sesion.php';
 
-include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
+
+
+include 'conexion.php';
 $conn->set_charset("utf8mb4");
 
-// Obtener la ID del usuario desde la sesión
 $user_id = $_SESSION['idusuario'];
 
-// Obtener la ID del profesor usando la ID del usuario
-$query_profesor = "SELECT id FROM profesores WHERE id_usuario = ?";
-$stmt_profesor = $conn->prepare($query_profesor);
-if (!$stmt_profesor) {
-    die("Error en la preparación de la consulta: " . $conn->error);
+// Validar si el usuario tiene datos registrados en datos_usuario
+$sql_check = "SELECT 1 FROM datos_usuario WHERE usuario_id = ? LIMIT 1";
+$stmt_check = $conn->prepare($sql_check);
+if ($stmt_check) {
+    $stmt_check->bind_param("i", $user_id);
+    $stmt_check->execute();
+    $stmt_check->store_result();
+    if ($stmt_check->num_rows === 0) {
+        header("Location: llenar_datos_profesor.php");
+        exit();
+    }
+    $stmt_check->close();
 }
-$stmt_profesor->bind_param("i", $user_id);
-if (!$stmt_profesor->execute()) {
-    die("Error en la ejecución de la consulta: " . $stmt_profesor->error);
-}
-$result_profesor = $stmt_profesor->get_result();
-if ($result_profesor->num_rows === 0) {
-    die("No se encontró el profesor.");
-}
-$profesor = $result_profesor->fetch_assoc();
-$profesor_id = $profesor['id'];
+
+// ...existing code...
 
 // Obtener el día actual en español para la región de Venezuela
 $formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
