@@ -11,11 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton+SC&family=Oswald:wght@200..700&family=Sofadi+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
 </head>
 <body>
-     
-        
     <div class="menu-noticias">
         <a href="inicio.php" class="boton-inicio">
             <img src="LogoUSM.png" alt="Logo" class="Logo"> Iniciar Sesión
@@ -23,7 +20,6 @@
         <div class="menu-noticiasint">
             <h1>Bienvenidos <br>a la USM</h1>
         </div>
-        
     </div>
     <div class="menu-noticias1">
         <h1>¡Visita nuestras facultades!</h1>
@@ -74,7 +70,7 @@
         </div>
     </div>
     <div class="menu-noticias1">
-        <h1>¡Explora sobre nuestra universidad!</h1>
+        <h1 style ="margin-bottom: 40px;">¡Explora sobre nuestra universidad!</h1>
     </div>
     <!-- Slider main container -->
     <div class="swiper">
@@ -134,7 +130,6 @@
                     <img src="https://i.imgur.com/ur12emT.jpeg" alt="slide-3">
                 </div>
             </div>
-            
         </div>
         <!-- If we need pagination -->
         <div class="swiper-pagination"></div>
@@ -144,28 +139,54 @@
 
         <!-- If we need scrollbar -->
         <div class="swiper-scrollbar"></div>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>const swiper = new Swiper('.swiper', {
-        // Optional parameters
-        direction: 'horizontal',
-        loop: true,
-        autoplay:{
-            delay: 10000, // 15 segundos 
-            disableOnInteraction: false,
-        },
-      
-        // If we need pagination
-        pagination: {
-          el: '.swiper-pagination',
-        },
+    </div>
+    
+    <footer style="background-color: rgb(28, 28, 28); color: white; padding: 20px; text-align: center;">
+        <div class="footer-content">
+            <h2 style="margin-bottom: 40px; color:white;">Universidad Santa María</h2>
+            <nav>
+                <ul style="margin-bottom: 10px;" class="icons">
+                    <li><a href="https://usm.edu.ve/preguntas-frecuentes/">Preguntas Frecuentes</a></li>
+                    <li><a href="https://usm.edu.ve/contacto/">Contáctanos</a></li>
+                </ul>
+            </nav>
+            <div style="margin-top: 18px; display: flex; justify-content: center; gap: 22px;" class="social-icons">
+                <a href="https://www.facebook.com/usm.vzla/" target="_blank" title="Facebook">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" style="width:32px;height:32px;" />
+                </a>
+                <a href="https://twitter.com/usm_vzla" target="_blank" title="Twitter">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" style="width:32px;height:32px;" />
+                </a>
+                <a href="https://instagram.com/usm_vzla" target="_blank" title="Instagram">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" style="width:32px;height:32px;" />
+                </a>
+                <a href="https://www.youtube.com/@usm_vzla" target="_blank" title="YouTube">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube" style="width:32px;height:32px;" />
+                </a>
+            </div>
+        </div>
+    </footer>
 
-        // Navigation arrows
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-      });
-      
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            // Optional parameters
+            direction: 'horizontal',
+            loop: true,
+            autoplay:{
+                delay: 10000, // 10 segundos 
+                disableOnInteraction: false,
+            },
+            // If we need pagination
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
     </script>
 </body>
 </html>
