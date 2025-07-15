@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 13-07-2025 a las 16:54:21
--- Versión del servidor: 9.1.0
--- Versión de PHP: 8.3.14
+-- Tiempo de generación: 15-07-2025 a las 03:26:09
+-- Versión del servidor: 8.3.0
+-- Versión de PHP: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -78,7 +78,7 @@ INSERT INTO `datos_usuario` (`id`, `usuario_id`, `cedula`, `nombres`, `apellidos
 (2, 6, '31661441', 'Sebastian Aaron', 'Sanchez Ramirez', 'Masculino', '04122001161', 'sebastiansanchezar3@gmail.com', 'bucare'),
 (3, 24, '30395202', 'María Victoria', 'García García', 'Femenino', '04129610038', 'mvggarcia05@gmail.com', 'Baruta'),
 (4, 29, '14446246', 'Jade', 'Poya', 'Femenino', '041245545455', 'jadepoya0505@gmail.com', 'El paraiso ?'),
-(5, 31, '30542565', 'Andrea', 'Mejia', 'Femenino', '0412701095', 'avictoria1501@gmail.com', 'dwd');
+(5, 31, '30542565', 'Andrea', 'Mejia', 'Femenino', '0412701095', 'avictoria1501@gmail.com', 'fff');
 
 -- --------------------------------------------------------
 
@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS `estudiantes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_usuario` int NOT NULL,
   `cedula` int DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb3_spanish2_ci NOT NULL,
   `carrera` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `semestre` int NOT NULL,
   `creditosdisponibles` int NOT NULL,
@@ -123,15 +124,15 @@ CREATE TABLE IF NOT EXISTS `estudiantes` (
 -- Volcado de datos para la tabla `estudiantes`
 --
 
-INSERT INTO `estudiantes` (`id`, `id_usuario`, `cedula`, `carrera`, `semestre`, `creditosdisponibles`) VALUES
-(1, 1, 165712321, 'Ingeniería de Sistemas', 1, 20),
-(2, 6, NULL, 'Ingeniería de Sistemas', 1, 20),
-(3, 24, NULL, 'Ingenieria en Sistemas', 1, 1),
-(4, 25, NULL, 'Ingenieria en Sistemas', 1, 15),
-(5, 26, NULL, 'Ingenieria en Sistemas', 1, 20),
-(6, 27, NULL, 'Ingenieria en Sistemas', 1, 20),
-(7, 28, NULL, 'Ingenieria en Sistemas', 1, 20),
-(8, 31, NULL, 'Ingenieria en Sistemas', 1, 18);
+INSERT INTO `estudiantes` (`id`, `id_usuario`, `cedula`, `email`, `carrera`, `semestre`, `creditosdisponibles`) VALUES
+(1, 1, 165712321, '', 'Ingeniería de Sistemas', 1, 20),
+(2, 6, NULL, '', 'Ingeniería de Sistemas', 1, 20),
+(3, 24, NULL, '', 'Ingenieria en Sistemas', 1, 1),
+(4, 25, NULL, '', 'Ingenieria en Sistemas', 1, 15),
+(5, 26, NULL, '', 'Ingenieria en Sistemas', 1, 20),
+(6, 27, NULL, '', 'Ingenieria en Sistemas', 1, 20),
+(7, 28, NULL, '', 'Ingenieria en Sistemas', 1, 20),
+(8, 31, 30542565, 'avictoria1501@gmail.com', 'Ingenieria en Sistemas', 1, 18);
 
 -- --------------------------------------------------------
 
@@ -291,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `horariosmateria` (
   `hora_fin` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_materia` (`id_materia`)
-) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `horariosmateria`
@@ -328,13 +329,12 @@ INSERT INTO `horariosmateria` (`id`, `id_materia`, `dia`, `hora_inicio`, `hora_f
 (46, 82, 'Martes', '07:00:00', '08:30:00'),
 (47, 83, 'Martes', '08:30:00', '10:00:00'),
 (48, 83, 'Miércoles', '08:30:00', '10:00:00'),
-(57, 85, 'Lunes', '00:00:00', '00:00:00'),
-(56, 84, '', '00:00:00', '00:00:00'),
 (54, 88, 'Viernes', '08:30:00', '10:00:00'),
 (53, 86, 'Miércoles', '10:00:00', '11:30:00'),
 (55, 89, 'Viernes', '07:00:00', '08:30:00'),
-(58, 85, 'Lunes', '00:00:00', '00:00:00'),
-(59, 90, 'Jueves', '01:45:00', '21:00:00');
+(59, 90, 'Jueves', '01:45:00', '21:00:00'),
+(66, 84, 'Lunes', '11:00:00', '12:00:00'),
+(68, 84, 'Miércoles', '09:41:00', '11:00:00');
 
 -- --------------------------------------------------------
 
@@ -389,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `materias` (
   `seccion` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_profesor` (`id_profesor`)
-) ENGINE=MyISAM AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `materias`
@@ -406,7 +406,7 @@ INSERT INTO `materias` (`id`, `nombre`, `salon`, `id_profesor`, `creditos`, `sem
 (87, 'Fisica 1', '901', 6, 5, 1, 'B'),
 (88, 'Lenguaje y Comunicacion', '702', NULL, 2, 1, 'A'),
 (89, 'Ingles 1', '702', 5, 2, 1, 'A'),
-(90, 'Daniela Garcia', '902', 6, 20, 1, 'A'),
+(90, 'Daniela Garcia', '902', NULL, 20, 1, 'A'),
 (91, 'Daniela Garcia', '902', 3, 20, 1, 'B');
 
 -- --------------------------------------------------------
@@ -426,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `reply_to` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=163 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `messages`
@@ -448,11 +448,8 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `created_at`, `group_id`, `t
 (155, 29, 'sd', '2025-07-10 17:49:12', 87, 'texto', '0'),
 (156, 29, 'asd', '2025-07-10 17:49:13', 87, 'texto', '0'),
 (157, 29, 'asdas', '2025-07-10 18:33:55', 87, 'texto', '0'),
-(161, 31, 'uploads/6872a5595fc63_1752343897.jpg', '2025-07-12 18:11:37', 84, 'imagen', '0'),
-(165, 29, 'goas', '2025-07-13 14:57:56', 89, 'texto', '0'),
-(164, 1, 'dasd', '2025-07-13 14:57:26', 90, 'texto', '0'),
-(167, 29, 'hola', '2025-07-13 15:07:42', 89, 'texto', '0'),
-(168, 1, 'hola', '2025-07-13 15:51:44', 87, 'texto', '0');
+(162, 31, 'km', '2025-07-13 18:16:33', 84, 'texto', '149'),
+(161, 31, 'uploads/6872a5595fc63_1752343897.jpg', '2025-07-12 18:11:37', 84, 'imagen', '0');
 
 -- --------------------------------------------------------
 
@@ -518,7 +515,7 @@ INSERT INTO `profesores` (`id`, `id_usuario`, `cedula`, `nombre`) VALUES
 (2, 4, 0, 'Hector Hurtado'),
 (3, 6, 0, 'Sebastian Sanchez'),
 (4, 7, 0, 'Saul Mendoza'),
-(5, 29, 0, 'Tomas Reveron'),
+(5, 29, 29989547, 'Tomas Reveron'),
 (6, 30, 0, 'Daniela Garcia');
 
 -- --------------------------------------------------------
@@ -563,6 +560,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `contrasena` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `nivel_usuario` enum('administrador','profesor','usuario') CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `session` tinyint(1) NOT NULL DEFAULT '0',
+  `codigo_recuperacion` varchar(255) COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
@@ -571,18 +569,17 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_usuario`, `session`) VALUES
-(1, 'TReveron', 'tomyreveroncito@gmail.com', '$2y$10$MjHASuz/bqzOFoh5Jqe2M.rqKfUmTSf9L//6YRLTVFaholnfZ9MKm', 'administrador', 1),
-(25, 'Daniela', 'daniela.aleja2021@gmail.com', '$2y$10$PhXZBCya4WmmRuC4JrTex.p5hmhh5Zi9o25EiWgdb7x/K2cCU4/kq', 'usuario', 0),
-(24, 'Mvicky0505', 'mvggarcia05@gmail.com', '$2y$10$8JCIh4b6v825FwFfeLHrjumhmgMDsS4V7Eo2pVGwyXIjQRNNQtwl6', 'administrador', 0),
-(5, 'ACepeda', 'angelcepeda@gmail.com', '$2y$10$G8fS6qQCpqXyfJ/US95Sl.MGqtwSD4jQ1oymMoYrLcqkEfvDiNEKm', 'profesor', 0),
-(6, 'Sebastian', 'sebastiansanchezar3@gmail.com', '$2y$10$pKa.Q0FKgIjEDG/lHHeaz./Al8.FD0h5iT9ZekPugh5S37rNobuDO', 'usuario', 0),
-(27, 'Marivgc19', 'mvgc1133@gmail.com', '$2y$10$vtm/d2SqSwxSIiS.p00hPej7UBUBg3SCQwKS47KtzbzV5RDq.I32O', 'usuario', 0),
-(28, 'Jpipi', 'janpipi@gmail.com', '$2y$10$dfQJGv63KFl9irf8NC04ZeiMddn/buoDgFHGW0lnTduyhJ9nRmfI.', 'administrador', 0),
-(29, 'Tprofesor', 'reveron29989547@usm.edu.ve', '$2y$10$WMsYx2.0SweZ9QFFhCvFuOVkHOT//2wfMQNnv/alJSVqvSmPa8SDm', 'profesor', 0),
-(30, 'DGarcia', 'danielagarciaprof@gmail.com', '$2y$10$l2QfBJE/NbuwJJ3VYqR6DuWlbiaEeze0oTaM7fQqoH0LF66GsSN.u', 'profesor', 0),
-(31, 'andreamejia', 'avictoria1501@gmail.com', '$2y$10$WlkX1OO3iCbZBILRi3mZ..c27q2reJfXIfg5/WVDD2oBnFHx1y/qG', 'administrador', 0),
-(32, 'andreameji', 'lectores.cerrados@gmail.com', '$2y$10$PbIgzvkOeqomf9naZl7S5eiPNLU7g3Bp1Drjq6qBFcR1h/qb4CCLO', 'profesor', 0);
+INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_usuario`, `session`, `codigo_recuperacion`) VALUES
+(1, 'TReveron', 'tomyreveroncito@gmail.com', '$2y$10$MjHASuz/bqzOFoh5Jqe2M.rqKfUmTSf9L//6YRLTVFaholnfZ9MKm', 'usuario', 0, ''),
+(25, 'Daniela', 'daniela.aleja2021@gmail.com', '$2y$10$PhXZBCya4WmmRuC4JrTex.p5hmhh5Zi9o25EiWgdb7x/K2cCU4/kq', 'usuario', 0, ''),
+(24, 'Mvicky0505', 'mvggarcia05@gmail.com', '$2y$10$8JCIh4b6v825FwFfeLHrjumhmgMDsS4V7Eo2pVGwyXIjQRNNQtwl6', 'administrador', 0, ''),
+(5, 'ACepeda', 'angelcepeda@gmail.com', '$2y$10$G8fS6qQCpqXyfJ/US95Sl.MGqtwSD4jQ1oymMoYrLcqkEfvDiNEKm', 'profesor', 0, ''),
+(6, 'Sebastian', 'sebastiansanchezar3@gmail.com', '$2y$10$pKa.Q0FKgIjEDG/lHHeaz./Al8.FD0h5iT9ZekPugh5S37rNobuDO', 'usuario', 0, ''),
+(27, 'Marivgc19', 'mvgc1133@gmail.com', '$2y$10$vtm/d2SqSwxSIiS.p00hPej7UBUBg3SCQwKS47KtzbzV5RDq.I32O', 'usuario', 0, ''),
+(28, 'Jpipi', 'janpipi@gmail.com', '$2y$10$dfQJGv63KFl9irf8NC04ZeiMddn/buoDgFHGW0lnTduyhJ9nRmfI.', 'administrador', 0, ''),
+(29, 'Tprofesor', 'reveron29989547@usm.edu.ve', '$2y$10$WMsYx2.0SweZ9QFFhCvFuOVkHOT//2wfMQNnv/alJSVqvSmPa8SDm', 'profesor', 0, ''),
+(30, 'DGarcia', 'danielagarciaprof@gmail.com', '$2y$10$l2QfBJE/NbuwJJ3VYqR6DuWlbiaEeze0oTaM7fQqoH0LF66GsSN.u', 'profesor', 0, ''),
+(31, 'andreamejia', 'avictoria1501@gmail.com', '$2y$10$qhyCJhavTPoEvfcYTYI19ubu0z8Bpb4HP8DwuXX.BGkEZD92ZZzPy', 'administrador', 0, '');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
