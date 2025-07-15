@@ -106,12 +106,15 @@ include 'comprobar_sesion.php';
             font-weight: 500;
             transition: var(--transition);
             margin-right: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-edit:hover {
             background: var(--secondary-blue);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
+            color: var(--white);
         }
 
         .btn-delete {
@@ -224,89 +227,7 @@ include 'comprobar_sesion.php';
             box-shadow: var(--shadow-md);
         }
 
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-        }
 
-        .modal-content {
-            background: var(--white);
-            margin: 5% auto;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gray-200);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .close {
-            color: var(--gray-600);
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .close:hover {
-            color: var(--gray-800);
-        }
-
-        .clase {
-            background: var(--gray-100);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid var(--gray-200);
-        }
-
-        .clase label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .clase select,
-        .clase input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid var(--gray-300);
-            border-radius: 4px;
-            margin-bottom: 1rem;
-        }
-
-        .clase select:focus,
-        .clase input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px rgba(97, 183, 255, 0.2);
-        }
 
         /* Dark mode adjustments */
         body.dark-mode .content-section {
@@ -363,54 +284,7 @@ include 'comprobar_sesion.php';
             color: #94a3b8;
         }
 
-        body.dark-mode .modal-content {
-            background: #1e293b;
-            border: 1px solid #334155;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
 
-        body.dark-mode .modal-title {
-            color: #f1f5f9;
-        }
-
-        body.dark-mode .modal-header {
-            border-bottom-color: #334155;
-        }
-
-        body.dark-mode .close {
-            color: #94a3b8;
-        }
-
-        body.dark-mode .close:hover {
-            color: #e2e8f0;
-        }
-
-        body.dark-mode .clase {
-            background: #334155;
-            border-color: #475569;
-        }
-
-        body.dark-mode .clase label {
-            color: #f1f5f9;
-        }
-
-        body.dark-mode .clase select,
-        body.dark-mode .clase input {
-            background: #475569;
-            border-color: #64748b;
-            color: #e2e8f0;
-        }
-
-        body.dark-mode .clase select:focus,
-        body.dark-mode .clase input:focus {
-            border-color: #61b7ff;
-            box-shadow: 0 0 0 2px rgba(97, 183, 255, 0.2);
-        }
-
-        body.dark-mode .clase select option {
-            background: #475569;
-            color: #e2e8f0;
-        }
 
         body.dark-mode .btn-edit {
             background: #3b82f6;
@@ -473,10 +347,7 @@ include 'comprobar_sesion.php';
             border-color: #334155;
         }
 
-        /* Mejoras para el modal backdrop en modo oscuro */
-        body.dark-mode .modal {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
+
 
         /* Mejoras para los mensajes de notificación */
         body.dark-mode .notification-success {
@@ -611,7 +482,7 @@ include 'comprobar_sesion.php';
                                 <td><?php echo htmlspecialchars($row["semestre"]); ?></td>
                                 <td><?php echo htmlspecialchars($row["seccion"]); ?></td>
                                 <td class="button-cell">
-                                    <button class="btn-edit" onclick="abrirModalEditar(<?php echo $row["id"]; ?>)">Editar</button>
+                                    <a href="editar_seccion.php?id=<?php echo $row["id"]; ?>" class="btn-edit">Editar</a>
                                     <button class="btn-delete" onclick="eliminarSeccion(<?php echo $row["id"]; ?>)">Eliminar</button>
                                 </td>
                             </tr>
@@ -651,18 +522,7 @@ include 'comprobar_sesion.php';
         </div>
     </div>
 
-    <!-- Modal para editar sección -->
-    <div id="modalEditar" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Editar Sección</h3>
-                <span class="close" onclick="cerrarModal()">&times;</span>
-            </div>
-            <div id="modalBody">
-                <!-- El contenido del modal se cargará dinámicamente -->
-            </div>
-        </div>
-    </div>
+
 
     <script>
         // Funciones del navbar (mantener las existentes)
@@ -685,29 +545,7 @@ include 'comprobar_sesion.php';
             });
         }
 
-        // Funciones del modal
-        function abrirModalEditar(id) {
-            const modal = document.getElementById('modalEditar');
-            const modalBody = document.getElementById('modalBody');
-            
-            // Mostrar loading
-            modalBody.innerHTML = '<p style="text-align: center; padding: 2rem;">Cargando...</p>';
-            modal.style.display = 'block';
-            
-            // Cargar contenido del modal
-            fetch(`cargar_seccion_modal.php?id=${id}`)
-                .then(response => response.text())
-                .then(html => {
-                    modalBody.innerHTML = html;
-                })
-                .catch(error => {
-                    modalBody.innerHTML = '<p style="text-align: center; color: red; padding: 2rem;">Error al cargar la sección</p>';
-                });
-        }
 
-        function cerrarModal() {
-            document.getElementById('modalEditar').style.display = 'none';
-        }
 
         function eliminarSeccion(id) {
             if (confirm('¿Estás seguro de que quieres eliminar esta sección?')) {
@@ -715,13 +553,7 @@ include 'comprobar_sesion.php';
             }
         }
 
-        // Cerrar modal al hacer clic fuera de él
-        window.onclick = function(event) {
-            const modal = document.getElementById('modalEditar');
-            if (event.target === modal) {
-                cerrarModal();
-            }
-        }
+
 
         // Funciones del navbar (mantener las existentes)
         if (document.getElementById('logoButton')) {
@@ -778,26 +610,7 @@ include 'comprobar_sesion.php';
             }, 5000);
         });
 
-        // Detectar cambios en el modo oscuro y actualizar elementos dinámicos
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    // Actualizar líneas divisoras en el modal si está abierto
-                    const modal = document.getElementById('modalEditar');
-                    if (modal && modal.style.display === 'block') {
-                        const hrs = modal.querySelectorAll('hr');
-                        hrs.forEach(hr => {
-                            hr.style.background = document.body.classList.contains('dark-mode') ? '#334155' : '#e5e7eb';
-                        });
-                    }
-                }
-            });
-        });
 
-        observer.observe(document.body, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
         });
 
         function redirigir(url) {

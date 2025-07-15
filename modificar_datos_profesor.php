@@ -7,50 +7,91 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Obtener los datos del estudiante más reciente
-$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario WHERE usuario_id = '" . $_SESSION['idusuario'] . "'";
-$result = $conn->query($sql);
+// Obtener el ID del usuario de la sesión
+$id_usuario = $_SESSION['idusuario'];
 
-// Verificar si la consulta fue exitosa
-if (!$result) {
+// Obtener los datos del profesor usando prepared statement
+$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion 
+        FROM datos_usuario 
+        WHERE usuario_id = ?";
+
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
     die("Error en la consulta: " . $conn->error);
 }
 
-$estudiante = $result->fetch_assoc();
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $estudiante = $result->fetch_assoc();
+} else {
+    die("No se encontraron datos del usuario");
+}
+
+// Obtener la foto del usuario usando prepared statement
+$sql_foto = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
+$stmt_foto = $conn->prepare($sql_foto);
+$foto = "css/perfil.png"; // Foto por defecto
+
+if ($stmt_foto) {
+    $stmt_foto->bind_param("i", $id_usuario);
+    $stmt_foto->execute();
+    $result_foto = $stmt_foto->get_result();
+    
+    if ($result_foto->num_rows > 0) {
+        $row_foto = $result_foto->fetch_assoc();
+        $foto = $row_foto['foto'];
+    }
+    $stmt_foto->close();
+}
 
 $error_message = "";
+$success_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
-    $cedula_nueva = $_POST['cedula'];
-    $nombres = $_POST['nombres'];
-    $apellidos = $_POST['apellidos'];
-    $sexo = $_POST['sexo'];
-    $telefono = $_POST['telefono'];
-    $correo = $_POST['correo'];
-    $direccion = $_POST['direccion'];
-    $idusuario = $_SESSION['idusuario'];
+    // Obtener y sanitizar los datos del formulario
+    $sexo = trim($_POST['sexo'] ?? '');
+    $telefono = trim($_POST['telefono'] ?? '');
+    $direccion = trim($_POST['direccion'] ?? '');
 
-    // Verificar que todos los datos estén presentes
-    if (empty($cedula_nueva) || empty($nombres) || empty($apellidos) || empty($sexo) || empty($telefono) || empty($correo) || empty($direccion)) {
+    // Validar que todos los datos estén presentes
+    if (empty($sexo) || empty($telefono) || empty($direccion)) {
         $error_message = "Todos los campos son obligatorios.";
     } else {
-        // Actualizar los datos en la base de datos
-        $sql = "UPDATE datos_usuario SET 
-                cedula='$cedula_nueva', 
-                nombres='$nombres', 
-                apellidos='$apellidos', 
-                sexo='$sexo', 
-                telefono='$telefono', 
-                correo='$correo', 
-                direccion='$direccion' 
-                WHERE usuario_id='$idusuario'";
-
-        $conn->query($sql);
-        header('Location: datos_profesor.php');
+        // Validar formato del teléfono (solo números y algunos caracteres especiales)
+        if (!preg_match('/^[\d\s\-\+\(\)]+$/', $telefono)) {
+            $error_message = "El formato del teléfono no es válido.";
+        } else {
+            // Actualizar los datos en la base de datos usando prepared statement
+            $sql_update = "UPDATE datos_usuario SET 
+                          sexo = ?, 
+                          telefono = ?, 
+                          direccion = ? 
+                          WHERE usuario_id = ?";
+            
+            $stmt_update = $conn->prepare($sql_update);
+            if ($stmt_update) {
+                $stmt_update->bind_param("sssi", $sexo, $telefono, $direccion, $id_usuario);
+                
+                if ($stmt_update->execute()) {
+                    $success_message = "Datos actualizados correctamente.";
+                    // Actualizar los datos en la variable para mostrar en el formulario
+                    header("Location: datos_profesor.php");
+                    exit();
+                } else {
+                    $error_message = "Error al actualizar los datos: " . $stmt_update->error;
+                }
+                $stmt_update->close();
+            } else {
+                $error_message = "Error en la preparación de la consulta.";
+            }
+        }
     }
 }
 
+$stmt->close();
 $conn->close();
 ?>
 
@@ -180,6 +221,16 @@ $conn->close();
             color: red;
             font-weight: bold;
         }
+
+        .success-message {
+            color: green;
+            font-weight: bold;
+            background-color: rgba(40, 167, 69, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #28a745;
+            margin-bottom: 15px;
+        }
     </style>
 
 </head>
@@ -205,27 +256,33 @@ $conn->close();
     <div class="pagina">
         <div class="wecontainer">
             <h1>Modificar Datos</h1>
+            <div class="perfil-container">
+                <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+            </div>
+
             <form method="POST" action="">
                 <?php if ($error_message): ?>
                     <p class="error-message"><?php echo $error_message; ?></p>
                 <?php endif; ?>
+                <?php if ($success_message): ?>
+                    <p class="success-message"><?php echo $success_message; ?></p>
+                <?php endif; ?>
 
                 <div class="form">
                     <label for="cedula">Número de Cédula:</label>
-                    <input type="text" id="cedula" name="cedula"
-                        value="<?php echo isset($estudiante['cedula']) ? $estudiante['cedula'] : ''; ?>"
-                        class="<?php echo empty($_POST['cedula']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <p  id="cedula" name="cedula">
+                        <?php echo isset($estudiante['cedula']) ? $estudiante['cedula'] : ''; ?>
+                    </p>
 
                     <label for="nombres">Nombres:</label>
-                    <input type="text" id="nombres" name="nombres"
-                        value="<?php echo isset($estudiante['nombres']) ? $estudiante['nombres'] : ''; ?>"
-                        class="<?php echo empty($_POST['nombres']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <p  id="nombres" name="nombres">
+                    <?php echo isset($estudiante['nombres']) ? $estudiante['nombres'] : ''; ?>
+                    </p>
 
                     <label for="apellidos">Apellidos:</label>
-                    <input type="text" id="apellidos" name="apellidos"
-                        value="<?php echo isset($estudiante['apellidos']) ? $estudiante['apellidos'] : ''; ?>"
-                        class="<?php echo empty($_POST['apellidos']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-
+                    <p  id="apellidos" name="apellidos">
+                        <?php echo isset($estudiante['apellidos']) ? $estudiante['apellidos'] : ''; ?>
+                    </p>
                     <label for="sexo">Sexo:</label>
                     <select id="sexo" name="sexo"
                         class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
@@ -243,15 +300,15 @@ $conn->close();
                         class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
 
                     <label for="correo">Correo:</label>
-                    <input type="email" id="correo" name="correo"
-                        value="<?php echo isset($estudiante['correo']) ? $estudiante['correo'] : ''; ?>"
-                        class="<?php echo empty($_POST['correo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <p  id="correo" name="correo">
+                        <?php echo isset($estudiante['correo']) ? $estudiante['correo'] : ''; ?>
+                    </p>
 
                     <label for="direccion">Dirección:</label>
                     <input type="text" id="direccion" name="direccion"
                         value="<?php echo isset($estudiante['direccion']) ? $estudiante['direccion'] : ''; ?>"
                         class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-
+                    <a href="forgotPassword.php">Cambiar contraseña</a>
                     <input type="submit" class="button" value="Guardar cambios">
                 </div>
             </form>
@@ -262,7 +319,26 @@ $conn->close();
         function goBack() {
             window.history.back();
         }
+         // Solo JS exclusivo para la funcionalidad de la foto de perfil
+         document.getElementById('editarPerfilBoton').addEventListener('click', function () {
+            alert('La foto debe ser cuadrada (igual de altura y anchura).');
+            document.getElementById('fotoInput').click();
+        });
 
+        document.getElementById('fotoInput').addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function () {
+                    if (img.width !== img.height) {
+                        alert('La foto debe ser cuadrada (igual de altura y anchura).');
+                    } else {
+                        document.getElementById('uploadForm').submit();
+                    }
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
 
     </script>
 

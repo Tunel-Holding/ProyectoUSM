@@ -30,6 +30,9 @@ $stmt->close();
 // 📨 Enviar mensaje de texto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     
+    // Actualizar actividad del usuario
+    actualizar_actividad();
+    
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
     $reply_to = isset($_POST['reply_to']) ? (int)$_POST['reply_to'] : 0;
@@ -60,6 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
 
 // 🖼️ Enviar imagen
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
+    // Actualizar actividad del usuario
+    actualizar_actividad();
+    
     $image = $_FILES['image'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
@@ -107,6 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
 
 // 📁 Enviar archivo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+    // Actualizar actividad del usuario
+    actualizar_actividad();
+    
     $file = $_FILES['file'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
