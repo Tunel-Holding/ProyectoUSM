@@ -41,7 +41,8 @@
                     <i class='bx bx-show'></i>
                 </div>
                 <span class="errorcontraseña"></span>
-                <a href="olvidarcontraseña.php">¿Olvidaste tu contraseña?</a>
+                <a href="forgotPassword.php">¿Olvidaste tu contraseña?</a>
+                    
                 <button type="submit" class="button">Iniciar Sesión</button>
 
             </form>

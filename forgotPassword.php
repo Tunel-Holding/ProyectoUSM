@@ -497,10 +497,30 @@ if(!empty($_POST['email'])) {
                 font-size: 24px;
             }
         }
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #ffd700;
+            color: #004c97;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 1px 2px 6px rgba(0,0,0,0.08);
+            transition: background 0.2s, color 0.2s;
+            z-index: 1000;
+        }
+        .back-link:hover {
+            background: #ffcc00;
+            color: #222;
+        }
     </style>
 </head>
 <body>
+    
     <div class="forgot-password-container">
+    <a href="inicio.php" class="back-link">Volver al Inicio de Sesión</a>
         <div class="forgot-card">
             <div class="logo-section">
                 <div class="logo-circle">UH</div>
@@ -513,10 +533,7 @@ if(!empty($_POST['email'])) {
                     <?php echo $mensaje; ?>
                 </div>
             <?php endif; ?>
-            
-            
-            
-            <?php if(!$usuario_autenticado): ?>
+           
             <form method="POST" action="">
                 <div class="form-group">
                     <label for="email">📧 Correo Electrónico</label>
@@ -533,19 +550,8 @@ if(!empty($_POST['email'])) {
             <p class="info-text">
                 Te enviaremos un enlace seguro a tu correo electrónico para que puedas restablecer tu contraseña.
             </p>
-            <?php endif; ?>
             
-            <?php if (isset($_SESSION['idusuario'])){ 
-                if ($_SESSION['nivelusu']==1){ ?>
-                    <a href="datos.php" class="back-link">Volver a página anterior</a>
-                <?php }else if ($_SESSION['nivelusu']==2){ ?>
-                    <a href="datos_profesor.php" class="back-link">Volver a página anterior</a>
-                <?php }else if ($_SESSION['nivelusu']==3){ ?>
-                    <a href="datos_admin.php" class="back-link">Volver a página anterior</a>
-                <?php } ?>
-            <?php }else{ ?>
-                <a href="Ingreso.php" class="back-link">Volver al Inicio de Sesión</a>
-            <?php } ?>
+        
         </div>
     </div>
 </body>
