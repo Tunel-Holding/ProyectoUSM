@@ -6,6 +6,9 @@ header('Content-Type: application/json');
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo_tarea'])) {
+    // Actualizar actividad del usuario
+    actualizar_actividad();
+    
     $id_tarea = $_POST['id_tarea'];
     $id_alumno = $_SESSION['idusuario'];
 

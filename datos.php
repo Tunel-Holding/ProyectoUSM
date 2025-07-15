@@ -29,9 +29,28 @@ $stmt->bind_param("i", $id_usuario); // Enlazar el ID del usuario
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Obtener la foto del usuario usando prepared statement
+$sql_foto = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
+$stmt_foto = $conn->prepare($sql_foto);
+$foto = "css/perfil.png"; // Foto por defecto
+
+if ($stmt_foto) {
+    $stmt_foto->bind_param("i", $id_usuario);
+    $stmt_foto->execute();
+    $result_foto = $stmt_foto->get_result();
+    
+    if ($result_foto->num_rows > 0) {
+        $row_foto = $result_foto->fetch_assoc();
+        $foto = $row_foto['foto'];
+    }
+    $stmt_foto->close();
+}
+
+// Verificar si se encontraron datos del usuario
 if ($result->num_rows > 0) {
     $estudiante = $result->fetch_assoc();
-} else { // Redirigir a la página de llenado de datos si no hay datos del usuario 
+} else { 
+    // Redirigir a la página de llenado de datos si no hay datos del usuario 
     header("Location: llenar_datos.php");
     exit();
 }
@@ -58,6 +77,37 @@ $conn->close(); // Cerrar la conexión
         rel="stylesheet">
     <title>Datos - USM</title>
     <style>
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 80vh;
+        }
+
+        .perfil-foto {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            margin-right: 100px;
+        }
+
+        .perfil-boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 400px;
+            height: 150px;
+            transition: all 0.3s ease-in-out;
+            font-size: 40px;
+        }
+
+        .perfil-boton:hover {
+            background-color: #0056b3;
+        }
         .contenedor-principal {
             margin: 0;
             display: flex;
@@ -173,6 +223,10 @@ $conn->close(); // Cerrar la conexión
     <div class="contenedor-principal">
         <div class="wecontainer">
             <h1>Datos del Estudiante</h1>
+            <div class="perfil-container">
+        <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+       
+    </div>
             <ul>
                 <li><strong>Número de Cédula:</strong> <span><?php echo $estudiante['cedula']; ?></span></li>
                 <li><strong>Nombres:</strong> <span><?php echo $estudiante['nombres']; ?></span></li>
@@ -187,7 +241,25 @@ $conn->close(); // Cerrar la conexión
     </div>
 
     <script>
-        // Aquí solo debe ir JS exclusivo de la página, si lo hubiera. Se eliminó la lógica de menú y tema.
+         document.getElementById('editarPerfilBoton').addEventListener('click', function () {
+            alert('La foto debe ser cuadrada (igual de altura y anchura).');
+            document.getElementById('fotoInput').click();
+        });
+
+        document.getElementById('fotoInput').addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function () {
+                    if (img.width !== img.height) {
+                        alert('La foto debe ser cuadrada (igual de altura y anchura).');
+                    } else {
+                        document.getElementById('uploadForm').submit();
+                    }
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
     </script>
 </body>
 

@@ -42,12 +42,6 @@
                     <p>Datos</p>
                 </div>
             </div>
-            <div class="opción">
-                <div class="intopcion" id="foto">
-                    <img src="css\camera.png">
-                    <p>Foto</p>
-                </div>
-            </div>
             <div class="opción" id="inscripcion">
                 <div class="intopcion">
                     <img src="css/inscripción.png">
@@ -215,9 +209,6 @@
         });
         document.getElementById('desempeño').addEventListener('click', function () {
             redirigir('Seleccion_de_materias_tareas.php');
-        });
-        document.getElementById('foto').addEventListener('click', function () {
-            redirigir('foto.php');
         });
     }
 </script>

@@ -38,12 +38,6 @@
                     <p>Datos</p>
                 </div>
             </div>
-            <div class="opción" id="foto">
-                <div class="intopcion">
-                    <img src="css\camera.png">
-                    <p>Foto</p>
-                </div>
-            </div>
             <div class="opción">
                 <div class="intopcion" id="cursos">
                     <img src="css/cursos.png">
@@ -189,9 +183,6 @@
         });
         document.getElementById('cursos').addEventListener('click', function () {
             redirigir('cursos.php');
-        });
-        document.getElementById('foto').addEventListener('click', function () {
-            redirigir('foto_profesor.php');
         });
         document.getElementById('tareas').addEventListener('click', function () {
             redirigir('Seleccion_de_materias_tareas_profesor.php');

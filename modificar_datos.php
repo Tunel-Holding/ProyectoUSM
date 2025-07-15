@@ -1,55 +1,97 @@
 <?php
 include 'comprobar_sesion.php';
 include 'conexion.php';
+
 // Verificar la conexión
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Obtener los datos del estudiante más reciente
-$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion FROM datos_usuario WHERE usuario_id = '" . $_SESSION['idusuario'] . "'";
-$result = $conn->query($sql);
+// Obtener el ID del usuario de la sesión
+$id_usuario = $_SESSION['idusuario'];
 
-// Verificar si la consulta fue exitosa
-if (!$result) {
+// Obtener los datos del estudiante usando prepared statement
+$sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion 
+        FROM datos_usuario 
+        WHERE usuario_id = ?";
+
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
     die("Error en la consulta: " . $conn->error);
 }
 
-$estudiante = $result->fetch_assoc();
+$stmt->bind_param("i", $id_usuario);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $estudiante = $result->fetch_assoc();
+} else {
+    die("No se encontraron datos del usuario");
+}
+
+// Obtener la foto del usuario usando prepared statement
+$sql_foto = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
+$stmt_foto = $conn->prepare($sql_foto);
+$foto = "css/perfil.png"; // Foto por defecto
+
+if ($stmt_foto) {
+    $stmt_foto->bind_param("i", $id_usuario);
+    $stmt_foto->execute();
+    $result_foto = $stmt_foto->get_result();
+    
+    if ($result_foto->num_rows > 0) {
+        $row_foto = $result_foto->fetch_assoc();
+        $foto = $row_foto['foto'];
+    }
+    $stmt_foto->close();
+}
 
 $error_message = "";
+$success_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
-    $cedula_nueva = $_POST['cedula'];
-    $nombres = $_POST['nombres'];
-    $apellidos = $_POST['apellidos'];
-    $sexo = $_POST['sexo'];
-    $telefono = $_POST['telefono'];
-    $correo = $_POST['correo'];
-    $direccion = $_POST['direccion'];
-    $idusuario = $_SESSION['idusuario'];
+    // Obtener y sanitizar solo los campos editables
+    $sexo = trim($_POST['sexo'] ?? '');
+    $telefono = trim($_POST['telefono'] ?? '');
+    $direccion = trim($_POST['direccion'] ?? '');
 
-    // Verificar que todos los datos estén presentes
-    if (empty($cedula_nueva) || empty($nombres) || empty($apellidos) || empty($sexo) || empty($telefono) || empty($correo) || empty($direccion)) {
+    // Verificar que todos los campos editables estén presentes
+    if (empty($sexo) || empty($telefono) || empty($direccion)) {
         $error_message = "Todos los campos son obligatorios.";
     } else {
-        // Actualizar los datos en la base de datos
-        $sql = "UPDATE datos_usuario SET 
-                cedula='$cedula_nueva', 
-                nombres='$nombres', 
-                apellidos='$apellidos', 
-                sexo='$sexo', 
-                telefono='$telefono', 
-                correo='$correo', 
-                direccion='$direccion' 
-                WHERE usuario_id='$idusuario'";
-
-        $conn->query($sql);
-        header('Location: datos.php');
+        // Validar formato del teléfono (solo números y algunos caracteres especiales)
+        if (!preg_match('/^[\d\s\-\+\(\)]+$/', $telefono)) {
+            $error_message = "El formato del teléfono no es válido.";
+        } else {
+            // Actualizar solo los campos editables en la base de datos usando prepared statement
+            $sql_update = "UPDATE datos_usuario SET 
+                          sexo = ?, 
+                          telefono = ?, 
+                          direccion = ? 
+                          WHERE usuario_id = ?";
+            
+            $stmt_update = $conn->prepare($sql_update);
+            if ($stmt_update) {
+                $stmt_update->bind_param("sssi", $sexo, $telefono, $direccion, $id_usuario);
+                
+                if ($stmt_update->execute()) {
+                    $success_message = "Datos actualizados correctamente.";
+                    // Actualizar los datos en la variable para mostrar en el formulario
+                    header("Location: datos.php");
+                    exit();
+                } else {
+                    $error_message = "Error al actualizar los datos: " . $stmt_update->error;
+                }
+                $stmt_update->close();
+            } else {
+                $error_message = "Error en la preparación de la consulta.";
+            }
+        }
     }
 }
 
+$stmt->close();
 $conn->close();
 ?>
 
@@ -67,7 +109,7 @@ $conn->close();
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <title>Datos - USM</title>
+    <title>Modificar Datos - USM</title>
     <style>
         body.dark-mode {
             --background-color: rgb(50, 50, 50);
@@ -83,27 +125,20 @@ $conn->close();
             align-items: center;
             min-height: 100vh;
             color: #fff;
-            /* Blanco */
             background-color: var(--background-color);
         }
 
         .wecontainer {
             font-family: "Poppins", sans-serif;
             max-width: 1200px;
-            /* Ajustamos el ancho máximo del contenedor */
             width: 90%;
-            /* Abarcamos un 90% del ancho de la página */
             background: var(--background-form);
             color: #004c97;
-            /* Azul oscuro */
             padding: 40px;
-            /* Aumentamos el padding */
             box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
             border-radius: 8px;
             border-top: 10px solid #ffd700;
-            /* Amarillo */
             border-bottom: 10px solid #ffd700;
-            /* Amarillo */
             border-left: 1px solid #ffd700 !important;
             border-right: 1px solid #ffd700 !important;
             text-align: center;
@@ -115,60 +150,84 @@ $conn->close();
         .wecontainer h1 {
             margin-bottom: 20px;
             color: #004c97;
-            /* Azul oscuro */
             font-size: 2em;
-            /* Aumentamos el tamaño de la fuente */
+        }
+
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .perfil-foto {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .perfil-boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            font-size: 16px;
+        }
+
+        .perfil-boton:hover {
+            background-color: #0056b3;
         }
 
         .wecontainer .form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            /* Dividimos en dos columnas */
-            gap: 10px;
+            gap: 20px;
             align-items: center;
         }
 
         .wecontainer label {
             color: #004c97;
-            /* Azul oscuro */
             font-size: 1.2em;
-            /* Aumentamos el tamaño de la fuente */
             font-weight: 500;
         }
 
         .wecontainer input,
-        select {
-            left: 40%;
+        .wecontainer select {
             padding: 10px;
-            /* Aumentamos el padding */
             width: 100%;
             background: transparent;
             border: 1px solid #004c97;
-            /* Azul oscuro */
             border-radius: 4px;
             font-size: 1em;
-            /* Aumentamos el tamaño de la fuente */
+        }
+
+        .wecontainer .readonly-field {
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            color: #6c757d;
+            font-size: 1em;
         }
 
         .wecontainer .button {
             grid-column: span 2;
-            /* El botón ocupa ambas columnas */
             margin-top: 20px;
             padding: 10px 20px;
             background: #ffd700 !important;
-            /* Amarillo */
             color: #004c97 !important;
-            /* Azul oscuro */
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1.2em;
-            /* Aumentamos el tamaño de la fuente */
         }
 
         .wecontainer .button:hover {
             background-color: #ffcc00;
-            /* Amarillo oscuro */
         }
 
         .error {
@@ -179,9 +238,17 @@ $conn->close();
             color: red;
             font-weight: bold;
         }
+
+        .success-message {
+            color: green;
+            font-weight: bold;
+            background-color: rgba(40, 167, 69, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #28a745;
+            margin-bottom: 15px;
+        }
     </style>
-
-
 </head>
 
 <body>
@@ -200,71 +267,73 @@ $conn->close();
 
     <?php include 'menu_alumno.php'; ?>
 
-    <!-- Aquí va el contenido y el JS exclusivo de la página, si lo hubiera -->
-
     <div class="pagina">
         <div class="wecontainer">
             <h1>Modificar Datos</h1>
+            
+            <div class="perfil-container">
+                <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+            </div>
+
             <form method="POST" action="">
                 <?php if ($error_message): ?>
-                    <p class="error-message"><?php echo $error_message; ?></p>
+                    <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
+                <?php endif; ?>
+                
+                <?php if ($success_message): ?>
+                    <p class="success-message"><?php echo htmlspecialchars($success_message); ?></p>
                 <?php endif; ?>
 
                 <div class="form">
+                    <!-- Campos de solo lectura -->
                     <label for="cedula">Número de Cédula:</label>
-                    <input type="text" id="cedula" name="cedula"
-                        value="<?php echo isset($estudiante['cedula']) ? $estudiante['cedula'] : ''; ?>"
-                        class="<?php echo empty($_POST['cedula']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <div class="readonly-field">
+                        <?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?>
+                    </div>
 
                     <label for="nombres">Nombres:</label>
-                    <input type="text" id="nombres" name="nombres"
-                        value="<?php echo isset($estudiante['nombres']) ? $estudiante['nombres'] : ''; ?>"
-                        class="<?php echo empty($_POST['nombres']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <div class="readonly-field">
+                        <?php echo htmlspecialchars($estudiante['nombres'] ?? ''); ?>
+                    </div>
 
                     <label for="apellidos">Apellidos:</label>
-                    <input type="text" id="apellidos" name="apellidos"
-                        value="<?php echo isset($estudiante['apellidos']) ? $estudiante['apellidos'] : ''; ?>"
-                        class="<?php echo empty($_POST['apellidos']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <div class="readonly-field">
+                        <?php echo htmlspecialchars($estudiante['apellidos'] ?? ''); ?>
+                    </div>
 
+                    <label for="correo">Correo:</label>
+                    <div class="readonly-field">
+                        <?php echo htmlspecialchars($estudiante['correo'] ?? ''); ?>
+                    </div>
+
+                    <!-- Campos editables -->
                     <label for="sexo">Sexo:</label>
                     <select id="sexo" name="sexo"
                         class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-                        <option value="" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == '')
-                            echo 'selected'; ?>>Seleccione</option>
-                        <option value="Masculino" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == 'Masculino')
-                            echo 'selected'; ?>>Masculino</option>
-                        <option value="Femenino" <?php if (isset($estudiante['sexo']) && $estudiante['sexo'] == 'Femenino')
-                            echo 'selected'; ?>>Femenino</option>
+                        <option value="" <?php if (($estudiante['sexo'] ?? '') == '') echo 'selected'; ?>>Seleccione</option>
+                        <option value="Masculino" <?php if (($estudiante['sexo'] ?? '') == 'Masculino') echo 'selected'; ?>>Masculino</option>
+                        <option value="Femenino" <?php if (($estudiante['sexo'] ?? '') == 'Femenino') echo 'selected'; ?>>Femenino</option>
                     </select>
 
                     <label for="telefono">Teléfono:</label>
                     <input type="text" id="telefono" name="telefono"
-                        value="<?php echo isset($estudiante['telefono']) ? $estudiante['telefono'] : ''; ?>"
+                        value="<?php echo htmlspecialchars($estudiante['telefono'] ?? ''); ?>"
                         class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-
-                    <label for="correo">Correo:</label>
-                    <input type="email" id="correo" name="correo"
-                        value="<?php echo isset($estudiante['correo']) ? $estudiante['correo'] : ''; ?>"
-                        class="<?php echo empty($_POST['correo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
 
                     <label for="direccion">Dirección:</label>
                     <input type="text" id="direccion" name="direccion"
-                        value="<?php echo isset($estudiante['direccion']) ? $estudiante['direccion'] : ''; ?>"
+                        value="<?php echo htmlspecialchars($estudiante['direccion'] ?? ''); ?>"
                         class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-
+                    <a href="forgotPassword.php">Cambiar contraseña</a>
                     <input type="submit" class="button" value="Guardar cambios">
                 </div>
             </form>
-
         </div>
     </div>
 
     <script>
-        function goBack() {
-            window.history.back();
-        }
+        // Script vacío - funcionalidad de foto removida
     </script>
-
 </body>
-
+</html>
 </html>

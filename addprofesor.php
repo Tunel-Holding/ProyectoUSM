@@ -122,8 +122,7 @@ class AddProfesorManager {
     public function enviarEmailBienvenida($nombre_usuario, $email) {
         try {
             $mail = new PHPMailer(true);
-            
-            // Configuración del servidor
+            $mail->CharSet = 'UTF-8'; 
             $mail->isSMTP();
             $mail->isHTML(true);
             $mail->Host = 'smtp.gmail.com';

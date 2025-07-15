@@ -23,18 +23,23 @@ if (!isset($_SESSION['nivelusu'])) {
     exit();
 }
 
-// Verificar si la sesión no ha expirado (opcional: 30 minutos)
-$tiempo_maximo = 30 * 60; // 30 minutos en segundos
-if (isset($_SESSION['ultimo_acceso']) && (time() - $_SESSION['ultimo_acceso']) > $tiempo_maximo) {
-    // Sesión expirada
-    session_destroy();
-    $_SESSION['mensaje'] = "Su sesión ha expirado. Por favor, inicie sesión nuevamente.";
-    header("Location: inicio.php");
-    exit();
+// Verificar si la sesión no ha expirado por inactividad (10 minutos)
+$tiempo_maximo = 10 * 60; // 10 minutos de inactividad en segundos
+
+// Solo verificar expiración si ya existe un tiempo de último acceso
+if (isset($_SESSION['ultimo_acceso'])) {
+    if ((time() - $_SESSION['ultimo_acceso']) > $tiempo_maximo) {
+        // Sesión expirada por inactividad
+        session_destroy();
+        $_SESSION['mensaje'] = "Su sesión ha expirado por inactividad. Por favor, inicie sesión nuevamente.";
+        header("Location: inicio.php");
+        exit();
+    }
 }
 
-// Actualizar tiempo de último acceso
 $_SESSION['ultimo_acceso'] = time();
+// NO actualizar automáticamente el tiempo de último acceso
+// Solo se actualizará cuando se llame a la función actualizar_actividad()
 
 // Función para verificar permisos específicos
 function verificar_permiso($nivel_requerido) {
@@ -73,6 +78,11 @@ function obtener_usuario_actual() {
         'nombre_usuario' => $_SESSION['nombre_usuario'] ?? null,
         'semestre' => $_SESSION['semestre_usu'] ?? null
     ];
+}
+
+// Función para actualizar la actividad del usuario
+function actualizar_actividad() {
+    $_SESSION['ultimo_acceso'] = time();
 }
 
 // Función para cerrar sesión de forma segura
