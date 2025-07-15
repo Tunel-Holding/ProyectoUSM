@@ -1,6 +1,6 @@
 /* ===== FOOTER ===== */
 .footer {
-    background: linear-gradient(90deg, #0d0628 60%, #0056b3 100%);
+    background: linear-gradient(90deg, hsl(0, 0%, 15%) 60%, #0056b3 100%);
     color: #fff;
     padding: 40px 0 10px 0;
     text-align: center;
@@ -137,6 +137,13 @@ body {
     top: 5%;
     right: 5%;
     z-index: 2;
+}
+
+.agr-link a:hover{
+
+    color: #0056b3;
+    background: white;
+    text-decoration: none;
 }
 
 .boton-inicio .Logo{
