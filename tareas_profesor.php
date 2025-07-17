@@ -269,7 +269,10 @@ if (isset($_POST['update_task_id'])) {
 
         <section class="created-tasks-section">
             <div class="card">
-                <h3>Tareas Creadas</h3>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <h3 style="margin:0;">Tareas Creadas</h3>
+                    <button id="print-all-grades-btn" class="btn btn-secondary" style="margin-left:10px;">Imprimir todas las notas</button>
+                </div>
                 <?php if (empty($tareas)): ?>
                     <div class="no-tasks-message" id="no-tasks-message">
                         <p>No hay tareas creadas aún. Crea tu primera tarea usando el formulario de arriba.</p>
@@ -396,6 +399,13 @@ if (isset($_POST['update_task_id'])) {
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- MANEJO DEL BOTÓN IMPRIMIR TODAS LAS NOTAS ---
+            const printAllGradesBtn = document.getElementById('print-all-grades-btn');
+            if (printAllGradesBtn) {
+                printAllGradesBtn.addEventListener('click', function() {
+                    window.open('generar_pdf_notas_todas.php', '_blank');
+                });
+            }
             // --- MANEJO DEL MODAL DE EDICIÓN ---
             const editTaskModal = document.getElementById('edit-task-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
