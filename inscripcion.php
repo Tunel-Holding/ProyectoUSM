@@ -26,6 +26,7 @@ include 'comprobar_sesion.php';
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
+             <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
             <p>UniHub</p>
         </div>
 
