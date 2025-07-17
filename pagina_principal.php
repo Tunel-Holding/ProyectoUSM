@@ -188,7 +188,7 @@ $resultado = $stmt->get_result();
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
             <a href="contacto.php" class="soporte-link">
-            <img src="css/3566427.png" alt="Logo" class="soporte">
+            <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
             </a>
 
             <p>UniHub</p>
