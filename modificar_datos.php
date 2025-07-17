@@ -34,12 +34,10 @@ if ($result->num_rows > 0) {
 $sql_foto = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
 $stmt_foto = $conn->prepare($sql_foto);
 $foto = "css/perfil.png"; // Foto por defecto
-
 if ($stmt_foto) {
     $stmt_foto->bind_param("i", $id_usuario);
     $stmt_foto->execute();
     $result_foto = $stmt_foto->get_result();
-    
     if ($result_foto->num_rows > 0) {
         $row_foto = $result_foto->fetch_assoc();
         $foto = $row_foto['foto'];
@@ -52,33 +50,77 @@ $success_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener y sanitizar solo los campos editables
-    $sexo = trim($_POST['sexo'] ?? '');
-    $telefono = trim($_POST['telefono'] ?? '');
-    $direccion = trim($_POST['direccion'] ?? '');
+    $sexo = trim($_POST['sexo'] ?? $estudiante['sexo']);
+    $telefono = trim($_POST['telefono'] ?? $estudiante['telefono']);
+    $direccion = trim($_POST['direccion'] ?? $estudiante['direccion']);
+
+    // Procesar la foto si se subió una nueva
+    $foto_subida = false;
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
+        $target_dir = "fotoperfil/";
+        $nombre_archivo = time() . '_' . basename($_FILES["foto"]["name"]);
+        $target_file = $target_dir . $nombre_archivo;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $check = getimagesize($_FILES["foto"]["tmp_name"]);
+        if ($check !== false) {
+            if ($check[0] !== $check[1]) {
+                $error_message = "La foto debe ser cuadrada (igual de altura y anchura).";
+            } elseif ($_FILES["foto"]["size"] > 500000) {
+                $error_message = "La foto es demasiado grande.";
+            } elseif (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
+                $error_message = "Solo se permiten archivos JPG, JPEG, PNG y GIF.";
+            } elseif (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
+                // Borrar la foto anterior si existe y no es la de por defecto
+                if ($foto != "css/perfil.png" && file_exists($foto)) {
+                    unlink($foto);
+                }
+                // Actualizar o insertar la foto en la base de datos
+                $sql_foto_check = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
+                $stmt_foto_check = $conn->prepare($sql_foto_check);
+                $stmt_foto_check->bind_param("i", $id_usuario);
+                $stmt_foto_check->execute();
+                $result_foto_check = $stmt_foto_check->get_result();
+                if ($result_foto_check->num_rows > 0) {
+                    $sql_update_foto = "UPDATE fotousuario SET foto = ? WHERE id_usuario = ?";
+                    $stmt_update_foto = $conn->prepare($sql_update_foto);
+                    $stmt_update_foto->bind_param("si", $target_file, $id_usuario);
+                    $stmt_update_foto->execute();
+                    $stmt_update_foto->close();
+                } else {
+                    $sql_insert_foto = "INSERT INTO fotousuario (id_usuario, foto) VALUES (?, ?)";
+                    $stmt_insert_foto = $conn->prepare($sql_insert_foto);
+                    $stmt_insert_foto->bind_param("is", $id_usuario, $target_file);
+                    $stmt_insert_foto->execute();
+                    $stmt_insert_foto->close();
+                }
+                $foto = $target_file;
+                $foto_subida = true;
+                $stmt_foto_check->close();
+            } else {
+                $error_message = "Error al subir la foto.";
+            }
+        } else {
+            $error_message = "El archivo no es una imagen válida.";
+        }
+    }
 
     // Verificar que todos los campos editables estén presentes
     if (empty($sexo) || empty($telefono) || empty($direccion)) {
         $error_message = "Todos los campos son obligatorios.";
-    } else {
+    } elseif (!$error_message) {
         // Validar formato del teléfono (solo números y algunos caracteres especiales)
-        if (!preg_match('/^[\d\s\-\+\(\)]+$/', $telefono)) {
+        if (!preg_match('/^[\\d\\s\\-\\+\\(\\)]+$/', $telefono)) {
             $error_message = "El formato del teléfono no es válido.";
         } else {
             // Actualizar solo los campos editables en la base de datos usando prepared statement
-            $sql_update = "UPDATE datos_usuario SET 
-                          sexo = ?, 
-                          telefono = ?, 
-                          direccion = ? 
-                          WHERE usuario_id = ?";
-            
+            $sql_update = "UPDATE datos_usuario SET sexo = ?, telefono = ?, direccion = ? WHERE usuario_id = ?";
             $stmt_update = $conn->prepare($sql_update);
             if ($stmt_update) {
                 $stmt_update->bind_param("sssi", $sexo, $telefono, $direccion, $id_usuario);
-                
                 if ($stmt_update->execute()) {
                     $success_message = "Datos actualizados correctamente.";
-                    // Actualizar los datos en la variable para mostrar en el formulario
-                    header("Location: datos.php");
+                    // Refrescar los datos para mostrar los nuevos valores
+                    header("Location: datos.php?success=1");
                     exit();
                 } else {
                     $error_message = "Error al actualizar los datos: " . $stmt_update->error;
@@ -270,42 +312,37 @@ $conn->close();
     <div class="pagina">
         <div class="wecontainer">
             <h1>Modificar Datos</h1>
-            
-            <div class="perfil-container">
-                <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+            <div class="perfil-container" style="text-align:center; margin-bottom: 20px;">
+                    <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto" style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:2px solid #ccc;">
             </div>
-
-            <form method="POST" action="">
+            <form method="POST" action="" enctype="multipart/form-data">
                 <?php if ($error_message): ?>
                     <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
                 <?php endif; ?>
-                
-                <?php if ($success_message): ?>
-                    <p class="success-message"><?php echo htmlspecialchars($success_message); ?></p>
+                <?php if (isset($_GET['success'])): ?>
+                    <p class="success-message">Datos actualizados correctamente.</p>
                 <?php endif; ?>
-
                 <div class="form">
+                    <!-- Foto de perfil -->
+                    <label for="foto" style="font-weight:bold;">Cambiar foto de perfil:</label>
+                    <input type="file" name="foto" id="foto" accept="image/*" style="margin-bottom:10px;">
                     <!-- Campos de solo lectura -->
                     <label for="cedula">Número de Cédula:</label>
                     <div class="readonly-field">
                         <?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?>
                     </div>
-
                     <label for="nombres">Nombres:</label>
                     <div class="readonly-field">
                         <?php echo htmlspecialchars($estudiante['nombres'] ?? ''); ?>
                     </div>
-
                     <label for="apellidos">Apellidos:</label>
                     <div class="readonly-field">
                         <?php echo htmlspecialchars($estudiante['apellidos'] ?? ''); ?>
                     </div>
-
                     <label for="correo">Correo:</label>
                     <div class="readonly-field">
                         <?php echo htmlspecialchars($estudiante['correo'] ?? ''); ?>
                     </div>
-
                     <!-- Campos editables -->
                     <label for="sexo">Sexo:</label>
                     <select id="sexo" name="sexo"
@@ -314,12 +351,10 @@ $conn->close();
                         <option value="Masculino" <?php if (($estudiante['sexo'] ?? '') == 'Masculino') echo 'selected'; ?>>Masculino</option>
                         <option value="Femenino" <?php if (($estudiante['sexo'] ?? '') == 'Femenino') echo 'selected'; ?>>Femenino</option>
                     </select>
-
                     <label for="telefono">Teléfono:</label>
                     <input type="text" id="telefono" name="telefono"
                         value="<?php echo htmlspecialchars($estudiante['telefono'] ?? ''); ?>"
                         class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-
                     <label for="direccion">Dirección:</label>
                     <input type="text" id="direccion" name="direccion"
                         value="<?php echo htmlspecialchars($estudiante['direccion'] ?? ''); ?>"
@@ -335,5 +370,4 @@ $conn->close();
         // Script vacío - funcionalidad de foto removida
     </script>
 </body>
-</html>
 </html>

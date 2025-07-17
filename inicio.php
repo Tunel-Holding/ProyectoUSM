@@ -41,7 +41,7 @@
                     <i class='bx bx-show'></i>
                 </div>
                 <span class="errorcontraseña"></span>
-                <a href="olvidarcontraseña.php">¿Olvidaste tu contraseña?</a>
+                <a href="olvidarcontraseña.php" class="olvido">¿Olvidaste tu contraseña?</a>
                 <button type="submit" class="button">Iniciar Sesión</button>
 
             </form>
@@ -78,12 +78,12 @@
             <div class="welcome-sign-up welcome">
                 <h3>¡Bienvenido!</h3>
                 <p>Ingrese los datos para continuar</p>
-                <button class="button" id="btn-sign-up">Registrarse</button>
+                <button class="button2" id="btn-sign-up">Registrarse</button>
             </div>
             <div class="welcome-sign-in welcome">
                 <h3>¡Hola!</h3>
                 <p>Registrese con sus datos para continuar</p>
-                <button class="button" id="btn-sign-in">Iniciar Sesión</button>
+                <button class="button2" id="btn-sign-in">Iniciar Sesión</button>
             </div>
         </div>
     </div>

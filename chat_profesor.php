@@ -1,6 +1,5 @@
 <?php
 include 'comprobar_sesion.php';
-
 require 'conexion.php';
 
 // Obtener el nombre y sección de la materia

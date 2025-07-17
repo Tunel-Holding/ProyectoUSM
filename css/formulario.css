@@ -1,0 +1,290 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Fondo y tipografía */
+body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: "Montserrat";
+    background: linear-gradient(to bottom , #1756bc, #270bc3);
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+}
+
+/* Formulario principal */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 0 10px #8ecae6;
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+/* Título */
+h1 {
+    margin: 10px 0 20px;
+    text-align: center;
+    font-size: 30px;
+    color: #023047;
+}
+
+/* Etiquetas */
+.formulario label,
+.contenedor label {
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Inputs y textarea */
+.formulario input,
+.formulario textarea {
+    width: 300px;
+    border: none;
+    box-shadow: 0 0 5px #8ecae6;
+    margin-bottom: 15px;
+    font-family: "Montserrat";
+    font-size: 14px;
+    border-radius: 6px;
+    padding: 6px;
+    background-color: #f0f4ff;
+    color: #333;
+}
+
+.formulario input:focus,
+.formulario textarea:focus {
+    outline: none;
+    background-color: #e3eeff;
+}
+
+/* Textarea específico */
+.formulario textarea {
+    height: 100px;
+    resize: none;
+    text-overflow: inherit;
+}
+
+/* Botón */
+.formulario button,
+.formulario a,
+.contenedor a,
+.ventana-mensaje a {
+    width: 170px;
+    height: 45px;
+    background-color: #3a86ff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.formulario button:hover,
+.formulario a:hover,
+.contenedor a:hover,
+.ventana-mensaje a:hover {
+    background-color: #264de4;
+}
+
+/* Mensajes */
+.formulario p,
+.contenedor p {
+    font-size: 17px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
+}
+
+/* Ventana de mensaje flotante */
+.ventana-mensaje {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px;
+  background-color: #ffffffde;
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  box-shadow: 0 0 10px #023047;
+  padding: 20px;
+  font-family: "Montserrat";
+  text-align: center;
+  z-index: 1000;
+  animation: aparecer 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* ✅ asegura centrado horizontal */
+  justify-content: center; /* ✅ centra verticalmente los hijos */
+}
+
+.ventana-mensaje p {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #023047;
+
+}
+.ventana-mensaje a {
+  display: flex;                  /* 🔄 activa flexbox */
+  align-items: center;            /* 🧍 centra verticalmente */
+  justify-content: center;        /* ↔️ centra horizontalmente */
+  height: 40px;                   /* ajusta la altura si es necesario */
+  padding: 0 20px;                /* solo padding horizontal */
+  background-color: #3a86ff;
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 0 5px #8ecae6;
+  transition: background-color 0.3s;
+}
+
+
+/* Imagen vista previa */
+.imagen-previsualizada {
+    width: 300px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #8ecae6;
+    margin-bottom: 15px;
+    transition: opacity 0.4s ease;
+}
+
+/* Transición suave */
+@keyframes aparecer {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* Centrado inferior */
+.centrar-abajo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contenedor modular adicional */
+.contenedor {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 0 10px #8ecae6;
+    padding: 15px;
+    text-align: center;
+}
+input[readonly] {
+  width: 300px;
+  height: 35px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  padding: 8px;
+  background-color: #f0f4ff;        /* Azul pastel */
+  color: #023047;                   /* Texto oscuro */
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 0 5px #8ecae6;      /* Sombras suaves azules */
+  text-align: center;
+}
+.imagen-central {
+  display: block;
+  margin: 20px auto 0;       /* margen superior para espacio desde "Soporte" */
+  width: 100px;              /* tamaño pequeño */
+  height: auto;
+  border-radius: 12px;       /* bordes redondeados pastel aesthetic */
+}
+
+.bloque-volver {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.bloque-volver label {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.bloque-volver button {
+  padding: 8px 20px;
+  background: linear-gradient(to right, #5083e1, #234da8);
+  border: none;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+  box-shadow: 0 0 4px #bde0fe;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bloque-volver button:hover {
+  transform: scale(1.03);
+  background: linear-gradient(to right, #094fe8, #0c2f71);
+}
+/* Ocultar input nativo */
+input[type="file"] {
+  display: none;
+}
+
+/* Estilo del botón tipo cuadro suave */
+.label-imagen {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #f0f4ff;
+  color: #004c97;
+  border: 1px solid #8ecae6;
+  border-radius: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 2px #bde0fe;
+  max-width: fit-content;
+  white-space: nowrap;
+  margin-bottom: 12px;
+}
+
+.label-imagen:hover {
+  background-color: #e3eeff;
+  box-shadow: 0 0 4px #a0c4ff;
+  transform: scale(1.02);
+}
+
+
+/* Vista previa de imagen */
+.imagen-previsualizada {
+  width: 240px;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 0 6px #8ecae6;
+  margin-top: 15px;
+  transition: opacity 0.3s ease;
+}
+
+
