@@ -529,7 +529,6 @@ class ProfesoresStyles {
             .profesores-table {
                 background: var(--white);
                 border-radius: var(--border-radius);
-                overflow: hidden;
                 box-shadow: var(--shadow-md);
                 border: 1px solid var(--gray-200);
             }

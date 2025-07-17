@@ -263,7 +263,7 @@ if(!empty($_POST['email'])) {
         
         if($stmt_update->execute()) {
             // Crear enlace de recuperación
-            $resetPassLink = 'http://localhost/classroom3/resetPassword.php?fp_code=' . $uniqidStr;
+            $resetPassLink = 'http://localhost/ProyectoUSM/resetPassword.php?fp_code=' . $uniqidStr;
             
             // Enviar email de recuperación
             if(enviarEmailRecuperacion($email, $nombre_usuario, $resetPassLink)) {

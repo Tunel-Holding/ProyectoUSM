@@ -8,6 +8,20 @@ $conn->set_charset("utf8mb4");
 
 $user_id = $_SESSION['idusuario'];
 
+// Obtener el id del profesor asociado al usuario
+$sql_profesor = "SELECT id FROM profesores WHERE id_usuario = ? LIMIT 1";
+$stmt_profesor = $conn->prepare($sql_profesor);
+if (!$stmt_profesor) {
+    die("Error en la preparación de la consulta de profesor: " . $conn->error);
+}
+$stmt_profesor->bind_param("i", $user_id);
+$stmt_profesor->execute();
+$stmt_profesor->bind_result($profesor_id);
+if (!$stmt_profesor->fetch()) {
+    die("No se encontró el profesor asociado a este usuario.");
+}
+$stmt_profesor->close();
+
 // Validar si el usuario tiene datos registrados en datos_usuario
 $sql_check = "SELECT 1 FROM datos_usuario WHERE usuario_id = ? LIMIT 1";
 $stmt_check = $conn->prepare($sql_check);
@@ -21,8 +35,6 @@ if ($stmt_check) {
     }
     $stmt_check->close();
 }
-
-// ...existing code...
 
 // Obtener el día actual en español para la región de Venezuela
 $formatter = new IntlDateFormatter('es_VE', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'America/Caracas', IntlDateFormatter::GREGORIAN, 'EEEE');
