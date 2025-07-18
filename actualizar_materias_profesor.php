@@ -9,6 +9,7 @@ require_once 'conexion.php';
 
 // Verificar que sea una petición POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    actualizar_actividad();
     http_response_code(405);
     echo json_encode(['success' => false, 'error' => 'Método no permitido']);
     exit;

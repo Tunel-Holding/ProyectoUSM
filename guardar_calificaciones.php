@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 header('Content-Type: application/json');
-
+actualizar_actividad();
 include 'conexion.php';
 
 // Leer datos JSON
@@ -106,6 +106,7 @@ foreach ($calificaciones as $item) {
         }
     }
 }
+actualizar_actividad();
 $conn->close();
 if (empty($errores)) {
     echo json_encode(['success' => true]);

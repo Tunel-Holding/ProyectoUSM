@@ -1,7 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
-session_start();
+actualizar_actividad();
 require 'conexion.php';
 
 if (!isset($_GET['id'])) {
@@ -28,6 +27,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
     $stmt->bind_param("ii", $idMateria, $idUsuario);
 
     if ($stmt->execute()) {
+        actualizar_actividad();
         // Eliminar los registros del horario del estudiante para la materia
         $sqlHorario = "DELETE FROM Horarios WHERE id_materia = ? AND id_estudiante = ?";
         $stmtHorario = $conn->prepare($sqlHorario);
@@ -53,8 +53,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
     } else {
         $_SESSION['mensaje'] = "Error al eliminar la materia.";
     }
-
-    $stmt->close();
+    actualizar_actividad();
     $conn->close();
 
     header("Location: inscripcion.php");

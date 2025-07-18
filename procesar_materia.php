@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php';
 
 $nombre = $_POST['nombre'];
@@ -27,6 +28,6 @@ if ($secciones > 0 && $secciones <= count($seccionLetras)) {
 } else {
     echo "Número de secciones inválido.";
 }
-
+actualizar_actividad();
 $conn->close();
 ?>

@@ -1,9 +1,10 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 require "conexion.php";
 
 if (isset($_GET['id'])) {
+    actualizar_actividad();
     $id_profesor = intval($_GET['id']);
     echo "<script>
         if (confirm('¿Está seguro de que desea eliminar este profesor?')) {
@@ -15,6 +16,6 @@ if (isset($_GET['id'])) {
 } else {
     echo "ID de profesor no especificado.";
 }
-
+actualizar_actividad();
 $conn->close();
 ?>

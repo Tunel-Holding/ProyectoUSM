@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = 'uploads/'; // Directorio donde se guardarán los archivos
@@ -18,4 +18,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo "Método de solicitud no permitido.";
 }
+actualizar_actividad();
 ?>

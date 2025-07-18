@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 include 'conexion.php';
-
+actualizar_actividad();
 header('Content-Type: application/json');
 $response = array();
 
@@ -43,7 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo_tarea'])) {
     $response['success'] = false;
     $response['error'] = "Solicitud no válida.";
 }
-
+actualizar_actividad();
+$conn->close();
 echo json_encode($response);
 exit();
 ?>

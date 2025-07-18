@@ -2,7 +2,7 @@
 include 'comprobar_sesion.php';
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 $conn->set_charset("utf8mb4");
-
+actualizar_actividad();
 // Obtener la ID del usuario desde la sesión
 $user_id = $_SESSION['idusuario'];
 
@@ -155,7 +155,6 @@ if (isset($_POST['update_task_id'])) {
             } else {
                 $_SESSION['mensaje_tarea'] = '<div class="alert-error">Error al actualizar la tarea.</div>';
             }
-            $stmt->close();
         } else {
             $_SESSION['mensaje_tarea'] = '<div class="alert-error">Error en la base de datos al preparar la actualización.</div>';
         }
@@ -165,6 +164,8 @@ if (isset($_POST['update_task_id'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
+actualizar_actividad();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,6 +178,7 @@ if (isset($_POST['update_task_id'])) {
     <link rel="stylesheet" href="css/principalprofesor.css">
     <link rel="stylesheet" href="css/horario.css">
     <link rel="stylesheet" href="css/tareasprofesores.css">
+    <script src="js/control_inactividad.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">

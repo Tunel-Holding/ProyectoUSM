@@ -13,6 +13,7 @@ include 'comprobar_sesion.php';
     <link rel="stylesheet" href="css/principaladministracion.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="js/control_inactividad.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
@@ -28,6 +29,7 @@ include 'comprobar_sesion.php';
     $sql = "SELECT DISTINCT nombre FROM materias";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
+        actualizar_actividad();
         echo "<table><tr><th>Nombre de la Materia</th><th></th><th></th></tr>";
         // Salida de datos de cada fila
         while ($row = $result->fetch_assoc()) {

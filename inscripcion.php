@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,7 +13,7 @@ include 'comprobar_sesion.php';
     <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="stylesheet" href="css/tablastyle.css">
     <link rel="icon" href="css/icono.png" type="image/png">
-
+    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>

@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 require 'conexion.php';
 
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     $reply_to = isset($_POST['reply_to']) ? (int)$_POST['reply_to'] : 0;
     $message = trim($_POST['message']);
 
-    if (strlen($message) > 0 && strlen($message) <= 1000) {
+    if (strlen($message) > 0 && strlen($message) <= 250) {
         // Permitir letras, números, espacios, puntuación básica y emojis
         if (preg_match('/^[\p{L}\p{N}\s\.,!?;:()@#$%*+\-=_<>\/\\\\]+$/u', $message)) {
             // Mensaje válido, puedes procesarlo con confianza

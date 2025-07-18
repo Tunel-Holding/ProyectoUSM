@@ -1,5 +1,5 @@
 <?php
-session_start();
+    actualizar_actividad();
 
 // Verificar si el usuario viene de modificar contraseña desde su perfil
 $usuario_autenticado = isset($_SESSION['idusuario']) && !empty($_SESSION['idusuario']);
@@ -286,6 +286,8 @@ if(!empty($_POST['email'])) {
     $mensaje = '🔒 Sesión cerrada por seguridad. Por favor, inicia sesión con tu nueva contraseña.';
     $tipo = 'success';
 }
+actualizar_actividad();
+$conn->close();
 ?>
 
 <!DOCTYPE html>

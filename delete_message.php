@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 session_start();
 require 'conexion.php';
 
@@ -80,6 +80,6 @@ if ($stmt->execute()) {
     echo json_encode(['error' => 'Error al eliminar el mensaje']);
 }
 
-$stmt->close();
+actualizar_actividad();
 $conn->close();
 ?> 

@@ -1,7 +1,7 @@
 <?php
 // Incluir el archivo de verificación de sesión
 require_once 'comprobar_sesion.php';
-
+actualizar_actividad();
 /**
  * Verificar si el usuario tiene permisos de administrador
  * Redirige al login si no tiene permisos
@@ -152,7 +152,6 @@ function verificar_sesion_activa() {
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    $stmt->close();
     $conn->close();
     
     return $row && $row['session'] == 1;

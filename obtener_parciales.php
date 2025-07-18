@@ -1,11 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php';
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
 
 $materia_id = $_GET['materia_id'];
 $usuario_id = $_GET['usuario_id'];
@@ -26,7 +22,6 @@ sort($parciales);
 
 header('Content-Type: application/json');
 echo json_encode($parciales);
-
-$stmt->close();
+actualizar_actividad();
 $conn->close();
 ?>

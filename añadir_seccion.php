@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 include 'conexion.php';
-
+actualizar_actividad();
 $nombre = $_GET['nombre'];
 
 // Obtener la última sección de la materia
