@@ -4,10 +4,7 @@ include 'comprobar_sesion.php';
 // Conexión a la base de datos
 include 'conexion.php';
 
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
+actualizar_actividad();
 
 // Obtener el ID del usuario de la sesión
 $id_usuario = $_SESSION['idusuario'];
@@ -55,7 +52,7 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-$stmt->close(); // Cerrar la sentencia
+actualizar_actividad();
 $conn->close(); // Cerrar la conexión
 
 ?>

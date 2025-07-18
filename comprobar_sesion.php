@@ -24,7 +24,7 @@ if (!isset($_SESSION['nivelusu'])) {
 }
 
 // Verificar si la sesión no ha expirado por inactividad (10 minutos)
-$tiempo_maximo = 10 * 60; // 10 minutos de inactividad en segundos
+$tiempo_maximo = 5 * 60; // 10 minutos de inactividad en segundos
 
 // Solo verificar expiración si ya existe un tiempo de último acceso
 if (isset($_SESSION['ultimo_acceso'])) {
@@ -34,12 +34,10 @@ if (isset($_SESSION['ultimo_acceso'])) {
         $_SESSION['mensaje'] = "Su sesión ha expirado por inactividad. Por favor, inicie sesión nuevamente.";
         header("Location: inicio.php");
         exit();
+    }else if(time() - $_SESSION['ultimo_acceso'] > 4 * 60){
+        echo "<div style='color: orange; font-weight: bold; text-align: center;'>Su sesión expirará en un minuto por inactividad</div>";
     }
 }
-
-$_SESSION['ultimo_acceso'] = time();
-// NO actualizar automáticamente el tiempo de último acceso
-// Solo se actualizará cuando se llame a la función actualizar_actividad()
 
 // Función para verificar permisos específicos
 function verificar_permiso($nivel_requerido) {

@@ -1,13 +1,7 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "proyectousm";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
+include 'comprobar_sesion.php';
+actualizar_actividad();
+include 'conexion.php';
 
 $usuario_id = $_POST['usuario_id'];
 $materia_id = $_POST['materia_id'];
@@ -27,6 +21,6 @@ if ($result_check->num_rows > 0) {
     // No hay archivo subido
     echo "No hay archivo subido";
 }
-
+actualizar_actividad();
 $conn->close();
 ?>

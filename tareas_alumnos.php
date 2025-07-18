@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
-
+actualizar_actividad();
 // Consultar tareas desde la base de datos
 $idMateria = $_SESSION['idmateria'];
 $id_alumno = $_SESSION['idusuario'];
@@ -17,7 +17,8 @@ $stmt->bind_param("si", $id_alumno, $idMateria);
 $stmt->execute();
 $result = $stmt->get_result();
 $tareas = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+actualizar_actividad();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +37,7 @@ $stmt->close();
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/tareas.css">
+    <script src="js/control_inactividad.js"></script>
     <style>
         .task-grid {
             display: grid;

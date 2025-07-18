@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,6 +14,7 @@ include 'comprobar_sesion.php';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Editar Materia - USM</title>
+    <script src="js/control_inactividad.js"></script>
     <style>
         .main-content {
             margin-top: 100px;
@@ -424,6 +426,7 @@ include 'comprobar_sesion.php';
     <div class="main-content">
         <?php
         require 'conexion.php';
+        actualizar_actividad();
         $nombre = $_GET['nombre'];
         $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre='$nombre' ORDER BY m.seccion ASC";
         $result = $conn->query($sql);
@@ -505,16 +508,16 @@ include 'comprobar_sesion.php';
             </h2>
             
             <form class="admin-form" action="procesar_editar_materia.php" method="POST">
-                <input type="hidden" name="nombreOriginal" value="<?php echo htmlspecialchars($materia['nombre']); ?>">
+                <input type="hidden" name="nombreOriginal" value="<?php echo htmlspecialchars($materia['nombre']); ?>" maxlength="50">
                 
                 <div class="form-group">
                     <label class="form-label" for="nombre">Nombre de la Materia:</label>
-                    <input class="form-input" type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($materia['nombre']); ?>" required>
+                    <input class="form-input" type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($materia['nombre']); ?>" required maxlength="50">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label" for="creditos">Número de Créditos:</label>
-                    <input class="form-input" type="number" id="creditos" name="creditos" value="<?php echo htmlspecialchars($materia['creditos']); ?>" required>
+                    <input class="form-input" type="number" id="creditos" name="creditos" value="<?php echo htmlspecialchars($materia['creditos']); ?>" required min="0" max="50">
                 </div>
                 
                 <button type="submit" class="form-submit">💾 Guardar Cambios</button>

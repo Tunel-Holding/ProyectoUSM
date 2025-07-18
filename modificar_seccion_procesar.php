@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 require 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -66,7 +67,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "<p>Error al preparar la consulta para obtener el ID del estudiante: " . $conn->error . "</p>";
     }
-
+    actualizar_actividad();
     $conn->close();
 }
 ?>
+    

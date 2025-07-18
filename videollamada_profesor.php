@@ -22,7 +22,7 @@ if ($row = $result->fetch_assoc()) {
     echo "<script>alert('Debes llenar tus datos personales antes de continuar.'); window.location.href='llenar_datos_profesor.php';</script>";
     exit();
 }
-$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>

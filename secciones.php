@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 if (isset($_GET['valor'])) {
     $_SESSION['materiaselecc'] = $_GET['valor'];
 }
@@ -81,8 +82,10 @@ if (isset($_GET['valor'])) {
         } else {
             echo "No se ha recibido el nombre de la materia.";
         }
+        actualizar_actividad();
+        $conn->close();
         ?>
-
+        
 
     </div>
     <script>
@@ -96,6 +99,7 @@ if (isset($_GET['valor'])) {
             });
         });
     </script>
+    <script src="js/control_inactividad.js"></script>
 </body>
 
 </html>

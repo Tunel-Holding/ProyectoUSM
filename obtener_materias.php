@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 header('Content-Type: application/json');
 require "conexion.php";
 
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Error al obtener materias: ' . $e->getMessage()]);
     }
-    
+    actualizar_actividad();
     $conn->close();
 } else {
     echo json_encode(['success' => false, 'message' => 'Método no permitido']);

@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 require 'conexion.php';
-
+actualizar_actividad();
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -60,6 +60,6 @@ if ($stmt_insert->execute()) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Error al guardar el horario: ' . $conn->error]);
 }
-
+actualizar_actividad();
 $conn->close();
 ?> 

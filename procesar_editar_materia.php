@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php';
 
 $nombre = $_POST['nombre'];
@@ -16,6 +17,6 @@ if ($conn->query($sql) === TRUE) {
 } else {
     echo "Error al actualizar la materia: " . $conn->error;
 }
-
+actualizar_actividad();
 $conn->close();
 ?>
