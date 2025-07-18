@@ -1,5 +1,5 @@
 <?php
-    session_start();
+   include("comprobar_sesion.php");
 require 'conexion.php';
 
 // 🔐 Validación de sesión activa
