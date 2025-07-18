@@ -56,6 +56,23 @@ $stmt->close();
         .task-card-footer {
             flex-shrink: 0;
         }
+        .task-completed-message {
+            text-align: center;
+            width: 100%;
+            display: block;
+            margin: 0 auto 0 auto;
+        }
+        }
+        .btn-mini {
+            padding: 6px 12px !important;
+            font-size: 0.95em !important;
+            min-width: 0 !important;
+            max-width: 180px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            margin-bottom: 8px !important;
+        }
         @media (max-width: 600px) {
             .task-grid {
                 grid-template-columns: 1fr;
@@ -167,17 +184,19 @@ $stmt->close();
     $status_class = '';
     $entregada = !is_null($tarea['id_entrega']);
 
-    // Obtener calificación y retroalimentación de la entrega si existe
+    // Obtener calificación, retroalimentación y archivo de la entrega si existe
     $calificacion = null;
     $retroalimentacion = null;
+    $archivo_entregado = null;
     if ($entregada) {
-        $stmtCalif = $conn->prepare("SELECT calificacion, retroalimentacion FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ? ORDER BY id_entrega DESC LIMIT 1");
+        $stmtCalif = $conn->prepare("SELECT calificacion, retroalimentacion, archivo FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ? ORDER BY id_entrega DESC LIMIT 1");
         $stmtCalif->bind_param("ii", $tarea['id'], $id_alumno);
         $stmtCalif->execute();
-        $stmtCalif->bind_result($califRes, $retroRes);
+        $stmtCalif->bind_result($califRes, $retroRes, $archivoRes);
         if ($stmtCalif->fetch()) {
             $calificacion = $califRes;
             $retroalimentacion = $retroRes;
+            $archivo_entregado = $archivoRes;
         }
         $stmtCalif->close();
     }
@@ -212,12 +231,24 @@ $stmt->close();
             >
                 <i class="fas fa-star"></i> Calificación: <?php echo ($calificacion !== null && $calificacion !== '') ? htmlspecialchars($calificacion) : 'N/A'; ?>
             </button>
+            <?php
+                // Calcular si la tarea está vencida por fecha/hora exacta
+                $fechaHoraEntrega = new DateTime($tarea['fecha_entrega'] . ' ' . $tarea['hora_entrega'], $tz_ve);
+                $ahoraExacto = new DateTime('now', $tz_ve);
+                $expirada = ($ahoraExacto > $fechaHoraEntrega);
+            ?>
+            <button class="submit-task-btn btn-mini<?php if ($expirada) echo ' disabled-task-btn'; ?>" data-idtarea="<?php echo $tarea['id']; ?>" data-archivo="<?php echo ($archivo_entregado && preg_match('/\.(pdf|docx|zip)$/i', $archivo_entregado)) ? htmlspecialchars($archivo_entregado) : ''; ?>" data-vencida="<?php echo $expirada ? '1' : '0'; ?>" <?php if ($expirada) echo 'disabled tabindex="-1"'; ?> >
+                <i class="fas fa-upload"></i> <?php echo $entregada ? 'Remplazar Tarea' : 'Subir Tarea'; ?>
+            </button>
+        <style>
+        .disabled-task-btn {
+            pointer-events: none !important;
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+        }
+        </style>
             <?php if ($entregada): ?>
                 <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Entregada</p>
-            <?php else: ?>
-                <button class="submit-task-btn" data-idtarea="<?php echo $tarea['id']; ?>" <?php if ($status === 'Vencida') echo 'disabled'; ?>>
-                    <i class="fas fa-upload"></i> Subir Tarea
-                </button>
             <?php endif; ?>
         </div>
     </div>
@@ -253,15 +284,16 @@ $stmt->close();
         <div class="modal-body">
             <form id="uploadForm" action="subir_tarea.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id_tarea" id="modal_id_tarea">
+                <input type="hidden" id="modal_vencida" value="0">
                 <p>Selecciona el archivo que deseas subir. El formato debe ser PDF, DOCX, o ZIP.</p>
                 <div id="uploadErrorMsg" style="color: #d32f2f; margin-bottom: 10px; display: none;"></div>
                 <input type="file" name="archivo_tarea" id="archivo_tarea" required accept=".pdf,.docx,.zip" style="display:none;">
                 <button type="button" id="archivo_tarea_btn" class="upload_button">
                     <i class="fas fa-file-upload"></i> Seleccionar Archivo
                 </button>
-                <span id="archivo_tarea_nombre" style="margin-left:10px;color:var(--accent-blue);"></span>
+                <span id="archivo_tarea_nombre" style="margin-left:10px;color:var(--accent-blue); min-width: 180px; display: inline-block;"></span>
                 <div id="archivo_tarea_size_error" style="color: #d32f2f; margin-top: 10px; display: none;"></div>
-                <button type="submit" class="submit-task-btn" style="background-color: var(--accent-blue); margin-top: 20px;">Enviar Tarea</button>
+                <button type="submit" class="submit-task-btn" id="enviar_tarea_btn" style="background-color: var(--accent-blue); margin-top: 20px;">Enviar Tarea</button>
             </form>
         </div>
     </div>
@@ -345,12 +377,59 @@ $stmt->close();
             const uploadErrorMsg = document.getElementById('uploadErrorMsg');
 
             document.querySelectorAll('.submit-task-btn[data-idtarea]').forEach(button => {
+                // Si el botón está deshabilitado (por atributo o clase), no debe tener ningún evento
+                if (button.hasAttribute('disabled') || button.classList.contains('disabled-task-btn')) {
+                    button.style.pointerEvents = 'none';
+                    button.style.userSelect = 'none';
+                    return;
+                }
                 button.addEventListener('click', function() {
                     const idTarea = this.getAttribute('data-idtarea');
+                    const archivoRegistrado = this.getAttribute('data-archivo');
+                    const vencida = this.getAttribute('data-vencida');
                     modalIdTarea.value = idTarea;
+                    document.getElementById('modal_vencida').value = vencida;
                     uploadModal.classList.add('visible');
                     uploadErrorMsg.style.display = 'none';
                     uploadErrorMsg.textContent = '';
+                    // Mostrar el nombre del archivo registrado
+                    const archivoNombre = document.getElementById('archivo_tarea_nombre');
+                    // Mostrar solo si es un nombre de archivo válido (pdf, docx, zip), si no, dejar vacío
+                    if (
+                        typeof archivoRegistrado === 'string' &&
+                        archivoRegistrado.match(/\.(pdf|docx|zip)$/i)
+                    ) {
+                        // Extraer solo el nombre original del archivo (sin prefijo de timestamp y uniqid)
+                        const nombreSolo = archivoRegistrado.split(/[\\/]/).pop();
+                        // Eliminar prefijo hasta el primer guion bajo triple (timestamp + uniqid + _)
+                        const partes = nombreSolo.split('_');
+                        let nombreOriginal = nombreSolo;
+                        if (partes.length > 2) {
+                            // El nombre original puede contener guiones bajos, así que unimos el resto
+                            nombreOriginal = partes.slice(2).join('_');
+                        }
+                        archivoNombre.textContent = 'Archivo: ' + nombreOriginal;
+                        // Cambiar el texto del botón a 'Remplazar archivo'
+                        document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Remplazar Archivo';
+                    } else {
+                        archivoNombre.textContent = '';
+                        // Cambiar el texto del botón a 'Seleccionar archivo'
+                        document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Seleccionar Archivo';
+                    }
+                    // Si la tarea está vencida, deshabilitar los botones dentro del modal
+                    const archivoBtn = document.getElementById('archivo_tarea_btn');
+                    const enviarBtn = document.getElementById('enviar_tarea_btn');
+                    if (vencida === '1') {
+                        archivoBtn.disabled = true;
+                        enviarBtn.disabled = true;
+                        archivoBtn.classList.add('disabled');
+                        enviarBtn.classList.add('disabled');
+                    } else {
+                        archivoBtn.disabled = false;
+                        enviarBtn.disabled = false;
+                        archivoBtn.classList.remove('disabled');
+                        enviarBtn.classList.remove('disabled');
+                    }
                 });
             });
 
