@@ -281,37 +281,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         function goBack() {
             window.history.back();
         }
-        const contenedor = document.getElementById('contenedor');
-        const botonIzquierdo = document.getElementById('boton-izquierdo');
-        const botonDerecho = document.getElementById('boton-derecho');
-        botonIzquierdo.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: -94,
-                behavior: 'smooth'
-            });
-        });
-        botonDerecho.addEventListener('click', () => {
-            contenedor.scrollBy({
-                left: 94,
-                behavior: 'smooth'
-            });
-        });
+        // ...existing code...
 
-        document.getElementById('logoButton').addEventListener("click", () => {
-            document.getElementById('menu').classList.toggle('toggle');
-            event.stopPropagation();
-        });
-        document.addEventListener('click', function (event) {
-            if (!container.contains(event.target) && container.classList.contains('toggle')) {
-                container.classList.remove('toggle');
-            }
-        });
-        document.addEventListener('click', function (event) {
-            var div = document.getElementById('menu');
-            if (!div.contains(event.target)) {
-                div.classList.remove('toggle');
-            }
-        });
+        // ...existing code...
         document.getElementById('switchtema').addEventListener('change', function () {
             const theme = this.checked ? 'dark' : 'light';
 
@@ -404,7 +376,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 console.log('Sending message:', message); // Depuración
                 console.log('Reply to:', replyTo); // Depuración
                 if (message.trim() !== '') {
-                    $.post('chat.php', {
+                    $.post('chat_profesor.php', {
                         message: message,
                         reply_to: replyTo
                     }, function (data) {
@@ -514,7 +486,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 formData.append('image', this.files[0]);
                 formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
 
-                fetch('chat.php', {
+                fetch('chat_profesor.php', { // <-- Cambia aquí
                     method: 'POST',
                     body: formData
                 }).then(response => response.text())
@@ -538,7 +510,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 formData.append('file', this.files[0]);
                 formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
 
-                fetch('chat.php', {
+                fetch('chat_profesor.php', { // <-- Cambia aquí
                     method: 'POST',
                     body: formData
                 }).then(response => response.text())
@@ -596,21 +568,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             $('#image').click(); // Simula un clic en el input de archivo
         });
 
-        document.getElementById('uploadButton').addEventListener("click", () => {
-            document.getElementById('SubirDiv').classList.toggle('show');
-            event.stopPropagation();
-        });
-        document.addEventListener('click', function (event) {
-            if (!container.contains(event.target) && container.classList.contains('show')) {
-                container.classList.remove('show');
-            }
-        });
-        document.addEventListener('click', function (event) {
-            var div = document.getElementById('SubirDiv');
-            if (!div.contains(event.target)) {
-                div.classList.remove('show');
-            }
-        });
+        // ...existing code...
 
         function uploadFile(type) {
             var fileInput;

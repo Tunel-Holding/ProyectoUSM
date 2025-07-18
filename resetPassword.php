@@ -11,6 +11,7 @@ if ($conn->connect_error) {
 $mensaje = '';
 $tipo = '';
 $fp_code = '';
+$enlace = '';
 
 // Procesar el formulario de restablecimiento de contraseña
 if(!empty($_POST['password']) && !empty($_POST['confirm_password']) && !empty($_POST['fp_code'])) {

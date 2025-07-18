@@ -271,7 +271,10 @@ $conn->close();
 
         <section class="created-tasks-section">
             <div class="card">
-                <h3>Tareas Creadas</h3>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <h3 style="margin:0;">Tareas Creadas</h3>
+                    <button id="print-all-grades-btn" class="btn btn-secondary" style="margin-left:10px;">Imprimir todas las notas</button>
+                </div>
                 <?php if (empty($tareas)): ?>
                     <div class="no-tasks-message" id="no-tasks-message">
                         <p>No hay tareas creadas aún. Crea tu primera tarea usando el formulario de arriba.</p>
@@ -398,6 +401,13 @@ $conn->close();
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- MANEJO DEL BOTÓN IMPRIMIR TODAS LAS NOTAS ---
+            const printAllGradesBtn = document.getElementById('print-all-grades-btn');
+            if (printAllGradesBtn) {
+                printAllGradesBtn.addEventListener('click', function() {
+                    window.open('generar_pdf_notas_todas.php', '_blank');
+                });
+            }
             // --- MANEJO DEL MODAL DE EDICIÓN ---
             const editTaskModal = document.getElementById('edit-task-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
@@ -427,33 +437,33 @@ $conn->close();
                     }
                 });
 
-            // Delegación de eventos para abrir el modal al hacer clic en "Editar"
-            taskList.addEventListener('click', (event) => {
-                const editBtn = event.target.closest('.edit-btn');
-                if (editBtn) {
-                    event.preventDefault(); // Prevenir cualquier acción por defecto
-                    const taskCard = editBtn.closest('.task-card');
-                    // Extraer datos de la tarjeta
-                    const taskId = taskCard.dataset.taskId;
-                    const title = taskCard.querySelector('.task-title').textContent.trim();
-                    const category = taskCard.querySelector('.task-category').textContent.trim().toLowerCase();
-                    const description = taskCard.querySelector('.task-description').textContent.trim();
-                    // Extraer fecha y hora de los atributos data-*
-                    const dateDataElem = taskCard.querySelector('.task-due-date-data');
-                    const dateMatch = dateDataElem.dataset.date;
-                    const timeMatch = dateDataElem.dataset.time;
-                    // Poblar el formulario del modal
-                    editTaskIdInput.value = taskId;
-                    editTaskTitleInput.value = title;
-                    editTaskCategoryInput.value = category;
-                    editDeliveryDateInput.value = dateMatch; // Formato YYYY-MM-DD
-                    editDeliveryTimeInput.value = timeMatch ? timeMatch.substring(0, 5) : ''; // Formato HH:MM
-                    editTaskDescriptionInput.value = description === 'Sin descripción.' ? '' : description;
-                    // Mostrar el modal
-                    editTaskModal.classList.add('visible');
-                }
-            });
-        }
+                // Delegación de eventos para abrir el modal al hacer clic en "Editar"
+                taskList.addEventListener('click', (event) => {
+                    const editBtn = event.target.closest('.edit-btn');
+                    if (editBtn) {
+                        event.preventDefault(); // Prevenir cualquier acción por defecto
+                        const taskCard = editBtn.closest('.task-card');
+                        // Extraer datos de la tarjeta
+                        const taskId = taskCard.dataset.taskId;
+                        const title = taskCard.querySelector('.task-title').textContent.trim();
+                        const category = taskCard.querySelector('.task-category').textContent.trim().toLowerCase();
+                        const description = taskCard.querySelector('.task-description').textContent.trim();
+                        // Extraer fecha y hora de los atributos data-*
+                        const dateDataElem = taskCard.querySelector('.task-due-date-data');
+                        const dateMatch = dateDataElem.dataset.date;
+                        const timeMatch = dateDataElem.dataset.time;
+                        // Poblar el formulario del modal
+                        editTaskIdInput.value = taskId;
+                        editTaskTitleInput.value = title;
+                        editTaskCategoryInput.value = category;
+                        editDeliveryDateInput.value = dateMatch; // Formato YYYY-MM-DD
+                        editDeliveryTimeInput.value = timeMatch ? timeMatch.substring(0, 5) : ''; // Formato HH:MM
+                        editTaskDescriptionInput.value = description === 'Sin descripción.' ? '' : description;
+                        // Mostrar el modal
+                        editTaskModal.classList.add('visible');
+                    }
+                });
+            }
 
         // --- MANEJO DEL MODAL DE EVALUACIÓN ---
         const evaluateTaskModal = document.getElementById('evaluate-task-modal');
@@ -513,9 +523,13 @@ $conn->close();
                                 </td>
                             </tr>`;
                         });
+                        // Validar si hay al menos una nota guardada antes de renderizar el botón
+                        let hayNotasInicial = data.students.some(student => student.calificacion && student.calificacion !== '');
                         studentListHTML += `</tbody></table>
                         <div class="modal-actions">
-                            <button id="save-grades-btn" class="btn btn-primary">Guardar Calificaciones</button>
+                            ${!hayNotasInicial ? '<div class="alert-warning" style="margin-bottom:10px;padding:8px 12px;background:#fff3cd;color:#856404;border-radius:4px;border:1px solid #ffeeba;text-align:left;font-size:15px;"><i class=\"fas fa-exclamation-triangle\" style=\"margin-right:7px;\"></i>Debe guardar al menos una nota para poder imprimir el documento.</div>' : ''}
+                            <button id="print-grades-btn" class="btn btn-secondary"${!hayNotasInicial ? ' disabled title="No se puede generar el documento. Debe guardar al menos una nota."' : ''}>Imprimir Notas</button>
+                            <button id="save-grades-btn" class="btn btn-primary" style="margin-left:10px;">Guardar Calificaciones</button>
                         </div>`;
                         studentListContainer.innerHTML = studentListHTML;
                         // Cargar valores existentes de calificación y retroalimentación
@@ -528,6 +542,25 @@ $conn->close();
                             const input = studentListContainer.querySelector(`input.input-retro[data-student-id='${student.id}']`);
                             if (input) input.value = (student.retroalimentacion !== undefined && student.retroalimentacion !== null) ? student.retroalimentacion : '';
                         });
+
+                        // Validar si hay al menos una nota guardada
+                        let hayNotas = data.students.some(student => student.calificacion && student.calificacion !== '');
+                        const printBtn = document.getElementById('print-grades-btn');
+                        if (printBtn) {
+                            if (!hayNotas) {
+                                printBtn.disabled = true;
+                                printBtn.title = 'No se puede generar el documento. Debe guardar al menos una nota.';
+                                printBtn.onclick = function() {
+                                    alert('No se puede generar el documento. Debe guardar al menos una nota.');
+                                };
+                            } else {
+                                printBtn.disabled = false;
+                                printBtn.title = '';
+                                printBtn.onclick = function() {
+                                    window.open('generar_pdf_notas.php?task_id=' + taskId, '_blank');
+                                };
+                            }
+                        }
 
                         // Guardar calificaciones y retroalimentaciones
                         const saveBtn = document.getElementById('save-grades-btn');

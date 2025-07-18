@@ -207,9 +207,11 @@ $conn->close(); // Cerrar la conexión
 
         <button type="button" id="logoButton">
             <img src="css/logoazul.png" alt="Logo">
+            
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
+             <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
             <p>UniHub</p>
         </div>
 

@@ -191,6 +191,10 @@ $conn->close();
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
+            <a href="contacto.php" class="soporte-link">
+            <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
+            </a>
+
             <p>UniHub</p>
         </div>
 

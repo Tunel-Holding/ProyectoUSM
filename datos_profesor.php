@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+
 actualizar_actividad();
 
 // Conexión a la base de datos
