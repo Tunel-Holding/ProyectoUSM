@@ -1,5 +1,5 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'comprobar_sesion.php';
 actualizar_actividad();
 
 include 'conexion.php';
