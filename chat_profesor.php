@@ -234,7 +234,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     <div class="cabecera cabecera-chat">
 
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+             <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
 
         <div class="nombremateria">
