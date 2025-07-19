@@ -149,12 +149,12 @@ while ($row = $result->fetch_assoc()) {
     // 🧱 Contenedor del mensaje
     $is_current_user = ($user_id == $current_user_id);
     $container_class = $is_current_user ? 'message-container-flex current-user' : 'message-container-flex other-user';
-    echo '<div class="' . $container_class . '">';
+    echo '<div class="' . htmlspecialchars($container_class, ENT_QUOTES, 'UTF-8') . '">';
 
     // Botones de acción
     echo '<div class="message-actions">';
     // Botón para responder
-    echo '<button class="reply-button" data-message-id="' . $message_id . '" data-username="' . $nombre_usuario . '" title="Responder">
+    echo '<button class="reply-button" data-message-id="' . intval($message_id) . '" data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '" title="Responder">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-responder" viewBox="0 0 16 16">
                 <path d="M6.854 4.146a.5.5 0 0 0-.708.708L8.293 7H1.5a.5.5 0 0 0 0 1h6.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/>
                 <path d="M13.5 8a.5.5 0 0 1-.5.5H9a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5z"/>
@@ -163,7 +163,7 @@ while ($row = $result->fetch_assoc()) {
 
     // Botón para eliminar (solo si tiene permiso)
     if ($can_delete) {
-        echo '<button class="delete-button" data-message-id="' . $message_id . '" onclick="deleteMessage(' . $message_id . ')" title="Eliminar">
+        echo '<button class="delete-button" data-message-id="' . intval($message_id) . '" onclick="deleteMessage(' . intval($message_id) . ')" title="Eliminar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-eliminar" viewBox="0 0 16 16">
                     <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1 0-2h3.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1H14.5a1 1 0 0 1 1 1zm-11 1v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4h-8z"/>
@@ -184,6 +184,7 @@ while ($row = $result->fetch_assoc()) {
         echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
     } else {
         // Para otros usuarios: [botones] [avatar] [burbuja]
+
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
                 <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
@@ -192,17 +193,17 @@ while ($row = $result->fetch_assoc()) {
             </div>';
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
         echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
-    }
+
 
     // 📨 Contenido del mensaje
-    echo "<strong>$nombre_usuario:</strong> ";
+    echo "<strong>" . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . ":</strong> ";
     if ($tipo === "texto") {
-        echo "<p id='message-text-$message_id'>$mensaje</p>";
+        echo "<p id='message-text-" . intval($message_id) . "'>" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "</p>";
     } elseif ($tipo === "imagen") {
-        echo "<img class='msg-foto' src='$mensaje' alt='Imagen'>";
+        echo "<img class='msg-foto' src='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' alt='Imagen'>";
     } elseif ($tipo === "archivo") {
         $file_name = basename($mensaje);
-        $ext = pathinfo($mensaje, PATHINFO_EXTENSION);
+        $ext = strtolower(pathinfo($mensaje, PATHINFO_EXTENSION));
         $icon_map = [
             'doc' => 'word.png',
             'docx' => 'word.png',
@@ -213,7 +214,7 @@ while ($row = $result->fetch_assoc()) {
             'pdf' => 'pdf.png'
         ];
         $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
-        echo "<a class='file' href='$mensaje' target='_blank'><img src='$icon' alt=''>$file_name</a>";
+        echo "<a class='file' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</a>";
     }
 
     // Mostrar la respuesta dentro de la burbuja, debajo del mensaje
@@ -237,22 +238,23 @@ while ($row = $result->fetch_assoc()) {
             echo "<span class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></span>";
 
             if ($reply_row['tipo'] === 'imagen') {
-                echo "<div class='reply-content'><img src='$reply_mensaje' class='reply-image' alt='Imagen'></div>";
-            } else {
-                echo "<div class='reply-content'>$reply_mensaje</div>";
-            }
+                            echo "<div class='reply-content'><img src='" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "' class='reply-image' alt='Imagen'></div>";
+        } else {
+            echo "<div class='reply-content'>" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "</div>";
+        }
             echo "</div>";
         }
         $reply_stmt->close();
     }
 
-    echo "<p class='timestamp'>$timestamp</p>";
+    echo "<p class='timestamp'>" . htmlspecialchars($timestamp, ENT_QUOTES, 'UTF-8') . "</p>";
     echo '</div>'; // Cierre de burbuja
 
     // Agregar avatar después de la burbuja para el usuario actual
     if ($is_current_user) {
-        echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
+        echo '<img src="' . htmlspecialchars($foto_perfil, ENT_QUOTES, 'UTF-8') . '" alt="Perfil" class="profile-icon-' . htmlspecialchars($nivel_usuario, ENT_QUOTES, 'UTF-8') . '" ' . htmlspecialchars($styleAvatar, ENT_QUOTES, 'UTF-8') . '>';
     }
+
 
     echo '</div>'; // Cierre de contenedor flex
 }

@@ -275,7 +275,7 @@ actualizar_actividad();
         $status_class = 'pending';
     }
                     ?>
-    <div class="task-card" data-status="<?php echo $status_class; ?>" data-fechaentrega="<?php echo htmlspecialchars($tarea['fecha_entrega'] . 'T' . $tarea['hora_entrega'] . '-04:00'); ?>">
+    <div class="task-card" data-status="<?php echo htmlspecialchars($status_class, ENT_QUOTES, 'UTF-8'); ?>" data-fechaentrega="<?php echo htmlspecialchars($tarea['fecha_entrega'] . 'T' . $tarea['hora_entrega'] . '-04:00', ENT_QUOTES, 'UTF-8'); ?>">
         <div class="task-card-content">
             <h4 class="task-title"><?php echo htmlspecialchars($tarea['titulo_tarea']); ?></h4>
             <p class="task-description"><?php echo htmlspecialchars($tarea['descripcion']); ?></p>
@@ -286,7 +286,7 @@ actualizar_actividad();
                 <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge <?php echo $status_class; ?>"><?php echo $status; ?></span></p>
             </div>
         </div>
-        <div class="task-card-footer status-<?php echo $status_class; ?>">
+        <div class="task-card-footer status-<?php echo htmlspecialchars($status_class, ENT_QUOTES, 'UTF-8'); ?>">
             <button class="grade-btn"
                 data-calificacion="<?php echo htmlspecialchars(($calificacion !== null && $calificacion !== '') ? $calificacion : 'N/A'); ?>"
                 data-retroalimentacion="<?php echo htmlspecialchars(($retroalimentacion !== null && $retroalimentacion !== '') ? $retroalimentacion : 'Sin retroalimentación.'); ?>"
@@ -300,7 +300,7 @@ actualizar_actividad();
                 $ahoraExacto = new DateTime('now', $tz_ve);
                 $expirada = ($ahoraExacto > $fechaHoraEntrega);
             ?>
-            <button class="submit-task-btn btn-mini<?php if ($expirada) echo ' disabled-task-btn'; ?>" data-idtarea="<?php echo $tarea['id']; ?>" data-archivo="<?php echo htmlspecialchars($archivo_entregado ?? ''); ?>" data-vencida="<?php echo $expirada ? '1' : '0'; ?>" <?php if ($expirada) echo 'disabled tabindex="-1"'; ?> >
+            <button class="submit-task-btn btn-mini<?php if ($expirada) echo ' disabled-task-btn'; ?>" data-idtarea="<?php echo intval($tarea['id']); ?>" data-archivo="<?php echo htmlspecialchars($archivo_entregado ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-vencida="<?php echo $expirada ? '1' : '0'; ?>" <?php if ($expirada) echo 'disabled tabindex="-1"'; ?> >
                 <i class="fas fa-upload"></i> <?php echo $entregada ? 'Remplazar Tarea' : 'Subir Tarea'; ?>
             </button>
             <?php if ($entregada): ?>

@@ -1,6 +1,4 @@
-<?php
-include 'comprobar_sesion.php';
-?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,7 +13,6 @@ include 'comprobar_sesion.php';
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <script src="js/control_inactividad.js"></script>
     <title>Ajustar Créditos</title>
     <style>
         body {
@@ -187,7 +184,6 @@ include 'comprobar_sesion.php';
         <h1>Ajustar Créditos</h1>
         <?php
         require 'conexion.php';
-        actualizar_actividad();
         if (isset($_GET['id_estudiante'])) {
             $cedula_estudiante = htmlspecialchars($_GET['id_estudiante']);
             echo "<p>Cédula del Estudiante: $cedula_estudiante</p>";
@@ -236,7 +232,6 @@ include 'comprobar_sesion.php';
         } else {
             echo "<p>Cédula de estudiante no proporcionada.</p>";
         }
-        actualizar_actividad();
         $conn->close();
         ?>
     </div>

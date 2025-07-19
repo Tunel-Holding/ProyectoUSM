@@ -1,6 +1,4 @@
 <?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     actualizar_actividad();
     $id_profesor = $_POST['id_profesor'];

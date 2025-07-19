@@ -1,6 +1,4 @@
 <?php
-include 'comprobar_sesion.php';
-
 require_once "conexion.php";
 
 /**
@@ -95,7 +93,6 @@ class ProfesoresManager {
      * Obtiene la lista de profesores con filtros opcionales usando prepared statements
      */
     public function obtenerProfesores($busqueda = null) {
-        actualizar_actividad();
         try {
             $sql = $this->construirConsultaBase();
             $filtros = $this->aplicarFiltros($sql, $busqueda);
@@ -1297,8 +1294,6 @@ try {
     <title>Gestión de Profesores - UniHub</title>
     <?php echo ProfesoresStyles::getStyles(); ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-
-    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>

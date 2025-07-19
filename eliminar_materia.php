@@ -3,19 +3,29 @@ include 'comprobar_sesion.php';
 actualizar_actividad();
 include 'conexion.php';
 
-$nombre = $_GET['nombre'];
+// Sanitizar y validar entrada
+$nombre = isset($_GET['nombre']) ? trim(htmlspecialchars(strip_tags($_GET['nombre']), ENT_QUOTES, 'UTF-8')) : '';
+
+// Validar que el nombre no esté vacío
+if (empty($nombre)) {
+    echo "<script>alert('Nombre de materia no válido.'); window.location.href = 'admin_materias.php';</script>";
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     actualizar_actividad();
     if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
-        $sql = "DELETE FROM materias WHERE nombre='$nombre'";
-        if ($conn->query($sql) === TRUE) {
+        // Usar prepared statement para prevenir inyección SQL
+        $sql = "DELETE FROM materias WHERE nombre = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $nombre);
+        if ($stmt->execute()) {
             echo "<script>
                     alert('Materia eliminada correctamente.');
                     window.location.href = 'admin_materias.php';
                   </script>";
         } else {
-            echo "Error al eliminar la materia: " . $conn->error;
+            echo "Error al eliminar la materia: " . $stmt->error;
         }
     } else {
         echo "<script>

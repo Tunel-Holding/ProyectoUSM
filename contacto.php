@@ -1,5 +1,4 @@
 <?php
-session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
@@ -9,6 +8,11 @@ require 'conexion.php';
 if (!isset($_SESSION['idusuario'])) {
     header("Location: inicio.php");
     exit();
+}
+
+// Generar token CSRF
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 // Obtener nombre del usuario desde la base de datos
@@ -29,13 +33,31 @@ $mensajeEnviado = false;
 $errorEnvio = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre  = htmlspecialchars($_POST['nombre']);
-    $asunto  = htmlspecialchars($_POST['asunto']);
-    $mensaje = htmlspecialchars($_POST['mensaje']);
-    $email   = $_SESSION['email'];
+    // Validación de token CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $errorEnvio = "Error de seguridad. Por favor, recarga la página e intenta nuevamente.";
+    } else {
+        // Sanitización y validación de datos de entrada
+        $nombre  = trim(htmlspecialchars(strip_tags($_POST['nombre'] ?? ''), ENT_QUOTES, 'UTF-8'));
+        $asunto  = trim(htmlspecialchars(strip_tags($_POST['asunto'] ?? ''), ENT_QUOTES, 'UTF-8'));
+        $mensaje = trim(htmlspecialchars(strip_tags($_POST['mensaje'] ?? ''), ENT_QUOTES, 'UTF-8'));
+        $email   = filter_var($_SESSION['email'] ?? '', FILTER_SANITIZE_EMAIL);
 
+    // Validaciones para prevenir inyección SQL y XSS
     if (empty($asunto) || empty($mensaje)) {
         $errorEnvio = "Mensaje y asunto son obligatorios.";
+    } else if (empty($nombre) || empty($email)) {
+        $errorEnvio = "Nombre y correo son obligatorios.";
+    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errorEnvio = "El formato del correo electrónico no es válido.";
+    } else if (strlen($asunto) > 100) {
+        $errorEnvio = "El asunto no puede tener más de 100 caracteres.";
+    } else if (strlen($mensaje) > 5000) {
+        $errorEnvio = "El mensaje no puede tener más de 5000 caracteres.";
+    } else if (preg_match('/[<>"\']/', $nombre) || preg_match('/[<>"\']/', $asunto)) {
+        $errorEnvio = "Los caracteres especiales no están permitidos en el nombre o asunto.";
+    } else if (preg_match('/script|javascript|vbscript|onload|onerror/i', $mensaje)) {
+        $errorEnvio = "El mensaje contiene contenido no permitido.";
     } else {
         $mail = new PHPMailer(true);
         $mail->CharSet = 'UTF-8';
@@ -58,14 +80,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Adjuntar imagen como embebida si existe
             $imgCid = '';
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                // Validaciones de seguridad para archivos
                 $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
-                $tipo = mime_content_type($_FILES['imagen']['tmp_name']);
-                if (in_array($tipo, $permitidos)) {
-                    // Generar un cid único
-                    $imgCid = md5(uniqid(time()));
-                    $mail->addEmbeddedImage($_FILES['imagen']['tmp_name'], $imgCid, $_FILES['imagen']['name']);
+                $maxSize = 5 * 1024 * 1024; // 5MB máximo
+                
+                // Verificar tamaño del archivo
+                if ($_FILES['imagen']['size'] > $maxSize) {
+                    $errorEnvio = "La imagen no puede ser mayor a 5MB.";
                 } else {
-                    $errorEnvio = "Formato de imagen no válido. Usa JPG, PNG o GIF.";
+                    // Verificar tipo MIME real del archivo
+                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                    $tipo = finfo_file($finfo, $_FILES['imagen']['tmp_name']);
+                    finfo_close($finfo);
+                    
+                    if (in_array($tipo, $permitidos)) {
+                        // Verificar extensión del archivo
+                        $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+                        $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'gif'];
+                        
+                        if (in_array($extension, $extensionesPermitidas)) {
+                            // Generar un cid único
+                            $imgCid = md5(uniqid(time()));
+                            $mail->addEmbeddedImage($_FILES['imagen']['tmp_name'], $imgCid, $_FILES['imagen']['name']);
+                        } else {
+                            $errorEnvio = "Extensión de archivo no permitida. Usa JPG, PNG o GIF.";
+                        }
+                    } else {
+                        $errorEnvio = "Formato de imagen no válido. Usa JPG, PNG o GIF.";
+                    }
                 }
             }
 
@@ -95,6 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errorEnvio = "Error al enviar el mensaje: " . $mail->ErrorInfo;
         }
     }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -108,6 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
   <form class="formulario" action="" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <h1>Soporte</h1>
      <img src="css/email.png" alt="Logo" class ="imagen-central">
      <br>

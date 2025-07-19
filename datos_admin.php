@@ -1,7 +1,5 @@
 <?php
-include 'comprobar_sesion.php';
 require_once "conexion.php";
-actualizar_actividad();
 // Función para obtener el nivel de usuario
 function obtenerNivelUsuario($conn, $usuario_id) {
     $usuario_id = (int)$usuario_id;
@@ -85,7 +83,6 @@ if (!empty($busqueda) && isset($busqueda) && ctype_digit($busqueda)) {
         $error = 'Ha ocurrido un error al procesar la búsqueda. Por favor, inténtalo de nuevo.';
     }
 }
-actualizar_actividad();
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -100,7 +97,6 @@ $conn->close();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>Búsqueda de Datos - UniHub</title>
-    <script src="js/control_inactividad.js"></script>
     <style>
         /* Estilos específicos para la página de datos admin */
         .page-header {

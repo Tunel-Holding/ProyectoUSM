@@ -1,7 +1,5 @@
 <?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
-    include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
+include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
 
 // Consulta para obtener la cantidad de profesores
 $result_profesores = $conn->query("SELECT COUNT(*) as count FROM profesores");
@@ -53,7 +51,6 @@ if ($result_materias) {
 usort($registros, function ($a, $b) {
     return $b['id'] - $a['id'];
 });
-actualizar_actividad();
 $result_profesores->close();
 $result_estudiantes->close();
 $result_materias->close();
@@ -72,7 +69,6 @@ $conn->close();
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin-general.css">
     <title>UniHub - Panel de Administración</title>
-    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>

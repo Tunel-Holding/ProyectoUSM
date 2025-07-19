@@ -1,7 +1,4 @@
-<?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
-?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -14,7 +11,6 @@ actualizar_actividad();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Editar Materia - USM</title>
-    <script src="js/control_inactividad.js"></script>
     <style>
         .main-content {
             margin-top: 100px;
@@ -426,14 +422,28 @@ actualizar_actividad();
     <div class="main-content">
         <?php
         require 'conexion.php';
-        actualizar_actividad();
-        $nombre = $_GET['nombre'];
-        $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre='$nombre' ORDER BY m.seccion ASC";
-        $result = $conn->query($sql);
+        
+        // Sanitizar y validar el parámetro nombre
+        $nombre = isset($_GET['nombre']) ? trim(htmlspecialchars(strip_tags($_GET['nombre']), ENT_QUOTES, 'UTF-8')) : '';
+        
+        if (empty($nombre)) {
+            header('Location: admin_materias.php');
+            exit();
+        }
+        
+        // Usar prepared statements para prevenir inyección SQL
+        $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre = ? ORDER BY m.seccion ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $nombre);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
         // Obtener información de la materia para el formulario de edición
-        $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre='$nombre' LIMIT 1";
-        $resultMateria = $conn->query($sqlMateria);
+        $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre = ? LIMIT 1";
+        $stmtMateria = $conn->prepare($sqlMateria);
+        $stmtMateria->bind_param("s", $nombre);
+        $stmtMateria->execute();
+        $resultMateria = $stmtMateria->get_result();
         $materia = $resultMateria->fetch_assoc();
         ?>
 

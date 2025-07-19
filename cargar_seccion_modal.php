@@ -1,7 +1,5 @@
 <?php
-include 'comprobar_sesion.php';
 include 'conexion.php';
-actualizar_actividad();
 $id = $_GET['id'];
 
 // Obtener los detalles de la sección a editar

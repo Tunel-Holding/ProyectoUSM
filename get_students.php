@@ -1,6 +1,4 @@
 <?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
 header('Content-Type: application/json');
 include 'conexion.php';
 
@@ -62,7 +60,6 @@ while ($row = $result->fetch_assoc()) {
     $students[] = $row;
 }
 $debug['num_students'] = count($students);
-actualizar_actividad();
 $conn->close();
 
 // Limpiar cualquier salida previa
