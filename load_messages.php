@@ -175,9 +175,21 @@ while ($row = $result->fetch_assoc()) {
     // Avatar y burbuja según el usuario
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
+        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
+        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
+                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
+                <button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>
+                <button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>
+            </div>';
         echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
     } else {
         // Para otros usuarios: [botones] [avatar] [burbuja]
+        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
+        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
+                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
+                <button class="menu-puntos-opcion disabled" disabled>Editar</button>
+                <button class="menu-puntos-opcion disabled" disabled>Eliminar</button>
+            </div>';
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
         echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
     }
@@ -241,25 +253,6 @@ while ($row = $result->fetch_assoc()) {
     if ($is_current_user) {
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
     }
-
-    // --- BOTÓN DE 3 PUNTITOS Y MENÚ CONTEXTUAL ---
-    // (En el bucle de mensajes, justo después de los botones de acción)
-    if ($is_current_user) {
-        // Para el usuario actual: [botones] [burbuja] [avatar] [3 puntitos]
-        echo '<button class="menu-btn" onclick="showMenu(event, ' . $message_id . ')">⋮</button>';
-        echo '<div class="message-menu" id="menu-' . $message_id . '">
-            <button class="menu-item" onclick="replyToMessage(' . $message_id . ', \'' . addslashes($nombre_usuario) . '\')">Responder</button>
-            <button class="menu-item" onclick="editMessage(' . $message_id . ')">Editar</button>
-            <button class="menu-item" onclick="deleteMessage(' . $message_id . ')">Eliminar</button>
-        </div>';
-    } else {
-        // Para otros usuarios: [botones] [avatar] [burbuja] [3 puntitos]
-        echo '<button class="menu-btn" onclick="showMenu(event, ' . $message_id . ')">⋮</button>';
-        echo '<div class="message-menu" id="menu-' . $message_id . '">
-            <button class="menu-item" onclick="replyToMessage(' . $message_id . ', \'' . addslashes($nombre_usuario) . '\')">Responder</button>
-        </div>';
-    }
-    // --- FIN HTML DEL BOTÓN Y MENÚ CONTEXTUAL ---
 
     echo '</div>'; // Cierre de contenedor flex
 }
@@ -421,70 +414,93 @@ $conn->close();
         object-fit: cover;
     }
 
-    .reply-button,
-    .delete-button {
-        display: none !important;
-    }
-
     /* --- BOTÓN DE 3 PUNTITOS Y MENÚ CONTEXTUAL --- */
-    .menu-btn {
+    .menu-puntos-btn {
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px 8px;
         font-size: 22px;
         color: #888;
+        padding: 4px 8px;
         border-radius: 50%;
         transition: background 0.2s;
         position: relative;
         z-index: 2;
+        /* Nuevo: para que el menú sea relativo a este botón */
+        display: inline-block;
     }
 
-    .menu-btn:hover {
+    .menu-puntos-btn:hover {
         background: #e0e0e0;
     }
 
-    .message-menu {
+    .menu-puntos {
         display: none;
         position: absolute;
-        min-width: 120px;
+        top: 100%;
+        left: 0;
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        min-width: 120px;
         z-index: 10;
-        right: 0;
-        top: 32px;
+        flex-direction: column;
         padding: 6px 0;
-        font-size: 15px;
+        margin-top: 4px;
     }
 
-    body.dark-mode .message-menu {
-        background: #232323;
-        border: 1px solid #444;
-        color: #eee;
+    .menu-puntos.show {
+        display: flex;
     }
 
-    .message-menu .menu-item {
+    .menu-puntos-opcion {
         padding: 10px 18px;
         cursor: pointer;
-        transition: background 0.2s;
-        border: none;
         background: none;
-        width: 100%;
+        border: none;
         text-align: left;
         font-size: 15px;
+        color: #213555;
+        transition: background 0.2s;
     }
 
-    .message-menu .menu-item:hover {
-        background: #f0f0f0;
+    .menu-puntos-opcion:hover {
+        background: #f4f8fb;
     }
 
-    body.dark-mode .message-menu .menu-item:hover {
+    .menu-puntos-opcion.disabled {
+        color: #aaa;
+        cursor: not-allowed;
+        background: none;
+    }
+
+    /* Ajuste para modo oscuro */
+    body.dark-mode .menu-puntos {
+        background: #232323;
+        border: 1px solid #444;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32);
+    }
+
+    body.dark-mode .menu-puntos-opcion {
+        color: #e0e0e0;
+    }
+
+    body.dark-mode .menu-puntos-opcion:hover {
         background: #333;
     }
 
-    /* --- FIN ESTILOS MENÚ --- */
+    /* Eliminar los estilos condicionales de right/left para mensajes propios */
+    .message-container-flex.current-user .menu-puntos {
+        left: auto;
+        right: 0;
+    }
+
+    /* Ocultar los botones originales de responder/eliminar */
+    .reply-button,
+    .delete-button {
+        display: none !important;
+    }
 
     @media (max-width: 768px) {
 
@@ -546,35 +562,30 @@ $conn->close();
         }
     }
 
-    // --- JS para mostrar/ocultar menú contextual y conectar acciones ---
-    function showMenu(event, messageId) {
-        event.stopPropagation();
-        // Ocultar otros menús
-        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
+    function mostrarMenuPuntos(btn, messageId, esPropio) {
+        // Cerrar otros menús
+        document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
         // Mostrar el menú de este mensaje
-        const menu = document.getElementById('menu-' + messageId);
-        if (menu) {
-            menu.style.display = 'block';
-            // Posicionar el menú si es necesario
-            const btn = event.currentTarget;
-            const rect = btn.getBoundingClientRect();
-            menu.style.top = (btn.offsetTop + btn.offsetHeight + 4) + 'px';
-            menu.style.right = '0px';
-        }
+        const menu = document.getElementById('menu-puntos-' + messageId);
+        menu.classList.toggle('show');
+        // Cerrar al hacer click fuera del botón y del menú
+        document.addEventListener('mousedown', function handler(e) {
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('show');
+                document.removeEventListener('mousedown', handler);
+            }
+        });
     }
-    // Cerrar menú al hacer clic fuera
-    window.addEventListener('click', function () {
-        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
-    });
-    // Opciones del menú
-    function replyToMessage(messageId, userName) {
-        // Simula el click en el botón de responder
-        $(".reply-button[data-message-id='" + messageId + "']").trigger('click');
-        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
+    function responderMensaje(id) {
+        // Simula click en el botón original (que está oculto)
+        document.querySelector('.reply-button[data-message-id="' + id + '"]').click();
     }
-    function editMessage(messageId) {
+    function editarMensaje(id) {
+        // Aquí puedes implementar la lógica de edición
         alert('Funcionalidad de edición próximamente...');
-        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
     }
-    // deleteMessage ya existe y funciona
+    function eliminarMensaje(id) {
+        // Simula click en el botón original (que está oculto)
+        document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
+    }
 </script>
