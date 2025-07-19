@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 require 'conexion.php';
-
+actualizar_actividad();
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -31,7 +31,7 @@ if ($result_check->num_rows === 0) {
     echo json_encode(['success' => false, 'message' => 'El horario no existe o no pertenece a esta materia']);
     exit();
 }
-
+actualizar_actividad();
 // Eliminar el horario
 $sql_delete = "DELETE FROM horariosmateria WHERE id = ? AND id_materia = ?";
 $stmt_delete = $conn->prepare($sql_delete);
@@ -42,6 +42,6 @@ if ($stmt_delete->execute()) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Error al eliminar el horario: ' . $conn->error]);
 }
-
+actualizar_actividad();
 $conn->close();
 ?> 

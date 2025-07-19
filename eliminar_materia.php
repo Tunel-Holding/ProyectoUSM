@@ -1,11 +1,12 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 include 'conexion.php';
 
 $nombre = $_GET['nombre'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    actualizar_actividad();
     if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
         $sql = "DELETE FROM materias WHERE nombre='$nombre'";
         if ($conn->query($sql) === TRUE) {
@@ -21,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 window.location.href = 'admin_materias.php';
               </script>";
     }
+    actualizar_actividad();
     $conn->close();
     exit();
 }
@@ -32,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eliminar Materia</title>
+    <script src="js/control_inactividad.js"></script>
 </head>
 <body>
     <script>

@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php';
 
 $id = $_POST['id']; // Obtener el ID de la sección desde el formulario
@@ -43,6 +44,6 @@ if ($conn->query($sql) === TRUE) {
     header("Location: $redirectUrl");
     exit();
 }
-
+actualizar_actividad();
 $conn->close();
 ?>

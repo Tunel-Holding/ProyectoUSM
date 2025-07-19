@@ -1,5 +1,5 @@
 <?php
-session_start();
+   include("comprobar_sesion.php");
 require 'conexion.php';
 
 // 🔐 Validación de sesión activa
@@ -177,8 +177,8 @@ while ($row = $result->fetch_assoc()) {
     echo '</div>'; // Cierre de burbuja
     echo '</div>'; // Cierre de contenedor flex
 }
-
-$stmt->close();
+actualizar_actividad();
+$conn->close();
 ?>
 
 <style>

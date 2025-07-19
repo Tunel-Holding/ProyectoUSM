@@ -1,5 +1,6 @@
 <?php 
 include 'comprobar_sesion.php';
+actualizar_actividad();
 $nivelusuario = $_SESSION['nivelusu']; 
 ?>
 <!DOCTYPE html>
@@ -10,6 +11,7 @@ $nivelusuario = $_SESSION['nivelusu'];
     <link rel="icon" href="css/icono.png" type="image/png">
 	<link rel="stylesheet" href="css\style.css">
 	<title>Inicio - USM</title>
+    <script src="js/control_inactividad.js"></script>
 </head>
 <body class="body2">
 	<div class="contenedorentrante2">

@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -69,6 +70,7 @@ include 'comprobar_sesion.php';
         }
     </style>
 
+    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>

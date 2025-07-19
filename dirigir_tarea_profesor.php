@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-session_start();
+actualizar_actividad();
 require 'conexion.php';
 
 if (isset($_GET['valor'])) { 
@@ -23,7 +23,7 @@ if (isset($_GET['valor'])) {
         echo "No se encontró la materia con el ID proporcionado.";
     }
 
-    $stmt->close(); 
+    actualizar_actividad();
     $conn->close();
 
     

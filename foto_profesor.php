@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 
 $id_profesor = $_SESSION['idusuario'];
@@ -12,6 +12,8 @@ if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
     $foto = $row['foto'];
 }
+actualizar_actividad();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +32,7 @@ if (mysqli_num_rows($result) > 0) {
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <title>Fotografía - USM</title>
+    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>

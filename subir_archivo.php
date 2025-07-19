@@ -1,6 +1,6 @@
 <?php
 include 'conexion.php';
-
+actualizar_actividad();
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
@@ -57,6 +57,7 @@ if ($result_check->num_rows > 0) {
             // No se muestra el mensaje de error
         }
     }
-}
+    }
+actualizar_actividad();
 $conn->close();
 ?>

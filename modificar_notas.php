@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
 // Verificar si 'idusuario' está definido en la sesión
 if (!isset($_SESSION['idusuario'])) {
     die("Error: ID de usuario no definido en la sesión.");
@@ -31,7 +31,7 @@ $materia_id = $_SESSION['materia_id'];
     <link rel="icon" href="css/icono.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalprofesor.css">
-
+    <script src="js/control_inactividad.js"></script>
     <link rel="stylesheet" href="css/tabla_calificaciones.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

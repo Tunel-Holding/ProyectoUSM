@@ -1,7 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
 include 'conexion.php';
-
+actualizar_actividad();
 $id = $_GET['id'];
 
 // Obtener los detalles de la sección a editar
@@ -144,7 +144,7 @@ $conn->close();
     
     <div class="form-group">
         <label class="form-label" for="salon">Salón:</label>
-        <input class="form-input" type="text" name="salon" id="salon" value="<?php echo htmlspecialchars($seccion['salon']); ?>" required>
+        <input class="form-input" type="text" name="salon" id="salon" value="<?php echo htmlspecialchars($seccion['salon']); ?>" required maxlength="50">
     </div>
     
     <div class="form-group">

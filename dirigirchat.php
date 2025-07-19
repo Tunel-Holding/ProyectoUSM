@@ -1,9 +1,9 @@
 <?php
 include 'comprobar_sesion.php';
 require 'conexion.php';
-
+actualizar_actividad();
 if (isset($_GET['valor'])) { 
-
+    actualizar_actividad();
     $id_estudiante = $_SESSION['idusuario'];
     $_SESSION['idmateria'] = $_GET['valor'];
     $id_materia = $_GET['valor'];
@@ -22,7 +22,7 @@ if (isset($_GET['valor'])) {
         echo "No se encontró la materia con el ID proporcionado.";
     }
 
-    $stmt->close(); 
+    actualizar_actividad();
     $conn->close();
 
     

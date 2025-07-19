@@ -1,5 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +75,7 @@ include 'comprobar_sesion.php';
             z-index: 2;
         }
     </style>
+    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>
