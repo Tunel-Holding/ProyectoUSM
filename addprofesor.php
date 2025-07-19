@@ -128,15 +128,15 @@ class AddProfesorManager {
             $mail->CharSet = 'UTF-8'; 
             $mail->isSMTP();
             $mail->isHTML(true);
-            $mail->Host = 'smtp.gmail.com';
+            $mail->Host = 'mail.conexiondocente.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'modulo11usm@gmail.com';
-            $mail->Password = 'aoau ilmo tglw yodm';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Username = 'soportetecnico@conexiondocente.com';
+            $mail->Password = 'soportetecnico**';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = 465;
             
             // Destinatarios y contenido
-            $mail->setFrom('modulo11usm@gmail.com', 'Universidad Santa Maria');
+            $mail->setFrom('soportetecnico@conexiondocente.com', 'UniHub');
             $mail->addAddress($email);
             $mail->Subject = 'Creación de Perfil Profesor - UniHub';
             
