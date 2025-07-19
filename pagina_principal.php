@@ -649,6 +649,76 @@ $conn->close();
                 gap: 20px !important;
             }
         }
+
+        /* Estilos para modo oscuro */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .divprincipal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+        }
+
+        body.dark-mode .contenedor-horario {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+            border-color: #4a5568 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        body.dark-mode .titulo-horario {
+            color: #ffffff !important;
+            border-bottom-color: #ffd700 !important;
+        }
+
+        body.dark-mode .tabla-horario th {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .tabla-horario td {
+            background-color: #2d3748 !important;
+            color: #ffffff !important;
+            border-bottom-color: #4a5568 !important;
+        }
+
+        body.dark-mode .nohayclases {
+            background: linear-gradient(135deg, #38a169 0%, #48bb78 100%) !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .tarjeta-materia {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+            border-color: #4a5568 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        body.dark-mode .tarjeta-materia:hover {
+            border-color: #ffd700 !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        body.dark-mode .nombre-materia {
+            color: #ffffff !important;
+            border-bottom-color: #ffd700 !important;
+        }
+
+        body.dark-mode .info-item {
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%) !important;
+            border-color: #718096 !important;
+        }
+
+        body.dark-mode .texto {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .soporte-flotante {
+            background-color: #4a5568 !important;
+        }
+
+        body.dark-mode .soporte-flotante:hover {
+            background-color: #2d3748 !important;
+        }
     </style>
 </head>
 

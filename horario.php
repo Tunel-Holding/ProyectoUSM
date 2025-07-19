@@ -120,6 +120,51 @@ if (!defined('INCLUDED_FROM_MAIN')) {
         font-size: 8px !important;
     }
 }
+
+/* Estilos para modo oscuro */
+body.dark-mode .horario-tabla {
+    background-color: #2d3748 !important;
+}
+
+body.dark-mode .horario-tabla th {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+    color: #ffffff !important;
+    border-color: #4a5568 !important;
+}
+
+body.dark-mode .horario-tabla td {
+    background-color: #2d3748 !important;
+    color: #ffffff !important;
+    border-color: #4a5568 !important;
+}
+
+body.dark-mode .horario-celda {
+    background-color: #4a5568 !important;
+    color: #ffffff !important;
+    border: 1px solid #718096 !important;
+}
+
+body.dark-mode .celda-vacia {
+    background-color: #2d3748 !important;
+    border-color: #4a5568 !important;
+}
+
+body.dark-mode .div-horario {
+    background: #2d3748 !important;
+    border-color: #4a5568 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .horario-tabla strong {
+    color: #ffd700 !important;
+}
+
+/* Estilos específicos para el mensaje de "No hay clases" en modo oscuro */
+body.dark-mode .horario-tabla td[colspan="6"] {
+    background-color: #2d3748 !important;
+    color: #a0aec0 !important;
+    border-color: #4a5568 !important;
+}
 </style>
 
 <?php
