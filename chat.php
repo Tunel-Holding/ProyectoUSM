@@ -224,13 +224,18 @@ $last_user_id = null;
             align-items: flex-start;
             justify-content: flex-start;
             width: 100vw;
-            min-height: 80vh;
+            height: calc(100vh - 120px);
             background: #f4f8fb;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .chat-dashboard-area {
+            background: #1a1a1a;
         }
 
         .sidebar-materias {
             width: 270px;
-            min-height: 600px;
+            height: 100%;
             background: #fff;
             border-radius: 18px 0 0 18px;
             box-shadow: 0 8px 32px rgba(33, 53, 85, 0.10);
@@ -241,6 +246,12 @@ $last_user_id = null;
             align-items: stretch;
             position: relative;
             margin-right: 24px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .sidebar-materias {
+            background: #2d2d2d;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar-materias h2 {
@@ -249,6 +260,11 @@ $last_user_id = null;
             font-size: 1.2rem;
             margin-bottom: 18px;
             font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .sidebar-materias h2 {
+            color: #ffffff;
         }
 
         .lista-materias {
@@ -266,7 +282,12 @@ $last_user_id = null;
             font-weight: 500;
             cursor: pointer;
             border: 2px solid transparent;
-            transition: background 0.2s, border 0.2s;
+            transition: background 0.2s, border 0.2s, color 0.2s;
+        }
+
+        body.dark-mode .materia-item {
+            background: #3a3a3a;
+            color: #e0e0e0;
         }
 
         .materia-item.selected,
@@ -279,13 +300,19 @@ $last_user_id = null;
         .chat-dashboard-main {
             background: #fff;
             width: 1400px;
-            min-height: 600px;
+            height: 100%;
             margin: 32px 32px 32px 0;
             border-radius: 0 18px 18px 0;
             box-shadow: 0 8px 32px rgba(33, 53, 85, 0.10);
             display: flex;
             flex-direction: column;
             position: relative;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .chat-dashboard-main {
+            background: #2d2d2d;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         @media (max-width: 1500px) {
@@ -324,6 +351,12 @@ $last_user_id = null;
             gap: 18px;
             background: #f7fafc;
             border-radius: 18px 18px 0 0;
+            min-height: 0;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .chat-dashboard-messages {
+            background: #1e1e1e;
         }
 
         .chat-dashboard-entry {
@@ -335,9 +368,13 @@ $last_user_id = null;
             display: flex;
             align-items: center;
             gap: 16px;
-            position: sticky;
-            bottom: 0;
             border-top: 1px solid #e6e6e6;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.dark-mode .chat-dashboard-entry {
+            background: #2d2d2d;
+            border-top: 1px solid #404040;
         }
 
         .chat-dashboard-entry input[type="text"] {
@@ -346,13 +383,25 @@ $last_user_id = null;
             padding: 12px 18px;
             font-size: 1.1rem;
             background: #f7f7f7;
-            transition: border 0.2s;
+            color: #333;
+            transition: border 0.2s, background 0.2s, color 0.2s;
             flex: 1;
         }
 
         .chat-dashboard-entry input[type="text"]:focus {
             border: 1.5px solid #ffd166;
             background: #fffbe6;
+        }
+
+        body.dark-mode .chat-dashboard-entry input[type="text"] {
+            background: #404040;
+            border: 1px solid #555;
+            color: #ffffff;
+        }
+
+        body.dark-mode .chat-dashboard-entry input[type="text"]:focus {
+            border: 1.5px solid #ffd166;
+            background: #4a4a4a;
         }
 
         .chat-dashboard-entry .button {
@@ -388,6 +437,11 @@ $last_user_id = null;
             gap: 8px;
             font-size: 0.98rem;
             width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .chat-dashboard-reply {
+            background: #404040;
         }
 
         .chat-dashboard-reply #reply-to-user {
@@ -398,8 +452,6 @@ $last_user_id = null;
         .chat-dashboard-reply #cancel-reply {
             margin-left: auto;
         }
-
-
     </style>
 </head>
 
@@ -457,24 +509,27 @@ $last_user_id = null;
                 <!-- Los mensajes se cargan aquí dinámicamente -->
             </div>
 
-            <div class="chat-dashboard-entry">
-                <div id="reply-preview" class="chat-dashboard-reply" style="display: none;">
-                    <div id="reply-to-user"></div>
-                    <div id="reply-message"></div>
-                    <button id="cancel-reply" class="buttoncancel">Cancelar</button>
+            <div class="chat-entry-wrapper">
+                <div class="chat-dashboard-entry">
+                    <div id="reply-preview" class="chat-dashboard-reply" style="display: none;">
+                        <div id="reply-to-user"></div>
+                        <div id="reply-message"></div>
+                        <button id="cancel-reply" class="buttoncancel">Cancelar</button>
+                    </div>
+                    <button id="upload-button" class="button" title="Subir archivo o imagen">
+                        <img src="css/plus-pequeno.png" alt="Upload">
+                    </button>
+                    <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="1000" />
+                    <button id="send-button" class="button" title="Enviar mensaje">
+                        <img src="css/enviar-mensaje.png" alt="Send">
+                    </button>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
+                        style="display: none;">
+                    <button id="call-button" class="button" title="Llamada">
+                        <img src="css/llamada_alumno.png" alt="Call">
+                    </button>
                 </div>
-                <button id="upload-button" class="button" title="Subir archivo o imagen">
-                    <img src="css/plus-pequeno.png" alt="Upload">
-                </button>
-                <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="1000" />
-                <button id="send-button" class="button" title="Enviar mensaje">
-                    <img src="css/enviar-mensaje.png" alt="Send">
-                </button>
-                <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display: none;">
-                <button id="call-button" class="button" title="Llamada">
-                    <img src="css/llamada_alumno.png" alt="Call">
-                </button>
             </div>
         </div>
     </div>
@@ -619,7 +674,7 @@ $last_user_id = null;
             // Mensajes
             setupMessageHandlers();
             setupFileHandlers();
-            
+
 
         }
 

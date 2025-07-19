@@ -13,12 +13,49 @@ body {
   height: 100vh; /* Asegura que el body ocupe todo el viewport */
   --fondorespuesta: #f1f1f1;
   --color-texto-reply: #333;
+  background: #f4f8fb;
+  transition: background 0.3s ease;
 }
 
 body.dark-mode {
   --fondo: rgb(60, 60, 60);
   --fondorespuesta: #636363;
   --color-texto-reply: #ccc;
+  background: #1a1a1a;
+}
+
+/* Modo oscuro para mensajes de usuario */
+body.dark-mode .message-bubble-usuario {
+  background: #404040;
+  color: #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Modo oscuro para separadores de fecha */
+body.dark-mode .date-separator {
+  background-color: #404040;
+  border: 1px solid #555;
+  color: #e0e0e0;
+}
+
+/* Modo oscuro para el menú de upload */
+body.dark-mode #upload-menu {
+  background-color: #2d2d2d;
+  border: 1px solid #555;
+}
+
+body.dark-mode .upload-option {
+  color: #e0e0e0;
+  border-bottom: 1px solid #555;
+}
+
+body.dark-mode .upload-option:hover {
+  background-color: #404040;
+}
+
+/* Modo oscuro para timestamps */
+body.dark-mode .timestamp {
+  color: #aaa;
 }
 
 #logoButton {
