@@ -14,7 +14,9 @@ if (isset($_GET['valor'])) {
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/inscripcionstyle.css">
-    <link rel="icon" href="css/icono.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
+    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
+    
     <style>
         .soporte-flotante-container {
             position: fixed;
@@ -79,7 +81,8 @@ if (isset($_GET['valor'])) {
     </div>
     <div class="cabecera">
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">

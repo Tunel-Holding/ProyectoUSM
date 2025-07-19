@@ -209,7 +209,8 @@ $last_user_id = null;
     <meta charset="UTF-8">
     <title>Chat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="css/icono.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
+    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/chat.css">

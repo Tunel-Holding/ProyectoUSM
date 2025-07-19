@@ -15,7 +15,9 @@ actualizar_actividad();
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="stylesheet" href="css/tablastyle.css">
-    <link rel="icon" href="css/icono.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
+    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .soporte-flotante-container {
@@ -245,7 +247,7 @@ actualizar_actividad();
         <button type="button" id="logoButton">
            <!-- <img src="css/logoazul.png" alt="Logo"> -->
              <img src="css/menu.png" alt="Menú" class="logo-menu">
-            
+
 
         </button>
         <div class="logoempresa">
@@ -286,9 +288,9 @@ actualizar_actividad();
 
                     if ($resultadoInscritas->num_rows > 0) {
                         while ($fila = $resultadoInscritas->fetch_assoc()) {
-                            
+
                             echo "<tr>";
-                            
+
                             echo "<td>" . $fila['nombre'] . "</td>";
                             echo "<td>" . $fila['seccion'] . "</td>";
                             echo "<td>" . $fila['creditos'] . "</td>";
