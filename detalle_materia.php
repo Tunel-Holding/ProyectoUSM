@@ -331,6 +331,85 @@ $conn->close();
             flex-shrink: 0;
             z-index: 2;
         }
+
+        /* Estilos para modo oscuro */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+        }
+
+        body.dark-mode .detalle-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .header-materia {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .info-card {
+            background: #2d3748;
+            border-color: #4a5568;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .info-card h3 {
+            color: #ffffff;
+            border-bottom-color: #ffd700;
+        }
+
+        body.dark-mode .info-item {
+            background: #4a5568;
+            border-left-color: #ffd700;
+        }
+
+        body.dark-mode .info-item .label {
+            color: #ffd700;
+        }
+
+        body.dark-mode .info-item .value {
+            color: #ffffff;
+        }
+
+        body.dark-mode .horarios-table th {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: #ffffff;
+        }
+
+        body.dark-mode .horarios-table td {
+            background-color: #2d3748;
+            color: #ffffff;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .horarios-table tr:nth-child(even) {
+            background-color: #4a5568;
+        }
+
+        body.dark-mode .btn-volver {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .btn-volver:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .profesor-datos h4 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .profesor-datos p {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .soporte-flotante {
+            background-color: #4a5568;
+        }
+
+        body.dark-mode .soporte-flotante:hover {
+            background-color: #2d3748;
+        }
     </style>
 </head>
 

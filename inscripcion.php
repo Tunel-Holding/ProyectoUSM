@@ -143,6 +143,94 @@ actualizar_actividad();
         .contenedormaterias tr:last-child td {
             border-bottom: none;
         }
+
+        /* Estilos para modo oscuro */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+        }
+
+        body.dark-mode .contenedor-principal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .contenedormaterias table {
+            background: #2d3748;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .contenedormaterias th {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: #ffffff;
+        }
+
+        body.dark-mode .contenedormaterias td {
+            background-color: #2d3748;
+            color: #ffffff;
+            border-bottom-color: #4a5568;
+        }
+
+        body.dark-mode .contenedormaterias tr:hover {
+            background-color: #4a5568;
+        }
+
+        body.dark-mode .btn-detalle {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .btn-detalle:hover {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .materias {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .div-materia {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border-color: #4a5568;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .div-materia:hover {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .div-materia h2 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .div-materia h4 {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .botoninscribir {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: #ffffff;
+        }
+
+        body.dark-mode .botoninscribir:hover {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        }
+
+        body.dark-mode .soporte-flotante {
+            background-color: #4a5568;
+        }
+
+        body.dark-mode .soporte-flotante:hover {
+            background-color: #2d3748;
+        }
+
+        body.dark-mode h1 {
+            color: #ffffff;
+        }
+
+        body.dark-mode h2 {
+            color: #ffffff;
+        }
     </style>
 
     <script src="js/control_inactividad.js"></script>
