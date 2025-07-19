@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estamos trabajando - UniHub</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #174388 0%, #1e5aa8 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 32px 20px;
+            max-width: 350px;
+            width: 90vw;
+            text-align: center;
+            margin: 20px auto;
+        }
+
+        .icono {
+            font-size: 60px;
+            margin-bottom: 18px;
+            /* Sin animación de giro */
+        }
+
+        h1 {
+            font-size: 1.7em;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        p {
+            font-size: 1.1em;
+            margin-bottom: 18px;
+            color: #f3f3f3;
+        }
+
+        .btn-volver {
+            background: #ffd700;
+            color: #174388;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-volver:hover {
+            background: #ffe066;
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 18px 5px;
+            }
+
+            h1 {
+                font-size: 1.2em;
+            }
+
+            .icono {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="icono" aria-label="Celular cargando">
+            <!-- Celular animado -->
+            <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="12" y="4" width="30" height="46" rx="6" fill="#fff" stroke="#174388" stroke-width="2" />
+                <rect x="19" y="10" width="16" height="30" rx="3" fill="#e9ecef" />
+                <rect id="bateria" x="25" y="14" width="4" height="14" rx="2" fill="#ffd700">
+                    <animate attributeName="y" values="28;14;28" dur="1.2s" repeatCount="indefinite" />
+                    <animate attributeName="height" values="0;14;0" dur="1.2s" repeatCount="indefinite" />
+                </rect>
+                <rect x="24" y="40" width="6" height="2" rx="1" fill="#bdbdbd" />
+                <rect x="25.5" y="6" width="3" height="2" rx="1" fill="#bdbdbd" />
+            </svg>
+        </div>
+        <h1>¡Estamos trabajando!</h1>
+        <p>Estamos trabajando en una página web optimizada para celular.<br>
+            Mientras tanto, por favor accede desde tu ordenador para disfrutar de todas las funciones.<br><br>
+            ¡Gracias por tu paciencia!</p>
+        <div class="icono" aria-label="Ordenador animado" style="margin-top: 18px;">
+            <!-- Ordenador animado -->
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="14" width="48" height="32" rx="5" fill="#fff" stroke="#174388" stroke-width="2" />
+                <rect x="14" y="20" width="36" height="20" rx="3" fill="#e9ecef" />
+                <rect x="20" y="48" width="24" height="4" rx="2" fill="#174388" />
+                <rect x="28" y="54" width="8" height="3" rx="1.5" fill="#ffd700" />
+                <rect x="30.5" y="10" width="3" height="4" rx="1.5" fill="#bdbdbd" />
+                <ellipse cx="32" cy="36" rx="10" ry="2.5" fill="#dbeafe">
+                    <animate attributeName="opacity" values="0.5;1;0.5" dur="1.2s" repeatCount="indefinite" />
+                </ellipse>
+            </svg>
+        </div>
+    </div>
+    <script>
+        function volverInicio() {
+            // Redirige a la página principal o a la anterior
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+
+</html>
