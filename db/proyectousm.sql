@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 19-07-2025 a las 07:31:24
+-- Tiempo de generación: 19-07-2025 a las 19:37:13
 -- Versión del servidor: 8.3.0
 -- Versión de PHP: 8.3.6
 
@@ -79,7 +79,7 @@ INSERT INTO `datos_usuario` (`id`, `usuario_id`, `cedula`, `nombres`, `apellidos
 (3, 24, 30395202, 'María Victoria', 'García García', 'Femenino', 2147483647, 'mvggarcia05@gmail.com', 'Baruta'),
 (4, 29, 14446246, 'Jade', 'Poya', 'Femenino', 2147483647, 'jadepoya0505@gmail.com', 'El paraiso ?'),
 (6, 34, 30715834, 'Stefano', 'Lattanzi', 'Masculino', 2147483647, 'lattanzi30715834@usm.edu.ve', 'sd'),
-(7, 35, 30542563, 'Andrea', 'Mejiaod12', 'Femenino', 31, 'avictoria1501@gmail.com', 'e');
+(7, 35, 30542563, 'Andrea', 'Mejiaod12', 'Femenino', 2147483647, 'avictoria1501@gmail.com', 'e');
 
 -- --------------------------------------------------------
 
@@ -134,7 +134,7 @@ INSERT INTO `estudiantes` (`id`, `id_usuario`, `cedula`, `email`, `carrera`, `se
 (6, 27, NULL, '', 'Ingenieria en Sistemas', 1, 20),
 (7, 28, NULL, '', 'Ingenieria en Sistemas', 1, 20),
 (8, 31, 30542565, 'avictoria1501@gmail.com', 'Ingenieria en Sistemas', 1, 18),
-(9, 35, NULL, '', 'Ingenieria en Sistemas', 1, 18);
+(9, 35, NULL, '', 'Ingenieria en Sistemas', 1, 11);
 
 -- --------------------------------------------------------
 
@@ -248,39 +248,38 @@ CREATE TABLE IF NOT EXISTS `horarios` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_estudiante` int DEFAULT NULL,
   `id_materia` int DEFAULT NULL,
-  `dia` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `hora_inicio` time DEFAULT NULL,
-  `hora_fin` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_estudiante` (`id_estudiante`),
   KEY `id_materia` (`id_materia`)
-) ENGINE=MyISAM AUTO_INCREMENT=107 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `horarios`
 --
 
-INSERT INTO `horarios` (`id`, `id_estudiante`, `id_materia`, `dia`, `hora_inicio`, `hora_fin`) VALUES
-(85, 1, 78, 'Jueves', '07:00:00', '08:30:00'),
-(84, 1, 78, 'Martes', '07:00:00', '09:15:00'),
-(75, 25, 78, 'Jueves', '07:00:00', '08:30:00'),
-(74, 25, 78, 'Martes', '07:00:00', '09:15:00'),
-(73, 24, 78, 'Jueves', '07:00:00', '08:30:00'),
-(72, 24, 78, 'Martes', '07:00:00', '09:15:00'),
-(103, 1, 90, 'Lunes', '07:00:00', '14:00:00'),
-(92, 1, 84, 'Martes', '07:00:00', '08:30:00'),
-(93, 1, 84, 'Jueves', '07:00:00', '09:15:00'),
-(94, 1, 86, 'Miércoles', '10:00:00', '11:30:00'),
-(95, 1, 88, 'Viernes', '08:30:00', '10:00:00'),
-(96, 1, 89, 'Viernes', '07:00:00', '08:30:00'),
-(97, 24, 80, 'Lunes', '07:00:00', '08:30:00'),
-(98, 24, 80, 'Miércoles', '07:00:00', '08:30:00'),
-(99, 24, 88, 'Viernes', '08:30:00', '10:00:00'),
-(102, 24, 89, 'Viernes', '07:00:00', '08:30:00'),
-(101, 24, 86, 'Miércoles', '10:00:00', '11:30:00'),
-(104, 31, 84, '', '00:00:00', '00:00:00'),
-(105, 35, 84, 'Lunes', '11:00:00', '12:00:00'),
-(106, 35, 84, 'Miércoles', '09:41:00', '11:00:00');
+INSERT INTO `horarios` (`id`, `id_estudiante`, `id_materia`) VALUES
+(85, 1, 78),
+(84, 1, 78),
+(75, 25, 78),
+(74, 25, 78),
+(73, 24, 78),
+(72, 24, 78),
+(103, 1, 90),
+(92, 1, 84),
+(93, 1, 84),
+(94, 1, 86),
+(95, 1, 88),
+(96, 1, 89),
+(97, 24, 80),
+(98, 24, 80),
+(99, 24, 88),
+(102, 24, 89),
+(101, 24, 86),
+(104, 31, 84),
+(105, 35, 84),
+(106, 35, 84),
+(107, 35, 86),
+(108, 35, 89);
 
 -- --------------------------------------------------------
 
@@ -358,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `inscripciones` (
   PRIMARY KEY (`id`),
   KEY `id_estudiante` (`id_estudiante`),
   KEY `id_materia` (`id_materia`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `inscripciones`
@@ -378,7 +377,9 @@ INSERT INTO `inscripciones` (`id`, `id_estudiante`, `id_materia`, `fecha_inscrip
 (47, 24, 89, '2025-01-20'),
 (46, 24, 86, '2025-01-20'),
 (49, 31, 84, '2025-07-12'),
-(50, 35, 84, '2025-07-19');
+(50, 35, 84, '2025-07-19'),
+(51, 35, 86, '2025-07-19'),
+(52, 35, 89, '2025-07-19');
 
 -- --------------------------------------------------------
 
@@ -406,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `materias` (
 INSERT INTO `materias` (`id`, `nombre`, `salon`, `id_profesor`, `creditos`, `semestre`, `seccion`) VALUES
 (84, 'Herramientas de Apoyo', '902', 1, 2, 1, 'A'),
 (83, 'Matematicas 1', '702', NULL, 5, 1, 'D'),
-(80, 'Matematicas 1', '902', NULL, 5, 1, 'A'),
+(80, 'Matematicas 1', '902', 8, 5, 1, 'A'),
 (81, 'Matematicas 1', '902', 4, 5, 1, 'B'),
 (82, 'Matematicas 1', '901', NULL, 5, 1, 'C'),
 (85, 'Herramientas de Apoyo', '902', 2, 2, 1, 'B'),
@@ -479,7 +480,7 @@ CREATE TABLE IF NOT EXISTS `notas` (
   `materia_id` int DEFAULT NULL,
   `semestre` int DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=208 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `notas`
@@ -499,7 +500,9 @@ INSERT INTO `notas` (`Id`, `usuario_id`, `Parcial1`, `Parcial2`, `Parcial3`, `Pa
 (202, 24, '12', '5', '18', '18', '13', 89, 1),
 (201, 24, NULL, NULL, NULL, NULL, NULL, 86, 1),
 (204, 31, NULL, NULL, NULL, NULL, NULL, 84, 1),
-(205, 35, NULL, NULL, NULL, NULL, NULL, 84, NULL);
+(205, 35, NULL, NULL, NULL, NULL, NULL, 84, NULL),
+(206, 35, NULL, NULL, NULL, NULL, NULL, 86, NULL),
+(207, 35, NULL, NULL, NULL, NULL, NULL, 89, NULL);
 
 -- --------------------------------------------------------
 
@@ -591,7 +594,7 @@ INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_us
 (28, 'Jpipi', 'janpipi@gmail.com', '$2y$10$dfQJGv63KFl9irf8NC04ZeiMddn/buoDgFHGW0lnTduyhJ9nRmfI.', 'administrador', 0, ''),
 (29, 'Tprofesor', 'reveron29989547@usm.edu.ve', '$2y$10$WMsYx2.0SweZ9QFFhCvFuOVkHOT//2wfMQNnv/alJSVqvSmPa8SDm', 'profesor', 0, ''),
 (30, 'DGarcia', 'danielagarciaprof@gmail.com', '$2y$10$l2QfBJE/NbuwJJ3VYqR6DuWlbiaEeze0oTaM7fQqoH0LF66GsSN.u', 'profesor', 0, ''),
-(35, 'andrea', 'avictoria1501@gmail.com', '$2y$10$Hm5jMWuvUBZps5.tJ/DYF.ZKIuPh0TlPCrNsD7JPMf/Tm6dacol2K', 'administrador', 0, ''),
+(35, 'andrea', 'avictoria1501@gmail.com', '$2y$10$Hm5jMWuvUBZps5.tJ/DYF.ZKIuPh0TlPCrNsD7JPMf/Tm6dacol2K', 'usuario', 0, ''),
 (33, 'stefano', 'lattanzi30715834@usm.edu.ve.com', '$2y$10$JNuyX.txfPzBUHxsPVC9Tet0t0wMix9qfnMmJmUyUkZMJSLuxvYfW', 'profesor', 0, ''),
 (34, 'stefanoA', 'lattanzi30715834@usm.edu.ve', '$2y$10$2g/.s2MHvYLSjGK55Xcw0OOsD4BUQO3yTlz3WPxJasAQuzKlfZHEm', 'profesor', 0, '');
 COMMIT;

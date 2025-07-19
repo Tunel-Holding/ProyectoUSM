@@ -286,6 +286,115 @@ $conn->close();
             border: 1px solid #28a745;
             margin-bottom: 15px;
         }
+
+        /* Estilos mejorados para modo oscuro */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+        }
+
+        body.dark-mode .pagina {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .wecontainer {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border-color: #ffd700;
+        }
+
+        body.dark-mode .wecontainer h1 {
+            color: #ffd700;
+        }
+
+        body.dark-mode .wecontainer label {
+            color: #ffffff;
+        }
+
+        body.dark-mode .wecontainer input,
+        body.dark-mode .wecontainer select {
+            background: #4a5568;
+            border-color: #718096;
+            color: #ffffff;
+        }
+
+        body.dark-mode .wecontainer input:focus,
+        body.dark-mode .wecontainer select:focus {
+            border-color: #ffd700;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        body.dark-mode .wecontainer .readonly-field {
+            background-color: #4a5568;
+            border-color: #718096;
+            color: #a0aec0;
+        }
+
+        body.dark-mode .wecontainer .button {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+            color: #1a1a2e !important;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        body.dark-mode .wecontainer .button:hover {
+            background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        body.dark-mode .perfil-boton {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: #ffffff;
+            border: 1px solid #718096;
+        }
+
+        body.dark-mode .perfil-boton:hover {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-color: #ffd700;
+        }
+
+        body.dark-mode .error {
+            border-color: #e53e3e;
+            background-color: rgba(229, 62, 62, 0.1);
+        }
+
+        body.dark-mode .error-message {
+            color: #fc8181;
+            background-color: rgba(229, 62, 62, 0.1);
+            border-color: #e53e3e;
+        }
+
+        body.dark-mode .success-message {
+            color: #68d391;
+            background-color: rgba(104, 211, 145, 0.1);
+            border-color: #38a169;
+        }
+
+        body.dark-mode .perfil-foto {
+            border-color: #ffd700;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        body.dark-mode a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        body.dark-mode a:hover {
+            color: #ffed4e;
+            text-decoration: underline;
+        }
+
+        /* Estilos para el soporte flotante en modo oscuro */
+        body.dark-mode .soporte-flotante {
+            background-color: #4a5568;
+        }
+
+        body.dark-mode .soporte-flotante:hover {
+            background-color: #2d3748;
+        }
     </style>
 </head>
 

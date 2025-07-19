@@ -88,17 +88,15 @@ function cerrar_sesion() {
     // Actualizar estado en la base de datos
     if (isset($_SESSION['idusuario'])) {
         try {
-            include 'conexion.php';
-            
-            $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            require 'conexion.php';
             
             $sql = "UPDATE usuarios SET session = 0 WHERE id = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$_SESSION['idusuario']]);
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $_SESSION['idusuario']);
+            $stmt->execute();
+            $stmt->close();
             
-            $pdo = null;
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             error_log("Error al actualizar estado de sesión: " . $e->getMessage());
         }
     }
