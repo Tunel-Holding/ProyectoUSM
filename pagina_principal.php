@@ -177,6 +177,59 @@ $conn->close();
             margin-bottom: 6px;
             color: #333;
         }
+        .soporte-flotante-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .soporte-flotante {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background-color: #446ad3;
+            padding: 12px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            overflow: hidden;
+            width: 60px;            /* ✅ suficiente para mostrar solo el ícono */
+            height: 50px;
+            transition: width 0.4s ease, background-color 0.3s ease;
+        }
+
+
+        .soporte-flotante:hover {
+            width: 210px; /* ✅ se expande hacia la izquierda */
+            background-color: #365ac0;
+        }
+
+        .soporte-mensaje {
+            flex: 1; /* ✅ ocupa todo el espacio disponible */
+            opacity: 0;
+            white-space: nowrap;
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+            transform: translateX(30px); /* animación desde la derecha */
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            text-align: left; /* ✅ texto alineado a la izquierda */
+            margin-right: auto;
+        }
+
+        .soporte-flotante:hover .soporte-mensaje {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .soporte-flotante img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            z-index: 2;
+        }
     </style>
 </head>
 
@@ -191,10 +244,6 @@ $conn->close();
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <a href="contacto.php" class="soporte-link">
-            <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
-            </a>
-
             <p>UniHub</p>
         </div>
 
@@ -256,6 +305,12 @@ $conn->close();
         </div>
     </div>
 
+    <div class="soporte-flotante-container">
+        <a href="contacto.php" class="soporte-flotante" title="Soporte">
+            <span class="soporte-mensaje">Contacto soporte</span>
+            <img src="css/audifonos-blanco.png" alt="Soporte">
+        </a>
+    </div>
     <script>
         // Aquí solo debe ir JS exclusivo de la página, si lo hubiera. Se eliminó la lógica de menú y tema.
     </script>
