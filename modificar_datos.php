@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Todos los campos son obligatorios.";
     } elseif (!$error_message) {
         // Validar formato del teléfono (solo números y algunos caracteres especiales)
-        if (!preg_match('/^[\\d\\s\\-\\+\\(\\)]+$/', $telefono)) {
+        if (!preg_match('/^[\d\s\-\+\(\)]+$/', $telefono)) {
             $error_message = "El formato del teléfono no es válido.";
         } else {
             // Actualizar solo los campos editables en la base de datos usando prepared statement
@@ -149,142 +149,497 @@ $conn->close();
     <title>Modificar Datos - USM</title>
     <script src="js/control_inactividad.js"></script>
     <style>
-        body.dark-mode {
-            --background-color: rgb(50, 50, 50);
-            --text-color: white;
-            --background-form: rgb(147, 136, 136);
+        /* Variables CSS para el modo oscuro y colores base */
+        :root {
+            --background-color-light: #f4f7f6; /* Fondo general claro, más suave */
+            --text-color-light: #333; /* Color de texto general claro */
+            --form-background-light: #ffffff; /* Fondo del formulario claro */
+            --primary-color: #004c97; /* Azul USM para títulos, labels y énfasis */
+            --secondary-color: #ffd700; /* Amarillo USM para bordes de formulario, botones */
+            --border-color-light: #dee2e6; /* Borde de inputs y campos de solo lectura claro */
+            --input-bg-light: #f8f9fa; /* Fondo de input de solo lectura claro */
+            --input-text-readonly-light: #6c757d; /* Texto de campos de solo lectura claro */
+            --shadow-color-light: rgba(0, 0, 0, 0.15); /* Sombra suave para elementos */
         }
 
+        /* Definiciones para el modo oscuro */
+        body.dark-mode {
+            --background-color: rgb(50, 50, 50); /* Fondo general oscuro */
+            --text-color: white; /* Color de texto general oscuro */
+            --form-background: rgb(80, 80, 80); /* Fondo del formulario oscuro, un poco más claro que el fondo general */
+            --primary-color: #ffd700; /* Amarillo USM como primario en oscuro (para títulos, etc.) */
+            --secondary-color: #004c97; /* Azul USM como secundario en oscuro (para bordes, acentos) */
+            --border-color: #666; /* Borde de inputs y campos de solo lectura oscuro */
+            --input-bg: #444; /* Fondo de input de solo lectura oscuro */
+            --input-text-readonly: #cccccc; /* Texto de campos de solo lectura oscuro */
+            --shadow-color-dark: rgba(0, 0, 0, 0.4); /* Sombra más pronunciada en oscuro */
+        }
         .pagina {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #fff;
-            background-color: var(--background-color);
+            box-sizing: border-box;
         }
 
+        /* Contenedor principal del formulario */
         .wecontainer {
             font-family: "Poppins", sans-serif;
             max-width: 1200px;
             width: 90%;
-            background: var(--background-form);
-            color: #004c97;
+            background: var(--form-background-light);
+            color: var(--primary-color);
             padding: 40px;
-            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            border-top: 10px solid #ffd700;
-            border-bottom: 10px solid #ffd700;
-            border-left: 1px solid #ffd700 !important;
-            border-right: 1px solid #ffd700 !important;
+            box-shadow: 2px 4px 12px var(--shadow-color-light);
+            border-radius: 10px;
+            border-top: 10px solid var(--secondary-color);
+            border-bottom: 10px solid var(--secondary-color);
+            border-left: 1px solid var(--secondary-color);
+            border-right: 1px solid var(--secondary-color);
             text-align: center;
             display: flex;
             flex-direction: column;
-            transition: 1s background ease-in-out;
+            transition: background 0.5s ease-in-out, box-shadow 0.5s ease, border-color 0.5s ease;
+        }
+
+        body.dark-mode .wecontainer {
+            background: var(--form-background);
+            color: var(--primary-color);
+            box-shadow: 2px 4px 12px var(--shadow-color-dark);
+            border-color: var(--primary-color);
         }
 
         .wecontainer h1 {
-            margin-bottom: 20px;
-            color: #004c97;
-            font-size: 2em;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        body.dark-mode .wecontainer h1 {
+            color: var(--primary-color);
         }
 
+        /* Contenedor de la foto de perfil */
         .perfil-container {
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             margin-bottom: 30px;
         }
 
-        .perfil-foto {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-right: 20px;
+        /* Nuevo Wrapper para la foto y el ícono */
+        .perfil-foto-wrapper {
+            position: relative; /* Clave para posicionar el ícono dentro */
+            width: 150px; /* Igual que el ancho de la foto */
+            height: 150px; /* Igual que el alto de la foto */
+            border-radius: 50%; /* Para que el ícono se adapte a la forma circular */
+            overflow: hidden; /* Asegura que cualquier cosa que sobresalga de la foto esté oculta */
+            cursor: pointer; /* Indica que es clicable */
         }
 
+        /* Mantiene el estilo de la foto de perfil */
+        .perfil-foto {
+            width: 100%; /* Ocupa todo el ancho del wrapper */
+            height: 100%; /* Ocupa todo el alto del wrapper */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--secondary-color);
+            box-shadow: 0 0 15px var(--shadow-color-light);
+            transition: border-color 0.5s ease-in-out, box-shadow 0.5s ease;
+            display: block; /* Elimina cualquier espacio extra debajo de la imagen */
+        }
+        body.dark-mode .perfil-foto {
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 0 15px var(--shadow-color-dark);
+        }
+
+        /* Estilos del ícono de edición (el lápiz) */
+        /* Estilos del ícono de edición (la capa de superposición con el lápiz) */
+        .edit-icon {
+            position: absolute;
+            top: 0; /* Cubre desde arriba */
+            left: 0; /* Cubre desde la izquierda */
+            width: 100%; /* Ocupa todo el ancho del wrapper */
+            height: 100%; /* Ocupa toda la altura del wrapper */
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente oscuro */
+            color: white; /* Color del lápiz */
+            display: flex;
+            justify-content: center; /* Centra el lápiz horizontalmente */
+            align-items: center; /* Centra el lápiz verticalmente */
+            opacity: 0; /* Oculto por defecto */
+            transition: opacity 0.3s ease, background-color 0.3s ease; /* Transición suave */
+            pointer-events: none; /* Permite clics a través de él cuando es opacidad 0 */
+            cursor: pointer; /* Vuelve a indicar clicable */
+            /* Añadimos un border-radius para que se adapte a la forma de la foto */
+            border-radius: 50%; 
+        }
+
+        /* Efecto al pasar el cursor sobre el contenedor de la foto */
+        .perfil-foto-wrapper:hover .edit-icon {
+            opacity: 1; /* Se vuelve visible */
+            pointer-events: auto; /* Permite que el ícono sea clicable */
+        }
+
+        /* Estilos para el SVG del lápiz */
+        .edit-icon svg {
+            width: 30px; /* Tamaño del SVG */
+            height: 30px;
+        }
+
+        /* Modo oscuro para el ícono de edición */
+        body.dark-mode .edit-icon {
+            background-color: rgba(0, 0, 0, 0.7); /* Un poco más oscuro en modo oscuro */
+            color: var(--primary-color); /* Lápiz amarillo en modo oscuro */
+        }
+        /* Puedes eliminar .perfil-boton si ya no lo usas para cambiar foto */
         .perfil-boton {
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
             font-size: 16px;
+            font-weight: 500;
         }
 
         .perfil-boton:hover {
             background-color: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+        }
+        body.dark-mode .perfil-boton {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        body.dark-mode .perfil-boton:hover {
+            background-color: #ffcc00;
+            box-shadow: 0 2px 5px var(--shadow-color-dark);
         }
 
+        /* Grid del formulario */
         .wecontainer .form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 20px 30px;
             align-items: center;
+            padding: 0 15px;
         }
 
+        /* Etiquetas de los campos */
         .wecontainer label {
-            color: #004c97;
-            font-size: 1.2em;
-            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 1.15em;
+            font-weight: 600;
+            text-align: right;
+            padding-right: 15px;
+            box-sizing: border-box;
+        }
+        body.dark-mode .wecontainer label {
+            color: var(--text-color);
         }
 
-        .wecontainer input,
+        /* Inputs y Selects editables */
+        .wecontainer input[type="text"],
+        .wecontainer input[type="file"],
         .wecontainer select {
-            padding: 10px;
+            padding: 12px 15px;
             width: 100%;
-            background: transparent;
-            border: 1px solid #004c97;
-            border-radius: 4px;
+            background: var(--form-background-light);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
             font-size: 1em;
+            color: var(--text-color-light);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, color 0.5s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
+        body.dark-mode .wecontainer input[type="text"],
+        body.dark-mode .wecontainer input[type="file"],
+        body.dark-mode .wecontainer select {
+            background: var(--input-bg);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        /* Estado de enfoque (focus) para inputs y selects */
+        .wecontainer input[type="text"]:focus,
+        .wecontainer select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 76, 151, 0.25);
+        }
+        body.dark-mode .wecontainer input[type="text"]:focus,
+        body.dark-mode .wecontainer select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.25);
+        }
+
+        /* Campos de solo lectura */
         .wecontainer .readonly-field {
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            color: #6c757d;
+            padding: 12px 15px;
+            background-color: var(--input-bg-light);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            color: var(--input-text-readonly-light);
             font-size: 1em;
+            box-sizing: border-box;
+            width: 100%;
+            text-align: left;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+        }
+        body.dark-mode .readonly-field {
+            background-color: var(--input-bg);
+            border-color: var(--border-color);
+            color: var(--input-text-readonly);
         }
 
+        /* Botón de guardar cambios */
         .wecontainer .button {
             grid-column: span 2;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #ffd700 !important;
-            color: #004c97 !important;
+            margin-top: 25px;
+            padding: 14px 30px;
+            background: var(--secondary-color); /* Color base del botón (amarillo USM en modo claro, azul USM en oscuro) */
+            color: var(--primary-color); /* Color base del texto (azul USM en modo claro, amarillo USM en oscuro) */
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1.2em;
+            font-weight: 700;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, color 0.3s ease; /* Añadido 'color' a la transición */
+            display: block;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .wecontainer .button:hover {
-            background-color: #ffcc00;
+            /* Modo Claro: Color al pasar el cursor */
+            background-color: #004c97; /* Ejemplo: Un azul más oscuro */
+            color: white; /* Ejemplo: Texto blanco */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow-color-light);
         }
 
+        body.dark-mode .wecontainer .button:hover {
+            /* Modo Oscuro: Color al pasar el cursor */
+            background-color: #ffd700; /* Ejemplo: Amarillo USM */
+            color: #004c97; /* Ejemplo: Texto azul USM */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow-color-dark);
+        }
+
+        /* Campo con error */
         .error {
-            border: 2px solid red;
+            border: 2px solid #dc3545 !important;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+        }
+
+        /* Mensajes de error y éxito */
+        .error-message,
+        .success-message {
+            grid-column: span 2;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+            transition: opacity 1s ease-out;
+        }
+        body.dark-mode .error-message,
+        body.dark-mode .success-message {
+            box-shadow: 0 2px 5px var(--shadow-color-dark);
         }
 
         .error-message {
-            color: red;
-            font-weight: bold;
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.15);
+            border: 1px solid #dc3545;
         }
 
         .success-message {
-            color: green;
-            font-weight: bold;
-            background-color: rgba(40, 167, 69, 0.1);
-            padding: 10px;
-            border-radius: 4px;
+            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.15);
             border: 1px solid #28a745;
-            margin-bottom: 15px;
+        }
+
+        /* Enlace de cambiar contraseña */
+        .wecontainer a[href="forgotPassword.php"] {
+            grid-column: span 2;
+            display: block;
+            margin-top: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+        }
+
+        .wecontainer a[href="forgotPassword.php"]:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        body.dark-mode .wecontainer a[href="forgotPassword.php"] {
+            color: var(--text-color);
+        }
+        body.dark-mode .wecontainer a[href="forgotPassword.php"]:hover {
+            color: #66b3ff;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .wecontainer {
+                padding: 25px;
+                width: 95%;
+            }
+
+            .wecontainer h1 {
+                font-size: 2em;
+            }
+
+            .perfil-foto-wrapper,
+            .perfil-foto { /* Asegura que también el wrapper se adapte */
+                width: 120px;
+                height: 120px;
+            }
+
+            .wecontainer .form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 0;
+            }
+            .wecontainer label {
+                text-align: left;
+                padding-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .wecontainer input[type="text"],
+            .wecontainer input[type="file"],
+            .wecontainer select,
+            .wecontainer .readonly-field,
+            .wecontainer .button,
+            .error-message,
+            .success-message,
+            .wecontainer a[href="forgotPassword.php"] {
+                grid-column: span 1;
+                width: 100%;
+                text-align: left;
+            }
+            .wecontainer .button {
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wecontainer {
+                padding: 15px;
+                border-radius: 8px;
+                border-top-width: 8px;
+                border-bottom-width: 8px;
+            }
+
+            .wecontainer h1 {
+                font-size: 1.6em;
+                margin-bottom: 15px;
+            }
+
+            .perfil-foto-wrapper,
+            .perfil-foto { /* Asegura que también el wrapper se adapte */
+                width: 90px;
+                height: 90px;
+                border-width: 3px;
+            }
+
+            .wecontainer input[type="text"],
+            .wecontainer input[type="file"],
+            .wecontainer select,
+            .readonly-field {
+                padding: 10px 12px;
+                font-size: 0.9em;
+                border-radius: 6px;
+            }
+
+            .wecontainer .button {
+                padding: 12px 25px;
+                font-size: 1em;
+                margin-top: 20px;
+                border-radius: 6px;
+            }
+
+            .error-message,
+            .success-message {
+                font-size: 0.9em;
+                padding: 10px;
+                border-radius: 6px;
+            }
+        }
+
+                .soporte-flotante-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .soporte-flotante {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background-color: #446ad3;
+            padding: 12px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            overflow: hidden;
+            width: 60px;            /* ✅ suficiente para mostrar solo el ícono */
+            height: 50px;
+            transition: width 0.4s ease, background-color 0.3s ease;
+        }
+
+
+        .soporte-flotante:hover {
+            width: 210px; /* ✅ se expande hacia la izquierda */
+            background-color: #365ac0;
+        }
+
+        .soporte-mensaje {
+            flex: 1; /* ✅ ocupa todo el espacio disponible */
+            opacity: 0;
+            white-space: nowrap;
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+            transform: translateX(30px); /* animación desde la derecha */
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            text-align: left; /* ✅ texto alineado a la izquierda */
+            margin-right: auto;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .soporte-flotante:hover .soporte-mensaje {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .soporte-flotante img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            z-index: 2;
         }
     </style>
 </head>
@@ -308,9 +663,18 @@ $conn->close();
     <div class="pagina">
         <div class="wecontainer">
             <h1>Modificar Datos</h1>
-            <div class="perfil-container" style="text-align:center; margin-bottom: 20px;">
-                    <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto" style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:2px solid #ccc;">
+            <div class="perfil-container">
+                <div class="perfil-foto-wrapper">
+                    <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+                    <input type="file" id="foto" name="foto" accept="image/*" style="display: none;">
+                    <label for="foto" class="edit-icon" title="Cambiar foto de perfil">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm-9.106 3.613L1.139 14.851A.5.5 0 0 0 1.905 15.6l10.239-2.228 1.635-1.635L4.742 3.753z"/>
+                        </svg>
+                    </label>
+                </div>
             </div>
+
             <form method="POST" action="" enctype="multipart/form-data">
                 <?php if ($error_message): ?>
                     <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
@@ -319,10 +683,6 @@ $conn->close();
                     <p class="success-message">Datos actualizados correctamente.</p>
                 <?php endif; ?>
                 <div class="form">
-                    <!-- Foto de perfil -->
-                    <label for="foto" style="font-weight:bold;">Cambiar foto de perfil:</label>
-                    <input type="file" name="foto" id="foto" accept="image/*" style="margin-bottom:10px;">
-                    <!-- Campos de solo lectura -->
                     <label for="cedula">Número de Cédula:</label>
                     <div class="readonly-field">
                         <?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?>
@@ -339,7 +699,6 @@ $conn->close();
                     <div class="readonly-field">
                         <?php echo htmlspecialchars($estudiante['correo'] ?? ''); ?>
                     </div>
-                    <!-- Campos editables -->
                     <label for="sexo">Sexo:</label>
                     <select id="sexo" name="sexo"
                         class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
@@ -362,8 +721,55 @@ $conn->close();
         </div>
     </div>
 
+    <div class="soporte-flotante-container">
+        <a href="contacto.php" class="soporte-flotante" title="Soporte">
+            <span class="soporte-mensaje">Contacto soporte</span>
+            <img src="css/audifonos-blanco.png" alt="Soporte">
+        </a>
+    </div>
+
     <script>
-        // Script vacío - funcionalidad de foto removida
+        document.addEventListener('DOMContentLoaded', function() {
+            // Script para la vista previa de la foto
+            const fotoInput = document.getElementById('foto');
+            const perfilFoto = document.getElementById('perfilFoto');
+
+            fotoInput.addEventListener('change', function(event) {
+                if (event.target.files && event.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        perfilFoto.src = e.target.result;
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+            });
+
+            // Manejar mensajes de éxito/error de PHP (si vienen por GET)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success') && urlParams.get('success') === '1') {
+                // Mostrar mensaje de éxito si es necesario, aunque el PHP ya hace un redirect con mensaje.
+                // Podrías poner un setTimeout para que desaparezca
+                const successMessageDiv = document.querySelector('.success-message');
+                if (successMessageDiv) {
+                    successMessageDiv.style.opacity = '1';
+                    setTimeout(() => {
+                        successMessageDiv.style.opacity = '0';
+                        setTimeout(() => successMessageDiv.remove(), 1000); // Eliminar después de la transición
+                    }, 5000); // Ocultar después de 5 segundos
+                }
+            }
+            // Similar para el error_message si lo gestionaras por GET
+            <?php if ($error_message): ?>
+                const errorMessageDiv = document.querySelector('.error-message');
+                if (errorMessageDiv) {
+                    errorMessageDiv.style.opacity = '1';
+                    setTimeout(() => {
+                        errorMessageDiv.style.opacity = '0';
+                        setTimeout(() => errorMessageDiv.remove(), 1000);
+                    }, 5000);
+                }
+            <?php endif; ?>
+        });
     </script>
 </body>
 </html>
