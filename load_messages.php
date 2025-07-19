@@ -172,10 +172,15 @@ while ($row = $result->fetch_assoc()) {
     }
     echo '</div>';
 
-    // Avatar
-    echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
-    // Burbuja
-    echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
+    // Avatar y burbuja según el usuario
+    if ($is_current_user) {
+        // Para el usuario actual: [botones] [burbuja] [avatar]
+        echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
+    } else {
+        // Para otros usuarios: [botones] [avatar] [burbuja]
+        echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
+        echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
+    }
 
     // 📨 Contenido del mensaje
     echo "<strong>$nombre_usuario:</strong> ";
@@ -231,6 +236,31 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<p class='timestamp'>$timestamp</p>";
     echo '</div>'; // Cierre de burbuja
+
+    // Agregar avatar después de la burbuja para el usuario actual
+    if ($is_current_user) {
+        echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
+    }
+
+    // --- BOTÓN DE 3 PUNTITOS Y MENÚ CONTEXTUAL ---
+    // (En el bucle de mensajes, justo después de los botones de acción)
+    if ($is_current_user) {
+        // Para el usuario actual: [botones] [burbuja] [avatar] [3 puntitos]
+        echo '<button class="menu-btn" onclick="showMenu(event, ' . $message_id . ')">⋮</button>';
+        echo '<div class="message-menu" id="menu-' . $message_id . '">
+            <button class="menu-item" onclick="replyToMessage(' . $message_id . ', \'' . addslashes($nombre_usuario) . '\')">Responder</button>
+            <button class="menu-item" onclick="editMessage(' . $message_id . ')">Editar</button>
+            <button class="menu-item" onclick="deleteMessage(' . $message_id . ')">Eliminar</button>
+        </div>';
+    } else {
+        // Para otros usuarios: [botones] [avatar] [burbuja] [3 puntitos]
+        echo '<button class="menu-btn" onclick="showMenu(event, ' . $message_id . ')">⋮</button>';
+        echo '<div class="message-menu" id="menu-' . $message_id . '">
+            <button class="menu-item" onclick="replyToMessage(' . $message_id . ', \'' . addslashes($nombre_usuario) . '\')">Responder</button>
+        </div>';
+    }
+    // --- FIN HTML DEL BOTÓN Y MENÚ CONTEXTUAL ---
+
     echo '</div>'; // Cierre de contenedor flex
 }
 actualizar_actividad();
@@ -286,10 +316,23 @@ $conn->close();
     .profile-icon-alumno,
     .profile-icon-profesor,
     .profile-icon-administrador {
-        margin-right: 10px;
         width: 40px;
         height: 40px;
         object-fit: cover;
+    }
+
+    /* Margen para avatares de otros usuarios (izquierda) */
+    .message-container-flex.other-user .profile-icon-alumno,
+    .message-container-flex.other-user .profile-icon-profesor,
+    .message-container-flex.other-user .profile-icon-administrador {
+        margin-right: 10px;
+    }
+
+    /* Margen para avatar del usuario actual (derecha) */
+    .message-container-flex.current-user .profile-icon-alumno,
+    .message-container-flex.current-user .profile-icon-profesor,
+    .message-container-flex.current-user .profile-icon-administrador {
+        margin-left: 10px;
     }
 
     .message-bubble-alumno,
@@ -378,6 +421,71 @@ $conn->close();
         object-fit: cover;
     }
 
+    .reply-button,
+    .delete-button {
+        display: none !important;
+    }
+
+    /* --- BOTÓN DE 3 PUNTITOS Y MENÚ CONTEXTUAL --- */
+    .menu-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px 8px;
+        font-size: 22px;
+        color: #888;
+        border-radius: 50%;
+        transition: background 0.2s;
+        position: relative;
+        z-index: 2;
+    }
+
+    .menu-btn:hover {
+        background: #e0e0e0;
+    }
+
+    .message-menu {
+        display: none;
+        position: absolute;
+        min-width: 120px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+        z-index: 10;
+        right: 0;
+        top: 32px;
+        padding: 6px 0;
+        font-size: 15px;
+    }
+
+    body.dark-mode .message-menu {
+        background: #232323;
+        border: 1px solid #444;
+        color: #eee;
+    }
+
+    .message-menu .menu-item {
+        padding: 10px 18px;
+        cursor: pointer;
+        transition: background 0.2s;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        font-size: 15px;
+    }
+
+    .message-menu .menu-item:hover {
+        background: #f0f0f0;
+    }
+
+    body.dark-mode .message-menu .menu-item:hover {
+        background: #333;
+    }
+
+    /* --- FIN ESTILOS MENÚ --- */
+
     @media (max-width: 768px) {
 
         .profile-icon-alumno,
@@ -437,4 +545,36 @@ $conn->close();
                 });
         }
     }
+
+    // --- JS para mostrar/ocultar menú contextual y conectar acciones ---
+    function showMenu(event, messageId) {
+        event.stopPropagation();
+        // Ocultar otros menús
+        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
+        // Mostrar el menú de este mensaje
+        const menu = document.getElementById('menu-' + messageId);
+        if (menu) {
+            menu.style.display = 'block';
+            // Posicionar el menú si es necesario
+            const btn = event.currentTarget;
+            const rect = btn.getBoundingClientRect();
+            menu.style.top = (btn.offsetTop + btn.offsetHeight + 4) + 'px';
+            menu.style.right = '0px';
+        }
+    }
+    // Cerrar menú al hacer clic fuera
+    window.addEventListener('click', function () {
+        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
+    });
+    // Opciones del menú
+    function replyToMessage(messageId, userName) {
+        // Simula el click en el botón de responder
+        $(".reply-button[data-message-id='" + messageId + "']").trigger('click');
+        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
+    }
+    function editMessage(messageId) {
+        alert('Funcionalidad de edición próximamente...');
+        document.querySelectorAll('.message-menu').forEach(m => m.style.display = 'none');
+    }
+    // deleteMessage ya existe y funciona
 </script>

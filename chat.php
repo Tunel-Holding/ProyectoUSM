@@ -759,6 +759,10 @@ $last_user_id = null;
                             $('#message').val('');
                             hideReplyPreview();
                             loadMessages();
+                            // Forzar scroll al final después de enviar
+                            setTimeout(() => {
+                                forceScrollToBottom();
+                            }, 100);
                         } else {
                             showError(response.error || 'Error al enviar el mensaje');
                         }
@@ -825,6 +829,10 @@ $last_user_id = null;
                             hideReplyPreview();
                             loadMessages();
                             document.getElementById('upload-menu').style.display = 'none';
+                            // Forzar scroll al final después de subir archivo
+                            setTimeout(() => {
+                                forceScrollToBottom();
+                            }, 100);
                         } else {
                             showError(response.error || 'Error al subir el archivo');
                         }
@@ -894,6 +902,13 @@ $last_user_id = null;
                     scrollTop: $('#chat-box')[0].scrollHeight
                 }, 'normal');
             }
+        }
+
+        // 📍 Forzar scroll al final (sin condiciones)
+        function forceScrollToBottom() {
+            $('.chat-dashboard-messages').animate({
+                scrollTop: $('.chat-dashboard-messages')[0].scrollHeight
+            }, 'fast');
         }
 
         // 🔄 Actualizar mensajes cada 2 segundos
