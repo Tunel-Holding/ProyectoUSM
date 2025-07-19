@@ -1,11 +1,10 @@
 <?php
-include 'comprobar_sesion.php';
-
 include 'conexion.php';
 
 $id = $_GET['id'];  
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    actualizar_actividad();
         $sql = "SELECT nombre, seccion FROM materias WHERE id='$id'";
         $result = $conn->query($sql);
         

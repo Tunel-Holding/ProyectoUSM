@@ -1,12 +1,26 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 require 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cedula_estudiante = htmlspecialchars($_POST['id_estudiante']);
-    $id_materia = htmlspecialchars($_POST['id_materia']);
-    $nueva_seccion = htmlspecialchars($_POST['nueva_seccion']);
-    $materia_nombre = htmlspecialchars($_POST['materia_nombre']); // Añadido
+    // Sanitizar y validar datos de entrada
+    $cedula_estudiante = htmlspecialchars(trim($_POST['id_estudiante'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $id_materia = filter_var($_POST['id_materia'] ?? 0, FILTER_VALIDATE_INT);
+    $nueva_seccion = htmlspecialchars(trim($_POST['nueva_seccion'] ?? ''), ENT_QUOTES, 'UTF-8');
+    $materia_nombre = htmlspecialchars(trim($_POST['materia_nombre'] ?? ''), ENT_QUOTES, 'UTF-8');
+    
+    // Validaciones
+    if (empty($cedula_estudiante) || $id_materia <= 0 || empty($nueva_seccion) || empty($materia_nombre)) {
+        echo "<script>alert('Todos los campos son obligatorios y deben ser válidos.'); window.history.back();</script>";
+        exit();
+    }
+    
+    // Validar formato de cédula (solo números)
+    if (!preg_match('/^\d+$/', $cedula_estudiante)) {
+        echo "<script>alert('La cédula debe contener solo números.'); window.history.back();</script>";
+        exit();
+    }
 
     // Obtener el ID del estudiante usando la cédula
     $sql_id_estudiante = "SELECT usuario_id FROM datos_usuario WHERE cedula = ?";
@@ -36,37 +50,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $stmt_update->bind_param("iii", $nuevo_id_materia, $id_estudiante, $id_materia);
 
                         if ($stmt_update->execute()) {
-                            echo "<p>La sección de la materia se ha actualizado correctamente.</p>";
                             echo "<script>
                                     alert('Sección actualizada correctamente.');
                                     // Redirigir a la página de búsqueda con la cédula del estudiante ingresada
-                                    window.location.href = 'admin_alumnos.php?query=" . $cedula_estudiante . "';
+                                    window.location.href = 'admin_alumnos.php?query=" . urlencode($cedula_estudiante) . "';
                                   </script>";
                         } else {
-                            echo "<p>Error al actualizar la sección: " . $stmt_update->error . "</p>";
+                            error_log("Error actualizando sección en modificar_seccion_procesar.php: " . $stmt_update->error);
+                            echo "<script>alert('Error al actualizar la sección.'); window.history.back();</script>";
                         }
 
                         $stmt_update->close();
                     } else {
-                        echo "<p>Error al preparar la consulta de actualización: " . $conn->error . "</p>";
+                        error_log("Error preparando consulta en modificar_seccion_procesar.php: " . $conn->error);
+                        echo "<script>alert('Error interno del servidor.'); window.history.back();</script>";
                     }
                 } else {
-                    echo "<p>Error: No se encontró la materia con la nueva sección proporcionada.</p>";
+                    echo "<script>alert('No se encontró la materia con la nueva sección proporcionada.'); window.history.back();</script>";
                 }
 
                 $stmt_nueva_materia->close();
             } else {
-                echo "<p>Error al preparar la consulta para obtener el ID de la nueva materia: " . $conn->error . "</p>";
+                error_log("Error preparando consulta en modificar_seccion_procesar.php: " . $conn->error);
+                echo "<script>alert('Error interno del servidor.'); window.history.back();</script>";
             }
         } else {
-            echo "<p>Error: No se encontró el estudiante con la cédula proporcionada.</p>";
+            echo "<script>alert('No se encontró el estudiante con la cédula proporcionada.'); window.history.back();</script>";
         }
 
         $stmt_id_estudiante->close();
     } else {
-        echo "<p>Error al preparar la consulta para obtener el ID del estudiante: " . $conn->error . "</p>";
+        error_log("Error preparando consulta en modificar_seccion_procesar.php: " . $conn->error);
+        echo "<script>alert('Error interno del servidor.'); window.history.back();</script>";
     }
-
+    actualizar_actividad();
     $conn->close();
 }
 ?>
+    

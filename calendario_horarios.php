@@ -1,9 +1,12 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+
 require 'conexion.php';
 
-// Obtener el ID de la materia desde la URL
-$materia_id = isset($_GET['materia_id']) ? $_GET['materia_id'] : null;
+// Sanitizar y validar el ID de la materia
+$materia_id = isset($_GET['materia_id']) ? filter_var($_GET['materia_id'], FILTER_VALIDATE_INT) : null;
 
 if (!$materia_id) {
     header('Location: admin_materias.php');
@@ -38,6 +41,7 @@ $horarios_existentes = [];
 while ($row = $result_horarios->fetch_assoc()) {
     $horarios_existentes[] = $row;
 }
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -173,9 +177,25 @@ while ($row = $result_horarios->fetch_assoc()) {
         }
 
         .calendar-cell.has-schedule {
-            background: var(--primary-yellow);
+            background: linear-gradient(135deg, var(--primary-yellow), #fbbf24);
             color: var(--gray-900);
             font-weight: 600;
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .calendar-cell.has-schedule::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.8;
         }
 
         .schedule-info {
@@ -366,6 +386,11 @@ while ($row = $result_horarios->fetch_assoc()) {
         body.dark-mode .calendar-cell.has-schedule {
             background: #f59e0b;
             color: #1e293b;
+            border: 2px solid #61b7ff;
+        }
+
+        body.dark-mode .calendar-cell.has-schedule::after {
+            background: #61b7ff;
         }
 
         body.dark-mode .controls-panel {
@@ -585,10 +610,23 @@ while ($row = $result_horarios->fetch_assoc()) {
         const horariosExistentes = <?php echo json_encode($horarios_existentes); ?>;
         const materiaId = <?php echo $materia_id; ?>;
 
-        // Horarios de clase (7:00 AM a 9:00 PM)
+        // Horarios de clase (7:00 AM a 9:00 PM) - incluyendo intervalos de 15 minutos
         const horarios = [
-            '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
-            '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
+            '07:00', '07:15', '07:30', '07:45',
+            '08:00', '08:15', '08:30', '08:45',
+            '09:00', '09:15', '09:30', '09:45',
+            '10:00', '10:15', '10:30', '10:45',
+            '11:00', '11:15', '11:30', '11:45',
+            '12:00', '12:15', '12:30', '12:45',
+            '13:00', '13:15', '13:30', '13:45',
+            '14:00', '14:15', '14:30', '14:45',
+            '15:00', '15:15', '15:30', '15:45',
+            '16:00', '16:15', '16:30', '16:45',
+            '17:00', '17:15', '17:30', '17:45',
+            '18:00', '18:15', '18:30', '18:45',
+            '19:00', '19:15', '19:30', '19:45',
+            '20:00', '20:15', '20:30', '20:45',
+            '21:00'
         ];
 
         const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
@@ -617,11 +655,8 @@ while ($row = $result_horarios->fetch_assoc()) {
                     const horario = encontrarHorario(hora, dia);
                     if (horario) {
                         cell.classList.add('has-schedule');
-                        cell.innerHTML = `
-                            <div class="schedule-info">
-                                ${horario.hora_inicio} - ${horario.hora_fin}
-                            </div>
-                        `;
+                        // Solo mostrar el color, sin texto
+                        cell.innerHTML = '';
                     }
                     
                     grid.appendChild(cell);
@@ -639,7 +674,10 @@ while ($row = $result_horarios->fetch_assoc()) {
         function encontrarHorario(hora, dia) {
             return horariosExistentes.find(h => {
                 const horaInicio = h.hora_inicio.substring(0, 5);
-                return h.dia === dia && horaInicio === hora;
+                const horaFin = h.hora_fin.substring(0, 5);
+                
+                // Verificar si la hora actual está dentro del rango del horario
+                return h.dia === dia && hora >= horaInicio && hora < horaFin;
             });
         }
 
@@ -649,6 +687,28 @@ while ($row = $result_horarios->fetch_assoc()) {
             
             const formData = new FormData(this);
             
+            // Validaciones del lado del cliente
+            const dia = formData.get('dia');
+            const horaInicio = formData.get('hora_inicio');
+            const horaFin = formData.get('hora_fin');
+            
+            if (!dia || !horaInicio || !horaFin) {
+                alert('❌ Todos los campos son obligatorios');
+                return;
+            }
+            
+            if (horaFin <= horaInicio) {
+                alert('❌ La hora de fin debe ser mayor que la hora de inicio');
+                return;
+            }
+            
+            // Verificar si ya existe un horario para este día
+            const horarioExistente = horariosExistentes.find(h => h.dia === dia);
+            if (horarioExistente) {
+                alert('❌ Ya existe un horario para este día');
+                return;
+            }
+            
             fetch('guardar_horario.php', {
                 method: 'POST',
                 body: formData
@@ -657,6 +717,8 @@ while ($row = $result_horarios->fetch_assoc()) {
             .then(data => {
                 if (data.success) {
                     alert('✅ Horario guardado correctamente');
+                    // Limpiar formulario
+                    document.getElementById('horarioForm').reset();
                     location.reload();
                 } else {
                     alert('❌ Error: ' + data.message);

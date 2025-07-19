@@ -1,8 +1,12 @@
 <?php
 include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
+
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 $conn->set_charset("utf8mb4");
-
+actualizar_actividad();
 // Obtener la ID del usuario desde la sesión
 $user_id = $_SESSION['idusuario'];
 
@@ -155,7 +159,6 @@ if (isset($_POST['update_task_id'])) {
             } else {
                 $_SESSION['mensaje_tarea'] = '<div class="alert-error">Error al actualizar la tarea.</div>';
             }
-            $stmt->close();
         } else {
             $_SESSION['mensaje_tarea'] = '<div class="alert-error">Error en la base de datos al preparar la actualización.</div>';
         }
@@ -165,6 +168,8 @@ if (isset($_POST['update_task_id'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
+actualizar_actividad();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,6 +182,7 @@ if (isset($_POST['update_task_id'])) {
     <link rel="stylesheet" href="css/principalprofesor.css">
     <link rel="stylesheet" href="css/horario.css">
     <link rel="stylesheet" href="css/tareasprofesores.css">
+    <script src="js/control_inactividad.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -287,7 +293,7 @@ if (isset($_POST['update_task_id'])) {
                                 $ahora_dt = new DateTime('now', $tz_ve);
                                 $ha_pasado_fecha = $ahora_dt >= $fecha_entrega_dt;
                             ?>
-                            <div class="task-card gradient-<?php echo rand(1,6); ?>" data-task-id="<?php echo $tarea['id']; ?>">
+                            <div class="task-card gradient-<?php echo rand(1,6); ?>" data-task-id="<?php echo $tarea['id']; ?>" data-fechaentrega="<?php echo htmlspecialchars($tarea['fecha_entrega'] . 'T' . $tarea['hora_entrega'] . '-04:00'); ?>">
                                 <?php if (!$ha_pasado_fecha): ?>
                                 <div class="task-actions">
                                     <button class="task-action-btn edit-btn" title="Editar Tarea">
@@ -324,7 +330,7 @@ if (isset($_POST['update_task_id'])) {
                                         ?>
                                     </span>
                                 </p>
-                                <button class="btn btn-primary btn-evaluar" onclick="openEvaluateModal(<?php echo $tarea['id']; ?>)" <?php echo !$ha_pasado_fecha ? 'disabled' : ''; ?>>Evaluar Tarea</button>
+                                <button class="btn btn-primary btn-evaluar" onclick="openEvaluateModal(<?php echo $tarea['id']; ?>)">Evaluar Tarea</button>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -496,9 +502,15 @@ if (isset($_POST['update_task_id'])) {
                             <tbody>`;
                         data.students.forEach(student => {
                             let archivoUrl = '';
+                            let esLink = false;
                             if (student.archivo_entregado) {
-                                // Si ya contiene 'uploads/' no lo duplicamos
-                                archivoUrl = student.archivo_entregado.startsWith('uploads/') ? student.archivo_entregado : ('uploads/' + student.archivo_entregado);
+                                // Si es un link (http/https), mostrar como link, si no, como archivo
+                                if (/^https?:\/\//i.test(student.archivo_entregado)) {
+                                    archivoUrl = student.archivo_entregado;
+                                    esLink = true;
+                                } else {
+                                    archivoUrl = student.archivo_entregado.startsWith('uploads/') ? student.archivo_entregado : ('uploads/' + student.archivo_entregado);
+                                }
                             }
                             studentListHTML += `<tr>
                                 <td>${student.nombres} ${student.apellidos}</td>
@@ -517,7 +529,11 @@ if (isset($_POST['update_task_id'])) {
                                     <input type="text" placeholder="Escribe una retroalimentación..." data-student-id="${student.id}" class="input-retro">
                                 </td>
                                 <td style='text-align:center;'>
-                                    ${archivoUrl ? `<button class='btn btn-primary' onclick=\"window.open('${archivoUrl.replace(/'/g, '%27')}', '_blank');return false;\">Ver Archivo</button>` : '<span style=\"color:#888;\">No entregado</span>'}
+                                    ${archivoUrl ? (
+                                        esLink
+                                            ? `<button class='btn btn-primary' onclick=\"window.open('${archivoUrl.replace(/'/g, '%27')}', '_blank');return false;\">Ver Link</button>`
+                                            : `<button class='btn btn-primary' onclick=\"window.open('${archivoUrl.replace(/'/g, '%27')}', '_blank');return false;\">Ver Archivo</button>`
+                                    ) : '<span style=\"color:#888;\">No entregado</span>'}
                                 </td>
                             </tr>`;
                         });
@@ -709,6 +725,31 @@ if (isset($_POST['update_task_id'])) {
                 switchtema.checked = false;
             }
         }
+    });
+    // --- ACTIVAR BOTÓN EVALUAR EN TIEMPO REAL ---
+function controlarEstadoBotonesEvaluar() {
+    const taskCards = document.querySelectorAll('.task-card');
+    const now = new Date();
+    taskCards.forEach(card => {
+        const btnEvaluar = card.querySelector('.btn-evaluar');
+        const fechaEntregaISO = card.getAttribute('data-fechaentrega');
+        if (!btnEvaluar || !fechaEntregaISO) return;
+        const fechaEntrega = new Date(fechaEntregaISO);
+        if (now >= fechaEntrega) {
+            btnEvaluar.disabled = false;
+        } else {
+            btnEvaluar.disabled = true;
+        }
+    });
+}
+
+    function activarBotonesEvaluarEnTiempoReal() {
+        controlarEstadoBotonesEvaluar(); // Llamada inmediata al cargar
+        setInterval(controlarEstadoBotonesEvaluar, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        activarBotonesEvaluarEnTiempoReal();
     });
     </script>
 </body>

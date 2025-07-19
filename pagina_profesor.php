@@ -1,7 +1,9 @@
 <?php
-include 'comprobar_sesion.php';
-
-
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
+require_once 'comprobar_sesion.php';
+actualizar_actividad();
 
 include 'conexion.php';
 $conn->set_charset("utf8mb4");
@@ -77,6 +79,8 @@ $result_materias = $stmt_materias->get_result();
 if (!$result_materias) {
     die("Error al obtener el resultado: " . $stmt_materias->error);
 }
+actualizar_actividad();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,11 +93,12 @@ if (!$result_materias) {
     <link rel="stylesheet" href="css/principalprofesor.css">
     <link rel="stylesheet" href="css/horario.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>    
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <title>Inicio - USM</title>
+    <script src="js/control_inactividad.js"></script>
 </head>
 
 <body>

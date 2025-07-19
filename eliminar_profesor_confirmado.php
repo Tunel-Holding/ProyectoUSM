@@ -1,11 +1,8 @@
 <?php
-include 'comprobar_sesion.php';
-
 require "conexion.php";
 
 if (isset($_GET['id'])) {
     $id_profesor = intval($_GET['id']);
-
     // Eliminar el profesor de la base de datos
     $sql = "DELETE FROM Profesores WHERE id = ?";
     $stmt = $conn->prepare($sql);
@@ -22,11 +19,11 @@ if (isset($_GET['id'])) {
             window.location.href = 'admin_profesores.php';
         </script>";
     }
-
-    $stmt->close();
+    actualizar_actividad();
+    $conn->close();
 } else {
     echo "ID de profesor no especificado.";
 }
-
+actualizar_actividad();
 $conn->close();
 ?>

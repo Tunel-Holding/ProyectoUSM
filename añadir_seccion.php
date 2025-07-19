@@ -1,7 +1,8 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 include 'conexion.php';
-
 $nombre = $_GET['nombre'];
 
 // Obtener la última sección de la materia

@@ -1,11 +1,11 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
 include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php';
 
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
 
 // Obtener el ID del usuario de la sesión
 $id_usuario = $_SESSION['idusuario'];
@@ -108,8 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($sexo) || empty($telefono) || empty($direccion)) {
         $error_message = "Todos los campos son obligatorios.";
     } elseif (!$error_message) {
-        // Validar formato del teléfono (solo números y algunos caracteres especiales)
-        if (!preg_match('/^[\\d\\s\\-\\+\\(\\)]+$/', $telefono)) {
+        // Validar formato del teléfono (solo números y longitud 10)
+        if (!is_numeric($telefono) || strlen($telefono) != 10) {
             $error_message = "El formato del teléfono no es válido.";
         } else {
             // Actualizar los datos en la base de datos usando prepared statement
@@ -132,8 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
-$stmt->close();
+actualizar_actividad();
 $conn->close();
 ?>
 
@@ -152,6 +151,7 @@ $conn->close();
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <title>Modificar Profesor - USM</title>
+    <script src="js/control_inactividad.js"></script>
     <style>
         body.dark-mode {
             --background-color: rgb(50, 50, 50);
@@ -340,7 +340,7 @@ $conn->close();
                     </select>
 
                     <label for="telefono">Teléfono:</label>
-                    <input type="text" id="telefono" name="telefono"
+                    <input type="number" id="telefono" name="telefono"
                         value="<?php echo isset($estudiante['telefono']) ? $estudiante['telefono'] : ''; ?>"
                         class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
 

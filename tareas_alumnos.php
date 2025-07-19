@@ -1,13 +1,21 @@
 <?php
 include 'comprobar_sesion.php';
-include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 
+
+
+include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
+actualizar_actividad();
 // Consultar tareas desde la base de datos
 $idMateria = $_SESSION['idmateria'];
 $id_alumno = $_SESSION['idusuario'];
 
-// Modificado para incluir id_tarea y verificar entregas
-$sql = "SELECT t.id, t.titulo_tarea, t.descripcion, t.fecha_entrega, t.hora_entrega, t.categoria, et.id_entrega 
+
+// Modificado para incluir id_tarea, verificar entregas y traer link
+
+$sql = "SELECT t.id, t.titulo_tarea, t.descripcion, t.fecha_entrega, t.hora_entrega, t.categoria, et.id_entrega, et.archivo 
         FROM tareas t 
         LEFT JOIN entregas_tareas et ON t.id = et.id_tarea AND et.id_alumno = ?
         WHERE t.id_materia = ?";
@@ -17,7 +25,8 @@ $stmt->bind_param("si", $id_alumno, $idMateria);
 $stmt->execute();
 $result = $stmt->get_result();
 $tareas = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+actualizar_actividad();
+// $conn->close(); // Se mueve al final del archivo
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +45,7 @@ $stmt->close();
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/tareas.css">
+    <script src="js/control_inactividad.js"></script>
     <style>
         .task-grid {
             display: grid;
@@ -55,6 +65,23 @@ $stmt->close();
         }
         .task-card-footer {
             flex-shrink: 0;
+        }
+        .task-completed-message {
+            text-align: center;
+            width: 100%;
+            display: block;
+            margin: 0 auto 0 auto;
+        }
+        
+        .btn-mini {
+            padding: 6px 12px !important;
+            font-size: 0.95em !important;
+            min-width: 0 !important;
+            max-width: 180px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            margin-bottom: 8px !important;
         }
         @media (max-width: 600px) {
             .task-grid {
@@ -84,13 +111,70 @@ $stmt->close();
             /* ajusta según el contenido */
             opacity: 1;
         }
+        .soporte-flotante-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .soporte-flotante {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background-color: #446ad3;
+            padding: 12px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            overflow: hidden;
+            width: 60px;            /* ✅ suficiente para mostrar solo el ícono */
+            height: 50px;
+            transition: width 0.4s ease, background-color 0.3s ease;
+        }
+
+
+        .soporte-flotante:hover {
+            width: 210px; /* ✅ se expande hacia la izquierda */
+            background-color: #365ac0;
+        }
+
+        .soporte-mensaje {
+            flex: 1; /* ✅ ocupa todo el espacio disponible */
+            opacity: 0;
+            white-space: nowrap;
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+            transform: translateX(30px); /* animación desde la derecha */
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            text-align: left; /* ✅ texto alineado a la izquierda */
+            margin-right: auto;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .soporte-flotante:hover .soporte-mensaje {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .soporte-flotante img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            z-index: 2;
+        }
     </style>
 </head>
 
 <body>
     <div class="contenedorentrante3">
         <img src="css\logo.png">
+
     </div>
+
+
     <div class="cabecera">
         <button type="button" id="logoButton">
             <img src="css/logo.png" alt="Logo">
@@ -167,17 +251,21 @@ $stmt->close();
     $status_class = '';
     $entregada = !is_null($tarea['id_entrega']);
 
-    // Obtener calificación y retroalimentación de la entrega si existe
+
+
+    // Obtener calificación, retroalimentación y archivo de la entrega si existe
     $calificacion = null;
     $retroalimentacion = null;
+    $archivo_entregado = null;
     if ($entregada) {
-        $stmtCalif = $conn->prepare("SELECT calificacion, retroalimentacion FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ? ORDER BY id_entrega DESC LIMIT 1");
+        $stmtCalif = $conn->prepare("SELECT calificacion, retroalimentacion, archivo FROM entregas_tareas WHERE id_tarea = ? AND id_alumno = ? ORDER BY id_entrega DESC LIMIT 1");
         $stmtCalif->bind_param("ii", $tarea['id'], $id_alumno);
         $stmtCalif->execute();
-        $stmtCalif->bind_result($califRes, $retroRes);
+        $stmtCalif->bind_result($califRes, $retroRes, $archivoRes);
         if ($stmtCalif->fetch()) {
             $calificacion = $califRes;
             $retroalimentacion = $retroRes;
+            $archivo_entregado = $archivoRes;
         }
         $stmtCalif->close();
     }
@@ -193,7 +281,7 @@ $stmt->close();
         $status_class = 'pending';
     }
                     ?>
-    <div class="task-card" data-status="<?php echo $status_class; ?>">
+    <div class="task-card" data-status="<?php echo htmlspecialchars($status_class, ENT_QUOTES, 'UTF-8'); ?>" data-fechaentrega="<?php echo htmlspecialchars($tarea['fecha_entrega'] . 'T' . $tarea['hora_entrega'] . '-04:00', ENT_QUOTES, 'UTF-8'); ?>">
         <div class="task-card-content">
             <h4 class="task-title"><?php echo htmlspecialchars($tarea['titulo_tarea']); ?></h4>
             <p class="task-description"><?php echo htmlspecialchars($tarea['descripcion']); ?></p>
@@ -204,7 +292,7 @@ $stmt->close();
                 <p><i class="fas fa-hourglass"></i> Estado: <span class="status-badge <?php echo $status_class; ?>"><?php echo $status; ?></span></p>
             </div>
         </div>
-        <div class="task-card-footer status-<?php echo $status_class; ?>">
+        <div class="task-card-footer status-<?php echo htmlspecialchars($status_class, ENT_QUOTES, 'UTF-8'); ?>">
             <button class="grade-btn"
                 data-calificacion="<?php echo htmlspecialchars(($calificacion !== null && $calificacion !== '') ? $calificacion : 'N/A'); ?>"
                 data-retroalimentacion="<?php echo htmlspecialchars(($retroalimentacion !== null && $retroalimentacion !== '') ? $retroalimentacion : 'Sin retroalimentación.'); ?>"
@@ -212,20 +300,32 @@ $stmt->close();
             >
                 <i class="fas fa-star"></i> Calificación: <?php echo ($calificacion !== null && $calificacion !== '') ? htmlspecialchars($calificacion) : 'N/A'; ?>
             </button>
+            <?php
+                // Calcular si la tarea está vencida por fecha/hora exacta
+                $fechaHoraEntrega = new DateTime($tarea['fecha_entrega'] . ' ' . $tarea['hora_entrega'], $tz_ve);
+                $ahoraExacto = new DateTime('now', $tz_ve);
+                $expirada = ($ahoraExacto > $fechaHoraEntrega);
+            ?>
+            <button class="submit-task-btn btn-mini<?php if ($expirada) echo ' disabled-task-btn'; ?>" data-idtarea="<?php echo intval($tarea['id']); ?>" data-archivo="<?php echo htmlspecialchars($archivo_entregado ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-vencida="<?php echo $expirada ? '1' : '0'; ?>" <?php if ($expirada) echo 'disabled tabindex="-1"'; ?> >
+                <i class="fas fa-upload"></i> <?php echo $entregada ? 'Remplazar Tarea' : 'Subir Tarea'; ?>
+            </button>
             <?php if ($entregada): ?>
                 <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Entregada</p>
-            <?php else: ?>
-                <button class="submit-task-btn" data-idtarea="<?php echo $tarea['id']; ?>" <?php if ($status === 'Vencida') echo 'disabled'; ?>>
-                    <i class="fas fa-upload"></i> Subir Tarea
-                </button>
             <?php endif; ?>
         </div>
     </div>
+
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
         </section>
     </div>
+<?php
+// Cerrar la conexión después de usarla en todo el archivo (después del foreach)
+if (isset($conn) && $conn instanceof mysqli) {
+    $conn->close();
+}
+?>
 
     <!-- Modal para ver calificación y retroalimentación -->
     <div id="gradeModal" class="modal-overlay">
@@ -253,15 +353,30 @@ $stmt->close();
         <div class="modal-body">
             <form id="uploadForm" action="subir_tarea.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id_tarea" id="modal_id_tarea">
-                <p>Selecciona el archivo que deseas subir. El formato debe ser PDF, DOCX, o ZIP.</p>
+                <input type="hidden" id="modal_vencida" value="0">
+                <p>Selecciona el tipo de entrega:</p>
+                <div style="margin-bottom: 12px;">
+                    <label style="margin-right: 18px;">
+                        <input type="radio" name="tipo_entrega" id="radio_archivo" value="archivo" checked> Archivo
+                    </label>
+                    <label>
+                        <input type="radio" name="tipo_entrega" id="radio_link" value="link"> Link
+                    </label>
+                </div>
                 <div id="uploadErrorMsg" style="color: #d32f2f; margin-bottom: 10px; display: none;"></div>
-                <input type="file" name="archivo_tarea" id="archivo_tarea" required accept=".pdf,.docx,.zip" style="display:none;">
-                <button type="button" id="archivo_tarea_btn" class="upload_button">
-                    <i class="fas fa-file-upload"></i> Seleccionar Archivo
-                </button>
-                <span id="archivo_tarea_nombre" style="margin-left:10px;color:var(--accent-blue);"></span>
-                <div id="archivo_tarea_size_error" style="color: #d32f2f; margin-top: 10px; display: none;"></div>
-                <button type="submit" class="submit-task-btn" style="background-color: var(--accent-blue); margin-top: 20px;">Enviar Tarea</button>
+                <div id="entrega_archivo">
+                    <input type="file" name="archivo_tarea" id="archivo_tarea" accept=".pdf,.docx,.zip" style="display:none;">
+                    <button type="button" id="archivo_tarea_btn" class="upload_button">
+                        <i class="fas fa-file-upload"></i> Seleccionar Archivo
+                    </button>
+                    <span id="archivo_tarea_nombre" style="margin-left:10px;color:var(--accent-blue); min-width: 180px; display: inline-block;"></span>
+                    <div id="archivo_tarea_size_error" style="color: #d32f2f; margin-top: 10px; display: none;"></div>
+                </div>
+                <div id="entrega_link" style="display:none; margin: 18px 0 0 0;">
+                    <label for="link_tarea" style="font-weight:500;">Ingresa un link:</label>
+                    <input type="url" name="link_tarea" id="link_tarea" placeholder="https://..." style="width: 100%; margin-top: 6px; padding: 7px 10px; border-radius: 5px; border: 1px solid #bbb;">
+                </div>
+                <button type="submit" class="submit-task-btn" id="enviar_tarea_btn" style="background-color: var(--accent-blue); margin-top: 20px;">Enviar Tarea</button>
             </form>
         </div>
     </div>
@@ -319,6 +434,7 @@ $stmt->close();
                 });
             });
 
+
             // Funcionalidad de búsqueda (ejemplo simple)
             const searchInput = document.querySelector('.search-bar input');
             if (searchInput) {
@@ -338,6 +454,50 @@ $stmt->close();
                 });
             }
 
+            // --- Desactivar botones de subir/remplazar tarea en tiempo real si expira la hora de entrega ---
+
+            function checkTareasExpiradas() {
+                document.querySelectorAll('.task-card').forEach(card => {
+                    const fechaEntregaISO = card.getAttribute('data-fechaentrega');
+                    if (!fechaEntregaISO) return;
+                    const fechaHoraEntrega = new Date(fechaEntregaISO);
+                    const ahora = new Date();
+                    // Si está pendiente, cambiar a vencida y deshabilitar botón
+                    if (card.dataset.status === 'pending') {
+                        if (ahora >= fechaHoraEntrega) {
+                            const btn = card.querySelector('.submit-task-btn');
+                            if (btn) {
+                                btn.disabled = true;
+                                btn.classList.add('disabled-task-btn');
+                                btn.setAttribute('tabindex', '-1');
+                                btn.style.pointerEvents = 'none';
+                                btn.style.userSelect = 'none';
+                            }
+                            card.dataset.status = 'overdue';
+                            const badge = card.querySelector('.status-badge');
+                            if (badge) {
+                                badge.textContent = 'Vencida';
+                                badge.className = 'status-badge overdue';
+                            }
+                        }
+                    }
+                    // Si está entregada, solo deshabilitar el botón de reemplazo si expira
+                    if (card.dataset.status === 'completed') {
+                        if (ahora >= fechaHoraEntrega) {
+                            const btn = card.querySelector('.submit-task-btn');
+                            if (btn && !btn.disabled) {
+                                btn.disabled = true;
+                                btn.classList.add('disabled-task-btn');
+                                btn.setAttribute('tabindex', '-1');
+                                btn.style.pointerEvents = 'none';
+                                btn.style.userSelect = 'none';
+                            }
+                        }
+                    }
+                });
+            }
+            setInterval(checkTareasExpiradas, 1000);
+
             const uploadModal = document.getElementById('uploadModal');
             const closeModal = document.getElementById('closeModal');
             const uploadForm = document.getElementById('uploadForm');
@@ -345,12 +505,91 @@ $stmt->close();
             const uploadErrorMsg = document.getElementById('uploadErrorMsg');
 
             document.querySelectorAll('.submit-task-btn[data-idtarea]').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    // Verificar en tiempo real si la tarea ya expiró
+                    const card = this.closest('.task-card');
+                    const fechaEntregaISO = card ? card.getAttribute('data-fechaentrega') : null;
+                    if (fechaEntregaISO) {
+                        const fechaHoraEntrega = new Date(fechaEntregaISO);
+                        const ahora = new Date();
+                        if (ahora >= fechaHoraEntrega) {
+                            // Desactivar botón y no abrir modal
+                            this.disabled = true;
+                            this.classList.add('disabled-task-btn');
+                            this.setAttribute('tabindex', '-1');
+                            this.style.pointerEvents = 'none';
+                            this.style.userSelect = 'none';
+                            // Cambiar estado visual
+                            if (card) {
+                                card.dataset.status = 'overdue';
+                                const badge = card.querySelector('.status-badge');
+                                if (badge) {
+                                    badge.textContent = 'Vencida';
+                                    badge.className = 'status-badge overdue';
+                                }
+                            }
+                            return; // No abrir modal
+                        }
+                    }
+                    // ...código original para abrir el modal...
                     const idTarea = this.getAttribute('data-idtarea');
+                    const archivoRegistrado = this.getAttribute('data-archivo');
+                    const vencida = this.getAttribute('data-vencida');
                     modalIdTarea.value = idTarea;
+                    document.getElementById('modal_vencida').value = vencida;
                     uploadModal.classList.add('visible');
                     uploadErrorMsg.style.display = 'none';
                     uploadErrorMsg.textContent = '';
+                    // Mostrar el nombre del archivo o link entregado
+                    const archivoNombre = document.getElementById('archivo_tarea_nombre');
+                    if (typeof archivoRegistrado === 'string' && archivoRegistrado.length > 0) {
+                        if (/^https?:\/\//i.test(archivoRegistrado)) {
+                            // Es un link, mostrar el dominio o el link recortado
+                            let nombreLink = archivoRegistrado;
+                            try {
+                                const urlObj = new URL(archivoRegistrado);
+                                nombreLink = urlObj.hostname + urlObj.pathname;
+                                if (nombreLink.length > 40) {
+                                    nombreLink = nombreLink.substring(0, 37) + '...';
+                                }
+                            } catch (e) {
+                                // Si no es un link válido, mostrar el texto tal cual
+                                nombreLink = archivoRegistrado;
+                            }
+                            archivoNombre.textContent = 'Link: ' + nombreLink;
+                            document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Seleccionar Archivo';
+                        } else if (archivoRegistrado.match(/\.(pdf|docx|zip)$/i)) {
+                            // Es un archivo, mostrar el nombre original
+                            const nombreSolo = archivoRegistrado.split(/[\\/]/).pop();
+                            const partes = nombreSolo.split('_');
+                            let nombreOriginal = nombreSolo;
+                            if (partes.length > 2) {
+                                nombreOriginal = partes.slice(2).join('_');
+                            }
+                            archivoNombre.textContent = 'Archivo: ' + nombreOriginal;
+                            document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Remplazar Archivo';
+                        } else {
+                            archivoNombre.textContent = '';
+                            document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Seleccionar Archivo';
+                        }
+                    } else {
+                        archivoNombre.textContent = '';
+                        document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Seleccionar Archivo';
+                    }
+                    // Si la tarea está vencida, deshabilitar los botones dentro del modal
+                    const archivoBtn = document.getElementById('archivo_tarea_btn');
+                    const enviarBtn = document.getElementById('enviar_tarea_btn');
+                    if (vencida === '1') {
+                        archivoBtn.disabled = true;
+                        enviarBtn.disabled = true;
+                        archivoBtn.classList.add('disabled');
+                        enviarBtn.classList.add('disabled');
+                    } else {
+                        archivoBtn.disabled = false;
+                        enviarBtn.disabled = false;
+                        archivoBtn.classList.remove('disabled');
+                        enviarBtn.classList.remove('disabled');
+                    }
                 });
             });
 
@@ -402,6 +641,38 @@ $stmt->close();
             });
 
             // Interceptar el submit para mostrar error si ocurre
+            // Mostrar/ocultar inputs según radio seleccionado
+            const radioArchivo = document.getElementById('radio_archivo');
+            const radioLink = document.getElementById('radio_link');
+            const entregaArchivoDiv = document.getElementById('entrega_archivo');
+            const entregaLinkDiv = document.getElementById('entrega_link');
+            radioArchivo.addEventListener('change', function() {
+                if (radioArchivo.checked) {
+                    entregaArchivoDiv.style.display = '';
+                    entregaLinkDiv.style.display = 'none';
+                    // Mostrar nombre si existe
+                    const archivoNombre = document.getElementById('archivo_tarea_nombre');
+                    if (archivoNombre.dataset.linkname) {
+                        archivoNombre.textContent = archivoNombre.dataset.linkname;
+                    }
+                    // Mostrar botón de archivo
+                    document.getElementById('archivo_tarea_btn').style.display = '';
+                }
+            });
+            radioLink.addEventListener('change', function() {
+                if (radioLink.checked) {
+                    entregaArchivoDiv.style.display = '';
+                    entregaLinkDiv.style.display = '';
+                    // Mostrar nombre si existe
+                    const archivoNombre = document.getElementById('archivo_tarea_nombre');
+                    if (archivoNombre.dataset.linkname) {
+                        archivoNombre.textContent = archivoNombre.dataset.linkname;
+                    }
+                    // Ocultar botón de archivo
+                    document.getElementById('archivo_tarea_btn').style.display = 'none';
+                }
+            });
+
             uploadForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 uploadErrorMsg.style.display = 'none';
@@ -409,13 +680,32 @@ $stmt->close();
                 const sizeError = document.getElementById('archivo_tarea_size_error');
                 sizeError.style.display = 'none';
                 sizeError.textContent = '';
-                if (archivoInput.files.length > 0) {
+                const archivoTieneValor = archivoInput.files.length > 0;
+                const linkInput = document.getElementById('link_tarea');
+                const linkTieneValor = linkInput && linkInput.value.trim() !== '';
+                // Validación según radio
+                if (radioArchivo.checked) {
+                    if (!archivoTieneValor) {
+                        uploadErrorMsg.textContent = 'Debes seleccionar un archivo.';
+                        uploadErrorMsg.style.display = 'block';
+                        return;
+                    }
                     const maxSize = 10 * 1024 * 1024; // 10MB
                     if (archivoInput.files[0].size > maxSize) {
                         sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
                         sizeError.style.display = 'block';
                         return;
                     }
+                } else if (radioLink.checked) {
+                    if (!linkTieneValor) {
+                        uploadErrorMsg.textContent = 'Debes ingresar un link.';
+                        uploadErrorMsg.style.display = 'block';
+                        return;
+                    }
+                } else {
+                    uploadErrorMsg.textContent = 'Selecciona el tipo de entrega.';
+                    uploadErrorMsg.style.display = 'block';
+                    return;
                 }
                 const formData = new FormData(uploadForm);
                 fetch(uploadForm.action, {
@@ -467,6 +757,12 @@ $stmt->close();
             });
         });
     </script>
+    <div class="soporte-flotante-container">
+        <a href="contacto.php" class="soporte-flotante" title="Soporte">
+            <span class="soporte-mensaje">Contacto soporte</span>
+            <img src="css/audifonos-blanco.png" alt="Soporte">
+        </a>
+    </div>
 </body>
 
 </html>

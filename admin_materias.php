@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -31,10 +33,11 @@ include 'comprobar_sesion.php';
         echo "<table><tr><th>Nombre de la Materia</th><th></th><th></th></tr>";
         // Salida de datos de cada fila
         while ($row = $result->fetch_assoc()) {
-            $nombreMateria = $row["nombre"];
+            $nombreMateria = htmlspecialchars($row["nombre"], ENT_QUOTES, 'UTF-8');
+            $nombreEncoded = urlencode($row["nombre"]);
             echo "<tr><td>" . $nombreMateria . "</td>";
-            echo "<td class='button-cell'><button onclick=\"window.location.href='editar_materia.php?nombre=$nombreMateria'\">Editar</button></td>";
-            echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_materia.php?nombre=$nombreMateria'\">Eliminar</button></td></tr>";
+            echo "<td class='button-cell'><button onclick=\"window.location.href='editar_materia.php?nombre=" . $nombreEncoded . "'\">Editar</button></td>";
+            echo "<td class='button-cell'><button onclick=\"window.location.href='eliminar_materia.php?nombre=" . $nombreEncoded . "'\">Eliminar</button></td></tr>";
         }
         echo "</table>";
         echo "<a href='añadir_materias.php'><button id='agregar' >Agregar</button></a>";

@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 require 'conexion.php';
 
 // Obtener el ID de la sección a editar
@@ -34,6 +36,7 @@ $profesores = [];
 while ($row = $result_profesores->fetch_assoc()) {
     $profesores[] = $row;
 }
+$conn->close();
 ?>
 
 <!DOCTYPE html>

@@ -1,5 +1,7 @@
 <?php
 // Este archivo contiene el menú del profesor que puede ser incluido en otras páginas
+require_once 'comprobar_sesion.php';
+actualizar_actividad();
 ?>
 
 <div class="menu" id="menu">

@@ -1,6 +1,9 @@
 <?php
-include 'comprobar_sesion.php';
-    include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+
+include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
 
 // Consulta para obtener la cantidad de profesores
 $result_profesores = $conn->query("SELECT COUNT(*) as count FROM profesores");
@@ -52,7 +55,9 @@ if ($result_materias) {
 usort($registros, function ($a, $b) {
     return $b['id'] - $a['id'];
 });
-
+$result_profesores->close();
+$result_estudiantes->close();
+$result_materias->close();
 $conn->close();
 
 

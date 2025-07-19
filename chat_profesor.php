@@ -1,7 +1,12 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
+
+
 include 'comprobar_sesion.php';
 require 'conexion.php';
-
+actualizar_actividad();
 // Obtener el nombre y sección de la materia
 $id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
 $stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
@@ -28,11 +33,23 @@ if (!isset($_SESSION['idusuario'])) {
 
 // Enviar mensaje
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
+    actualizar_actividad();
     echo 'POST recibido';
     $message = $_POST['message'];
     $user_id = $_SESSION['idusuario'];
     $group_id = $_SESSION['idmateria'];
     $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0; // Asignar 0 si no se proporciona reply_to
+
+
+    if(strlen($message)>=250){
+        die('El mensaje no puede tener más de 250 caracteres');
+    }else if(strlen($message)<1){
+        die('El mensaje no puede estar vacío');
+        exit;
+    }
+    if (!preg_match('/^[\p{L}\p{N}\s\.,!?;:()@#$%*+\-=_<>\/\\\\]+$/u', $message)) {
+        die('El mensaje no puede contener caracteres especiales');
+    }
 
     $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
     if ($stmt === false) {
@@ -42,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     if ($stmt->execute() === false) {
         die('Execute failed: ' . htmlspecialchars($stmt->error));
     }
-    $stmt->close();
+    actualizar_actividad();
     exit(); // Salir después de insertar el mensaje
 }
 
@@ -53,13 +70,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
     $group_id = $_SESSION['idmateria'];
     $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
 
-    $target_dir = "uploads/";
-    $target_file = $target_dir . basename($image["name"]);
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    //✅ Validación de imagen
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $max_size = 5 * 1024 * 1024; // 5MB
 
-    // Check if image file is a actual image or fake image
-    $check = getimagesize($image["tmp_name"]);
-    if ($check !== false) {
+    if (!in_array($image['type'], $allowed_types)) {
+        echo json_encode(['error' => 'Tipo de imagen no permitido']);
+        exit();
+    }
+
+    if ($image['size'] > $max_size) {
+        echo json_encode(['error' => 'La imagen es demasiado grande (máximo 5MB)']);
+        exit();
+    }
+
+    $target_dir = "uploads/";
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
+
+    // ✅ Sanitizar nombre de archivo
+    $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));
+    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
+    $target_file = $target_dir . $new_filename;
         if (move_uploaded_file($image["tmp_name"], $target_file)) {
             $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
             if ($stmt === false) {
@@ -73,9 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
         } else {
             die('Error al subir la imagen.');
         }
-    } else {
-        die('El archivo no es una imagen.');
-    }
+    
     exit();
 }
 
@@ -86,14 +117,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     $group_id = $_SESSION['idmateria'];
     $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0;
 
+    // ✅ Validación de archivo
+    $allowed_types = [
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/pdf'
+    ];
+    $max_size = 10 * 1024 * 1024; // 10MB
+
+    if (!in_array($file['type'], $allowed_types)) {
+        echo json_encode(['error' => 'Tipo de archivo no permitido']);
+        exit();
+    }
+
+    if ($file['size'] > $max_size) {
+        echo json_encode(['error' => 'El archivo es demasiado grande (máximo 10MB)']);
+        exit();
+    }
+
     $target_dir = "uploads/";
-    $target_file = $target_dir . basename($file["name"]);
-    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
 
-    $validTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'];
+    // ✅ Sanitizar nombre de archivo
+    $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
+    $target_file = $target_dir . $new_filename;
 
-    if (in_array($fileType, $validTypes)) {
         if (move_uploaded_file($file["tmp_name"], $target_file)) {
+
             $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
             if ($stmt === false) {
                 die('Prepare failed: ' . htmlspecialchars($conn->error));
@@ -106,9 +163,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         } else {
             die('Error al subir el archivo.');
         }
-    } else {
-        die('Tipo de archivo no permitido.');
-    }
+   
+    actualizar_actividad();
     exit();
 }
 ?>
@@ -130,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/control_inactividad.js"></script>
     <style>
         .message-container {
             display: flex;

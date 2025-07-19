@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -27,11 +29,11 @@ include 'comprobar_sesion.php';
     <form class="form-materia" action="procesar_materia.php" method="POST">
         <div>
             <label for="nombre">Nombre de la Materia:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="nombre" required maxlength="50">
         </div>
         <div>
             <label for="salon">Salón:</label>
-            <input type="text" id="salon" name="salon" required>
+            <input type="text" id="salon" name="salon" required maxlength="50">
         </div>
         <div>
             <label for="secciones">Número de Secciones:</label>
@@ -45,7 +47,7 @@ include 'comprobar_sesion.php';
         </div>
         <div>
             <label for="creditos">Número de Créditos:</label>
-            <input type="number" id="creditos" name="creditos" required>
+            <input type="number" id="creditos" name="creditos" required min="0" max="50">
         </div>
         <div>
             <label for="semestre">Semestre:</label>

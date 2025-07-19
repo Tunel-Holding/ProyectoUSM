@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -9,6 +11,7 @@ require_once 'conexion.php';
 
 // Verificar que sea una petición POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    actualizar_actividad();
     http_response_code(405);
     echo json_encode(['success' => false, 'error' => 'Método no permitido']);
     exit;

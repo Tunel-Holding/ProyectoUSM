@@ -1,9 +1,7 @@
 <?php
 include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php';
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
 
 $materia_id = $_GET['materia_id'];
 $usuario_id = $_GET['usuario_id'];
@@ -22,8 +20,7 @@ while ($row = $result->fetch_assoc()) {
 
 header('Content-Type: application/json');
 echo json_encode($data);
-
-$stmt->close();
+actualizar_actividad();
 $conn->close();
 
 error_log("Materias ID: $materia_id, Usuario ID: $usuario_id, Parcial: $parcial_num, Rutas: " . json_encode($data));

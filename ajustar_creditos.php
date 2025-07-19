@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -186,7 +188,6 @@ include 'comprobar_sesion.php';
         <h1>Ajustar Créditos</h1>
         <?php
         require 'conexion.php';
-
         if (isset($_GET['id_estudiante'])) {
             $cedula_estudiante = htmlspecialchars($_GET['id_estudiante']);
             echo "<p>Cédula del Estudiante: $cedula_estudiante</p>";
@@ -217,9 +218,9 @@ include 'comprobar_sesion.php';
                     // Formulario para ajustar créditos
                     echo "<form action='ajustar_creditos_procesar.php' method='post'>
                             <input type='hidden' name='id_usuario' value='$id_usuario'>
-                            <input type='hidden' name='id_estudiante' value='$cedula_estudiante'>
+                            <input type='hidden' name='id_estudiante' value='$cedula_estudiante' >
                             <label for='creditos'>Nuevo Número de Créditos:</label>
-                            <input type='number' name='creditos' id='creditos' required min='0'>
+                            <input type='number' name='creditos' id='creditos' required min='0' max='$creditosdisponibles'>
                             <div class='btn-container'>
                                 <button type='submit' class='btn-ajustar'>Ajustar Créditos</button>
                             </div>
@@ -235,7 +236,6 @@ include 'comprobar_sesion.php';
         } else {
             echo "<p>Cédula de estudiante no proporcionada.</p>";
         }
-
         $conn->close();
         ?>
     </div>

@@ -1,6 +1,9 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -424,13 +427,28 @@ include 'comprobar_sesion.php';
     <div class="main-content">
         <?php
         require 'conexion.php';
-        $nombre = $_GET['nombre'];
-        $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre='$nombre' ORDER BY m.seccion ASC";
-        $result = $conn->query($sql);
+        
+        // Sanitizar y validar el parámetro nombre
+        $nombre = isset($_GET['nombre']) ? trim(htmlspecialchars(strip_tags($_GET['nombre']), ENT_QUOTES, 'UTF-8')) : '';
+        
+        if (empty($nombre)) {
+            header('Location: admin_materias.php');
+            exit();
+        }
+        
+        // Usar prepared statements para prevenir inyección SQL
+        $sql = "SELECT m.*, p.nombre AS profesor_nombre FROM materias m LEFT JOIN profesores p ON m.id_profesor = p.id WHERE m.nombre = ? ORDER BY m.seccion ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $nombre);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
         // Obtener información de la materia para el formulario de edición
-        $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre='$nombre' LIMIT 1";
-        $resultMateria = $conn->query($sqlMateria);
+        $sqlMateria = "SELECT nombre, creditos FROM materias WHERE nombre = ? LIMIT 1";
+        $stmtMateria = $conn->prepare($sqlMateria);
+        $stmtMateria->bind_param("s", $nombre);
+        $stmtMateria->execute();
+        $resultMateria = $stmtMateria->get_result();
         $materia = $resultMateria->fetch_assoc();
         ?>
 
@@ -505,16 +523,16 @@ include 'comprobar_sesion.php';
             </h2>
             
             <form class="admin-form" action="procesar_editar_materia.php" method="POST">
-                <input type="hidden" name="nombreOriginal" value="<?php echo htmlspecialchars($materia['nombre']); ?>">
+                <input type="hidden" name="nombreOriginal" value="<?php echo htmlspecialchars($materia['nombre']); ?>" maxlength="50">
                 
                 <div class="form-group">
                     <label class="form-label" for="nombre">Nombre de la Materia:</label>
-                    <input class="form-input" type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($materia['nombre']); ?>" required>
+                    <input class="form-input" type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($materia['nombre']); ?>" required maxlength="50">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label" for="creditos">Número de Créditos:</label>
-                    <input class="form-input" type="number" id="creditos" name="creditos" value="<?php echo htmlspecialchars($materia['creditos']); ?>" required>
+                    <input class="form-input" type="number" id="creditos" name="creditos" value="<?php echo htmlspecialchars($materia['creditos']); ?>" required min="0" max="50">
                 </div>
                 
                 <button type="submit" class="form-submit">💾 Guardar Cambios</button>

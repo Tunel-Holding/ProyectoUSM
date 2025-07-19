@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
+
+include 'comprobar_sesion.php';
+actualizar_actividad();
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 $conn->set_charset("utf8mb4");
 
@@ -73,6 +78,8 @@ $stmt = $conn->prepare($query_materias_profesor);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $resultado = $stmt->get_result();
+actualizar_actividad();
+$conn->close();
 
 ?>
 
@@ -92,6 +99,7 @@ $resultado = $stmt->get_result();
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <title>Inicio - USM</title>
+    <script src="js/control_inactividad.js"></script>
     <style>
         .contenedor-materias-grid {
             display: grid;
@@ -173,6 +181,59 @@ $resultado = $stmt->get_result();
             margin-bottom: 6px;
             color: #333;
         }
+        .soporte-flotante-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .soporte-flotante {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background-color: #446ad3;
+            padding: 12px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            overflow: hidden;
+            width: 60px;            /* ✅ suficiente para mostrar solo el ícono */
+            height: 50px;
+            transition: width 0.4s ease, background-color 0.3s ease;
+        }
+
+
+        .soporte-flotante:hover {
+            width: 210px; /* ✅ se expande hacia la izquierda */
+            background-color: #365ac0;
+        }
+
+        .soporte-mensaje {
+            flex: 1; /* ✅ ocupa todo el espacio disponible */
+            opacity: 0;
+            white-space: nowrap;
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+            transform: translateX(30px); /* animación desde la derecha */
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            text-align: left; /* ✅ texto alineado a la izquierda */
+            margin-right: auto;
+        }
+
+        .soporte-flotante:hover .soporte-mensaje {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .soporte-flotante img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            z-index: 2;
+        }
     </style>
 </head>
 
@@ -187,10 +248,6 @@ $resultado = $stmt->get_result();
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <a href="contacto.php" class="soporte-link">
-            <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
-            </a>
-
             <p>UniHub</p>
         </div>
 
@@ -252,6 +309,12 @@ $resultado = $stmt->get_result();
         </div>
     </div>
 
+    <div class="soporte-flotante-container">
+        <a href="contacto.php" class="soporte-flotante" title="Soporte">
+            <span class="soporte-mensaje">Contacto soporte</span>
+            <img src="css/audifonos-blanco.png" alt="Soporte">
+        </a>
+    </div>
     <script>
         // Aquí solo debe ir JS exclusivo de la página, si lo hubiera. Se eliminó la lógica de menú y tema.
     </script>

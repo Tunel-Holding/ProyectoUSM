@@ -1,7 +1,9 @@
 <?php
-include 'comprobar_sesion.php';
-require_once "conexion.php";
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
+require_once "conexion.php";
 // Función para obtener el nivel de usuario
 function obtenerNivelUsuario($conn, $usuario_id) {
     $usuario_id = (int)$usuario_id;
@@ -85,6 +87,7 @@ if (!empty($busqueda) && isset($busqueda) && ctype_digit($busqueda)) {
         $error = 'Ha ocurrido un error al procesar la búsqueda. Por favor, inténtalo de nuevo.';
     }
 }
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="es">

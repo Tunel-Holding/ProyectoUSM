@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
 require_once "conexion.php";
 require 'vendor/autoload.php';
@@ -79,6 +81,7 @@ class AddProfesorManager {
      * Añade un nuevo profesor usando prepared statements
      */
     public function añadirProfesor($nombre, $nombre_usuario, $email) {
+        actualizar_actividad();
         try {
             // Iniciar transacción
             $this->conn->begin_transaction();
@@ -691,6 +694,7 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/control_inactividad.js"></script>
     <title>Añadir Profesor - UniHub</title>
     <?php echo AddProfesorStyles::getStyles(); ?>
 </head>

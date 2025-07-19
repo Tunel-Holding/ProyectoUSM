@@ -1,5 +1,7 @@
 <?php
-include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -317,7 +319,6 @@ include 'comprobar_sesion.php';
             <h1 class="titulo">Búsqueda de Estudiantes</h1>
             <?php
             require "conexion.php";
-
             $mostrarBusqueda = true;
             $errorMensaje = '';
 

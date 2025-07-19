@@ -1,18 +1,17 @@
 <?php
-include 'comprobar_sesion.php';
 require 'conexion.php';
-
 header('Content-Type: application/json');
 
+// Validaciones de seguridad
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido']);
     exit();
 }
 
-// Obtener datos del JSON
+// Obtener y sanitizar datos del JSON
 $input = json_decode(file_get_contents('php://input'), true);
-$horario_id = $input['horario_id'] ?? null;
-$materia_id = $input['materia_id'] ?? null;
+$horario_id = filter_var($input['horario_id'] ?? null, FILTER_VALIDATE_INT);
+$materia_id = filter_var($input['materia_id'] ?? null, FILTER_VALIDATE_INT);
 
 // Validaciones
 if (!$horario_id || !$materia_id) {
@@ -31,7 +30,6 @@ if ($result_check->num_rows === 0) {
     echo json_encode(['success' => false, 'message' => 'El horario no existe o no pertenece a esta materia']);
     exit();
 }
-
 // Eliminar el horario
 $sql_delete = "DELETE FROM horariosmateria WHERE id = ? AND id_materia = ?";
 $stmt_delete = $conn->prepare($sql_delete);
@@ -42,6 +40,5 @@ if ($stmt_delete->execute()) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Error al eliminar el horario: ' . $conn->error]);
 }
-
 $conn->close();
 ?> 

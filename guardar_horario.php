@@ -1,22 +1,36 @@
 <?php
-include 'comprobar_sesion.php';
 require 'conexion.php';
-
 header('Content-Type: application/json');
 
+// Validaciones de seguridad
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido']);
     exit();
 }
 
-$materia_id = $_POST['materia_id'] ?? null;
-$dia = $_POST['dia'] ?? null;
-$hora_inicio = $_POST['hora_inicio'] ?? null;
-$hora_fin = $_POST['hora_fin'] ?? null;
+// Sanitizar y validar datos de entrada
+$materia_id = filter_var($_POST['materia_id'] ?? null, FILTER_VALIDATE_INT);
+$dia = trim(htmlspecialchars(strip_tags($_POST['dia'] ?? ''), ENT_QUOTES, 'UTF-8'));
+$hora_inicio = trim(htmlspecialchars(strip_tags($_POST['hora_inicio'] ?? ''), ENT_QUOTES, 'UTF-8'));
+$hora_fin = trim(htmlspecialchars(strip_tags($_POST['hora_fin'] ?? ''), ENT_QUOTES, 'UTF-8'));
 
 // Validaciones
 if (!$materia_id || !$dia || !$hora_inicio || !$hora_fin) {
     echo json_encode(['success' => false, 'message' => 'Todos los campos son requeridos']);
+    exit();
+}
+
+// Validar formato de día
+$diasPermitidos = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+if (!in_array($dia, $diasPermitidos)) {
+    echo json_encode(['success' => false, 'message' => 'Día no válido']);
+    exit();
+}
+
+// Validar formato de hora (HH:MM)
+if (!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', $hora_inicio) || 
+    !preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', $hora_fin)) {
+    echo json_encode(['success' => false, 'message' => 'Formato de hora no válido']);
     exit();
 }
 
@@ -60,6 +74,5 @@ if ($stmt_insert->execute()) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Error al guardar el horario: ' . $conn->error]);
 }
-
 $conn->close();
 ?> 

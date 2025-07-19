@@ -1,7 +1,6 @@
 <?php
-include 'comprobar_sesion.php';
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    actualizar_actividad();
     $id_profesor = $_POST['id_profesor'];
     $id_materia = $_POST['id_materia'];
 
@@ -31,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             $stmt->close();
+            $conn->close();
         } else {
             echo "Error en la preparación de la consulta: " . $conn->error;
         }
 
-        $conn->close();
     } else {
         echo $id_profesor;
         echo $id_materia;
@@ -44,4 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     echo "Método de solicitud no válido.";
 }
+actualizar_actividad();
+$conn->close();
 ?>

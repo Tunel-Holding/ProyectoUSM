@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-
+actualizar_actividad();
     require 'conexion.php';
     if (isset($_GET['valor'])) { 
 
@@ -8,6 +8,7 @@ include 'comprobar_sesion.php';
         $id_materia = $_GET['valor']; // La variable con la id de la seccion
 
         function getAvailableCredits($id_usuario) { 
+            actualizar_actividad();
             global $conn; 
             $sql = "SELECT creditosdisponibles FROM estudiantes WHERE id_usuario = ?"; 
             $stmt = $conn->prepare($sql); 
@@ -20,6 +21,7 @@ include 'comprobar_sesion.php';
         }
 
         function getRequiredCredits($id_materia) { 
+            actualizar_actividad();
             global $conn; 
             $sql = "SELECT creditos FROM materias WHERE id = ?"; 
             $stmt = $conn->prepare($sql); 
@@ -54,12 +56,14 @@ include 'comprobar_sesion.php';
             $result = $stmt->get_result();
 
             if ($result->num_rows === 0) {
+                actualizar_actividad();
                 // Insertar la inscripción en la base de datos
                 $stmt = $conn->prepare("INSERT INTO Inscripciones (id_estudiante, id_materia, fecha_inscripcion) VALUES (?, ?, NOW())");
                 $stmt->bind_param("ii", $id_estudiante, $id_materia);
                 $stmt->execute();
-
+                actualizar_actividad();
                 if ($stmt->affected_rows > 0) {
+                    actualizar_actividad();
                     $stmt = $conn->prepare("SELECT dia, hora_inicio, hora_fin FROM horariosmateria WHERE id_materia = ?"); 
                     $stmt->bind_param("i", $id_materia); 
                     $stmt->execute(); 
@@ -95,6 +99,7 @@ include 'comprobar_sesion.php';
         } else { 
             $_SESSION['mensaje'] =  "Solicitud no válida.";
         }
-
+        actualizar_actividad();
+        $conn->close();
         
 ?>
