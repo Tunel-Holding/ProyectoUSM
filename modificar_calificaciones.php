@@ -17,7 +17,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <title>Ajustar Créditos</title>
+    <title>Modificar Calificaciones</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,6 +36,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             max-width: 1000px;
             /* Ajustar el ancho del contenedor */
             margin: auto;
+            margin-top: 100px;
             background-color: var(--bg-container);
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -84,7 +85,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
-            width: 100%;
+            width: 50%;
             max-width: 300px;
         }
 
@@ -125,6 +126,12 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             border: 1px solid #ccc;
             width: 100%;
             max-width: 300px;
+        }
+
+        .califications-table {
+            min-width: 500px;
+            margin: auto;
+            overflow-x: auto;
         }
 
         table {
@@ -185,51 +192,82 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
     <?php include 'navAdmin.php'; ?>
 
     <div class="container">
-        <h1>Ajustar Créditos</h1>
+        <h1>Modificar Calificaciones</h1>
         <?php
         require 'conexion.php';
         if (isset($_GET['id_estudiante'])) {
             $cedula_estudiante = htmlspecialchars($_GET['id_estudiante']);
             echo "<p>Cédula del Estudiante: $cedula_estudiante</p>";
 
-            // Obtener la información del estudiante
-            $sql_estudiante = "
-                SELECT du.nombres, du.apellidos, e.creditosdisponibles, e.id_usuario
+            // Nueva consulta: obtener nombres, apellidos, id_usuario, titulo de tareas y calificación de cada una
+            $sql = "
+                SELECT du.nombres, du.apellidos, e.id_usuario, t.id, t.titulo_tarea, et.calificacion
                 FROM datos_usuario du
                 JOIN estudiantes e ON du.usuario_id = e.id_usuario
+                LEFT JOIN entregas_tareas et ON et.id_alumno = e.id_usuario
+                LEFT JOIN tareas t ON t.id = et.id_tarea
                 WHERE du.cedula = ?
             ";
 
-            if ($stmt_estudiante = $conn->prepare($sql_estudiante)) {
-                $stmt_estudiante->bind_param("s", $cedula_estudiante);
-                $stmt_estudiante->execute();
-                $result_estudiante = $stmt_estudiante->get_result();
+            if ($stmt = $conn->prepare($sql)) {
+                $stmt->bind_param("s", $cedula_estudiante);
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-                if ($result_estudiante->num_rows > 0) {
-                    $row_estudiante = $result_estudiante->fetch_assoc();
-                    $nombres = htmlspecialchars($row_estudiante['nombres']);
-                    $apellidos = htmlspecialchars($row_estudiante['apellidos']);
-                    $creditosdisponibles = htmlspecialchars($row_estudiante['creditosdisponibles']);
-                    $id_usuario = htmlspecialchars($row_estudiante['id_usuario']);
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $nombres = htmlspecialchars($row['nombres']);
+                    $apellidos = htmlspecialchars($row['apellidos']);
+                    $id_usuario = htmlspecialchars($row['id_usuario']);
 
                     echo "<p>Nombre: $nombres $apellidos</p>";
-                    echo "<p>Créditos Disponibles: $creditosdisponibles</p>";
 
-                    // Formulario para ajustar créditos
-                    echo "<form action='ajustar_creditos_procesar.php' method='post'>
+                    // Formulario para ajustar calificaciones de todas las tareas
+                    echo "<form action='modificar_calificacion_procesar.php' method='post'>
                             <input type='hidden' name='id_usuario' value='$id_usuario'>
                             <input type='hidden' name='id_estudiante' value='$cedula_estudiante' >
-                            <label for='creditos'>Nuevo Número de Créditos:</label>
-                            <input type='number' name='creditos' id='creditos' required min='0' max='$creditosdisponibles'>
+                            <div class='califications-table'>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Asignación</th>
+                                            <th>Calificación</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>";
+
+                    // Mostrar todas las tareas y sus calificaciones
+                    do {
+                        if ($row['id'] != null) {
+                            $titulo_tarea = htmlspecialchars($row['titulo_tarea']);
+                            $id_tarea = htmlspecialchars($row['id']);
+                            $calificacion = $row['calificacion'];
+                            $input_value = ($calificacion !== null && $calificacion !== '') ? htmlspecialchars($calificacion) : '';
+                            $mensaje = ($calificacion === null || $calificacion === '') ? "<span style='color: orange; font-size: 0.9em;'>(Sin calificación)</span>" : "";
+                            echo "<tr>
+                                    <td>$titulo_tarea</td>
+                                    <td>
+                                        <select name='calificacion_$id_tarea' value='$input_value' required>
+                                            <option value='A' " . ($input_value === 'A' ? 'selected' : '') . ">A</option>
+                                            <option value='NA' " . ($input_value === 'NA' ? 'selected' : '') . ">NA</option>
+                                        </select> $mensaje
+                                    </td>
+                                  </tr>";
+                        }
+                    } while ($row = $result->fetch_assoc());
+
+                    echo "        </tbody>
+                                </table>
+                            </div>
                             <div class='btn-container'>
-                                <button type='submit' class='btn-ajustar'>Ajustar Créditos</button>
+                                <button type='submit' class='btn-ajustar'>Guardar cambios</button>
                             </div>
                           </form>";
                 } else {
-                    echo "<p>No se encontró el estudiante con la cédula proporcionada.</p>";
+                    echo "<p>No se encontró el estudiante con la cédula proporcionada o no tiene tareas asignadas.</p>";
                 }
 
-                $stmt_estudiante->close();
+                $stmt->close();
             } else {
                 echo "<p>Error al preparar la consulta de estudiante: " . $conn->error . "</p>";
             }

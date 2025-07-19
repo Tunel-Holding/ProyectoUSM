@@ -381,7 +381,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
                                     <td>" . htmlspecialchars($row['creditosdisponibles'] ?? '', ENT_QUOTES, 'UTF-8') . "</td>
                                     <td class='acciones'>
                                         <a href='modificar_seccion.php?id_estudiante=" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btn-modificar'>Modificar Sección</a>
-                                        <a href='ajustar_creditos.php?id_estudiante=" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btn-ajustar'>Ajustar Créditos</a>
+                                        <a href='modificar_calificaciones.php?id_estudiante=" . htmlspecialchars($row['cedula'] ?? '', ENT_QUOTES, 'UTF-8') . "' class='btn-ajustar'>Modificar Calificaciones</a>
                                     </td>
                                 </tr>";
                             }
