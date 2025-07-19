@@ -465,7 +465,8 @@ $last_user_id = null;
     </div>
     <div class="cabecera cabecera-chat">
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+             <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="nombremateria">
             <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>

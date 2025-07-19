@@ -243,7 +243,10 @@ actualizar_actividad();
     <div class="cabecera">
 
         <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
+           <!-- <img src="css/logoazul.png" alt="Logo"> -->
+             <img src="css/menu.png" alt="Menú" class="logo-menu">
+            
+
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
