@@ -1,4 +1,5 @@
 <?php
+
 require_once 'AuthGuard.php';
 $auth = AuthGuard::getInstance();
 $auth->checkAccess(AuthGuard::NIVEL_PROFESOR);

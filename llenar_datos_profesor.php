@@ -73,6 +73,16 @@ function usuarioTieneDatos($conn, $idusuario) {
     return $row['count'] > 0;
 }
 
+function obtenerMail($conn, $idusuario) {
+    $stmt = $conn->prepare("SELECT email FROM usuarios WHERE id = ?");
+    $stmt->bind_param("i", $idusuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $stmt->close();
+    return $row['email'];
+}
+
 $errores = [];
 $datos = [];
 
@@ -101,7 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'apellidos' => ['tipo' => 'nombre', 'requerido' => true],
                     'sexo' => ['tipo' => 'sexo', 'requerido' => false],
                     'telefono' => ['tipo' => 'telefono', 'requerido' => false],
-                    'correo' => ['tipo' => 'email', 'requerido' => false],
                     'direccion' => ['tipo' => 'texto', 'requerido' => false]
                 ];
                 
@@ -146,7 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $datos['apellidos'],
                             $datos['sexo'],
                             $datos['telefono'],
-                            $datos['correo'],
+                            obtenerMail($conn, $idusuario), // Usar el email de la sesión
                             $datos['direccion']
                         );
                         
@@ -355,9 +364,9 @@ $conn->close();
                            maxlength="11">
 
                     <label for="correo">Correo:</label>
-                    <input type="email" id="correo" name="correo" 
-                           value="<?php echo isset($datos['correo']) ? htmlspecialchars($datos['correo']) : ''; ?>"
-                           maxlength="100">
+                    <div style="padding: 8px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; color: #666; font-size: 0.9em;">
+                        <?php echo htmlspecialchars(obtenerMail($conn, $idusuario) ?? 'No disponible'); ?>
+                    </div>
 
                     <label for="direccion">Dirección:</label>
                     <input type="text" id="direccion" name="direccion" 

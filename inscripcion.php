@@ -16,6 +16,7 @@ actualizar_actividad();
     <link rel="stylesheet" href="css/inscripcionstyle.css">
     <link rel="stylesheet" href="css/tablastyle.css">
     <link rel="icon" href="css/icono.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .soporte-flotante-container {
             position: fixed;
@@ -71,6 +72,77 @@ actualizar_actividad();
             flex-shrink: 0;
             z-index: 2;
         }
+
+        /* Estilos para el botón "Ver detalle" */
+        .btn-detalle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #446ad3 0%, #365ac0 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(68, 106, 211, 0.2);
+            min-width: 100px;
+        }
+
+        .btn-detalle:hover {
+            background: linear-gradient(135deg, #365ac0 0%, #2a4a9e 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(68, 106, 211, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-detalle:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(68, 106, 211, 0.2);
+        }
+
+        .btn-detalle i {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        /* Estilos para la tabla */
+        .contenedormaterias table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .contenedormaterias th {
+            background: linear-gradient(135deg, #446ad3 0%, #365ac0 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .contenedormaterias td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        .contenedormaterias tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .contenedormaterias tr:last-child td {
+            border-bottom: none;
+        }
     </style>
 
     <script src="js/control_inactividad.js"></script>
@@ -105,6 +177,7 @@ actualizar_actividad();
                         <th>Créditos</th>
                         <th>Profesor</th>
                         <th>Salón</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -122,13 +195,15 @@ actualizar_actividad();
 
                     if ($resultadoInscritas->num_rows > 0) {
                         while ($fila = $resultadoInscritas->fetch_assoc()) {
+                            
                             echo "<tr>";
+                            
                             echo "<td>" . $fila['nombre'] . "</td>";
                             echo "<td>" . $fila['seccion'] . "</td>";
                             echo "<td>" . $fila['creditos'] . "</td>";
                             echo "<td>" . $fila['profesor'] . "</td>";
                             echo "<td>" . $fila['salon'] . "</td>";
-
+                            echo "<td><a href='detalle_materia.php?id=" . $fila['id'] . "' class='btn-detalle'><i class='fas fa-eye'></i>Ver detalle</a></td>";
                             echo "</tr>";
                         }
                     } else {
