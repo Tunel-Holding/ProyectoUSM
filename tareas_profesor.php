@@ -517,12 +517,8 @@ $conn->close();
                                 <td>
                                     <select data-student-id="${student.id}" class="input-calificacion">
                                         <option value="">-</option>
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
-                                        <option value="D">D</option>
-                                        <option value="E">E</option>
-                                        <option value="F">F</option>
+                                        <option value="Aprobado">Aprobado</option>
+                                        <option value="No Aprobado">No Aprobado</option>                                        
                                     </select>
                                 </td>
                                 <td>
