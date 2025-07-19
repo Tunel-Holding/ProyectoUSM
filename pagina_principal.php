@@ -407,7 +407,6 @@ $conn->close();
 
         .menuopciones {
             max-width: 300px !important;
-            overflow-x: auto !important;
         }
 
         .opción {
