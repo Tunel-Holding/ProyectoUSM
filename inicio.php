@@ -25,8 +25,8 @@
         <div class="container-form">
             <form class="sign-in" id="sign-in" action="Ingreso.php" method="post">
                 <div class="logos">
-                    <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
-                    <div class="barravertical"></div>
+                    <!-- <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
+                    <div class="barravertical"></div> -->
                     <img src="css/logounihubazul.png" class="logo-uni1">
                 </div>
                 <h2>Iniciar Sesión</h2>
@@ -49,8 +49,8 @@
         <div class="container-form">
             <form class="sign-up" id="sign-up" action="Registro.php" method="post">
                 <div class="logos">
-                    <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
-                    <div class="barravertical"></div>
+                    <!-- <img src="https://usm.edu.ve/wp-content/uploads/2020/08/usmlgoretina-1.png" class="logo-uni1">
+                    <div class="barravertical"></div> -->
                     <img src="css/logounihubazul.png" class="logo-uni1">
                 </div>
                 <h2>Registrarse</h2>
