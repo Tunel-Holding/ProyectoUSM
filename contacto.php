@@ -4,6 +4,8 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 require 'conexion.php';
 
+session_start();
+
 // Validar sesión
 if (!isset($_SESSION['idusuario'])) {
     header("Location: inicio.php");
