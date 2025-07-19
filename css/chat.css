@@ -142,8 +142,8 @@ body.dark-mode {
   align-self: flex-start;
   transition: background 0.3s ease, color 0.3s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  background: linear-gradient(135deg, #ffd166, #fcbf49); /* dorado cálido */
-  color: #213555; /* azul oscuro institucional */
+  background: #174388; /* azul institucional */
+  color: white; /* texto blanco para mejor contraste */
 }
 
 /* Modo oscuro activado con clase */
@@ -164,13 +164,13 @@ body.dark-mode .message-bubble-profesor {
 
 .message-bubble-usuario p,
 .message-bubble-profesor p {
-  color: #000;
+  color: inherit;
   display: block; /* Hacer que el nombre del usuario esté en una línea separada */
   margin-bottom: 5px;
 }
 .message-bubble-usuario strong,
 .message-bubble-profesor strong {
-  color: #000;
+  color: inherit;
   display: block; /* Hacer que el nombre del usuario esté en una línea separada */
   margin-bottom: 2px;
   margin-top: 10px;
@@ -377,7 +377,7 @@ body.dark-mode .message-entry .button-container {
 
 
 .message-entry .button {
-  background-color: #007bff;
+  background-color: #173b88;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -394,7 +394,7 @@ body.dark-mode .message-entry .button-container {
 
 
 .message-entry .button.llamada {
-  background-color: #28a745;
+  background-color: #174388;
   margin-left: 10px;
 }
 
@@ -404,7 +404,7 @@ body.dark-mode .message-entry .button-container {
 }
 
 .message-entry .button.llamada:hover {
-  background-color: #218838; /* Cambia el color al pasar el ratón */
+  background-color: #0e3470; /* Cambia el color al pasar el ratón */
 }
 
 .message-entry .button img {
@@ -413,7 +413,7 @@ body.dark-mode .message-entry .button-container {
 }
 
 .message-entry .button:hover {
-  background-color: #0056b3;
+  background-color: #0e3470;
 }
 
 #reply-preview {

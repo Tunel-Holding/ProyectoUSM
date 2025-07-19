@@ -271,9 +271,9 @@ $last_user_id = null;
 
         .materia-item.selected,
         .materia-item:hover {
-            background: #ffd166;
-            border: 2px solid #fcbf49;
-            color: #213555;
+            background: #174388;
+            border: 2px solid #0e3470;
+            color: white;
         }
 
         .chat-dashboard-main {
@@ -364,7 +364,7 @@ $last_user_id = null;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffd166;
+            background: #174388;
             border: none;
         }
 
@@ -398,6 +398,8 @@ $last_user_id = null;
         .chat-dashboard-reply #cancel-reply {
             margin-left: auto;
         }
+
+
     </style>
 </head>
 
@@ -454,6 +456,7 @@ $last_user_id = null;
             <div class="chat-dashboard-messages" id="chat-box">
                 <!-- Los mensajes se cargan aquí dinámicamente -->
             </div>
+
             <div class="chat-dashboard-entry">
                 <div id="reply-preview" class="chat-dashboard-reply" style="display: none;">
                     <div id="reply-to-user"></div>
@@ -616,6 +619,8 @@ $last_user_id = null;
             // Mensajes
             setupMessageHandlers();
             setupFileHandlers();
+            
+
         }
 
         // 💬 Configurar manejo de mensajes
@@ -788,6 +793,8 @@ $last_user_id = null;
                     console.error('Error loading messages:', error);
                 });
         }
+
+
 
         // 🗑️ Eliminar mensaje
         function deleteMessage(messageId) {

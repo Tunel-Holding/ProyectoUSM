@@ -76,8 +76,8 @@ while ($row = $result->fetch_assoc()) {
     $current_date   = date("Y-m-d", strtotime($row['created_at']));
     $foto_perfil    = !empty($row['foto']) ? htmlspecialchars($row['foto']) : 'css/perfil.png';
 
-    // 🎨 Color pastel dinámico
-    $userColor    = idToColor($user_id, $palette);
+    // 🎨 Color azul institucional
+    $userColor    = '#174388';
     $styleBurbuja = 'style="background:' . $userColor . '; color:white;"';
     $styleAvatar  = 'style="border: 2px solid ' . $userColor . '; border-radius:50%;"';
 
