@@ -1,6 +1,4 @@
 <?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
 include 'conexion.php';
 
 // Sanitizar y validar entrada
@@ -32,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 window.location.href = 'admin_materias.php';
               </script>";
     }
-    actualizar_actividad();
     $conn->close();
     exit();
 }
@@ -44,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eliminar Materia</title>
-    <script src="js/control_inactividad.js"></script>
 </head>
 <body>
     <script>

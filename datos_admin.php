@@ -1,4 +1,8 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+
 require_once "conexion.php";
 // Función para obtener el nivel de usuario
 function obtenerNivelUsuario($conn, $usuario_id) {

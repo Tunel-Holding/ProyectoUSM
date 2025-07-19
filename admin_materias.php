@@ -1,3 +1,8 @@
+<?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+?>
 <!DOCTYPE html>
 <html lang="es">
 

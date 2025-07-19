@@ -1,4 +1,8 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+
 include 'conexion.php';
 $id = $_GET['id'];
 

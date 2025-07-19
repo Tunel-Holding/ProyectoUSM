@@ -1,4 +1,8 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
+
 include 'comprobar_sesion.php';
 actualizar_actividad();
 require 'conexion.php';

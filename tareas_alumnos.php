@@ -1,5 +1,11 @@
 <?php
 include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
+
+
+
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 actualizar_actividad();
 // Consultar tareas desde la base de datos
@@ -66,7 +72,7 @@ actualizar_actividad();
             display: block;
             margin: 0 auto 0 auto;
         }
-        }
+        
         .btn-mini {
             padding: 6px 12px !important;
             font-size: 0.95em !important;

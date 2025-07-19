@@ -1,4 +1,8 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+
 require 'conexion.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

@@ -1,5 +1,9 @@
 <?php
 include 'comprobar_sesion.php';
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
+
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
 $conn->set_charset("utf8mb4");
 actualizar_actividad();

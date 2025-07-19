@@ -1,4 +1,8 @@
 <?php
+require_once 'AuthGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
+
 include 'conexion.php'; // Incluye tu archivo de conexión a la base de datos
 
 // Consulta para obtener la cantidad de profesores
