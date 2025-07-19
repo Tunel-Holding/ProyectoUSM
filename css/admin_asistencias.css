@@ -1,0 +1,297 @@
+/* Botón Asistir (verde) y Retirar (rojo) */
+/* Botón Asistir (verde) y Retirar (rojo) */
+.btn-asistencia {
+    background: #43a047; /* Verde */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.7rem 2.2rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(46,125,255,0.10);
+    letter-spacing: 0.5px;
+}
+.btn-asistencia:hover {
+    background: #388e3c;
+}
+.btn-asistencia.retirado {
+    background: #b71c1c; /* Rojo */
+    color: #fff;
+}
+.btn-asistencia.retirado:hover {
+    background: #c62828;
+}
+@media (prefers-color-scheme: dark) {
+    .btn-asistencia {
+        background: #66bb6a; /* Verde más claro */
+        color: #222;
+    }
+    .btn-asistencia:hover {
+        background: #388e3c;
+        color: #fff;
+    }
+    .btn-asistencia.retirado {
+        background: #c62828; /* Rojo oscuro */
+        color: #fff;
+    }
+    .btn-asistencia.retirado:hover {
+        background: #b71c1c;
+    }
+}
+/* Tabla de asistencia modo claro */
+/* Tabla de asistencia modo claro mejorada */
+.tabla-asistencia {
+    background: var(--card-light);
+    color: var(--text-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 2rem;
+    font-family: 'Inter', Arial, sans-serif;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+.tabla-asistencia th, .tabla-asistencia td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+    font-size: 1.05rem;
+    transition: background 0.2s, color 0.2s;
+}
+.tabla-asistencia th {
+    background: #34495e;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #d0d7e2;
+    text-transform: uppercase;
+}
+.tabla-asistencia tr:last-child td {
+    border-bottom: none;
+}
+.tabla-asistencia tr {
+    transition: box-shadow 0.2s, background 0.2s;
+}
+.tabla-asistencia tr:hover {
+    background: #eaf1ff;
+    box-shadow: 0 2px 8px rgba(46,125,255,0.07);
+}
+.tabla-asistencia td {
+    border-right: 1px solid #f0f0f0;
+}
+.tabla-asistencia td:last-child {
+    border-right: none;
+}
+
+/* Modo oscuro para tabla de asistencia mejorada */
+body.dark-mode .tabla-asistencia {
+    background: #23272f;
+    color: #f5f6fa;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-dark);
+    border: 1px solid #22242a;
+}
+body.dark-mode .tabla-asistencia th, body.dark-mode .tabla-asistencia td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+    font-size: 1.05rem;
+    color: #f5f6fa;
+    background: none;
+}
+body.dark-mode .tabla-asistencia th {
+    background-color: #34495e;
+    font-weight: 700;
+    color: #fff;
+    border-bottom: 2px solid #333;
+    text-transform: uppercase;
+}
+body.dark-mode .tabla-asistencia tr:nth-child(even) {
+    background-color: #2c2f33;
+}
+body.dark-mode .tabla-asistencia tr:nth-child(odd) {
+    background-color: #23272f;
+}
+body.dark-mode .tabla-asistencia td {
+    font-size: 14px;
+}
+body.dark-mode .tabla-asistencia tr:last-child td {
+    border-bottom: none;
+}
+body.dark-mode .tabla-asistencia tr:hover {
+    background: #34495e;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(144,202,249,0.07);
+}
+body.dark-mode .tabla-asistencia td {
+    border-right: 1px solid #23272f;
+}
+body.dark-mode .tabla-asistencia td:last-child {
+    border-right: none;
+}
+/* admin_asistencias.css */
+:root {
+    --background-light: #f5f6fa;
+    --background-dark: #181a1b;
+    --card-light: #fff;
+    --card-dark: #23272f;
+    --text-light: #222;
+    --text-dark: #000000;
+    --primary: #2e7dff;
+    --primary-dark: #90caf9;
+    --border-radius: 8px;
+    --shadow-light: 0 2px 8px rgba(0,0,0,0.07);
+    --shadow-dark: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+body.dark-mode {
+    --background-light: #181a1b;
+    --background-dark: #121212;
+    --card-light: #23272f;
+    --card-dark: #2c2f33;
+    --text-light: #000000;
+    --text-dark: #f5f6fa;
+    --primary: #90caf9;
+    --primary-dark: #42a5f5;
+    --border-radius: 8px;
+    --shadow-light: 0 2px 8px rgba(0,0,0,0.07);
+    --shadow-dark: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+body {
+    background: var(--background-light);
+    color: var(--text-light);
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    transition: background 0.3s, color 0.3s;
+}
+body.dark-mode {
+    background: var(--background-dark);
+    color: var(--text-dark);
+}
+
+.main-content {
+    max-width: 900px;
+    margin: 2rem auto 2rem auto;
+    padding: 1rem;
+    margin-top: 90px; /* Ajusta según el alto de tu navbar */
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.materias-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.materia-card {
+    background: var(--card-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    padding: 1.5rem;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.materia-card h3 {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.secciones-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.seccion-item {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.seccion-nombre {
+    flex: 1;
+    font-weight: 500;
+}
+
+.asistencia-form {
+    margin: 0;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #1565c0;
+}
+
+.sin-secciones {
+    color: #888;
+    font-style: italic;
+}
+
+/* Tabla de asistencia modo claro */
+
+.tabla-asistencia {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+.tabla-asistencia th, .tabla-asistencia td {
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 1.05rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+.tabla-asistencia th {
+    background-color: #34495e;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #d0d7e2;
+    text-transform: uppercase;
+}
+.tabla-asistencia tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.tabla-asistencia tr:nth-child(odd) {
+    background-color: #eaf1fb;
+}
+.tabla-asistencia td {
+    font-size: 14px;
+}
+.tabla-asistencia tr:last-child td {
+    border-bottom: none;
+}
+.tabla-asistencia tr:hover {
+    background: #eaf1ff;
+    box-shadow: 0 2px 8px rgba(46,125,255,0.07);
+}

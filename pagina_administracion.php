@@ -91,6 +91,10 @@ $conn->close();
                     <img src="css/horario.png" alt="Materias" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Materias
                 </a>
+                <a href="admin_asistencias.php" class="btn-primary">
+                    <img src="css/asistencia.png" alt="Asistencias" style="width: 20px; height: 20px; filter: none;">
+                    Gestionar Asistencias
+                </a>
             </div>
         </div>
     </section>
@@ -236,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
+});
     </script>
 </body>
 </html>
