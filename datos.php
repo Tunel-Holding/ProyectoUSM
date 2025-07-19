@@ -367,7 +367,9 @@ $conn->close(); // Cerrar la conexión
     <div class="cabecera">
 
         <button type="button" id="logoButton">
-            <img src="css/logoazul.png" alt="Logo">
+           <!-- <img src="css/logoazul.png" alt="Logo"> -->
+
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
             
         </button>
         <div class="logoempresa">

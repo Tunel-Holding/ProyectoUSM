@@ -552,3 +552,17 @@ body.dark-mode {
   border-radius: 50px;
   color: white;
 }
+/* Limitar tamaño del icono del menú hamburguesa */
+.logo-menu {
+    width: 38px !important;
+    height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+}
+.logo-menu:hover {
+  transform: scale(1.07);
+  box-shadow: transparent
+}
