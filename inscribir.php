@@ -69,8 +69,8 @@ actualizar_actividad();
                     $stmt->execute(); 
                     $result = $stmt->get_result(); // Insertar el horario del estudiante en la tabla horarios 
                     while ($row = $result->fetch_assoc()) {
-                        $stmt_insert = $conn->prepare("INSERT INTO horarios (id_estudiante, id_materia, dia, hora_inicio, hora_fin) VALUES (?, ?, ?, ?, ?)"); 
-                        $stmt_insert->bind_param("iisss", $id_estudiante, $id_materia, $row['dia'], $row['hora_inicio'], $row['hora_fin']); 
+                        $stmt_insert = $conn->prepare("INSERT INTO horarios (id_estudiante, id_materia) VALUES (?, ?)"); 
+                        $stmt_insert->bind_param("ii", $id_estudiante, $id_materia); 
                         $stmt_insert->execute(); 
                     }
                     
