@@ -81,7 +81,6 @@ class AddProfesorManager {
      * Añade un nuevo profesor usando prepared statements
      */
     public function añadirProfesor($nombre, $nombre_usuario, $email) {
-        actualizar_actividad();
         try {
             // Iniciar transacción
             $this->conn->begin_transaction();
