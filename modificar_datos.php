@@ -404,7 +404,8 @@ $conn->close();
     </div>
     <div class="cabecera">
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
