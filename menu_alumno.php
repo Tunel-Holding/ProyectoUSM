@@ -190,11 +190,8 @@
         document.getElementById('inscripcion').addEventListener('click', function () {
             redirigir('inscripcion.php');
         });
-        document.getElementById('horario').addEventListener('click', function () {
-            redirigir('horario.php');
-        });
         document.getElementById('chat').addEventListener('click', function () {
-            redirigir('seleccionarmateria.php');
+            redirigir('chat.php');
         });
         document.getElementById('desempeño').addEventListener('click', function () {
             redirigir('Seleccion_de_materias_tareas.php');
