@@ -77,19 +77,22 @@ $conn->close(); // Cerrar la conexión
         rel="stylesheet">
     <title>Datos - USM</title>
     <style>
+        /* Sección de Foto de Perfil */
         .perfil-container {
             display: flex;
+            flex-direction: column; /* Apila la imagen y el botón verticalmente */
             align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 80vh;
+            margin-bottom: 40px; /* Más espacio debajo de la sección de perfil */
         }
 
         .perfil-foto {
-            width: 400px;
-            height: 400px;
+            width: 180px; /* Foto ligeramente más pequeña */
+            height: 180px;
             border-radius: 50%;
-            margin-right: 100px;
+            object-fit: cover; /* Asegura que la imagen cubra el área sin distorsión */
+            border: 5px solid #ffd700; /* Borde dorado alrededor de la foto */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más suave para la foto */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
         .perfil-boton {
@@ -105,102 +108,256 @@ $conn->close(); // Cerrar la conexión
             font-size: 40px;
         }
 
-        .perfil-boton:hover {
-            background-color: #0056b3;
+        .perfil-foto:hover {
+            transform: scale(1.05); /* Ligeramente más grande al pasar el ratón */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada al pasar el ratón */
         }
         .contenedor-principal {
-            margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: auto;
-            color: #fff;
-            /* Blanco */
+            align-items: flex-start; /* Alinea los elementos al inicio para que el contenido fluya naturalmente */
+            padding: 20px;
+            min-height: calc(100vh - 120px); /* Ajusta según la altura del encabezado/pie de página */
         }
 
+        /* Contenedor Principal de Datos (wecontainer) */
         .wecontainer {
-            margin-top: 20px;
-            font-family: "Poppins", sans-serif;
-            max-width: 1400px;
-            /* Aumenté aún más el ancho máximo */
-            background: var(--background-form);
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            border-top: 10px solid #ffd700;
-            /* Amarillo */
-            border-bottom: 10px solid #ffd700;
-            /* Amarillo */
-            border-left: 1px solid #ffd700 !important;
-            border-right: 1px solid #ffd700 !important;
-            transition: 1s background ease-in-out;
+            background: #ffffff; /* Fondo blanco para el contenedor de datos */
+            padding: 40px; /* Aumento del padding para más espacio */
+            border-radius: 12px; /* Esquinas más redondeadas */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra más suave y extendida */
+            max-width: 900px; /* Ancho máximo ajustado para una mejor legibilidad */
+            width: 100%; /* Asegura que ocupe todo el ancho dentro de su ancho máximo */
+            border-top: 8px solid #004c97; /* Borde superior azul, más grueso y prominente */
+            border-bottom: 8px solid #004c97; /* Borde inferior azul, más grueso y prominente */
+            border-left: none !important; /* Elimina los bordes laterales para una apariencia más limpia */
+            border-right: none !important; /* Elimina los bordes laterales para una apariencia más limpia */
+            box-sizing: border-box; /* Incluye padding y borde en el ancho y alto total del elemento */
+            margin-top: 30px; /* Espacio desde la parte superior */
         }
+
 
         .wecontainer h1 {
             text-align: center;
-            color: #004c97;
-            /* Azul oscuro */
+            color: #004c97; /* Azul oscuro */
+            margin-bottom: 30px; /* Espacio debajo del título */
+            font-size: 2.2em; /* Título más grande */
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif; /* Aplica Poppins al título también */
         }
 
+        /* Lista de Datos (UL y LI) */
         .wecontainer ul {
             list-style: none;
             padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            /* Permite que los elementos se envuelvan en varias filas */
-            justify-content: space-between;
+            display: grid; /* Usa CSS Grid para un diseño más estructurado */
+            grid-template-columns: 1fr 1fr; /* Dos columnas */
+            gap: 20px; /* Espacio entre los elementos de la cuadrícula */
+            margin-bottom: 30px; /* Espacio antes del botón */
         }
 
         .wecontainer li {
-            margin: 10px;
-            padding: 20px;
-            /* Aumenté el padding para cuadros más grandes */
-            background: transparent;
-            /* Azul claro */
-            border: 1px solid #004c97;
-            /* Borde azul oscuro */
-            border-radius: 4px;
-            flex: 1 1 calc(45% - 40px);
-            /* Reduje un poco el cálculo para cuadros más grandes */
-            box-sizing: border-box;
-            font-size: 1.2em;
-            /* Aumenté el tamaño de la fuente */
+            background: #f8f9fa; /* Fondo gris muy claro para cada elemento de dato */
+            padding: 18px 25px; /* Padding cómodo */
+            border-radius: 8px; /* Esquinas ligeramente redondeadas */
+            border: 1px solid #e0e0e0; /* Borde sutil */
+            display: flex;
+            flex-direction: row; /* **Alinea los ítems en fila (horizontalmente)** */
+            justify-content: space-between; /* Espacio entre el strong y el span */
+            align-items: center; /* Centra verticalmente */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra muy ligera */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            font-family: 'Poppins', sans-serif; /* Aplica Poppins a los elementos de la lista */
+        }
+
+        .wecontainer li:hover {
+            transform: translateY(-3px); /* Efecto de ligero levantamiento al pasar el ratón */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra más visible al pasar el ratón */
         }
 
         .wecontainer li strong {
-            color: #004c97;
-            /* Azul oscuro */
+            color: #004c97; /* Azul oscuro para las etiquetas */
+            font-size: 0.9em; /* Fuente ligeramente más pequeña para la etiqueta */
+            /* margin-bottom: 5px; REMOVED: Ya no es necesario con flex-direction: row */
+            font-weight: 600;
+            white-space: nowrap; /* Evita que el texto de la etiqueta se rompa */
+            margin-right: 10px; /* Espacio entre la etiqueta y el valor */
+
         }
 
         .wecontainer li span {
-            color: #004c97;
-            /* Azul oscuro */
+            color: #555; /* Gris más oscuro para los valores */
+            font-size: 1.1em; /* Fuente ligeramente más grande para el valor */
+            word-wrap: break-word; /* Asegura que las palabras largas se rompan */
+            white-space: normal; /* Permite que el texto se ajuste naturalmente */
+            text-align: right; /* Alinea el valor a la derecha si hay espacio */
+            flex-grow: 1; /* Permite que el span ocupe el espacio restante */
         }
 
         .wecontainer a {
             font-weight: 700;
         }
 
+        /* Estilos del Botón */
         .button {
             display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background-color: #ffd700;
-            /* Amarillo */
-            color: #004c97;
-            /* Azul oscuro */
+            width: fit-content; /* Ajusta el ancho al contenido */
+            margin: 0 auto; /* Centra el botón */
+            padding: 12px 30px; /* Más padding para un botón más grande */
+            background-color: #ffd700; /* Dorado */
+            color: #004c97; /* Texto azul oscuro */
             border: none;
-            border-radius: 4px;
+            border-radius: 30px; /* Botón en forma de píldora */
             cursor: pointer;
             text-align: center;
-            font-size: 1em;
+            font-size: 1.1em; /* Tamaño de fuente más grande para el botón */
             text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Poppins', sans-serif; /* Aplica Poppins al botón */
+        }
+        .button:hover {
+            background-color: #ffcc00; /* Dorado más oscuro al pasar el ratón */
+            transform: translateY(-2px); /* Ligero levantamiento */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
         }
 
-        .button:hover {
-            background-color: #ffcc00;
-            /* Amarillo oscuro */
+        /* Ajustes Responsivos */
+        @media (max-width: 768px) {
+            .wecontainer ul {
+                grid-template-columns: 1fr; /* Una sola columna en pantallas más pequeñas */
+            }
+
+            .wecontainer {
+                padding: 25px;
+                margin-top: 20px;
+            }
+
+            .wecontainer h1 {
+                font-size: 1.8em;
+            }
+
+            .perfil-foto {
+                width: 150px;
+                height: 150px;
+            }
         }
+
+        @media (max-width: 480px) {
+            .wecontainer {
+                padding: 15px;
+            }
+
+            .wecontainer h1 {
+                font-size: 1.5em;
+            }
+
+            .wecontainer li {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        .soporte-flotante-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .soporte-flotante {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background-color: #446ad3;
+            padding: 12px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            overflow: hidden;
+            width: 60px;            /* ✅ suficiente para mostrar solo el ícono */
+            height: 50px;
+            transition: width 0.4s ease, background-color 0.3s ease;
+        }
+
+
+        .soporte-flotante:hover {
+            width: 210px; /* ✅ se expande hacia la izquierda */
+            background-color: #365ac0;
+        }
+
+        .soporte-mensaje {
+            flex: 1; /* ✅ ocupa todo el espacio disponible */
+            opacity: 0;
+            white-space: nowrap;
+            color: #fff;
+            font-weight: 500;
+            font-size: 14px;
+            transform: translateX(30px); /* animación desde la derecha */
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            text-align: left; /* ✅ texto alineado a la izquierda */
+            margin-right: auto;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .soporte-flotante:hover .soporte-mensaje {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .soporte-flotante img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        /* Contenedor principal en modo oscuro */
+        body.dark-mode .wecontainer {
+            background-color: #292942;
+            border-top: 8px solid #ffd700; /* Mantiene el dorado en modo oscuro */
+            border-bottom: 8px solid #ffd700;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Título en modo oscuro */
+        body.dark-mode .wecontainer h1 {
+            color: #ffd700;
+        }
+
+        /* Cada cuadro de datos en modo oscuro */
+        body.dark-mode .wecontainer li {
+            background-color: #3a3a55;
+            border: 1px solid #555574;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Etiquetas y contenido de los datos */
+        body.dark-mode .wecontainer li strong {
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .wecontainer li span {
+            color: #d4d4d4;
+        }
+
+        /* Botón en modo oscuro */
+        body.dark-mode .button {
+            background-color: #ffd700;
+            color: #292942;
+        }
+
+        body.dark-mode .button:hover {
+            background-color: #ffcc00;
+        }
+
     </style>
 </head>
 
@@ -214,7 +371,6 @@ $conn->close(); // Cerrar la conexión
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-             <img src="css/audifonos-blanco.png" alt="Logo" class="soporte">
             <p>UniHub</p>
         </div>
 
@@ -228,7 +384,7 @@ $conn->close(); // Cerrar la conexión
             <div class="perfil-container">
         <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
        
-    </div>
+    </div class="datos-grid">
             <ul>
                 <li><strong>Número de Cédula:</strong> <span><?php echo $estudiante['cedula']; ?></span></li>
                 <li><strong>Nombres:</strong> <span><?php echo $estudiante['nombres']; ?></span></li>
@@ -263,6 +419,12 @@ $conn->close(); // Cerrar la conexión
             }
         });
     </script>
+    <div class="soporte-flotante-container">
+        <a href="contacto.php" class="soporte-flotante" title="Soporte">
+            <span class="soporte-mensaje">Contacto soporte</span>
+            <img src="css/audifonos-blanco.png" alt="Soporte">
+        </a>
+    </div>
 </body>
 
 </html>
