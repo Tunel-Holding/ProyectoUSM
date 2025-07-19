@@ -1,6 +1,4 @@
 <?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
 include 'conexion.php';
 
 $usuario_id = $_POST['usuario_id'];
@@ -22,7 +20,6 @@ if ($result_select->num_rows > 0) {
     if (file_exists($ruta_archivo)) {
         unlink($ruta_archivo);
     }
-actualizar_actividad();
     // Eliminar registro de la base de datos
     $sql_delete = "DELETE FROM archivos WHERE usuario_id = ? AND materia_id = ? AND parcial = ?";
     $stmt_delete = $conn->prepare($sql_delete);
@@ -36,6 +33,5 @@ actualizar_actividad();
 } else {
     echo "No se encontró el archivo";
 }
-actualizar_actividad();
 $conn->close();
 ?>

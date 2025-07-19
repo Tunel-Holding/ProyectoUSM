@@ -1,6 +1,4 @@
 <?php
-include 'comprobar_sesion.php';
-actualizar_actividad();
 require "conexion.php";
 
 if (isset($_GET['id'])) {
@@ -16,6 +14,5 @@ if (isset($_GET['id'])) {
 } else {
     echo "ID de profesor no especificado.";
 }
-actualizar_actividad();
 $conn->close();
 ?>

@@ -1,7 +1,5 @@
 <?php
-include 'comprobar_sesion.php';
 require 'conexion.php';
-actualizar_actividad();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $id_usuario = htmlspecialchars($_POST['id_usuario']);
@@ -75,7 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "<p>Error al preparar la consulta de actualización: " . $conn->error . "</p>";
     }
-    actualizar_actividad();
     $conn->close();
     } else {
         echo "<p>El número de créditos o la cédula del estudiante no es válido.</p>";
