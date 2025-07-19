@@ -28,4 +28,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp 
           local-dir: ./              # Carpeta local que quieres subir (ajústala si es necesario)
-          server-dir: /public_html/
+          server-dir: /
