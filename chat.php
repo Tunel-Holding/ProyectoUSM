@@ -17,19 +17,24 @@ if (!isset($_SESSION['idusuario'])) {
 $advertencia = "";
 
 // Obtener el nombre y sección de la materia
-$id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
-$stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
-$stmt->bind_param("i", $id_materia);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $_SESSION['nombre_materia'] = $row['nombre'];
-    $_SESSION['seccion_materia'] = $row['seccion'];
+$id_materia = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
+if ($id_materia) {
+    $stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
+    $stmt->bind_param("i", $id_materia);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $_SESSION['nombre_materia'] = $row['nombre'];
+        $_SESSION['seccion_materia'] = $row['seccion'];
+    } else {
+        $_SESSION['nombre_materia'] = "Materia no encontrada";
+        $_SESSION['seccion_materia'] = "";
+    }
+    $stmt->close();
 } else {
-    $_SESSION['nombre_materia'] = "Materia no encontrada";
+    $_SESSION['nombre_materia'] = "";
     $_SESSION['seccion_materia'] = "";
 }
-$stmt->close();
 
 // 📨 Enviar mensaje de texto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
@@ -174,32 +179,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 }
 
 // 💬 Mostrar historial de mensajes
-$idgrupo = $_SESSION['idmateria'];
-
-$stmt = $conn->prepare("
-    SELECT 
-        messages.id, 
-        messages.message, 
-        messages.created_at, 
-        messages.tipo, 
-        messages.reply_to,
-        usuarios.id AS user_id, 
-        usuarios.nombre_usuario, 
-        usuarios.nivel_usuario,
-        foto
-    FROM messages
-    JOIN usuarios ON messages.user_id = usuarios.id
-    LEFT JOIN fotousuario ON usuarios.id = id_usuario
-    WHERE messages.group_id = ?
-    ORDER BY messages.created_at ASC
-");
-
-$stmt->bind_param("i", $idgrupo);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$last_date = null;
-$last_user_id = null;
+$idgrupo = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
+if ($idgrupo) {
+    $stmt = $conn->prepare("
+        SELECT 
+            messages.id, 
+            messages.message, 
+            messages.created_at, 
+            messages.tipo, 
+            messages.reply_to,
+            usuarios.id AS user_id, 
+            usuarios.nombre_usuario, 
+            usuarios.nivel_usuario,
+            foto
+        FROM messages
+        JOIN usuarios ON messages.user_id = usuarios.id
+        LEFT JOIN fotousuario ON usuarios.id = id_usuario
+        WHERE messages.group_id = ?
+        ORDER BY messages.created_at ASC
+    ");
+    $stmt->bind_param("i", $idgrupo);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $last_date = null;
+    $last_user_id = null;
+}
 ?>
 
 <!DOCTYPE html>
@@ -494,6 +498,11 @@ $last_user_id = null;
             $materias[] = $row;
         }
         $stmt->close();
+        // Seleccionar materia por defecto si no hay una seleccionada y hay materias
+        if (!$materia_actual && count($materias) > 0) {
+            $_SESSION['idmateria'] = $materias[0]['id'];
+            $materia_actual = $materias[0]['id'];
+        }
         ?>
         <div class="sidebar-materias">
             <h2>Mis Materias</h2>

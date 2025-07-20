@@ -87,7 +87,11 @@ function idToColor($id, $palette)
     return $palette[$id % count($palette)];
 }
 
-$idgrupo = $_SESSION['idmateria'];
+$idgrupo = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
+if (!$idgrupo) {
+    echo '<div style="color:#888; text-align:center; margin-top:30px;">No tienes materias seleccionadas o inscritas.</div>';
+    exit();
+}
 $current_user_id = $_SESSION['idusuario'];
 $current_user_level = $_SESSION['nivel_usuario'] ?? 'usuario';
 
@@ -239,10 +243,10 @@ while ($row = $result->fetch_assoc()) {
             echo "<span class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></span>";
 
             if ($reply_row['tipo'] === 'imagen') {
-                            echo "<div class='reply-content'><img src='" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "' class='reply-image' alt='Imagen'></div>";
-        } else {
-            echo "<div class='reply-content'>" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "</div>";
-        }
+                echo "<div class='reply-content'><img src='" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "' class='reply-image' alt='Imagen'></div>";
+            } else {
+                echo "<div class='reply-content'>" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "</div>";
+            }
             echo "</div>";
         }
         $reply_stmt->close();
