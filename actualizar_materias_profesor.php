@@ -3,6 +3,15 @@
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
+// CORS y JSON para todas las respuestas
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+// Responder preflight
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
 // Registrar errores fatales y warnings en un archivo log y enviar respuesta JSON
 
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
