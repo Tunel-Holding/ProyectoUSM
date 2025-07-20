@@ -132,6 +132,8 @@ $conn->close();
     <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
     <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/principalunihub.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/horario.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
