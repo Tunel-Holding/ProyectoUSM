@@ -328,7 +328,7 @@ actualizar_actividad();
         <div class="materias">
             <?php
             // Conexión a la base de datos
-            $conexion = new mysqli("localhost", "root", "", "proyectousm");
+            $conexion = new mysqli("199.79.62.11", "conexftd_conexionProfesores", "Lcar0n@2023", "conexftd_proyectousm");
 
             // Verificar la conexión
             if ($conexion->connect_error) {
