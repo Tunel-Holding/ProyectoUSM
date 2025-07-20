@@ -405,6 +405,7 @@ $conn->close();
         border-radius: 8px;
         padding: 10px 14px;
         margin-top: 10px;
+        margin-bottom: 8px;
         font-size: 1em;
         color: #222;
         font-weight: 500;
