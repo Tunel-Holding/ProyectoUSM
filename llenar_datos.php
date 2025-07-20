@@ -119,16 +119,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }
                 if (empty($errores)) {
+                    $correo = obtenerMail($conn, $idusuario); // Obtener el correo antes
+
                     $stmt = $conn->prepare("INSERT INTO datos_usuario (usuario_id, cedula, nombres, apellidos, sexo, telefono, correo, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                     if ($stmt) {
-                        $stmt->bind_param("isssssss", 
+                        $stmt->bind_param("isssssss",
                             $idusuario,
                             $datos['numero_cedula'],
                             $datos['nombres'],
                             $datos['apellidos'],
                             $datos['sexo'],
                             $datos['telefono'],
-                            obtenerMail($conn, $idusuario), // Usar el email de la sesión
+                            $correo,
                             $datos['direccion']
                         );
                         if ($stmt->execute()) {
