@@ -17,11 +17,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap" rel="stylesheet">
 
-    <title>Inicio de Sesión - USM</title>
+    <title>Inicio de Sesión - UniHub</title>
 </head>
 
 <body class="body1">
-
     <div class="container">
         <div class="container-form">
             <form class="sign-in" id="sign-in" action="Ingreso.php" method="post">
