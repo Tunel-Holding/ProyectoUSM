@@ -461,24 +461,6 @@ if ($idgrupo) {
         .chat-dashboard-reply #cancel-reply {
             margin-left: auto;
         }
-
-        #upload-menu {
-            position: absolute;
-            bottom: 70px;
-            /* más cerca del input */
-            left: 150px !important;
-            /* pegado al botón + */
-            transform: none;
-            background-color: var(--fondo);
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            z-index: 1000;
-        }
     </style>
 </head>
 
