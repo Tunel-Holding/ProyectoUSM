@@ -528,6 +528,8 @@ $conn->close();
     .message-container-flex.current-user .menu-puntos {
         left:700px;
         right: auto;
+        top:400px;
+
     }
 
     .reply-button,
