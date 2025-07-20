@@ -480,10 +480,11 @@ $conn->close();
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         min-width: 120px;
-        z-index: 10;
-        flex-direction: column;
-        padding: 6px 0;
-        margin-top: 4px;
+        z-index: 9999 !important;
+        left: auto !important;
+        right: 0 !important;
+        background: red !important;
+        /* TEMPORAL para depuración */
     }
 
     .menu-puntos.show {
