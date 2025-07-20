@@ -328,7 +328,7 @@ actualizar_actividad();
         <div class="materias">
             <?php
             // Conexión a la base de datos
-            $conexion = new mysqli("localhost", "root", "", "proyectousm");
+            $conexion = new mysqli("199.79.62.11", "conexftd_conexionProfesores", "Lcar0n@2023", "conexftd_proyectousm");
 
             // Verificar la conexión
             if ($conexion->connect_error) {
@@ -359,8 +359,8 @@ actualizar_actividad();
                 GROUP BY nombre
             ) sub
             JOIN materias m ON m.id = sub.min_id
-            LEFT JOIN Inscripciones i ON m.id = i.id_materia AND i.id_estudiante = ?
-            LEFT JOIN HistoricoAcademico h ON m.id = h.MateriaID AND h.EstudianteID = ?
+            LEFT JOIN inscripciones i ON m.id = i.id_materia AND i.id_estudiante = ?
+            LEFT JOIN historicoacademico h ON m.id = h.MateriaID AND h.EstudianteID = ?
             WHERE m.semestre <= ? AND i.id_materia IS NULL AND (h.MateriaID IS NULL OR h.Calificacion IS NULL)";
 
 

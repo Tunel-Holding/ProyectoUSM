@@ -724,7 +724,7 @@ $conn->close();
 
 <body>
     <div class="contenedorentrante3">
-        <img src="css\logo.png">
+        <img src="css/logounihubblanco.png">
     </div>
     <div class="cabecera">
 
