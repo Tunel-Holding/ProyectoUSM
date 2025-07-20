@@ -271,6 +271,7 @@ $conn->close();
 ?>
 
 <style>
+    /* Contenedor de mensajes */
     .message-container-flex {
         display: flex;
         flex-direction: row;
@@ -279,16 +280,15 @@ $conn->close();
         position: relative;
     }
 
-    /* Mensajes del usuario actual (derecha) */
     .message-container-flex.current-user {
         justify-content: flex-end;
     }
 
-    /* Mensajes de otros usuarios (izquierda) */
     .message-container-flex.other-user {
         justify-content: flex-start;
     }
 
+    /* Acciones de mensaje */
     .message-actions {
         display: flex;
         flex-direction: column;
@@ -299,13 +299,11 @@ $conn->close();
         transition: opacity 0.2s;
     }
 
-    /* Posicionamiento de botones para usuario actual */
     .message-container-flex.current-user .message-actions {
         margin-right: 8px;
         order: -1;
     }
 
-    /* Posicionamiento de botones para otros usuarios */
     .message-container-flex.other-user .message-actions {
         margin-left: 8px;
         order: 1;
@@ -316,6 +314,7 @@ $conn->close();
         pointer-events: auto;
     }
 
+    /* Avatares */
     .profile-icon-alumno,
     .profile-icon-profesor,
     .profile-icon-administrador {
@@ -324,20 +323,19 @@ $conn->close();
         object-fit: cover;
     }
 
-    /* Margen para avatares de otros usuarios (izquierda) */
     .message-container-flex.other-user .profile-icon-alumno,
     .message-container-flex.other-user .profile-icon-profesor,
     .message-container-flex.other-user .profile-icon-administrador {
         margin-right: 10px;
     }
 
-    /* Margen para avatar del usuario actual (derecha) */
     .message-container-flex.current-user .profile-icon-alumno,
     .message-container-flex.current-user .profile-icon-profesor,
     .message-container-flex.current-user .profile-icon-administrador {
         margin-left: 10px;
     }
 
+    /* Burbujas de mensaje */
     .message-bubble-alumno,
     .message-bubble-profesor,
     .message-bubble-administrador {
@@ -351,40 +349,56 @@ $conn->close();
         margin-left: 10px;
     }
 
-    .reply-button,
-    .delete-button {
-        background: rgba(255, 255, 255, 0.95);
-        border: 1.5px solid #bbb;
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        padding: 0;
-        cursor: pointer;
-        transition: all 0.2s;
+    /* Burbujas de archivos */
+    .file-bubble {
+        max-width: 260px !important;
+        min-width: 0 !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        box-sizing: border-box;
+    }
+
+    .file-bubble .file {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 20px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+        padding: 6px 10px;
+        margin: 4px 0;
+        font-size: 1em;
+        text-decoration: none;
+        color: #174388;
+        transition: background 0.2s;
+        box-sizing: border-box;
+        max-width: 220px;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .reply-button:hover {
+    .file-bubble .file img {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .file-bubble .file span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 150px;
+        vertical-align: middle;
+    }
+
+    .file-bubble .file:hover {
         background: #e3f2fd;
-        border-color: #2196f3;
-        transform: scale(1.1);
+        text-decoration: underline;
     }
 
-    .delete-button {
-        background: rgba(255, 255, 255, 0.95);
-        color: #d32f2f;
-        border-color: #d32f2f;
-    }
-
-    .delete-button:hover {
-        background: #ffebee;
-        border-color: #c62828;
-        transform: scale(1.1);
-    }
-
+    /* Respuestas dentro de la burbuja */
     .reply-preview-inside {
         background: rgba(33, 150, 243, 0.10);
         border-left: 4px solid #2196f3;
@@ -424,7 +438,7 @@ $conn->close();
         object-fit: cover;
     }
 
-    /* --- BOTÓN DE 3 PUNTITOS Y MENÚ CONTEXTUAL --- */
+    /* Menú de 3 puntitos */
     .menu-puntos-btn {
         background: none;
         border: none;
@@ -436,7 +450,6 @@ $conn->close();
         transition: background 0.2s;
         position: relative;
         z-index: 2;
-        /* Nuevo: para que el menú sea relativo a este botón */
         display: inline-block;
     }
 
@@ -485,7 +498,6 @@ $conn->close();
         background: none;
     }
 
-    /* Ajuste para modo oscuro */
     body.dark-mode .menu-puntos {
         background: #232323;
         border: 1px solid #444;
@@ -500,93 +512,14 @@ $conn->close();
         background: #333;
     }
 
-    /* Eliminar los estilos condicionales de right/left para mensajes propios */
     .message-container-flex.current-user .menu-puntos {
         left: auto;
         right: 0;
     }
 
-    /* Ocultar los botones originales de responder/eliminar */
     .reply-button,
     .delete-button {
         display: none !important;
-    }
-
-    /* Limita el ancho de los archivos en la burbuja y recorta el nombre si es muy largo */
-    .message-bubble-alumno .file,
-    .message-bubble-profesor .file,
-    .message-bubble-administrador .file {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        max-width: 220px;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 8px;
-        padding: 6px 10px;
-        margin: 4px 0;
-        font-size: 1em;
-        text-decoration: none;
-        color: #174388;
-        transition: background 0.2s;
-        box-sizing: border-box;
-    }
-
-    .message-bubble-alumno .file span,
-    .message-bubble-profesor .file span,
-    .message-bubble-administrador .file span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-        max-width: 150px;
-        vertical-align: middle;
-    }
-
-    .message-bubble-alumno .file img,
-    .message-bubble-profesor .file img,
-    .message-bubble-administrador .file img {
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-        flex-shrink: 0;
-    }
-
-    .message-bubble-alumno:has(.file),
-    .message-bubble-profesor:has(.file),
-    .message-bubble-administrador:has(.file) {
-        max-width: 260px !important;
-        min-width: 0 !important;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    /* Limita el ancho de las burbujas de archivos y el tamaño del ícono, manteniendo el estilo azul */
-    .file-bubble {
-        max-width: 260px !important;
-        min-width: 0 !important;
-        padding-left: 14px !important;
-        padding-right: 14px !important;
-        box-sizing: border-box;
-    }
-
-    .file-bubble .file img {
-        width: 36px;
-        height: 36px;
-        margin-right: 10px;
-        flex-shrink: 0;
-    }
-
-    .file-bubble .file span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-        max-width: 150px;
-        vertical-align: middle;
     }
 
     @media (max-width: 768px) {
@@ -605,11 +538,13 @@ $conn->close();
             padding: 8px 10px;
         }
 
-        .reply-button,
-        .delete-button {
-            width: 30px;
-            height: 30px;
-            font-size: 16px;
+        .file-bubble {
+            max-width: 80vw !important;
+        }
+
+        .file-bubble .file img {
+            width: 28px;
+            height: 28px;
         }
 
         .reply-preview-inside {
@@ -621,8 +556,6 @@ $conn->close();
             max-width: 80px;
             max-height: 50px;
         }
-
-
     }
 </style>
 
