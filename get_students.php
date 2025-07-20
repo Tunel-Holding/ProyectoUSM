@@ -1,18 +1,23 @@
 <?php
-header('Content-Type: application/json');
-include 'conexion.php';
+// Siempre iniciar sesión si no está iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Evitar cualquier salida antes del header
+// Forzar salida solo JSON y evitar cualquier salida previa
 ob_start();
+header('Content-Type: application/json');
 
+include 'conexion.php';
 $debug = [];
 
+// Validar sesión
 if (!isset($_SESSION['idusuario']) || !isset($_SESSION['idmateria'])) {
-    $debug['session'] = $_SESSION;
+    $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
+    ob_end_clean();
     echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
     exit;
 }
-
 
 $id_materia = $_SESSION['idmateria'];
 $debug['id_materia'] = $id_materia;
@@ -40,6 +45,7 @@ $debug['query'] = $query;
 $stmt = $conn->prepare($query);
 if (!$stmt) {
     $debug['prepare_error'] = $conn->error;
+    ob_end_clean();
     echo json_encode(['error' => 'Error al preparar la consulta: ' . $conn->error, 'debug' => $debug]);
     exit;
 }
@@ -47,6 +53,7 @@ if (!$stmt) {
 $stmt->bind_param("ii", $task_id, $id_materia);
 if (!$stmt->execute()) {
     $debug['execute_error'] = $stmt->error;
+    ob_end_clean();
     echo json_encode(['error' => 'Error al ejecutar la consulta: ' . $stmt->error, 'debug' => $debug]);
     exit;
 }
@@ -62,6 +69,6 @@ while ($row = $result->fetch_assoc()) {
 $debug['num_students'] = count($students);
 $conn->close();
 
-// Limpiar cualquier salida previa
+// Limpiar cualquier salida previa (warnings, espacios, etc.)
 ob_end_clean();
 echo json_encode(['students' => $students, 'debug' => $debug]);
