@@ -2,6 +2,12 @@
 require_once __DIR__ . '/vendor/autoload.php';
 include 'conexion.php';
 
+// Obtener id de materia para filtrar tareas
+$materia_id = isset($_GET['materia_id']) ? intval($_GET['materia_id']) : 0;
+if ($materia_id <= 0) {
+    die('ID de materia no válido.');
+}
+
 // Configuración de mPDF
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);
 $mpdf->SetTitle('Listado de Notas de Todas las Tareas');
@@ -23,12 +29,12 @@ $html = '<style>
 $html .= '<h2>Listado de Notas de Todas las Tareas</h2>';
 $html .= '<table>';
 
-// Consulta para obtener todas las tareas y sus notas
 $query = "SELECT t.id AS id_tarea, t.titulo_tarea, du.usuario_id, du.nombres, du.apellidos, et.calificacion
           FROM tareas t
           JOIN entregas_tareas et ON et.id_tarea = t.id
           JOIN estudiantes e ON et.id_alumno = e.id
           JOIN datos_usuario du ON e.id_usuario = du.usuario_id
+          WHERE t.id_materia = " . $materia_id . "
           ORDER BY du.nombres, du.apellidos, t.titulo_tarea";
 $result = $conn->query($query);
 
