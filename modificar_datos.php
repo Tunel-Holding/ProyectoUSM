@@ -138,7 +138,8 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="css/icono.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
+    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -650,7 +651,9 @@ $conn->close();
     </div>
     <div class="cabecera">
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
