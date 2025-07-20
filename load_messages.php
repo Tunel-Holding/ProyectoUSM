@@ -562,7 +562,7 @@ $conn->close();
     }
 
     .reply-preview-inside .reply-content {
-        text-align: center;
+        text-align: left;
         display: block;
     }
 
