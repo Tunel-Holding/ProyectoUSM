@@ -24,7 +24,10 @@ $result = $stmt->get_result();
 
 $lista = [];
 while ($row = $result->fetch_assoc()) {
-    $lista[] = $row['nombres'] . ' ' . $row['apellidos'];
+    // Sólo primer nombre y primer apellido
+    $nombre = explode(' ', $row['nombres'])[0];
+    $apellido = explode(' ', $row['apellidos'])[0];
+    $lista[] = $nombre . ' ' . $apellido;
 }
 $stmt->close();
 $conn->close();
