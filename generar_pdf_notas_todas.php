@@ -70,7 +70,7 @@ if ($result && $result->num_rows > 0) {
         $html .= '</tr>';
     }
 } else {
-    $html .= '<tr><td colspan="100" style="text-align:center;padding:12px;">No hay notas registradas.</td></tr>';
+    $html .= '<tr><td colspan="100" style="text-align:center;padding:12px;">No hay tareas registradas.</td></tr>';
 }
 $html .= '</tbody></table>';
 
