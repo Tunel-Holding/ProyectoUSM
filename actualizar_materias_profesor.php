@@ -1,4 +1,32 @@
 <?php
+// Registrar errores fatales y warnings en un archivo log y enviar respuesta JSON
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    $msg = "[PHP ERROR] $errstr en $errfile:$errline";
+    error_log($msg, 3, __DIR__ . '/error_backend.log');
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error fatal en el backend',
+        'details' => $msg
+    ]);
+    exit;
+});
+
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && ($error['type'] === E_ERROR || $error['type'] === E_PARSE || $error['type'] === E_CORE_ERROR || $error['type'] === E_COMPILE_ERROR)) {
+        $msg = "[PHP SHUTDOWN] {$error['message']} en {$error['file']}:{$error['line']}";
+        error_log($msg, 3, __DIR__ . '/error_backend.log');
+        if (!headers_sent()) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error fatal en el backend',
+                'details' => $msg
+            ]);
+        }
+    }
+});
 require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 // Permitir acceso tanto a administradores como a profesores
