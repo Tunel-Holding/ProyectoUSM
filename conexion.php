@@ -1,5 +1,5 @@
 <?php
-$servername = "localhost";
+$servername = "md-32";
 $username = "conexftd_conexionProfesores";
 $password = "Lcar0n@2023";
 $dbname = "conexftd_proyectousm";
