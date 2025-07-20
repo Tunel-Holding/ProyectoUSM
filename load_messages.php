@@ -193,7 +193,7 @@ while ($row = $result->fetch_assoc()) {
             </div>';
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
         echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
-
+    }
 
     // 📨 Contenido del mensaje
     echo "<strong>" . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . ":</strong> ";
