@@ -143,13 +143,23 @@ try {
     if ($conn->connect_errno === 0) {
         $conn->rollback();
     }
-    
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Error al actualizar las materias',
-        'details' => $e->getMessage()
-    ]);
+    // Si el error es por array vacío, devolver mensaje claro
+    $msg = $e->getMessage();
+    if (strpos($msg, 'No se puede preparar la consulta de asignación') !== false || strpos($msg, 'No se puede ejecutar la asignación') !== false) {
+        http_response_code(200);
+        echo json_encode([
+            'success' => false,
+            'error' => 'No se seleccionó ninguna materia para asignar. Si desea eliminar todas las materias, deje el campo vacío.',
+            'details' => $msg
+        ]);
+    } else {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Error al actualizar las materias',
+            'details' => $msg
+        ]);
+    }
 }
 
 $conn->close();
