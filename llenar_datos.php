@@ -147,6 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 actualizar_actividad();
+$correo_usuario = obtenerMail($conn, $idusuario);
 $conn->close();
 ?>
 
@@ -316,7 +317,7 @@ $conn->close();
 
                     <label for="correo">Correo:</label>
                     <div style="padding: 8px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; color: #666; font-size: 0.9em;">
-                        <?php echo obtenerMail($conn, $idusuario); ?>
+                        <?php echo htmlspecialchars($correo_usuario); ?>
                     </div>
 
                     <label for="direccion">Dirección:</label>

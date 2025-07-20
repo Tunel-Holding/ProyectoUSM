@@ -278,7 +278,7 @@ actualizar_actividad();
                     require 'conexion.php';
                     $sqlInscritas = "SELECT m.id, m.nombre, m.seccion, m.creditos, p.nombre AS profesor, m.salon
                              FROM materias m
-                             JOIN Inscripciones i ON m.id = i.id_materia
+                             JOIN inscripciones i ON m.id = i.id_materia
                              JOIN profesores p ON m.id_profesor = p.id
                              WHERE i.id_estudiante = ?";
                     $stmtInscritas = $conn->prepare($sqlInscritas);
