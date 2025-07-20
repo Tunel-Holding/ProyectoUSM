@@ -9,12 +9,12 @@ $debug = [];
 
 
 // Validar sesión
-if (!isset($_SESSION['idusuario'])) {
-    $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
-    ob_end_clean();
-    echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
-    exit;
-}
+// if (!isset($_SESSION['idusuario'])) {
+//     $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
+//     ob_end_clean();
+//     echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
+//     exit;
+// }
 
 // Obtener el task_id por GET
 $task_id = isset($_GET['task_id']) ? intval($_GET['task_id']) : 0;
