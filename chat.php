@@ -961,6 +961,24 @@ if ($idgrupo) {
         function showError(message) {
             alert(message); // Mejorar con una notificación más elegante
         }
+
+        // Deshabilitar el botón de enviar si el input está vacío
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send-button');
+
+        function toggleSendButton() {
+            sendButton.disabled = messageInput.value.trim().length === 0;
+            if (sendButton.disabled) {
+                sendButton.style.opacity = '0.5';
+                sendButton.style.cursor = 'not-allowed';
+            } else {
+                sendButton.style.opacity = '';
+                sendButton.style.cursor = '';
+            }
+        }
+
+        messageInput.addEventListener('input', toggleSendButton);
+        document.addEventListener('DOMContentLoaded', toggleSendButton);
     </script>
 
 
