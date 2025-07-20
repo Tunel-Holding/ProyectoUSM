@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
             </button>
             <a id="video-call-button" class="button llamada" href="videollamada_profesor.php">
                 <img src="css/icons/meet.svg" alt="Videollamada" width="40" height="40">
-                //probando
+                
             </a>
             <input type="file" id="imageInput" accept="image/*">
             <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
