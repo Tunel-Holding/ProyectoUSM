@@ -467,7 +467,7 @@ $last_user_id = null;
     <div class="cabecera cabecera-chat">
         <button type="button" id="logoButton">
             <!-- <img src="css/logo.png" alt="Logo"> -->
-             <img src="css/menu.png" alt="Menú" class="logo-menu">
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="nombremateria">
             <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>
@@ -533,7 +533,7 @@ $last_user_id = null;
                     <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
                         style="display: none;">
                     <button id="call-button" class="button" title="Llamada">
-                        <img src="css/llamada_alumno.png" alt="Call">
+                        <img src="css/icons/meet.svg" alt="Call">
                     </button>
                 </div>
             </div>

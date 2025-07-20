@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
     $reply_to = isset($_POST['reply_to']) ? $_POST['reply_to'] : 0; // Asignar 0 si no se proporciona reply_to
 
 
-    if(strlen($message)>=250){
+    if (strlen($message) >= 250) {
         die('El mensaje no puede tener más de 250 caracteres');
-    }else if(strlen($message)<1){
+    } else if (strlen($message) < 1) {
         die('El mensaje no puede estar vacío');
         exit;
     }
@@ -93,20 +93,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
     $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));
     $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
     $target_file = $target_dir . $new_filename;
-        if (move_uploaded_file($image["tmp_name"], $target_file)) {
-            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
-            if ($stmt === false) {
-                die('Prepare failed: ' . htmlspecialchars($conn->error));
-            }
-            $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
-            if ($stmt->execute() === false) {
-                die('Execute failed: ' . htmlspecialchars($stmt->error));
-            }
-            $stmt->close();
-        } else {
-            die('Error al subir la imagen.');
+    if (move_uploaded_file($image["tmp_name"], $target_file)) {
+        $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($conn->error));
         }
-    
+        $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
+        if ($stmt->execute() === false) {
+            die('Execute failed: ' . htmlspecialchars($stmt->error));
+        }
+        $stmt->close();
+    } else {
+        die('Error al subir la imagen.');
+    }
+
     exit();
 }
 
@@ -149,21 +149,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
     $target_file = $target_dir . $new_filename;
 
-        if (move_uploaded_file($file["tmp_name"], $target_file)) {
+    if (move_uploaded_file($file["tmp_name"], $target_file)) {
 
-            $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
-            if ($stmt === false) {
-                die('Prepare failed: ' . htmlspecialchars($conn->error));
-            }
-            $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
-            if ($stmt->execute() === false) {
-                die('Execute failed: ' . htmlspecialchars($stmt->error));
-            }
-            $stmt->close();
-        } else {
-            die('Error al subir el archivo.');
+        $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($conn->error));
         }
-   
+        $stmt->bind_param("isii", $user_id, $target_file, $group_id, $reply_to);
+        if ($stmt->execute() === false) {
+            die('Execute failed: ' . htmlspecialchars($stmt->error));
+        }
+        $stmt->close();
+    } else {
+        die('Error al subir el archivo.');
+    }
+
     actualizar_actividad();
     exit();
 }
@@ -236,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
 
         <button type="button" id="logoButton">
             <!-- <img src="css/logo.png" alt="Logo"> -->
-             <img src="css/menu.png" alt="Menú" class="logo-menu">
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
 
         <div class="nombremateria">
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
                 <img src="css/enviar-mensaje.png" alt="Send" width="40" height="40">
             </button>
             <a id="video-call-button" class="button llamada" href="videollamada_profesor.php">
-                <ion-icon name="videocam-outline"></ion-icon>
+                <img src="css/icons/meet.svg" alt="Videollamada" width="40" height="40">
             </a>
             <input type="file" id="imageInput" accept="image/*">
             <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
@@ -637,7 +637,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         document.addEventListener('click', function (event) {
             var uploadMenu = document.getElementById('upload-menu');
             if (!uploadMenu.contains(event.target) && !document.getElementById('upload-button').contains(event.target)) {
-                uploadMenu.style.display = 'none';
+                uploadMenu.classList.remove('show');
             }
         });
 
