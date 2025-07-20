@@ -556,6 +556,16 @@ $conn->close();
 
     }
 
+    .reply-preview-inside .reply-to-text {
+        text-align: left;
+        display: block;
+    }
+
+    .reply-preview-inside .reply-content {
+        text-align: center;
+        display: block;
+    }
+
     @media (max-width: 768px) {
 
         .profile-icon-alumno,
