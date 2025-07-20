@@ -1,5 +1,8 @@
 <?php
 include 'conexion.php';
+require_once 'authGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
 $materia_id = isset($_GET['materia_id']) ? intval($_GET['materia_id']) : 0;
 $seccion = isset($_GET['seccion']) ? $_GET['seccion'] : '';

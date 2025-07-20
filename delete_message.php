@@ -1,7 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
 actualizar_actividad();
-session_start();
 require 'conexion.php';
 
 // 🔐 Validación de sesión

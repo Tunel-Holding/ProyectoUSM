@@ -1,8 +1,4 @@
 <?php
-// Siempre iniciar sesión si no está iniciada
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Forzar salida solo JSON y evitar cualquier salida previa
 ob_start();
