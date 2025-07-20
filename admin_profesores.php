@@ -30,8 +30,8 @@ class ProfesoresManager {
                     WHEN m.id_profesor IS NOT NULL THEN p.nombre
                     ELSE NULL
                 END AS profesor_asignado
-            FROM Materias m
-            LEFT JOIN Profesores p ON m.id_profesor = p.id
+            FROM materias m
+            LEFT JOIN profesores p ON m.id_profesor = p.id
             ORDER BY m.nombre, m.seccion
         ";
         $result = $this->conn->query($sql);
@@ -54,12 +54,12 @@ class ProfesoresManager {
             SELECT
                 p.id AS id_profesor,
                 p.nombre AS Nombre_Profesor, 
-                GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS Materias,
+                GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS materias,
                 GROUP_CONCAT(m.id SEPARATOR ',') AS materias_ids
             FROM 
-                Profesores p
+                profesores p
             LEFT JOIN 
-                Materias m ON p.id = m.id_profesor
+                materias m ON p.id = m.id_profesor
         ";
     }
     
