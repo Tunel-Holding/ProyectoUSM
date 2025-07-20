@@ -208,7 +208,9 @@ $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
                 $hora_para_mostrar = date("H:i", strtotime($hora));
                 echo "<tr>";
                 echo "<td><strong>$hora_para_mostrar</strong></td>";
-                foreach ($dias as $dia) {
+                // Solo 6 columnas para los días
+                for ($i = 0; $i < 6; $i++) {
+                    $dia = $dias[$i];
                     $contenido_celda = "";
                     $rowspan = 1;
                     $celda_ocupada = false;
