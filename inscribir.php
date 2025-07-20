@@ -58,7 +58,7 @@ actualizar_actividad();
             if ($result->num_rows === 0) {
                 actualizar_actividad();
                 // Insertar la inscripción en la base de datos
-                $stmt = $conn->prepare("INSERT INTO Inscripciones (id_estudiante, id_materia, fecha_inscripcion) VALUES (?, ?, NOW())");
+                $stmt = $conn->prepare("INSERT INTO inscripciones (id_estudiante, id_materia, fecha_inscripcion) VALUES (?, ?, NOW())");
                 $stmt->bind_param("ii", $id_estudiante, $id_materia);
                 $stmt->execute();
                 actualizar_actividad();
