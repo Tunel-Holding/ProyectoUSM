@@ -31,8 +31,29 @@ $stmt->bind_param("i", $id_usuario); // Enlazar el ID del usuario
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Obtener la foto del usuario (profesor) usando prepared statement
+// Asumimos que la tabla para las fotos de profesor es 'fotoprofesor'
+// o que se usa la misma tabla 'fotousuario' para ambos con un identificador de rol.
+// Si usas una tabla diferente, ajusta el nombre de la tabla y la columna si es necesario.
+$sql_foto = "SELECT foto FROM fotousuario WHERE id_usuario = ?"; // Ajusta la tabla si es 'fotoprofesor'
+$stmt_foto = $conn->prepare($sql_foto);
+$foto = "css/perfil.png"; // Foto por defecto para profesores
+
+if ($stmt_foto) {
+    $stmt_foto->bind_param("i", $id_usuario);
+    $stmt_foto->execute();
+    $result_foto = $stmt_foto->get_result();
+    
+    if ($result_foto->num_rows > 0) {
+        $row_foto = $result_foto->fetch_assoc();
+        $foto = $row_foto['foto'];
+    }
+    $stmt_foto->close();
+}
+
+
 if ($result->num_rows > 0) {
-    $estudiante = $result->fetch_assoc();
+    $estudiante = $result->fetch_assoc(); // Se mantiene 'estudiante' por consistencia con el HTML existente
 } else { // Redirigir a la página de llenado de datos si no hay datos del usuario 
     header("Location: llenar_datos_profesor.php");
     exit();
@@ -45,12 +66,11 @@ $conn->close(); // Cerrar la conexión
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
     <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalprofesor.css">
@@ -62,116 +82,233 @@ $conn->close(); // Cerrar la conexión
     <title>Datos - UniHub</title>
     <script src="js/control_inactividad.js"></script>
     <style>
-        body.dark-mode {
-            --background-color: rgb(50, 50, 50);
-            --text-color: white;
-            --background-form: rgb(147, 136, 136);
+        /* Sección de Foto de Perfil */
+        .perfil-container {
+            display: flex;
+            flex-direction: column; /* Apila la imagen verticalmente */
+            align-items: center;
+            margin-bottom: 40px; /* Más espacio debajo de la sección de perfil */
+            position: relative; /* Para mantener la animación si la tuviéramos */
         }
 
-        .pagina {
-            margin: 0;
-            padding: 20px;
+        .perfil-foto {
+            width: 180px; /* Foto ligeramente más pequeña */
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover; /* Asegura que la imagen cubra el área sin distorsión */
+            border: 5px solid #ffd700; /* Borde dorado alrededor de la foto */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más suave para la foto */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: default; /* Cambia el cursor para indicar que no es interactivo para cambiar la foto aquí */
+        }
+
+        .perfil-foto:hover {
+            transform: scale(1.05); /* Ligeramente más grande al pasar el ratón */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada al pasar el ratón */
+        }
+
+        /* Contenedor Principal de Datos (wecontainer) */
+        .contenedor-principal {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff;
-            /* Blanco */
+            align-items: flex-start; /* Alinea los elementos al inicio para que el contenido fluya naturalmente */
+            padding: 20px;
+            min-height: calc(100vh - 120px); /* Ajusta según la altura del encabezado/pie de página */
         }
 
         .wecontainer {
-            font-family: "Poppins", sans-serif;
-            max-width: 1400px;
-            /* Aumenté aún más el ancho máximo */
-            background: var(--background-form);
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            border-top: 10px solid #ffd700;
-            /* Amarillo */
-            border-bottom: 10px solid #ffd700;
-            /* Amarillo */
-            border-left: 1px solid #ffd700 !important;
-            border-right: 1px solid #ffd700 !important;
-            transition: 1s background ease-in-out;
+            background: #ffffff; /* Fondo blanco para el contenedor de datos */
+            padding: 40px; /* Aumento del padding para más espacio */
+            border-radius: 12px; /* Esquinas más redondeadas */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra más suave y extendida */
+            max-width: 900px; /* Ancho máximo ajustado para una mejor legibilidad */
+            width: 100%; /* Asegura que ocupe todo el ancho dentro de su ancho máximo */
+            border-top: 8px solid #26c8dd; /* Borde superior azul, más grueso y prominente */
+            border-bottom: 8px solid #26c8dd; /* Borde inferior azul, más grueso y prominente */
+            border-left: none !important; /* Elimina los bordes laterales para una apariencia más limpia */
+            border-right: none !important; /* Elimina los bordes laterales para una apariencia más limpia */
+            box-sizing: border-box; /* Incluye padding y borde en el ancho y alto total del elemento */
+            margin-top: 30px; /* Espacio desde la parte superior */
         }
+
 
         .wecontainer h1 {
             text-align: center;
-            color: #26c8dd;
-            /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro */
+            margin-bottom: 30px; /* Espacio debajo del título */
+            font-size: 2.2em; /* Título más grande */
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif; /* Aplica Poppins al título también */
         }
 
+        /* Lista de Datos (UL y LI) */
         .wecontainer ul {
             list-style: none;
             padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            /* Permite que los elementos se envuelvan en varias filas */
-            justify-content: space-between;
+            display: grid; /* Usa CSS Grid para un diseño más estructurado */
+            grid-template-columns: 1fr 1fr; /* Dos columnas */
+            gap: 20px; /* Espacio entre los elementos de la cuadrícula */
+            margin-bottom: 30px; /* Espacio antes del botón */
         }
 
         .wecontainer li {
-            margin: 10px;
-            padding: 20px;
-            /* Aumenté el padding para cuadros más grandes */
-            background: transparent;
-            /* Azul claro */
-            border: 1px solid #26c8dd;
-            /* Borde azul oscuro */
-            border-radius: 4px;
-            flex: 1 1 calc(45% - 40px);
-            /* Reduje un poco el cálculo para cuadros más grandes */
-            box-sizing: border-box;
-            font-size: 1.2em;
-            /* Aumenté el tamaño de la fuente */
+            background: #f8f9fa; /* Fondo gris muy claro para cada elemento de dato */
+            padding: 18px 25px; /* Padding cómodo */
+            border-radius: 8px; /* Esquinas ligeramente redondeadas */
+            border: 1px solid #e0e0e0; /* Borde sutil */
+            display: flex;
+            flex-direction: row; /* **Alinea los ítems en fila (horizontalmente)** */
+            justify-content: space-between; /* Espacio entre el strong y el span */
+            align-items: center; /* Centra verticalmente */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra muy ligera */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            font-family: 'Poppins', sans-serif; /* Aplica Poppins a los elementos de la lista */
+        }
+
+        .wecontainer li:hover {
+            transform: translateY(-3px); /* Efecto de ligero levantamiento al pasar el ratón */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra más visible al pasar el ratón */
         }
 
         .wecontainer li strong {
-            color: #26c8dd;
-            /* Azul oscuro */
+            color: #26c8dd; /* Azul oscuro para las etiquetas */
+            font-size: 0.9em; /* Fuente ligeramente más pequeña para la etiqueta */
+            font-weight: 600;
+            white-space: nowrap; /* Evita que el texto de la etiqueta se rompa */
+            margin-right: 10px; /* Espacio entre la etiqueta y el valor */
+
         }
 
         .wecontainer li span {
-            color: #26c8dd;
-            /* Azul oscuro */
+            color: #555; /* Gris más oscuro para los valores */
+            font-size: 1.1em; /* Fuente ligeramente más grande para el valor */
+            word-wrap: break-word; /* Asegura que las palabras largas se rompan */
+            white-space: normal; /* Permite que el texto se ajuste naturalmente */
+            text-align: right; /* Alinea el valor a la derecha si hay espacio */
+            flex-grow: 1; /* Permite que el span ocupe el espacio restante */
         }
 
         .wecontainer a {
             font-weight: 700;
         }
 
+        /* Estilos del Botón */
         .button {
             display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background-color: #ffd700;
-            /* Amarillo */
-            color: #26c8dd;
-            /* Azul oscuro */
+            width: fit-content; /* Ajusta el ancho al contenido */
+            margin: 0 auto; /* Centra el botón */
+            padding: 12px 30px; /* Más padding para un botón más grande */
+            background-color: #ffd700; /* Dorado */
+            color: #004c97; /* Texto azul oscuro */
             border: none;
-            border-radius: 4px;
+            border-radius: 30px; /* Botón en forma de píldora */
             cursor: pointer;
             text-align: center;
-            font-size: 1em;
+            font-size: 1.1em; /* Tamaño de fuente más grande para el botón */
             text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Poppins', sans-serif; /* Aplica Poppins al botón */
+        }
+        .button:hover {
+            background-color: #ffcc00; /* Dorado más oscuro al pasar el ratón */
+            transform: translateY(-2px); /* Ligero levantamiento */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
         }
 
-        .button:hover {
-            background-color: #ffcc00;
-            /* Amarillo oscuro */
+        /* Ajustes Responsivos */
+        @media (max-width: 768px) {
+            .wecontainer ul {
+                grid-template-columns: 1fr; /* Una sola columna en pantallas más pequeñas */
+            }
+
+            .wecontainer {
+                padding: 25px;
+                margin-top: 20px;
+            }
+
+            .wecontainer h1 {
+                font-size: 1.8em;
+            }
+
+            .perfil-foto {
+                width: 150px;
+                height: 150px;
+            }
         }
+
+        @media (max-width: 480px) {
+            .wecontainer {
+                padding: 15px;
+            }
+
+            .wecontainer h1 {
+                font-size: 1.5em;
+            }
+
+            .wecontainer li {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        /* Contenedor principal en modo oscuro */
+        body.dark-mode .wecontainer {
+            background-color: #292942;
+            border-top: 8px solid #ffd700; /* Mantiene el dorado en modo oscuro */
+            border-bottom: 8px solid #ffd700;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Título en modo oscuro */
+        body.dark-mode .wecontainer h1 {
+            color: #ffd700;
+        }
+
+        /* Cada cuadro de datos en modo oscuro */
+        body.dark-mode .wecontainer li {
+            background-color: #3a3a55;
+            border: 1px solid #555574;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Etiquetas y contenido de los datos */
+        body.dark-mode .wecontainer li strong {
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .wecontainer li span {
+            color: #d4d4d4;
+        }
+
+        /* Botón en modo oscuro */
+        body.dark-mode .button {
+            background-color: #ffd700;
+            color: #292942;
+        }
+
+        body.dark-mode .button:hover {
+            background-color: #ffcc00;
+        }
+
+        body.dark-mode .perfil-foto {
+            border-color: #ffd700; /* Borde dorado en modo oscuro */
+        }
+
     </style>
 </head>
 
 <body>
-    <div class="contenedorentrante3">
-        <img src="css\logo.png">
-    </div>
+
     <div class="cabecera">
         <button type="button" id="logoButton">
-            <!-- <img src="css/logo.png" alt="Logo"> -->
-             <img src="css/menu.png" alt="Menú" class="logo-menu">
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
@@ -179,26 +316,32 @@ $conn->close(); // Cerrar la conexión
         </div>
     </div>
 
-<?php include 'menu_profesor.php'; ?>
+    <?php include 'menu_profesor.php'; ?>
 
-    <div class="pagina">
+    <div class="contenedor-principal">
         <div class="wecontainer">
             <h1>Datos del Profesor</h1>
-            <ul>
-                <li><strong>Número de Cédula:</strong> <span><?php echo $estudiante['cedula']; ?></span></li>
-                <li><strong>Nombres:</strong> <span><?php echo $estudiante['nombres']; ?></span></li>
-                <li><strong>Apellidos:</strong> <span><?php echo $estudiante['apellidos']; ?></span></li>
-                <li><strong>Sexo:</strong> <span><?php echo $estudiante['sexo']; ?></span></li>
-                <li><strong>Teléfono:</strong> <span><?php echo $estudiante['telefono']; ?></span></li>
-                <li><strong>Correo:</strong> <span>&nbsp;&nbsp;&nbsp;<?php echo $estudiante['correo']; ?></span></li>
-                <li><strong>Dirección:</strong> <span><?php echo $estudiante['direccion']; ?></span></li>
-            </ul>
-            <a href="modificar_datos_profesor.php" class="button">Modificar datos</a>
+            <div class="perfil-container">
+                <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+                </div>
+            <div class="datos-grid">
+                <ul>
+                    <li><strong>Número de Cédula:</strong> <span><?php echo $estudiante['cedula']; ?></span></li>
+                    <li><strong>Nombres:</strong> <span><?php echo $estudiante['nombres']; ?></span></li>
+                    <li><strong>Apellidos:</strong> <span><?php echo $estudiante['apellidos']; ?></span></li>
+                    <li><strong>Sexo:</strong> <span><?php echo $estudiante['sexo']; ?></span></li>
+                    <li><strong>Teléfono:</strong> <span><?php echo $estudiante['telefono']; ?></span></li>
+                    <li><strong>Correo:</strong> <span><?php echo $estudiante['correo']; ?></span></li>
+                    <li><strong>Dirección:</strong> <span><?php echo $estudiante['direccion']; ?></span></li>
+                </ul>
+                <a href="modificar_datos_profesor.php" class="button">Modificar datos</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Aquí solo debe ir JS exclusivo de la página, si lo hubiera. Se eliminó la lógica de menú y tema.
+        // No necesitamos la lógica para la edición de la foto en esta página
+        // ya que el botón de edición y el input de archivo fueron eliminados.
     </script>
 </body>
 
