@@ -3,7 +3,7 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-$idusuario = $_SESSION['idusuario'] ?? null;
+
 // Headers de seguridad
 header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
@@ -85,6 +85,7 @@ function obtenerMail($conn, $idusuario) {
 
 $errores = [];
 $datos = [];
+$idusuario = $_SESSION['idusuario'] ?? null;
 
 // Si el formulario ha sido enviado, procesa los datos
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
