@@ -1,7 +1,4 @@
 <?php
-require_once 'authGuard.php';
-$auth = AuthGuard::getInstance();
-$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
