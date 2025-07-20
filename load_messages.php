@@ -493,6 +493,7 @@ $conn->close();
     }
 
     .message-container-flex.other-user .menu-puntos {
+        top: calc(100% - 30px) !important;
         left: 0;
         right: auto;
     }
