@@ -1168,7 +1168,8 @@ class ProfesoresScripts {
                                     saveIndicator.classList.remove("show");
                                 }, 2000);
                             } else {
-                                saveIndicator.textContent = "✗ Error al guardar";
+                                // Mostrar el mensaje exacto del backend si existe
+                                saveIndicator.textContent = "✗ " + (data.message ? data.message : "Error al guardar");
                                 saveIndicator.style.color = "#dc3545";
                                 saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
                                 setTimeout(() => {
