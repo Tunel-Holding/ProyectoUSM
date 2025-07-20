@@ -72,7 +72,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->Password   = 'soportecnico**';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
-
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ];
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = 'html';  
 
             $mail->setFrom($email, $nombre);
             $mail->addAddress('soportetecnico@conexiondocente.com');
