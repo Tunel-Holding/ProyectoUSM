@@ -75,6 +75,7 @@ function obtenerMail($conn, $idusuario) {
 
 $errores = [];
 $datos = [];
+$idusuario = $_SESSION['idusuario'] ?? null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar token CSRF
@@ -146,6 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 actualizar_actividad();
+$correo_usuario = obtenerMail($conn, $idusuario);
 $conn->close();
 ?>
 
@@ -155,7 +157,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="icon" href="css/icono.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
+    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -254,7 +257,8 @@ $conn->close();
     </div>
     <div class="cabecera">
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
@@ -313,7 +317,7 @@ $conn->close();
 
                     <label for="correo">Correo:</label>
                     <div style="padding: 8px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; color: #666; font-size: 0.9em;">
-                        <?php echo obtenerMail($conn, $idusuario); ?>
+                        <?php echo htmlspecialchars($correo_usuario); ?>
                     </div>
 
                     <label for="direccion">Dirección:</label>
