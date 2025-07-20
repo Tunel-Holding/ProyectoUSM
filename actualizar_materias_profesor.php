@@ -51,7 +51,6 @@ $newHeaders = [
 foreach ($newHeaders as $hdr) {
     header($hdr);
 }
-require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 // Permitir acceso tanto a administradores como a profesores
 if (!$auth->checkAccess(AuthGuard::NIVEL_PROFESOR, false) && !$auth->checkAccess(AuthGuard::NIVEL_ADMIN, false)) {
