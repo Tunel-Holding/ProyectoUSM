@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Si no hay errores, insertar en la base de datos
                 if (empty($errores)) {
                     $stmt = $conn->prepare("INSERT INTO datos_usuario (usuario_id, cedula, nombres, apellidos, sexo, telefono, correo, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                    
+                    $email = obtenerMail($conn, $idusuario);
                     if ($stmt) {
                         $stmt->bind_param("isssssss", 
                             $idusuario,
@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $datos['apellidos'],
                             $datos['sexo'],
                             $datos['telefono'],
-                            obtenerMail($conn, $idusuario), // Usar el email de la sesión
+                            $email, // Usar el email de la sesión
                             $datos['direccion']
                         );
                         
