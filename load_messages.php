@@ -205,27 +205,7 @@ while ($row = $result->fetch_assoc()) {
 
     // 📨 Contenido del mensaje
     echo "<strong>" . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . ":</strong> ";
-    if ($tipo === "texto") {
-        echo "<p id='message-text-" . intval($message_id) . "'>" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "</p>";
-    } elseif ($tipo === "imagen") {
-        echo "<img class='msg-foto' src='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' alt='Imagen'>";
-    } elseif ($tipo === "archivo") {
-        $file_name = basename($mensaje);
-        $ext = strtolower(pathinfo($mensaje, PATHINFO_EXTENSION));
-        $icon_map = [
-            'doc' => 'word.png',
-            'docx' => 'word.png',
-            'xls' => 'excel.png',
-            'xlsx' => 'excel.png',
-            'ppt' => 'powerpoint.png',
-            'pptx' => 'powerpoint.png',
-            'pdf' => 'pdf.png'
-        ];
-        $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
-        echo "<a class='file' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''><span>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</span></a>";
-    }
-
-    // Mostrar la respuesta dentro de la burbuja, debajo del mensaje
+    // Mostrar la respuesta dentro de la burbuja, arriba del mensaje principal
     if ($reply_to) {
         $reply_query = "
             SELECT m.message, u.nombre_usuario, m.tipo 
@@ -253,6 +233,26 @@ while ($row = $result->fetch_assoc()) {
             echo "</div>";
         }
         $reply_stmt->close();
+    }
+    // Ahora el mensaje principal
+    if ($tipo === "texto") {
+        echo "<p id='message-text-" . intval($message_id) . "'>" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "</p>";
+    } elseif ($tipo === "imagen") {
+        echo "<img class='msg-foto' src='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' alt='Imagen'>";
+    } elseif ($tipo === "archivo") {
+        $file_name = basename($mensaje);
+        $ext = strtolower(pathinfo($mensaje, PATHINFO_EXTENSION));
+        $icon_map = [
+            'doc' => 'word.png',
+            'docx' => 'word.png',
+            'xls' => 'excel.png',
+            'xlsx' => 'excel.png',
+            'ppt' => 'powerpoint.png',
+            'pptx' => 'powerpoint.png',
+            'pdf' => 'pdf.png'
+        ];
+        $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
+        echo "<a class='file' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''><span>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</span></a>";
     }
 
     echo "<p class='timestamp'>" . htmlspecialchars($timestamp, ENT_QUOTES, 'UTF-8') . "</p>";
