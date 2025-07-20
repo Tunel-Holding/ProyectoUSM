@@ -27,7 +27,7 @@ if (count($materias) === 0) {
 }
 
 // Si no hay materia seleccionada, selecciona la primera y recarga
-if (!isset($_SESSION['idmateria']) && count($materias) > 0) {
+if (!isset($_SESSION['idmateria'])) {
     $_SESSION['idmateria'] = $materias[0]['id'];
     header("Location: chat.php");
     exit();
@@ -523,8 +523,7 @@ $last_user_id = null;
         <div class="sidebar-materias">
             <h2>Mis Materias</h2>
             <div class="lista-materias">
-                <?php foreach (
-                    $materias as $mat): ?>
+                <?php foreach ($materias as $mat): ?>
                     <div class="materia-item<?php if ($materia_actual == $mat['id'])
                         echo ' selected'; ?>"
                         onclick="window.location.href='dirigirchat.php?valor=<?php echo $mat['id']; ?>'">
