@@ -55,12 +55,12 @@ if (!defined('INCLUDED_FROM_MAIN')) {
 
 <style>
 /* Estilos específicos para la tabla del horario */
+
 .horario-tabla {
     width: 100% !important;
-    max-width: 100% !important;
     font-size: 11px !important;
     border-collapse: collapse !important;
-    table-layout: auto !important;
+    table-layout: fixed !important;
 }
 
 .horario-tabla th,
@@ -98,15 +98,57 @@ if (!defined('INCLUDED_FROM_MAIN')) {
     background-color: #f8f9fa !important;
 }
 
+
+
 .div-horario {
     width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
     border-radius: 10px !important;
     border: 2px solid #174388 !important;
     margin: 10px 0 !important;
     background: white !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    /* Scrollbar visible si el contenedor es pequeño */
+    overflow-x: auto !important;
+}
+
+/* Scrollbar personalizado para .div-horario */
+.div-horario::-webkit-scrollbar {
+    height: 10px;
+    background: #e3f2fd;
+    border-radius: 8px;
+}
+.div-horario::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #174388 0%, #1e5aa8 100%);
+    border-radius: 8px;
+}
+.div-horario::-webkit-scrollbar-thumb:hover {
+    background: #174388;
+}
+.div-horario::-webkit-scrollbar-corner {
+    background: #e3f2fd;
+}
+
+/* Firefox */
+.div-horario {
+    scrollbar-width: thin;
+    scrollbar-color: #174388 #e3f2fd;
+}
+
+/* Modo oscuro: scroll acorde */
+body.dark-mode .div-horario::-webkit-scrollbar {
+    background: #2d3748;
+}
+body.dark-mode .div-horario::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+}
+body.dark-mode .div-horario::-webkit-scrollbar-thumb:hover {
+    background: #4a5568;
+}
+body.dark-mode .div-horario::-webkit-scrollbar-corner {
+    background: #2d3748;
+}
+body.dark-mode .div-horario {
+    scrollbar-color: #4a5568 #2d3748;
 }
 
 /* Responsive para móviles */
@@ -204,14 +246,19 @@ $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
         if (empty($datos_horario) || empty($horas_disponibles)) {
             echo "<tr><td colspan='7' style='text-align: center; padding: 20px; color: #666;'>No hay clases programadas para este estudiante</td></tr>";
         } else {
+            // Inicializar control de saltos para cada día
+            $saltos = array_fill_keys($dias, 0);
             foreach ($horas_disponibles as $hora) {
                 $hora_para_mostrar = date("H:i", strtotime($hora));
                 echo "<tr>";
                 echo "<td><strong>$hora_para_mostrar</strong></td>";
-                foreach ($dias as $dia) {
+                for ($i = 0; $i < 6; $i++) {
+                    $dia = $dias[$i];
+                    if ($saltos[$dia] > 0) {
+                        $saltos[$dia]--;
+                        continue;
+                    }
                     $contenido_celda = "";
-                    $rowspan = 1;
-                    $celda_ocupada = false;
                     if (isset($datos_horario[$dia][$hora])) {
                         $info = $datos_horario[$dia][$hora];
                         if ($info["inicio"]) {
@@ -220,10 +267,9 @@ $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
                                              htmlspecialchars($info["profesor"]);
                             $rowspan = $info["rowspan"];
                             echo "<td class='horario-celda' rowspan='$rowspan'>$contenido_celda</td>";
-                            $celda_ocupada = true;
+                            $saltos[$dia] = $rowspan - 1;
                         }
-                    }
-                    if (!$celda_ocupada) {
+                    } else {
                         echo "<td class='celda-vacia'></td>";
                     }
                 }
