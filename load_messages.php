@@ -185,7 +185,9 @@ while ($row = $result->fetch_assoc()) {
                 <button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>
                 <button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>
             </div>';
-        echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
+        // Si es archivo, agrega la clase file-bubble
+        $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
+        echo '<div class="message-bubble-' . $nivel_usuario . $extra_class . '" ' . $styleBurbuja . '>';
     } else {
         // Para otros usuarios: [botones] [avatar] [burbuja]
 
@@ -196,7 +198,9 @@ while ($row = $result->fetch_assoc()) {
                 <button class="menu-puntos-opcion disabled" disabled>Eliminar</button>
             </div>';
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
-        echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
+        // Si es archivo, agrega la clase file-bubble
+        $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
+        echo '<div class="message-bubble-' . $nivel_usuario . $extra_class . '" ' . $styleBurbuja . '>';
     }
 
     // 📨 Contenido del mensaje
@@ -558,6 +562,31 @@ $conn->close();
         min-width: 0 !important;
         padding-left: 10px;
         padding-right: 10px;
+    }
+
+    /* Limita el ancho de las burbujas de archivos y el tamaño del ícono, manteniendo el estilo azul */
+    .file-bubble {
+        max-width: 260px !important;
+        min-width: 0 !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        box-sizing: border-box;
+    }
+
+    .file-bubble .file img {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .file-bubble .file span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 150px;
+        vertical-align: middle;
     }
 
     @media (max-width: 768px) {
