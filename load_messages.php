@@ -264,9 +264,7 @@ while ($row = $result->fetch_assoc()) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
-                <button class="menu-puntos-opcion disabled" disabled>Editar</button>
-                <button class="menu-puntos-opcion disabled" disabled>Eliminar</button>
+                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
             </div>';
         echo '</div>';
     }
