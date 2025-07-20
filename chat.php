@@ -538,7 +538,7 @@ if ($idgrupo) {
                     </button>
                     <input type="text" id="message"
                         placeholder="<?php echo $sin_materias ? 'No tienes materias disponibles' : 'Escribe un mensaje...'; ?>"
-                        maxlength="1000" <?php if ($sin_materias)
+                        maxlength="1000" autocomplete="off" <?php if ($sin_materias)
                             echo 'disabled style="background:#eee;cursor:not-allowed;"'; ?> />
                     <button id="send-button" class="button" title="Enviar mensaje" <?php if ($sin_materias)
                         echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
