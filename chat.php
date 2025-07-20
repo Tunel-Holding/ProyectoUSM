@@ -466,7 +466,7 @@ if ($idgrupo) {
             position: absolute;
             bottom: 70px;
             /* más cerca del input */
-            left: 60px;
+            left: 150px;
             /* pegado al botón + */
             transform: none;
             background-color: var(--fondo);
