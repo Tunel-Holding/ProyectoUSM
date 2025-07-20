@@ -473,7 +473,7 @@ $conn->close();
     .menu-puntos {
         display: none;
         position: absolute;
-        top: 100%;
+        top: 50%;
         left: 0;
         background: #fff;
         border: 1px solid #ddd;
