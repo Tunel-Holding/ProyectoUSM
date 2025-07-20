@@ -36,7 +36,7 @@ $profesor_id = intval($input['profesor_id']);
 $materias_ids = $input['materias_ids']; // Array de IDs de materias
 
 // Validar que el profesor existe
-$stmt = $conn->prepare("SELECT id FROM Profesores WHERE id = ?");
+$stmt = $conn->prepare("SELECT id FROM profesores WHERE id = ?");
 if (!$stmt) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Error al validar profesor']);

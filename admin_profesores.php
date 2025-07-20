@@ -1173,6 +1173,7 @@ class ProfesoresScripts {
                                 } catch (err) {
                                     text = "No se pudo leer el cuerpo de la respuesta.";
                                 }
+                                console.log("[BACKEND ERROR]", text); // Mostrar el error completo en consola
                                 let errorMsg = "✗ Error de conexión\n" + text;
                                 saveIndicator.textContent = errorMsg;
                                 saveIndicator.style.color = "#dc3545";
