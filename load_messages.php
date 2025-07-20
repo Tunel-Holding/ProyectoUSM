@@ -478,7 +478,7 @@ $conn->close();
         display: none;
         z-index: 9999;
         position: absolute;
-        top: 75%;
+        top: 25%;
         left: 0;
         right: auto;
         margin: 0;
