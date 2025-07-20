@@ -230,9 +230,9 @@ $conn->close();
         .layout-dos-columnas {
             display: flex;
             gap: 40px; /* Usando variable, sin !important */
-            width: 100%;
+            width: 90%;
             max-width: 1400px;
-            margin: 20px auto 0; /* Ajustado el margin-top, sin !important */
+            margin: 20px auto; /* Ajustado el margin-top, sin !important */
             align-items: stretch; /* Clave para que las columnas se estiren a la misma altura */
         }
 
