@@ -393,12 +393,12 @@ $conn->close();
     <!-- MODAL PARA EVALUAR TAREA          -->
     <!-- ================================= -->
     <div id="evaluate-task-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content" style="width:600px; height:80vh; display:flex; flex-direction:column;">
             <div class="modal-header">
                 <h2>Evaluar Tarea</h2>
                 <button id="close-evaluate-modal-btn" class="close-btn">&times;</button>
             </div>
-            <div id="student-list-container">
+            <div id="student-list-container" style="flex:1 1 auto; overflow-y:auto; padding:10px;">
                 <!-- La lista de estudiantes se cargará aquí -->
             </div>
         </div>

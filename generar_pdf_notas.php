@@ -1,5 +1,7 @@
 
 <?php
+// Iniciar buffer para evitar salidas previas
+if (session_status() === PHP_SESSION_NONE) { ob_start(); }
 require_once('conexion.php');
 require_once('vendor/autoload.php');
 use Mpdf\Mpdf;
@@ -92,4 +94,6 @@ $html .= '<div class="firma-linea"></div>';
 $html .= '</div>';
 
 $mpdf->WriteHTML($html);
+// Limpiar buffer antes de enviar PDF
+if (ob_get_length()) { ob_end_clean(); }
 $mpdf->Output('notas_tarea_' . $task_id . '.pdf', 'I');
