@@ -66,16 +66,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
+            $mail->Host       = 'mail.conexiondocente.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'stonksappsoporte@gmail.com';
-            $mail->Password   = 'xmgbudtscybkhaxo';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
+            $mail->Username   = 'soportetecnico@conexiondocente.com';
+            $mail->Password   = 'soportecnico**';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
 
 
             $mail->setFrom($email, $nombre);
-            $mail->addAddress('stonksappsoporte@gmail.com');
+            $mail->addAddress('soportetecnico@conexiondocente.com');
             $mail->isHTML(true);
             $mail->Subject = "Mensaje de: $nombre - $asunto";
 
