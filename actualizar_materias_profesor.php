@@ -34,6 +34,15 @@ register_shutdown_function(function() {
         }
     }
 });
+$newHeaders = [
+    'Content-Type: application/json',
+    'Access-Control-Allow-Origin: *',
+    'Access-Control-Allow-Methods: POST',
+    'Access-Control-Allow-Headers: Content-Type'
+];
+foreach ($newHeaders as $hdr) {
+    header($hdr);
+}
 require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 // Permitir acceso tanto a administradores como a profesores
