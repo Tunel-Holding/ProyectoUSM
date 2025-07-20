@@ -25,12 +25,12 @@ if (!defined('INCLUDED_FROM_MAIN')) {
         $result_horario = $stmt_horario->get_result();
 
         $datos_horario = [];
+        $horas_disponibles = [];
         if ($result_horario->num_rows > 0) {
             while ($row = $result_horario->fetch_assoc()) {
                 $hora_inicio = strtotime($row['hora_inicio']);
                 $hora_fin = strtotime($row['hora_fin']);
                 $intervalo = 45 * 60; // 45 minutos
-                
                 for ($hora = $hora_inicio; $hora < $hora_fin; $hora += $intervalo) {
                     $hora_formateada = date("H:i:s", $hora);
                     $datos_horario[$row['dia']][$hora_formateada] = [
@@ -40,11 +40,15 @@ if (!defined('INCLUDED_FROM_MAIN')) {
                         "inicio" => ($hora == $hora_inicio),
                         "rowspan" => ceil(($hora_fin - $hora_inicio) / $intervalo)
                     ];
+                    $horas_disponibles[] = $hora_formateada;
                 }
             }
         }
         $stmt_horario->close();
         $conn->close();
+        // Calcular horas únicas y ordenadas
+        $horas_disponibles = array_unique($horas_disponibles);
+        sort($horas_disponibles);
     }
 }
 ?>
@@ -180,6 +184,11 @@ function generar_horas($inicio, $intervalo, $total) {
 }
 ?>
 
+<?php
+// El array de días correcto para lunes a sábado
+$dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+?>
+
 <div class="div-horario">
     <table class="horario-tabla">
         <tr>
@@ -189,37 +198,31 @@ function generar_horas($inicio, $intervalo, $total) {
             <th>Miércoles</th>
             <th>Jueves</th>
             <th>Viernes</th>
+            <th>Sábado</th>
         </tr>
         <?php
-        // Debug: Mostrar información de los datos del horario
-        if (empty($datos_horario)) {
-            echo "<tr><td colspan='6' style='text-align: center; padding: 20px; color: #666;'>No hay clases programadas para este estudiante</td></tr>";
+        if (empty($datos_horario) || empty($horas_disponibles)) {
+            echo "<tr><td colspan='7' style='text-align: center; padding: 20px; color: #666;'>No hay clases programadas para este estudiante</td></tr>";
         } else {
-            $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes","Sábado"];
-            $horas = generar_horas("07:00:00", 45, 10);
-            
-            foreach ($horas as $hora) {
+            foreach ($horas_disponibles as $hora) {
                 $hora_para_mostrar = date("H:i", strtotime($hora));
                 echo "<tr>";
                 echo "<td><strong>$hora_para_mostrar</strong></td>";
-                
                 foreach ($dias as $dia) {
                     $contenido_celda = "";
                     $rowspan = 1;
                     $celda_ocupada = false;
-                    
                     if (isset($datos_horario[$dia][$hora])) {
                         $info = $datos_horario[$dia][$hora];
                         if ($info["inicio"]) {
-                            $contenido_celda = "<strong>" . htmlspecialchars($info["materia"]) . "</strong><br>" . 
-                                             htmlspecialchars($info["salon"]) . "<br>" . 
+                            $contenido_celda = "<strong>" . htmlspecialchars($info["materia"]) . "</strong><br>" .
+                                             htmlspecialchars($info["salon"]) . "<br>" .
                                              htmlspecialchars($info["profesor"]);
                             $rowspan = $info["rowspan"];
                             echo "<td class='horario-celda' rowspan='$rowspan'>$contenido_celda</td>";
                             $celda_ocupada = true;
                         }
                     }
-                    
                     if (!$celda_ocupada) {
                         echo "<td class='celda-vacia'></td>";
                     }
