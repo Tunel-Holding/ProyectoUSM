@@ -89,7 +89,6 @@ function idToColor($id, $palette)
 
 $idgrupo = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
 if (!$idgrupo) {
-    echo '<div style="color:#888; text-align:center; margin-top:30px;">No tienes materias seleccionadas o inscritas.</div>';
     exit();
 }
 $current_user_id = $_SESSION['idusuario'];

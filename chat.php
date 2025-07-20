@@ -531,17 +531,26 @@ if ($idgrupo) {
                         <div id="reply-message"></div>
                         <button id="cancel-reply" class="buttoncancel">Cancelar</button>
                     </div>
-                    <button id="upload-button" class="button" title="Subir archivo o imagen">
+                    <?php $sin_materias = empty($materias); ?>
+                    <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
+                        echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
                         <img src="css/plus-pequeno.png" alt="Upload">
                     </button>
-                    <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="1000" />
-                    <button id="send-button" class="button" title="Enviar mensaje">
+                    <input type="text" id="message"
+                        placeholder="<?php echo $sin_materias ? 'No tienes materias disponibles' : 'Escribe un mensaje...'; ?>"
+                        maxlength="1000" <?php if ($sin_materias)
+                            echo 'disabled style="background:#eee;cursor:not-allowed;"'; ?> />
+                    <button id="send-button" class="button" title="Enviar mensaje" <?php if ($sin_materias)
+                        echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
                         <img src="css/enviar-mensaje.png" alt="Send">
                     </button>
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" <?php if ($sin_materias)
+                        echo 'disabled'; ?>>
                     <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
-                        style="display: none;">
-                    <button id="call-button" class="button" title="Llamada">
+                        style="display: none;" <?php if ($sin_materias)
+                            echo 'disabled'; ?>>
+                    <button id="call-button" class="button" title="Llamada" <?php if ($sin_materias)
+                        echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
                         <img src="css/icons/meet.svg" alt="Call">
                     </button>
                 </div>
@@ -632,6 +641,14 @@ if ($idgrupo) {
             loadMessages();
             setupEventListeners();
             setupNavigation();
+            // Deshabilitar inputs si no hay materias
+            var sinMaterias = <?php echo json_encode($sin_materias); ?>;
+            if (sinMaterias) {
+                document.getElementById('message').disabled = true;
+                document.getElementById('send-button').disabled = true;
+                document.getElementById('upload-button').disabled = true;
+                document.getElementById('call-button').disabled = true;
+            }
         });
 
         // 🔗 Configurar navegación
