@@ -30,18 +30,19 @@ class ProfesoresManager {
                     WHEN m.id_profesor IS NOT NULL THEN p.nombre
                     ELSE NULL
                 END AS profesor_asignado
-            FROM materias m
+            FROM Materias m
             LEFT JOIN Profesores p ON m.id_profesor = p.id
             ORDER BY m.nombre, m.seccion
         ";
-        
         $result = $this->conn->query($sql);
+        if (!$result) {
+            error_log('Error en obtenerTodasMateriasConAsignacion: ' . $this->conn->error);
+            return [];
+        }
         $materias = [];
-        
         while ($materia = $result->fetch_assoc()) {
             $materias[] = $materia;
         }
-        
         return $materias;
     }
     
