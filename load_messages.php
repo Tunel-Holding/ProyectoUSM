@@ -218,7 +218,7 @@ while ($row = $result->fetch_assoc()) {
             'pdf' => 'pdf.png'
         ];
         $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
-        echo "<a class='file' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</a>";
+        echo "<a class='file' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''><span>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</span></a>";
     }
 
     // Mostrar la respuesta dentro de la burbuja, debajo del mensaje
@@ -514,7 +514,9 @@ $conn->close();
     .message-bubble-administrador .file {
         display: flex;
         align-items: center;
-        max-width: 260px;
+        justify-content: flex-start;
+        max-width: 220px;
+        min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -526,13 +528,18 @@ $conn->close();
         text-decoration: none;
         color: #174388;
         transition: background 0.2s;
+        box-sizing: border-box;
     }
 
-    .message-bubble-alumno .file:hover,
-    .message-bubble-profesor .file:hover,
-    .message-bubble-administrador .file:hover {
-        background: #e3f2fd;
-        text-decoration: underline;
+    .message-bubble-alumno .file span,
+    .message-bubble-profesor .file span,
+    .message-bubble-administrador .file span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 150px;
+        vertical-align: middle;
     }
 
     .message-bubble-alumno .file img,
@@ -542,22 +549,6 @@ $conn->close();
         height: 28px;
         margin-right: 10px;
         flex-shrink: 0;
-    }
-
-    .message-bubble-alumno .file,
-    .message-bubble-profesor .file,
-    .message-bubble-administrador .file {
-        word-break: break-all;
-        min-width: 0;
-    }
-
-    .message-bubble-alumno .file,
-    .message-bubble-profesor .file,
-    .message-bubble-administrador .file {
-        /* El texto del nombre del archivo se recorta si es muy largo */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     @media (max-width: 768px) {
