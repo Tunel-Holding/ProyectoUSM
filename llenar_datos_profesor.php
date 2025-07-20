@@ -187,7 +187,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="icon" href="css/icono.png" type="image/png">
+    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
+    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalprofesor.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -195,7 +196,7 @@ $conn->close();
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <title>Datos - USM</title>
+    <title>Datos - UniHub</title>
     <script src="js/control_inactividad.js"></script>
     <style>
         body.dark-mode {
@@ -297,7 +298,8 @@ $conn->close();
     </div>
     <div class="cabecera">
         <button type="button" id="logoButton">
-            <img src="css/logo.png" alt="Logo">
+            <!-- <img src="css/logo.png" alt="Logo"> -->
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
