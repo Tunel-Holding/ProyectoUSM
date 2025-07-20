@@ -1,9 +1,11 @@
 <?php
 // Registrar errores fatales y warnings en un archivo log y enviar respuesta JSON
+
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
     $msg = "[PHP ERROR] $errstr en $errfile:$errline";
     error_log($msg, 3, __DIR__ . '/error_backend.log');
     http_response_code(500);
+    echo '<p style="color:red;font-weight:bold">' . htmlspecialchars($msg) . '</p>';
     echo json_encode([
         'success' => false,
         'message' => 'Error fatal en el backend',
@@ -19,6 +21,7 @@ register_shutdown_function(function() {
         error_log($msg, 3, __DIR__ . '/error_backend.log');
         if (!headers_sent()) {
             http_response_code(500);
+            echo '<p style="color:red;font-weight:bold">' . htmlspecialchars($msg) . '</p>';
             echo json_encode([
                 'success' => false,
                 'message' => 'Error fatal en el backend',
