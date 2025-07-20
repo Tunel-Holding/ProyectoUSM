@@ -1161,8 +1161,25 @@ class ProfesoresScripts {
                                 materias_ids: selectedOptions.filter(id => id !== "")
                             })
                         })
-                        .then(response => response.json())
-                        .then(data => {
+                        .then(async response => {
+                            let data;
+                            try {
+                                data = await response.json();
+                            } catch (e) {
+                                // Si no es JSON válido, mostrar el texto completo (HTML de error PHP)
+                                const text = await response.text();
+                                let errorMsg = "✗ Error de conexión\n" + text;
+                                saveIndicator.textContent = errorMsg;
+                                saveIndicator.style.color = "#dc3545";
+                                saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
+                                setTimeout(() => {
+                                    saveIndicator.classList.remove("show");
+                                    saveIndicator.textContent = "✓ Guardado";
+                                    saveIndicator.style.color = "#28a745";
+                                    saveIndicator.style.background = "rgba(40, 167, 69, 0.1)";
+                                }, 3000);
+                                return;
+                            }
                             if (data.success) {
                                 timeoutId = setTimeout(() => {
                                     saveIndicator.classList.remove("show");
