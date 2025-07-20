@@ -547,12 +547,13 @@ $conn->close();
     }
 
     /* SOLO el texto del mensaje principal a la derecha si es tuyo */
+    .message-container-flex.current-user .message-bubble-usuario p,
     .message-container-flex.current-user .message-bubble-alumno p,
     .message-container-flex.current-user .message-bubble-profesor p,
     .message-container-flex.current-user .message-bubble-administrador p {
         text-align: right !important;
         margin-right: 0 !important;
-        
+
     }
 
     @media (max-width: 768px) {
