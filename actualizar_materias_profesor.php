@@ -18,7 +18,6 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     $msg = "[PHP ERROR] $errstr en $errfile:$errline";
     error_log($msg, 3, __DIR__ . '/error_backend.log');
     http_response_code(500);
-    echo '<p style="color:red;font-weight:bold">' . htmlspecialchars($msg) . '</p>';
     echo json_encode([
         'success' => false,
         'message' => 'Error fatal en el backend',
@@ -162,7 +161,6 @@ try {
         if (!$stmt) {
             throw new Exception("Error al preparar la consulta de asignación: " . $conn->error);
         }
-        
         $params = array_merge([$profesor_id], $materias_ids);
         $types = 'i' . str_repeat('i', count($materias_ids));
         $stmt->bind_param($types, ...$params);
@@ -170,16 +168,14 @@ try {
             throw new Exception("Error al ejecutar la asignación: " . $stmt->error);
         }
     }
-    
     // Confirmar transacción
     $conn->commit();
-    
     // Obtener las materias actualizadas para devolver
-    $stmt = $conn->prepare("
-        SELECT GROUP_CONCAT(CONCAT(nombre, ' (', seccion, ')') SEPARATOR ', ') AS materias
-        FROM materias 
-        WHERE id_profesor = ?
-    ");
+    $stmt = $conn->prepare(
+        "SELECT GROUP_CONCAT(CONCAT(nombre, ' (', seccion, ')') SEPARATOR ', ') AS materias
+        FROM materias
+        WHERE id_profesor = ?"
+    );
     if (!$stmt) {
         throw new Exception("Error al preparar la consulta de obtención de materias: " . $conn->error);
     }
