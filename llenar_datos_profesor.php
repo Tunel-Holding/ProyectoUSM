@@ -176,8 +176,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-actualizar_actividad(); 
-$conn->close();
+
+actualizar_actividad();
+// ...existing code...
 ?>
 
 <!DOCTYPE html>
@@ -381,6 +382,8 @@ $conn->close();
         </div>
     </div>
 
+
+<?php $conn->close();?>
 </body>
 
 </html>
