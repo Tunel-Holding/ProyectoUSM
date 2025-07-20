@@ -223,8 +223,8 @@ while ($row = $result->fetch_assoc()) {
             $reply_mensaje = htmlspecialchars($reply_row['message']);
 
             echo "<div class='reply-preview-inside'>";
-            // Cambiar a una sola línea para 'Respondiendo a' y el nombre
-            echo "<div class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></div>";
+            // Un solo <span> para 'Respondiendo a' y el nombre en la misma línea
+            echo "<span class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></span>";
 
             if ($reply_row['tipo'] === 'imagen') {
                 echo "<div class='reply-content'><img src='" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "' class='reply-image' alt='Imagen'></div>";
@@ -424,8 +424,17 @@ $conn->close();
         font-style: italic;
         color: #1976d2;
         margin-bottom: 2px;
-        display: inline-block;
+        display: inline;
+        opacity: 1;
         vertical-align: middle;
+    }
+
+    .reply-to-text strong {
+        font-style: normal;
+        font-weight: bold;
+        color: #1976d2;
+        margin-left: 3px;
+        display: inline;
     }
 
     .reply-content {
