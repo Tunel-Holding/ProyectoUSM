@@ -189,14 +189,7 @@ while ($row = $result->fetch_assoc()) {
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
         echo '<div class="message-bubble-' . $nivel_usuario . $extra_class . '" ' . $styleBurbuja . '>';
     } else {
-        // Para otros usuarios: [botones] [avatar] [burbuja]
-
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
-                <button class="menu-puntos-opcion disabled" disabled>Editar</button>
-                <button class="menu-puntos-opcion disabled" disabled>Eliminar</button>
-            </div>';
+        // Para otros usuarios: [avatar] [burbuja] [botones]
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
@@ -264,6 +257,15 @@ while ($row = $result->fetch_assoc()) {
         echo '<img src="' . htmlspecialchars($foto_perfil, ENT_QUOTES, 'UTF-8') . '" alt="Perfil" class="profile-icon-' . htmlspecialchars($nivel_usuario, ENT_QUOTES, 'UTF-8') . '" ' . htmlspecialchars($styleAvatar, ENT_QUOTES, 'UTF-8') . '>';
     }
 
+    // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos
+    if (!$is_current_user) {
+        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
+        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
+                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
+                <button class="menu-puntos-opcion disabled" disabled>Editar</button>
+                <button class="menu-puntos-opcion disabled" disabled>Eliminar</button>
+            </div>';
+    }
 
     echo '</div>'; // Cierre de contenedor flex
 }
