@@ -179,12 +179,14 @@ while ($row = $result->fetch_assoc()) {
     // Avatar y burbuja según el usuario
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
+        echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
                 <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
                 <button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>
                 <button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>
             </div>';
+        echo '</div>';
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
         echo '<div class="message-bubble-' . $nivel_usuario . $extra_class . '" ' . $styleBurbuja . '>';
@@ -257,14 +259,16 @@ while ($row = $result->fetch_assoc()) {
         echo '<img src="' . htmlspecialchars($foto_perfil, ENT_QUOTES, 'UTF-8') . '" alt="Perfil" class="profile-icon-' . htmlspecialchars($nivel_usuario, ENT_QUOTES, 'UTF-8') . '" ' . htmlspecialchars($styleAvatar, ENT_QUOTES, 'UTF-8') . '>';
     }
 
-    // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos
+    // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos envuelto
     if (!$is_current_user) {
+        echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
                 <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
                 <button class="menu-puntos-opcion disabled" disabled>Editar</button>
                 <button class="menu-puntos-opcion disabled" disabled>Eliminar</button>
             </div>';
+        echo '</div>';
     }
 
     echo '</div>'; // Cierre de contenedor flex
@@ -471,24 +475,22 @@ $conn->close();
     }
 
     .menu-puntos {
-        display: none;
+        z-index: 9999;
         position: absolute;
         top: 100%;
         left: 0;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        min-width: 120px;
-        z-index: 9999 !important;
-        left: auto !important;
-        right: 0 !important;
-        background: red !important;
-        /* TEMPORAL para depuración */
+        right: auto;
+        margin: 0;
     }
 
-    .menu-puntos.show {
-        display: flex;
+    .message-container-flex.current-user .menu-puntos {
+        left: auto;
+        right: 0;
+    }
+
+    .message-container-flex.other-user .menu-puntos {
+        left: 0;
+        right: auto;
     }
 
     .menu-puntos-opcion {
