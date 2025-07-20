@@ -1,6 +1,6 @@
 <?php
 include 'comprobar_sesion.php';
-require_once 'AuthGuard.php';
+require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 $auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 

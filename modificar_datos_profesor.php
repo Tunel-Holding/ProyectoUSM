@@ -1,6 +1,6 @@
 <?php
 
-require_once 'AuthGuard.php';
+require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 $auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
 include 'comprobar_sesion.php';

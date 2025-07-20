@@ -9,7 +9,7 @@ header("X-Frame-Options: DENY");
 header("X-XSS-Protection: 1; mode=block");
 header("Referrer-Policy: strict-origin-when-cross-origin");
 
-require_once 'AuthGuard.php';
+require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 $auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 include 'comprobar_sesion.php';
