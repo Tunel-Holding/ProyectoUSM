@@ -1,0 +1,525 @@
+/* principalunihub.css: Estilos base para alumnos y profesores UniHub */
+
+:root {
+  --background-color: #f8f9fa;
+  --text-color: #222;
+  --primary-yellow: #f8e352;
+  --primary-blue: #3a85ff;
+  --secondary-blue: #61b7ff;
+  --header-gradient: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+  --accent-blue: var(--primary-blue);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  height: 100vh;
+  transition: 1s background-color ease-in-out;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body.dark-mode {
+  --background-color: #23272f;
+  --text-color: #fff;
+}
+
+/* Header y navegación */
+.cabecera {
+  width: 100%;
+  height: 70px;
+  background: var(--header-gradient);
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-end;
+}
+
+.cabecera button img {
+  width: 70px;
+  height: auto;
+}
+
+.cabecera button {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  left: 15px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cabecera p {
+  font-family: "Poppins", sans-serif;
+  font-size: 38px;
+  color: white;
+  position: absolute;
+  right: 20px;
+  user-select: none;
+  font-weight: 700;
+}
+
+.logoempresa img {
+  width: 70px;
+  height: auto;
+}
+
+.logoempresa {
+  display: flex;
+  flex-direction: row;
+  width: 225px;
+  height: auto;
+  align-items: center;
+}
+
+/* Layout principal */
+.layout-dos-columnas {
+  display: flex;
+  gap: 0;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  align-items: stretch;
+  min-height: calc(100vh - 70px);
+}
+
+.columna-izquierda {
+  flex: 3;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.columna-derecha {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor de horario */
+.contenedor-horario {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 2px solid var(--primary-blue);
+  border-radius: 0;
+  padding: 25px 0 25px 0;
+  box-shadow: 0 4px 20px rgba(58, 133, 255, 0.05);
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.titulo-horario {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 22px;
+  color: var(--primary-blue);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 3px solid var(--primary-yellow);
+  padding-bottom: 10px;
+}
+
+/* Tabla de horario */
+.div-horario {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  margin: 0;
+}
+
+.tabla-horario, .horario-tabla {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.tabla-horario th, .horario-tabla th {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  padding: 12px 8px;
+  border: 1px solid var(--primary-blue);
+  letter-spacing: 0.5px;
+}
+
+.tabla-horario td, .horario-tabla td {
+  padding: 8px 6px;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+  vertical-align: middle;
+  min-width: 100px;
+  max-width: 150px;
+}
+
+.hora-col {
+  background: linear-gradient(135deg, #eaf6ff 0%, #f0f8ff 100%);
+  font-weight: bold;
+  color: var(--primary-blue);
+  font-size: 14px;
+  border: 1px solid var(--primary-blue) !important;
+}
+
+.horario-celda {
+  background: linear-gradient(135deg, #f8e35222 0%, #f8e35211 100%);
+  color: var(--primary-blue);
+  font-weight: 600;
+  border: 2px solid var(--primary-blue);
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(248, 227, 82, 0.2);
+  transition: all 0.3s ease;
+}
+
+.horario-celda:hover {
+  background: linear-gradient(135deg, #f8e35244 0%, #f8e35222 100%);
+  box-shadow: 0 4px 16px rgba(248, 227, 82, 0.3);
+  transform: translateY(-1px);
+}
+
+.celda-vacia {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+}
+
+.materia-nombre {
+  font-weight: bold;
+  color: var(--primary-blue);
+  font-size: 13px;
+  margin-bottom: 3px;
+  line-height: 1.2;
+}
+
+.materia-aula {
+  font-size: 11px;
+  color: var(--secondary-blue);
+  font-weight: 500;
+}
+
+/* Tarjetas de materias */
+.contenedor-materias-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px 0;
+}
+
+.tarjeta-materia {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 2px solid var(--primary-yellow);
+  border-radius: 12px;
+  padding: 18px 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(97, 183, 255, 0.1);
+}
+
+.tarjeta-materia:hover {
+  box-shadow: 0 6px 20px rgba(58, 133, 255, 0.2);
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.icono-materia {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: var(--primary-blue);
+  display: block;
+}
+
+.nombre-materia {
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--primary-yellow);
+  padding-bottom: 8px;
+  line-height: 1.3;
+}
+
+.info-materia {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, rgba(248, 227, 82, 0.2) 0%, rgba(97, 183, 255, 0.1) 100%);
+  border-radius: 15px;
+  border: 1px solid #e0e0e0;
+  font-size: 12px;
+  width: 100%;
+  max-width: 140px;
+}
+
+.icono {
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+  color: var(--primary-yellow);
+}
+
+.texto {
+  color: var(--primary-blue);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .layout-dos-columnas {
+    flex-direction: column;
+    gap: 0;
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0;
+  }
+  .columna-izquierda, .columna-derecha {
+    flex: 1;
+    width: 100vw;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .contenedor-horario {
+    border-radius: 0;
+    padding: 20px 0 20px 0;
+  }
+  
+  .contenedor-materias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-dos-columnas {
+    width: 100vw;
+    margin: 0;
+    gap: 0;
+  }
+  .contenedor-horario {
+    padding: 10px 0 10px 0;
+  }
+  
+  .titulo-horario {
+    font-size: 20px;
+  }
+  
+  .tabla-horario th, .horario-tabla th {
+    font-size: 12px;
+    padding: 8px 4px;
+  }
+  
+  .tabla-horario td, .horario-tabla td {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+  
+  .hora-col {
+    font-size: 12px;
+  }
+  
+  .materia-nombre {
+    font-size: 12px;
+  }
+  
+  .materia-aula {
+    font-size: 10px;
+  }
+} 
+
+.profesor-layout-dos-columnas {
+  display: flex;
+  gap: 40px;
+  width: 90%;
+  max-width: 1400px;
+  margin: 30px auto 0 auto;
+  align-items: stretch;
+}
+
+.profesor-columna-izquierda {
+  flex: 2;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.profesor-columna-derecha {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.profesor-contenedor-horario {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 2px solid var(--primary-blue);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(58, 133, 255, 0.10);
+  margin-bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.profesor-titulo-horario {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 22px;
+  color: var(--primary-blue);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 3px solid var(--primary-yellow);
+  padding-bottom: 10px;
+}
+
+body.dark-mode .profesor-contenedor-horario {
+  background: linear-gradient(135deg, #23272f 0%, #1a1a2e 100%);
+  border: 2px solid #61b7ff;
+  box-shadow: 0 4px 24px rgba(97, 183, 255, 0.18);
+}
+
+body.dark-mode .profesor-titulo-horario {
+  color: #f8e352;
+  border-bottom: 3px solid #f8e352;
+}
+
+body.dark-mode .div-horario {
+  background: #2d3340;
+  border: 1.5px solid #61b7ff;
+}
+
+body.dark-mode .tabla-horario, 
+body.dark-mode .horario-tabla {
+  background: #2d3340;
+  color: #fff;
+}
+
+body.dark-mode .tabla-horario th, 
+body.dark-mode .horario-tabla th {
+  background: linear-gradient(135deg, #3a85ff 0%, #61b7ff 100%);
+  color: #fff;
+  border: 1.5px solid #61b7ff;
+}
+
+body.dark-mode .tabla-horario td, 
+body.dark-mode .horario-tabla td {
+  background: #23272f;
+  color: #fff;
+  border: 1px solid #3a85ff;
+}
+
+body.dark-mode .hora-col {
+  background: #23272f;
+  color: #f8e352;
+  font-weight: bold;
+}
+
+body.dark-mode .horario-celda {
+  background: #23272f;
+  color: #f8e352;
+  border: 2px solid #f8e352;
+  font-weight: 600;
+}
+
+body.dark-mode .materia-nombre {
+  color: #f8e352;
+}
+
+body.dark-mode .materia-aula {
+  color: #61b7ff;
+}
+
+body.dark-mode .contenedor-materias-grid {
+  background: none;
+}
+
+body.dark-mode .tarjeta-materia {
+  background: #23272f;
+  border: 2px solid #61b7ff;
+  box-shadow: 0 4px 18px rgba(97, 183, 255, 0.18);
+}
+
+body.dark-mode .tarjeta-materia:hover {
+  border-color: #f8e352;
+  box-shadow: 0 8px 32px rgba(248, 227, 82, 0.18);
+}
+
+body.dark-mode .nombre-materia {
+  color: #f8e352;
+  border-bottom: 2px solid #f8e352;
+}
+
+body.dark-mode .info-item {
+  background: #2d3340;
+  border: 1px solid #3a85ff;
+  color: #fff;
+}
+
+body.dark-mode .icono {
+  color: #f8e352;
+}
+
+body.dark-mode .texto {
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .profesor-layout-dos-columnas {
+    flex-direction: column;
+    gap: 20px;
+    width: 98%;
+    margin: 15px auto 0 auto;
+  }
+  .profesor-columna-izquierda, .profesor-columna-derecha {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .profesor-layout-dos-columnas {
+    width: 100%;
+    margin: 10px auto 0 auto;
+    gap: 10px;
+  }
+  .profesor-contenedor-horario {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .profesor-titulo-horario {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
+} 

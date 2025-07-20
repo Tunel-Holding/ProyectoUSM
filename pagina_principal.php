@@ -81,6 +81,15 @@ if ($result_horario->num_rows > 0) {
 }
 $stmt_horario->close();
 
+$horas_disponibles = [];
+foreach ($datos_horario as $dia => $horas) {
+    foreach ($horas as $hora => $info) {
+        $horas_disponibles[] = $hora;
+    }
+}
+$horas_disponibles = array_unique($horas_disponibles);
+sort($horas_disponibles);
+
 
 $query_materias_profesor = "
 SELECT 
@@ -122,6 +131,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
     <link rel="icon" href="css/logounihubblanco.png" type="image/png">
+    <link rel="stylesheet" href="css/principalunihub.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="stylesheet" href="css/horario.css">
@@ -762,9 +772,6 @@ $conn->close();
 </head>
 
 <body>
-    <div class="contenedorentrante3">
-        <img src="css/logounihubblanco.png">
-    </div>
     <div class="cabecera">
 
         <button type="button" id="logoButton">
@@ -791,7 +798,7 @@ $conn->close();
                     <h2 class="titulo-horario">Horario Semanal Completo</h2>
                     <?php 
                     define('INCLUDED_FROM_MAIN', true);
-                    include 'horario.php'; 
+                    include 'horario_alumno.php'; 
                     ?>
                 </div>
             </div>
