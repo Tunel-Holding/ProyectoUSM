@@ -1168,8 +1168,12 @@ class ProfesoresScripts {
                                     saveIndicator.classList.remove("show");
                                 }, 2000);
                             } else {
-                                // Mostrar el mensaje exacto del backend si existe
-                                saveIndicator.textContent = "✗ " + (data.message ? data.message : "Error al guardar");
+                                // Mostrar el mensaje exacto del backend y detalles si existen
+                                let errorMsg = "✗ " + (data.message ? data.message : "Error al guardar");
+                                if (data.details) {
+                                    errorMsg += "\n" + data.details;
+                                }
+                                saveIndicator.textContent = errorMsg;
                                 saveIndicator.style.color = "#dc3545";
                                 saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
                                 setTimeout(() => {
@@ -1181,7 +1185,11 @@ class ProfesoresScripts {
                             }
                         })
                         .catch(error => {
-                            saveIndicator.textContent = "✗ Error de conexión";
+                            let errorMsg = "✗ Error de conexión";
+                            if (error && error.message) {
+                                errorMsg += "\n" + error.message;
+                            }
+                            saveIndicator.textContent = errorMsg;
                             saveIndicator.style.color = "#dc3545";
                             saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
                             setTimeout(() => {
