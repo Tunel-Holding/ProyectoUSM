@@ -31,17 +31,18 @@ class ProfesoresManager {
                     ELSE NULL
                 END AS profesor_asignado
             FROM materias m
-            LEFT JOIN Profesores p ON m.id_profesor = p.id
+            LEFT JOIN profesores p ON m.id_profesor = p.id
             ORDER BY m.nombre, m.seccion
         ";
-        
         $result = $this->conn->query($sql);
+        if (!$result) {
+            error_log('Error en obtenerTodasMateriasConAsignacion: ' . $this->conn->error);
+            return [];
+        }
         $materias = [];
-        
         while ($materia = $result->fetch_assoc()) {
             $materias[] = $materia;
         }
-        
         return $materias;
     }
     
@@ -53,12 +54,12 @@ class ProfesoresManager {
             SELECT
                 p.id AS id_profesor,
                 p.nombre AS Nombre_Profesor, 
-                GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS Materias,
+                GROUP_CONCAT(CONCAT(m.nombre, ' (', m.seccion, ')') SEPARATOR ', ') AS materias,
                 GROUP_CONCAT(m.id SEPARATOR ',') AS materias_ids
             FROM 
-                Profesores p
+                profesores p
             LEFT JOIN 
-                Materias m ON p.id = m.id_profesor
+                materias m ON p.id = m.id_profesor
         ";
     }
     
@@ -75,12 +76,11 @@ class ProfesoresManager {
             if (preg_match('/^[a-zA-Z0-9\s]+$/', $busqueda)) {
                 // Limitar longitud para prevenir ataques
                 if (strlen($busqueda) <= 100) {
-                    // Buscar tanto por nombre como por cédula
-                    $sql .= " WHERE p.nombre LIKE ? OR p.cedula LIKE ?";
+                    // Buscar solo por nombre (el campo cedula no existe)
+                    $sql .= " WHERE p.nombre LIKE ?";
                     return [
                         'sql' => $sql,
                         'params' => [
-                            '%' . $busqueda . '%',
                             '%' . $busqueda . '%'
                         ]
                     ];
@@ -1282,7 +1282,7 @@ try {
     
 } catch (Exception $e) {
     error_log("Error en admin_profesores.php: " . $e->getMessage());
-    $error = 'Ha ocurrido un error al cargar los datos. Por favor, inténtalo de nuevo.';
+    $error = 'Ha ocurrido un error al cargar los datos. Por favor, inténtalo de nuevo.<br><span style="color:#dc3545;font-size:0.95em">' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . '</span>';
 }
 ?>
 <!DOCTYPE html>

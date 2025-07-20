@@ -666,20 +666,19 @@ $conn->close();
     <div class="pagina">
         <div class="wecontainer">
             <h1>Modificar Datos</h1>
-            <div class="perfil-container">
-                <div class="perfil-foto-wrapper">
-                    <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
-                    <input type="file" id="foto" name="foto" accept="image/*" style="display: none;">
-                    <label for="foto" class="edit-icon" title="Cambiar foto de perfil">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
-                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                            <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
-                        </svg>
-                    </label>
-                </div>
-            </div>
-
             <form method="POST" action="" enctype="multipart/form-data">
+                <div class="perfil-container" style="justify-content: center; align-items: center;">
+                    <div class="perfil-foto-wrapper" id="fotoWrapper">
+                        <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
+                        <input type="file" id="foto" name="foto" accept="image/*" style="display: none;">
+                        <label for="foto" class="edit-icon" title="Cambiar foto de perfil">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
+                            </svg>
+                        </label>
+                    </div>
+                </div>
                 <?php if ($error_message): ?>
                     <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
                 <?php endif; ?>
