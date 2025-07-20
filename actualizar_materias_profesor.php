@@ -13,7 +13,7 @@ require_once 'conexion.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     actualizar_actividad();
     http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
     exit;
 }
 
@@ -23,7 +23,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 // Validar datos de entrada
 if (!isset($input['profesor_id']) || !isset($input['materias_ids'])) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Datos incompletos']);
+    echo json_encode(['success' => false, 'message' => 'Datos incompletos']);
     exit;
 }
 
@@ -34,7 +34,7 @@ $materias_ids = $input['materias_ids']; // Array de IDs de materias
 $stmt = $conn->prepare("SELECT id FROM Profesores WHERE id = ?");
 if (!$stmt) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Error al validar profesor']);
+    echo json_encode(['success' => false, 'message' => 'Error al validar profesor']);
     exit;
 }
 $stmt->bind_param("i", $profesor_id);
@@ -42,7 +42,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 if ($result->num_rows === 0) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Profesor no encontrado']);
+    echo json_encode(['success' => false, 'message' => 'Profesor no encontrado']);
     exit;
 }
 
@@ -52,7 +52,7 @@ if (!empty($materias_ids)) {
     $stmt = $conn->prepare("SELECT id, id_profesor FROM materias WHERE id IN ($placeholders)");
     if (!$stmt) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => 'Error al validar materias']);
+        echo json_encode(['success' => false, 'message' => 'Error al validar materias']);
         exit;
     }
     
@@ -69,7 +69,7 @@ if (!empty($materias_ids)) {
     // Verificar que todas las materias existen
     if (count($materias_existentes) !== count($materias_ids)) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Una o más materias no existen']);
+        echo json_encode(['success' => false, 'message' => 'Una o más materias no existen']);
         exit;
     }
     
@@ -77,7 +77,7 @@ if (!empty($materias_ids)) {
     foreach ($materias_existentes as $materia) {
         if ($materia['id_profesor'] !== null && $materia['id_profesor'] != $profesor_id) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Una o más materias ya están asignadas a otros profesores']);
+            echo json_encode(['success' => false, 'message' => 'Una o más materias ya están asignadas a otros profesores']);
             exit;
         }
     }
@@ -149,14 +149,14 @@ try {
         http_response_code(200);
         echo json_encode([
             'success' => false,
-            'error' => 'No se seleccionó ninguna materia para asignar. Si desea eliminar todas las materias, deje el campo vacío.',
+            'message' => 'No se seleccionó ninguna materia para asignar. Si desea eliminar todas las materias, deje el campo vacío.',
             'details' => $msg
         ]);
     } else {
         http_response_code(500);
         echo json_encode([
             'success' => false,
-            'error' => 'Error al actualizar las materias',
+            'message' => 'Error al actualizar las materias',
             'details' => $msg
         ]);
     }
