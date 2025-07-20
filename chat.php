@@ -461,6 +461,24 @@ if ($idgrupo) {
         .chat-dashboard-reply #cancel-reply {
             margin-left: auto;
         }
+
+        #upload-menu {
+            position: absolute;
+            bottom: 70px;
+            /* más cerca del input */
+            left: 24px;
+            /* pegado al botón + */
+            transform: none;
+            background-color: var(--fondo);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            z-index: 1000;
+        }
     </style>
 </head>
 
@@ -473,9 +491,9 @@ if ($idgrupo) {
             <!-- <img src="css/logo.png" alt="Logo"> -->
             <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
-        <!--<div class="nombremateria">
+        <div class="nombremateria">
             <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>
-        </div>-->
+        </div>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
             <p>UH</p>
