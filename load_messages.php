@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include("comprobar_sesion.php");
 require 'conexion.php';
 
@@ -193,7 +198,7 @@ while ($row = $result->fetch_assoc()) {
             </div>';
         echo '<img src="' . $foto_perfil . '" alt="Perfil" class="profile-icon-' . $nivel_usuario . '" ' . $styleAvatar . '>';
         echo '<div class="message-bubble-' . $nivel_usuario . '" ' . $styleBurbuja . '>';
-
+    }
 
     // 📨 Contenido del mensaje
     echo "<strong>" . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . ":</strong> ";

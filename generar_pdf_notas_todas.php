@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 include 'conexion.php';
-
-// Obtener id de materia para filtrar tareas
-$materia_id = isset($_GET['materia_id']) ? intval($_GET['materia_id']) : 0;
-if ($materia_id <= 0) {
+// Iniciar sesión y obtener materia desde sesión
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (!isset($_SESSION['idmateria']) || intval($_SESSION['idmateria']) <= 0) {
     die('ID de materia no válido.');
 }
+$materia_id = intval($_SESSION['idmateria']);
 
 // Configuración de mPDF
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);
@@ -70,7 +70,7 @@ if ($result && $result->num_rows > 0) {
         $html .= '</tr>';
     }
 } else {
-    $html .= '<tr><td colspan="100" style="text-align:center;padding:12px;">No hay notas registradas.</td></tr>';
+    $html .= '<tr><td colspan="100" style="text-align:center;padding:12px;">No hay tareas registradas.</td></tr>';
 }
 $html .= '</tbody></table>';
 
