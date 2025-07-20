@@ -55,12 +55,12 @@ if (!defined('INCLUDED_FROM_MAIN')) {
 
 <style>
 /* Estilos específicos para la tabla del horario */
+
 .horario-tabla {
     width: 100% !important;
-    max-width: 100% !important;
     font-size: 11px !important;
     border-collapse: collapse !important;
-    table-layout: auto !important;
+    table-layout: fixed !important;
 }
 
 .horario-tabla th,
@@ -98,10 +98,9 @@ if (!defined('INCLUDED_FROM_MAIN')) {
     background-color: #f8f9fa !important;
 }
 
+
 .div-horario {
     width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
     border-radius: 10px !important;
     border: 2px solid #174388 !important;
     margin: 10px 0 !important;
