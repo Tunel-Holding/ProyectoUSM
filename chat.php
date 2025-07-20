@@ -473,9 +473,9 @@ if ($idgrupo) {
             <!-- <img src="css/logo.png" alt="Logo"> -->
             <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
-        <div class="nombremateria">
+        <!--<div class="nombremateria">
             <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>
-        </div>
+        </div>-->
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
             <p>UH</p>
