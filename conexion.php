@@ -24,4 +24,5 @@ try {
     echo "<pre>" . $e->getMessage() . "</pre>";
     exit;
 }
+//prueba pa ve cositas
 ?>
