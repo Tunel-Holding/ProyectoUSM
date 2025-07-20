@@ -731,13 +731,7 @@ function controlarEstadoBotonesEvaluar() {
     taskCards.forEach(card => {
         const btnEvaluar = card.querySelector('.btn-evaluar');
         const fechaEntregaISO = card.getAttribute('data-fechaentrega');
-        if (!btnEvaluar || !fechaEntregaISO) return;
-        const fechaEntrega = new Date(fechaEntregaISO);
-        if (now >= fechaEntrega) {
-            btnEvaluar.disabled = false;
-        } else {
-            btnEvaluar.disabled = true;
-        }
+        
     });
 }
 
