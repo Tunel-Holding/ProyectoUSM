@@ -225,7 +225,7 @@ $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
                             $celda_ocupada = true;
                         }
                     }
-                    if (!$celda_ocupada) {
+                    else if (!$celda_ocupada) {
                         echo "<td class='celda-vacia'></td>";
                     }
                 }
