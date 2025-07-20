@@ -50,7 +50,7 @@ actualizar_actividad();
 
         if (hasEnoughCredits($id_estudiante, $id_materia)) { 
             // Verificar si el estudiante ya está inscrito en la materia
-            $stmt = $conn->prepare("SELECT * FROM Inscripciones WHERE id_estudiante = ? AND id_materia = ?");
+            $stmt = $conn->prepare("SELECT * FROM inscripciones WHERE id_estudiante = ? AND id_materia = ?");
             $stmt->bind_param("ii", $id_estudiante, $id_materia);
             $stmt->execute();
             $result = $stmt->get_result();
