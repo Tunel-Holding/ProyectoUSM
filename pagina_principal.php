@@ -133,31 +133,375 @@ $conn->close();
     <title>Inicio - UniHub</title>
     <script src="js/control_inactividad.js"></script>
     <style>
+        :root {
+            /* --- Variables de Colores Base (Modo Claro) --- */
+            --color-primary-blue: #174388; /* Azul principal (ej: para bordes, textos importantes) */
+            --color-secondary-blue: #1e5aa8; /* Azul secundario (ej: para degradados) */
+            --color-accent-gold: #ffd700; /* Dorado para acentos */
+            --color-text-dark: #333; /* Color de texto oscuro general */
+            --color-text-light: #fff; /* Color de texto claro (para fondos oscuros) */
+            --color-border-light: #ddd; /* Borde ligero */
+            --color-bg-light-1: #f9f9f9; /* Fondo muy claro (ej: tarjetas base) */
+            --color-bg-light-2: #f8f9fa; /* Fondo claro general */
+            --color-bg-light-3: #e9ecef; /* Fondo ligeramente más oscuro */
+            --color-success-green: #28a745; /* Verde para mensajes de éxito */
+            --color-success-green-dark: #20c997; /* Verde más oscuro para degradado de éxito */
+
+            /* --- Variables de Degradados (Modo Claro) --- */
+            --gradient-main-bg: linear-gradient(135deg, var(--color-bg-light-2) 0%, var(--color-bg-light-3) 100%);
+            --gradient-header-bg: linear-gradient(135deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
+            --gradient-card-bg: linear-gradient(135deg, #ffffff 0%, var(--color-bg-light-2) 100%);
+            --gradient-info-item-bg: linear-gradient(135deg, var(--color-bg-light-2) 0%, var(--color-bg-light-3) 100%);
+            --gradient-support-button: #446ad3; /* Color sólido para el botón flotante */
+            --gradient-support-button-hover: #365ac0; /* Color sólido para el hover del botón flotante */
+            --gradient-no-classes: linear-gradient(135deg, var(--color-success-green) 0%, var(--color-success-green-dark) 100%);
+
+            /* --- Variables de Sombras --- */
+            --shadow-base: 0 4px 8px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 4px 15px rgba(23, 67, 136, 0.1);
+            --shadow-card-hover: 0 15px 35px rgba(23, 67, 136, 0.25);
+            --shadow-header: 0 4px 15px rgba(0, 0, 0, 0.2);
+            --shadow-table: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-hover-box: 0 8px 25px rgba(0, 0, 0, 0.2);
+            --shadow-profesor-img: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+            /* --- Variables de Bordes --- */
+            --border-main: 2px solid var(--color-primary-blue);
+            --border-light: 1px solid var(--color-border-light);
+            --border-light-2: 1px solid #dee2e6;
+            --border-accent: 2px solid var(--color-accent-gold);
+
+            /* --- Otras Variables --- */
+            --border-radius-base: 10px;
+            --border-radius-lg: 15px;
+            --border-radius-pill: 50px;
+        }
+
+        /* --- Modo Oscuro: Sobrescribe las variables base --- */
+        body.dark-mode {
+            --color-primary-blue: #2d3748; /* Fondo oscuro para elementos principales */
+            --color-secondary-blue: #4a5568; /* Fondo más oscuro para elementos */
+            --color-text-dark: #ffffff; /* Texto blanco para modo oscuro */
+            --color-border-light: #4a5568; /* Borde más oscuro */
+            --color-bg-light-1: #1a1a2e;
+            --color-bg-light-2: #1a1a2e; /* Fondo general oscuro */
+            --color-bg-light-3: #16213e; /* Fondo ligeramente más oscuro */
+            --color-success-green: #38a169;
+            --color-success-green-dark: #48bb78;
+
+            --gradient-main-bg: linear-gradient(135deg, var(--color-bg-light-2) 0%, var(--color-bg-light-3) 100%);
+            --gradient-header-bg: linear-gradient(135deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
+            --gradient-card-bg: linear-gradient(135deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
+            --gradient-info-item-bg: linear-gradient(135deg, var(--color-secondary-blue) 0%, #718096 100%);
+            --gradient-support-button: #4a5568;
+            --gradient-support-button-hover: #2d3748;
+            --gradient-no-classes: linear-gradient(135deg, var(--color-success-green) 0%, var(--color-success-green-dark) 100%);
+
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --shadow-card-hover: 0 15px 35px rgba(0, 0, 0, 0.4);
+            --shadow-header: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --shadow-table: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-hover-box: 0 8px 25px rgba(0, 0, 0, 0.3);
+            --shadow-profesor-img: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+
+            background: var(--gradient-main-bg); /* Aplica el fondo del modo oscuro al body */
+            color: var(--color-text-light); /* Color de texto general para dark mode */
+        }
+
+        /* --- Estilos Generales y Layout --- */
+        .divprincipal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--gradient-main-bg); /* Usando variable */
+            min-height: calc(100vh - 140px); /* Ajustado, sin !important */
+        }
+
+        .layout-dos-columnas {
+            display: flex;
+            gap: 40px; /* Usando variable, sin !important */
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto 0; /* Ajustado el margin-top, sin !important */
+            align-items: stretch; /* Clave para que las columnas se estiren a la misma altura */
+        }
+
+        .columna-izquierda,
+        .columna-derecha {
+            display: flex;
+            flex-direction: column;
+            flex: 1; /* Ocupa el mismo espacio disponible */
+            min-width: 0; /* Permite que las columnas se encojan */
+            height: auto;
+        }
+
+        /* --- Contenedor de Horario --- */
+        .contenedor-horario {
+            flex: 1; /* Ocupa todo el espacio disponible dentro de su columna */
+            width: 100%; /* Asegura que ocupe todo el ancho de su columna */
+            box-sizing: border-box;
+            background: var(--gradient-main-bg); /* Usando variable, sin !important */
+            border: var(--border-main); /* Usando variable, sin !important */
+            border-radius: var(--border-radius-lg); /* Usando variable, sin !important */
+            box-shadow: var(--shadow-lg); /* Usando variable, sin !important */
+            padding: 25px;
+            margin-bottom: 0; /* Quita el margin-bottom aquí, el gap del layout se encarga */
+        }
+
+        /* Modo oscuro para contenedor-horario */
+        body.dark-mode .contenedor-horario {
+            background: var(--gradient-card-bg); /* Usa la variable de dark-mode */
+            border-color: var(--color-border-light);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .titulo-horario {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--color-primary-blue); /* Usando variable, sin !important */
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: var(--border-accent); /* Usando variable, sin !important */
+            padding-bottom: 10px;
+        }
+
+        /* Modo oscuro para titulo-horario */
+        body.dark-mode .titulo-horario {
+            color: var(--color-text-light);
+            border-bottom-color: var(--color-accent-gold);
+        }
+
+        /* Tabla de Horario */
+        .div-horario {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            border-radius: var(--border-radius-base);
+            border: var(--border-light);
+            margin: 10px 0;
+            background: white; /* Por defecto */
+        }
+
+        /* Modo oscuro para div-horario */
+        body.dark-mode .div-horario {
+            background: var(--color-primary-blue); /* Ajusta si quieres otro color de fondo para la tabla en dark mode */
+            border-color: var(--color-border-light);
+        }
+
+
+        .horario-tabla {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            font-size: 12px;
+            table-layout: fixed;
+            border-collapse: collapse; /* Añadido para un mejor aspecto */
+        }
+
+        .div-horario table {
+            min-width: 600px;
+            max-width: 100%;
+        }
+
+        .horario-tabla th,
+        .horario-tabla td {
+            padding: 6px 2px;
+            min-width: 60px;
+            max-width: 120px;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-align: center; /* Centrar contenido en las celdas */
+            vertical-align: middle; /* Alinear verticalmente */
+        }
+
+        .tabla-horario th { /* Selector más específico si es necesario, pero .horario-tabla th ya es bueno */
+            background: var(--gradient-header-bg); /* Usando variable, sin !important */
+            color: var(--color-text-light); /* Usando variable, sin !important */
+            font-weight: 600;
+            padding: 12px 8px;
+        }
+
+        /* Modo oscuro para tabla-horario th */
+        body.dark-mode .tabla-horario th {
+            background: var(--gradient-header-bg);
+            color: var(--color-text-light);
+        }
+
+        .tabla-horario td { /* Selector más específico si es necesario */
+            padding: 10px 8px;
+            border-bottom: var(--border-light-2); /* Usando variable, sin !important */
+            background-color: white; /* Fondo de celdas por defecto */
+            color: var(--color-text-dark); /* Color de texto por defecto */
+        }
+
+        /* Modo oscuro para tabla-horario td */
+        body.dark-mode .tabla-horario td {
+            background-color: var(--color-primary-blue); /* Ajusta el fondo de la celda */
+            color: var(--color-text-light);
+            border-bottom-color: var(--color-border-light);
+        }
+
+
+        .horario-celda {
+            font-size: 10px;
+            line-height: 1.1;
+            word-break: break-word;
+        }
+
+        .nohayclases {
+            background: var(--gradient-no-classes); /* Usando variable, sin !important */
+            color: var(--color-text-light); /* Usando variable, sin !important */
+            font-weight: 600;
+            padding: 20px;
+            border-radius: var(--border-radius-base);
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* --- Contenedor de Materias (Grid) --- */
         .contenedor-materias-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
-            padding: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Minmax ajustado a 150px */
+            gap: 15px; /* Gap ajustado */
+            padding: 30px; /* Padding ajustado */
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* --- Tarjetas de Materia --- */
+        .tarjeta-materia-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .tarjeta-materia {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
+            background: var(--gradient-card-bg); /* Usando variable, sin !important */
+            border: var(--border-main); /* Usando variable, sin !important */
+            border-radius: var(--border-radius-lg); /* Usando variable, sin !important */
+            padding: 20px 15px;
+            box-shadow: var(--shadow-xl); /* Usando variable, sin !important */
+            transition: all 0.4s ease;
             position: relative;
-            overflow: visible;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* Estilo para la línea superior de la tarjeta */
+        .tarjeta-materia::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary-blue) 0%, var(--color-accent-gold) 50%, var(--color-primary-blue) 100%); /* Sin !important */
+        }
+
+        .tarjeta-materia:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-card-hover); /* Usando variable, sin !important */
+            border-color: var(--color-accent-gold); /* Usando variable, sin !important */
+        }
+
+        /* Modo oscuro para tarjeta-materia */
+        body.dark-mode .tarjeta-materia {
+            background: var(--gradient-card-bg);
+            border-color: var(--color-border-light);
+            box-shadow: var(--shadow-lg); /* Ajustado para dark mode */
+        }
+
+        body.dark-mode .tarjeta-materia:hover {
+            border-color: var(--color-accent-gold);
+            box-shadow: var(--shadow-card-hover); /* Ajustado para dark mode */
+        }
+
+        .icono-materia {
+            font-size: 36px;
+            margin-bottom: 12px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .tarjeta-materia:hover .icono-materia {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .nombre-materia {
+            color: var(--color-primary-blue); /* Usando variable, sin !important */
+            font-weight: 700;
             font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: var(--border-accent); /* Usando variable, sin !important */
+            padding-bottom: 8px;
         }
 
+        /* Modo oscuro para nombre-materia */
+        body.dark-mode .nombre-materia {
+            color: var(--color-text-light);
+            border-bottom-color: var(--color-accent-gold);
+        }
+
+
+        .info-materia {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--gradient-info-item-bg); /* Usando variable, sin !important */
+            border-radius: 20px;
+            border: var(--border-light-2); /* Usando variable, sin !important */
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 160px;
+        }
+
+        /* Modo oscuro para info-item */
+        body.dark-mode .info-item {
+            background: var(--gradient-info-item-bg);
+            border-color: var(--color-border-light);
+        }
+
+        .icono {
+            font-size: 16px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .texto {
+            color: var(--color-text-dark); /* Usando variable, sin !important */
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        /* Modo oscuro para texto */
+        body.dark-mode .texto {
+            color: var(--color-text-light);
+        }
+
+        /* --- Imágenes de Profesor y Hover Box --- */
         .profesor-img {
             width: 89px;
             height: 89px;
@@ -167,11 +511,16 @@ $conn->close();
             margin: 0 auto;
             transition: transform 0.3s ease;
             cursor: pointer;
+            border: 3px solid var(--color-primary-blue); /* Usando variable, sin !important */
+            box-shadow: var(--shadow-profesor-img); /* Usando variable, sin !important */
         }
 
         .profesor-img:hover {
             transform: scale(1.05);
         }
+
+        /* Modo oscuro para profesor-img (el borde cambiará con la variable principal) */
+
 
         .hover-container {
             position: relative;
@@ -186,14 +535,21 @@ $conn->close();
             top: 110%;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #fff;
-            border: 1px solid #ccc;
+            background: white; /* Usando variable, sin !important */
+            border: 2px solid var(--color-primary-blue); /* Usando variable, sin !important */
             padding: 10px;
             width: 240px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 6px;
+            box-shadow: var(--shadow-hover-box); /* Usando variable, sin !important */
+            border-radius: var(--border-radius-base); /* Usando variable, sin !important */
             transition: max-height 0.5s ease, opacity 0.5s ease;
             z-index: 100;
+        }
+
+        /* Modo oscuro para hover-box */
+        body.dark-mode .hover-box {
+            background: var(--color-primary-blue); /* Fondo oscuro para el hover box */
+            border-color: var(--color-border-light);
+            box-shadow: var(--shadow-hover-box); /* Ajustado para dark mode */
         }
 
         .hover-container:hover .hover-box {
@@ -211,8 +567,23 @@ $conn->close();
         .info-lista li {
             font-size: 13px;
             margin-bottom: 6px;
-            color: #333;
+            color: var(--color-primary-blue); /* Usando variable, sin !important */
+            font-weight: 500;
+            border-bottom: var(--border-light-2); /* Usando variable, sin !important */
+            padding: 5px 0;
         }
+
+        /* Modo oscuro para info-lista li */
+        body.dark-mode .info-lista li {
+            color: var(--color-text-light);
+            border-bottom-color: var(--color-border-light);
+        }
+
+        .info-lista li:last-child {
+            border-bottom: none;
+        }
+
+        /* --- Botón de Soporte Flotante --- */
         .soporte-flotante-container {
             position: fixed;
             bottom: 20px;
@@ -224,33 +595,42 @@ $conn->close();
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            background-color: #446ad3;
+            background-color: var(--gradient-support-button); /* Usando variable, sin !important */
             padding: 12px 16px;
-            border-radius: 50px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: var(--border-radius-pill); /* Usando variable, sin !important */
+            box-shadow: var(--shadow-md); /* Usando variable, sin !important */
             text-decoration: none;
             overflow: hidden;
-            width: 60px;            /* ✅ suficiente para mostrar solo el ícono */
+            width: 60px; /* Suficiente para mostrar solo el ícono */
             height: 50px;
             transition: width 0.4s ease, background-color 0.3s ease;
         }
 
-
         .soporte-flotante:hover {
-            width: 210px; /* ✅ se expande hacia la izquierda */
-            background-color: #365ac0;
+            width: 210px; /* Se expande hacia la izquierda */
+            background-color: var(--gradient-support-button-hover); /* Usando variable, sin !important */
         }
 
+        /* Modo oscuro para soporte-flotante */
+        body.dark-mode .soporte-flotante {
+            background-color: var(--gradient-support-button);
+        }
+
+        body.dark-mode .soporte-flotante:hover {
+            background-color: var(--gradient-support-button-hover);
+        }
+
+
         .soporte-mensaje {
-            flex: 1; /* ✅ ocupa todo el espacio disponible */
+            flex: 1; /* Ocupa todo el espacio disponible */
             opacity: 0;
             white-space: nowrap;
-            color: #fff;
+            color: var(--color-text-light); /* Usando variable, sin !important */
             font-weight: 500;
             font-size: 14px;
             transform: translateX(30px); /* animación desde la derecha */
             transition: transform 0.4s ease, opacity 0.4s ease;
-            text-align: left; /* ✅ texto alineado a la izquierda */
+            text-align: left; /* Texto alineado a la izquierda */
             margin-right: auto;
         }
 
@@ -262,105 +642,68 @@ $conn->close();
         .soporte-flotante img {
             width: 30px;
             height: 30px;
-            filter: brightness(0) invert(1);
+            filter: brightness(0) invert(1); /* Para iconos blancos */
             flex-shrink: 0;
             z-index: 2;
         }
 
-        /* Estilos específicos para la tabla del horario */
-        .horario-tabla {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: auto;
-            font-size: 12px;
-            table-layout: fixed;
+
+        /* --- Header --- */
+        .cabecera {
+            background: var(--gradient-header-bg); /* Usando variable, sin !important */
+            box-shadow: var(--shadow-header); /* Usando variable, sin !important */
         }
 
-        .horario-tabla th,
-        .horario-tabla td {
-            padding: 6px 2px;
-            min-width: 60px;
-            max-width: 120px;
-            word-wrap: break-word;
-            overflow: hidden;
+        /* --- Menu (mantengo !important aquí ya que son estilos de posicionamiento/animación) --- */
+        /* A menudo, para menus "overlay" o con JS que manipula `transform`, `!important` puede ser útil
+        para asegurar que los estilos de JS no entren en conflicto con otros CSS.
+        Si ves que el menú no funciona sin ellos, puedes reintroducirlos selectivamente. */
+        .menu {
+            position: fixed; /* Mantuve fixed por ser un menú flotante */
+            top: 80px;
+            left: 20px;
+            z-index: 1000;
+            transform: translateX(-120%);
+            transition: transform 0.5s ease-in-out;
         }
 
-        .horario-celda {
-            font-size: 10px;
-            line-height: 1.1;
-            word-break: break-word;
+        .menu.toggle {
+            transform: translateX(0);
         }
 
-        /* Contenedor para el horario con scroll horizontal si es necesario */
-        .div-horario {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: auto;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            margin: 10px 0;
-            background: white;
+        .menuopciones {
+            max-width: 300px;
         }
 
-        /* Forzar que la tabla no exceda el ancho del contenedor */
-        .div-horario table {
-            min-width: 600px;
-            max-width: 100%;
+        .opción {
+            min-width: 80px;
+            margin: 5px;
         }
 
-        /* Ajustes específicos para el contenedor principal */
+        /* Asegurar que el contenido principal no se superponga con el menú */
         .divprincipal {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
+            margin-left: 0;
+            padding-left: 20px;
         }
 
-        .contenedor-horario {
-            width: 100%;
-            max-width: 100%;
-            margin-bottom: 30px;
-            box-sizing: border-box;
+        /* --- Media Queries --- */
+
+        @media (max-width: 1200px) {
+            .layout-dos-columnas {
+                gap: 30px; /* Sin !important */
+            }
+
+            .contenedor-horario {
+                padding: 20px; /* Sin !important */
+            }
         }
 
-        /* Layout de dos columnas para horario y materias */
-        .layout-dos-columnas {
-            display: flex;
-            gap: 30px;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .columna-izquierda {
-            flex: 2;
-            min-width: 0; /* Permite que se encoja */
-        }
-
-        .columna-derecha {
-            flex: 1;
-            min-width: 0; /* Permite que se encoja */
-        }
-
-        .contenedor-materias-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            width: 100%;
-            max-width: 100%;
-        }
-
-        /* Responsive design */
         @media (max-width: 1024px) {
             .layout-dos-columnas {
                 flex-direction: column;
                 gap: 20px;
             }
-            
+
             .columna-izquierda,
             .columna-derecha {
                 width: 100%;
@@ -369,13 +712,19 @@ $conn->close();
 
         @media (max-width: 768px) {
             .divprincipal {
-                padding: 10px;
+                padding: 20px 15px; /* Sin !important */
+                min-height: calc(100vh - 120px); /* Ajustado el valor */
             }
-            
+
             .contenedor-horario {
-                margin-bottom: 20px;
+                padding: 15px; /* Sin !important */
+                margin-bottom: 20px; /* Sin !important */
             }
-            
+
+            .titulo-horario {
+                font-size: 20px; /* Sin !important */
+            }
+
             .contenedor-materias-grid {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
                 gap: 10px;
@@ -390,334 +739,24 @@ $conn->close();
             .horario-celda {
                 font-size: 9px;
             }
-        }
 
-        /* Estilos específicos para el menú */
-        .menu {
-            position: fixed !important;
-            top: 80px !important;
-            left: 20px !important;
-            z-index: 1000 !important;
-            transform: translateX(-120%) !important;
-            transition: transform 0.5s ease-in-out !important;
-        }
-
-        .menu.toggle {
-            transform: translateX(0) !important;
-        }
-
-        .menuopciones {
-            max-width: 300px !important;
-        }
-
-        .opción {
-            min-width: 80px !important;
-            margin: 5px !important;
-        }
-
-        /* Asegurar que el contenido principal no se superponga con el menú */
-        .divprincipal {
-            margin-left: 0 !important;
-            padding-left: 20px !important;
-        }
-
-        /* Responsive para el menú */
-        @media (max-width: 768px) {
+            /* Responsive para el menú */
             .menu {
-                left: 10px !important;
-                top: 70px !important;
+                left: 10px; /* Sin !important */
+                top: 70px; /* Sin !important */
             }
-            
+
             .menuopciones {
-                max-width: 250px !important;
+                max-width: 250px; /* Sin !important */
             }
-            
+
             .opción {
-                min-width: 70px !important;
+                min-width: 70px; /* Sin !important */
             }
-        }
 
-        /* Mejoras finales para la organización de la página */
-        .titulo-horario {
-            font-size: 22px !important;
-            font-weight: 600 !important;
-            color: #174388 !important;
-            margin-bottom: 15px !important;
-            text-align: center !important;
-            border-bottom: 2px solid #ffd700 !important;
-            padding-bottom: 10px !important;
-        }
-
-        .contenedor-horario {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-            border: 2px solid #174388 !important;
-            border-radius: 15px !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-            padding: 25px !important;
-            margin-bottom: 30px !important;
-        }
-
-        .tabla-horario {
-            border-radius: 10px !important;
-            overflow: hidden !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .tabla-horario th {
-            background: linear-gradient(135deg, #174388 0%, #1e5aa8 100%) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            padding: 12px 8px !important;
-        }
-
-        .tabla-horario td {
-            padding: 10px 8px !important;
-            border-bottom: 1px solid #dee2e6 !important;
-        }
-
-        .nohayclases {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            padding: 20px !important;
-            border-radius: 10px !important;
-            text-align: center !important;
-            font-size: 18px !important;
-        }
-
-        /* Mejoras para las tarjetas de materias */
-        .tarjeta-materia-link {
-            text-decoration: none !important;
-            color: inherit !important;
-            display: block !important;
-        }
-
-        .tarjeta-materia {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
-            border: 2px solid #174388 !important;
-            border-radius: 15px !important;
-            padding: 20px 15px !important;
-            box-shadow: 0 4px 15px rgba(23, 67, 136, 0.1) !important;
-            transition: all 0.4s ease !important;
-            position: relative !important;
-            overflow: hidden !important;
-            text-align: center !important;
-            cursor: pointer !important;
-        }
-
-        .tarjeta-materia::before {
-            content: '' !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            height: 4px !important;
-            background: linear-gradient(90deg, #174388 0%, #ffd700 50%, #174388 100%) !important;
-        }
-
-        .tarjeta-materia:hover {
-            transform: translateY(-8px) scale(1.05) !important;
-            box-shadow: 0 15px 35px rgba(23, 67, 136, 0.25) !important;
-            border-color: #ffd700 !important;
-        }
-
-        .icono-materia {
-            font-size: 36px !important;
-            margin-bottom: 12px !important;
-            display: block !important;
-            transition: transform 0.3s ease !important;
-        }
-
-        .tarjeta-materia:hover .icono-materia {
-            transform: scale(1.1) rotate(5deg) !important;
-        }
-
-        .nombre-materia {
-            color: #174388 !important;
-            font-weight: 700 !important;
-            font-size: 16px !important;
-            margin-bottom: 15px !important;
-            text-align: center !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.5px !important;
-            border-bottom: 2px solid #ffd700 !important;
-            padding-bottom: 8px !important;
-        }
-
-        .info-materia {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 8px !important;
-            align-items: center !important;
-        }
-
-        .info-item {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 6px !important;
-            padding: 6px 12px !important;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-            border-radius: 20px !important;
-            border: 1px solid #dee2e6 !important;
-            transition: all 0.3s ease !important;
-            width: 100% !important;
-            max-width: 160px !important;
-        }
-
-        .icono {
-            font-size: 16px !important;
-            min-width: 24px !important;
-            text-align: center !important;
-        }
-
-        .texto {
-            color: #333 !important;
-            font-weight: 500 !important;
-            font-size: 12px !important;
-        }
-
-        .profesor-img {
-            border: 3px solid #174388 !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-        }
-
-        /* Mejoras para el hover box */
-        .hover-box {
-            background: white !important;
-            border: 2px solid #174388 !important;
-            border-radius: 10px !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .info-lista li {
-            color: #174388 !important;
-            font-weight: 500 !important;
-            border-bottom: 1px solid #e9ecef !important;
-            padding: 5px 0 !important;
-        }
-
-        .info-lista li:last-child {
-            border-bottom: none !important;
-        }
-
-        /* Mejoras para el header */
-        .cabecera {
-            background: linear-gradient(135deg, #174388 0%, #1e5aa8 100%) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-        }
-
-        /* Espaciado general mejorado */
-        .divprincipal {
-            padding: 30px 20px !important;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-            min-height: calc(100vh - 140px) !important;
-        }
-
-        /* Mejoras para el layout de dos columnas */
-        .layout-dos-columnas {
-            gap: 40px !important;
-            margin-top: 20px !important;
-        }
-
-        /* Responsive final */
-        @media (max-width: 1200px) {
             .layout-dos-columnas {
-                gap: 30px !important;
+                gap: 20px; /* Sin !important */
             }
-            
-            .contenedor-horario {
-                padding: 20px !important;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .divprincipal {
-                padding: 20px 15px !important;
-            }
-            
-            .contenedor-horario {
-                padding: 15px !important;
-                margin-bottom: 20px !important;
-            }
-            
-            .titulo-horario {
-                font-size: 20px !important;
-            }
-            
-            .layout-dos-columnas {
-                gap: 20px !important;
-            }
-        }
-
-        /* Estilos para modo oscuro */
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
-            color: #ffffff !important;
-        }
-
-        body.dark-mode .divprincipal {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
-        }
-
-        body.dark-mode .contenedor-horario {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
-            border-color: #4a5568 !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-        }
-
-        body.dark-mode .titulo-horario {
-            color: #ffffff !important;
-            border-bottom-color: #ffd700 !important;
-        }
-
-        body.dark-mode .tabla-horario th {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
-            color: #ffffff !important;
-        }
-
-        body.dark-mode .tabla-horario td {
-            background-color: #2d3748 !important;
-            color: #ffffff !important;
-            border-bottom-color: #4a5568 !important;
-        }
-
-        body.dark-mode .nohayclases {
-            background: linear-gradient(135deg, #38a169 0%, #48bb78 100%) !important;
-            color: #ffffff !important;
-        }
-
-        body.dark-mode .tarjeta-materia {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
-            border-color: #4a5568 !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-        }
-
-        body.dark-mode .tarjeta-materia:hover {
-            border-color: #ffd700 !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
-        }
-
-        body.dark-mode .nombre-materia {
-            color: #ffffff !important;
-            border-bottom-color: #ffd700 !important;
-        }
-
-        body.dark-mode .info-item {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%) !important;
-            border-color: #718096 !important;
-        }
-
-        body.dark-mode .texto {
-            color: #ffffff !important;
-        }
-
-        body.dark-mode .soporte-flotante {
-            background-color: #4a5568 !important;
-        }
-
-        body.dark-mode .soporte-flotante:hover {
-            background-color: #2d3748 !important;
         }
     </style>
 </head>
