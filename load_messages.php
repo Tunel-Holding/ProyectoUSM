@@ -545,10 +545,19 @@ $conn->close();
     .message-bubble-alumno .file img,
     .message-bubble-profesor .file img,
     .message-bubble-administrador .file img {
-        width: 28px;
-        height: 28px;
+        width: 40px;
+        height: 40px;
         margin-right: 10px;
         flex-shrink: 0;
+    }
+
+    .message-bubble-alumno:has(.file),
+    .message-bubble-profesor:has(.file),
+    .message-bubble-administrador:has(.file) {
+        max-width: 260px !important;
+        min-width: 0 !important;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     @media (max-width: 768px) {
