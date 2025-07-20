@@ -1166,8 +1166,13 @@ class ProfesoresScripts {
                             try {
                                 data = await response.json();
                             } catch (e) {
-                                // Si no es JSON válido, mostrar el texto completo (HTML de error PHP)
-                                const text = await response.text();
+                                // Si no es JSON válido, usar response.clone() para leer el texto
+                                let text = "";
+                                try {
+                                    text = await response.clone().text();
+                                } catch (err) {
+                                    text = "No se pudo leer el cuerpo de la respuesta.";
+                                }
                                 let errorMsg = "✗ Error de conexión\n" + text;
                                 saveIndicator.textContent = errorMsg;
                                 saveIndicator.style.color = "#dc3545";
