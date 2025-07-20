@@ -137,6 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         } catch (Exception $e) {
             $errorEnvio = "Error al enviar el mensaje: " . $mail->ErrorInfo;
+            echo "<script>alert('Error al enviar el mensaje: " . htmlspecialchars($errorEnvio, ENT_QUOTES, 'UTF-8') . "');</script>";
         }
     }
     }
