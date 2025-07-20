@@ -1,11 +1,12 @@
 <?php
+require_once 'comprobar_sesion.php';
     actualizar_actividad();
 
 // Verificar si el usuario viene de modificar contraseña desde su perfil
 $usuario_autenticado = isset($_SESSION['idusuario']) && !empty($_SESSION['idusuario']);
 // Si viene del perfil y está autenticado, cerrar sesión por seguridad
 if ($usuario_autenticado) {
-    require_once 'comprobar_sesion.php';
+    
     cerrar_sesion();
     $mensaje = '🔒 Sesión cerrada por seguridad. Por favor, inicia sesión con tu nueva contraseña.';
     $tipo = 'success';
