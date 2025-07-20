@@ -526,7 +526,7 @@ $conn->close();
     }
 
     .message-container-flex.current-user .menu-puntos {
-        left: 500px;
+        left: 200px;
         right: auto;
     }
 
