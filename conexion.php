@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "proyectousm";
+$username = "conexftd_conexionProfesores";
+$password = "Lcar0n@2023";
+$dbname = "conexftd_proyectousm";
 
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
