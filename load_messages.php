@@ -493,7 +493,7 @@ $conn->close();
     }
 
     .message-container-flex.other-user .menu-puntos {
-        top: calc(100% - 30px) !important;
+        top: calc(100% - 40px) !important;
         left: 0;
         right: auto;
     }
@@ -678,8 +678,46 @@ $conn->close();
         document.querySelector('.reply-button[data-message-id="' + id + '"]').click();
     }
     function editarMensaje(id) {
-        // Aquí puedes implementar la lógica de edición
-        alert('Funcionalidad de edición próximamente...');
+        const msgText = document.getElementById('message-text-' + id);
+        if (!msgText) return;
+        // Evita múltiples ediciones simultáneas
+        if (document.getElementById('edit-input-' + id)) return;
+        const original = msgText.textContent;
+        // Reemplaza el texto por un input y botones
+        msgText.innerHTML = `
+            <input id="edit-input-${id}" type="text" value="${original.replace(/"/g, '&quot;')}" style="width: 80%; padding: 4px; border-radius: 6px; border: 1px solid #aaa; font-size: 1em;">
+            <button onclick="guardarEdicion(${id})" style="margin-left:4px;">Guardar</button>
+            <button onclick="cancelarEdicion(${id}, '${original.replace(/'/g, "&#39;").replace(/"/g, '&quot;')}')" style="margin-left:2px;">Cancelar</button>
+        `;
+        document.getElementById('edit-input-' + id).focus();
+    }
+    function cancelarEdicion(id, original) {
+        const msgText = document.getElementById('message-text-' + id);
+        if (msgText) msgText.textContent = original;
+    }
+    function guardarEdicion(id) {
+        const input = document.getElementById('edit-input-' + id);
+        if (!input) return;
+        const nuevoTexto = input.value.trim();
+        if (nuevoTexto.length === 0) {
+            alert('El mensaje no puede estar vacío');
+            return;
+        }
+        // AJAX para actualizar el mensaje
+        fetch('editar_mensaje.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${id}&nuevo_texto=${encodeURIComponent(nuevoTexto)}`
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    loadMessages();
+                } else {
+                    alert(data.error || 'Error al editar el mensaje');
+                }
+            })
+            .catch(() => alert('Error de conexión al editar mensaje'));
     }
     function eliminarMensaje(id) {
         // Simula click en el botón original (que está oculto)
