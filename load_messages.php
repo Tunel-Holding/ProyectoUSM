@@ -482,6 +482,7 @@ $conn->close();
         left: 0;
         right: auto;
         margin: 0;
+        flex-direction: column;
     }
 
     .menu-puntos.show {
