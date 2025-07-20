@@ -1,7 +1,6 @@
-
 <?php
-// Iniciar buffer para evitar salidas previas
-if (session_status() === PHP_SESSION_NONE) { ob_start(); }
+// Iniciar buffer para capturar cualquier salida previa
+ob_start();
 require_once('conexion.php');
 require_once('vendor/autoload.php');
 use Mpdf\Mpdf;
