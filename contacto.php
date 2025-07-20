@@ -66,16 +66,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
+            $mail->Host       = 'mail.conexiondocente.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'stonksappsoporte@gmail.com';
-            $mail->Password   = 'xmgbudtscybkhaxo';
+            $mail->Username   = 'soportetecnico@conexiondocente.com';
+            $mail->Password   = 'ZEZ^Q!@~Xgbv';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
-
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ];
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = 'html';  
 
             $mail->setFrom($email, $nombre);
-            $mail->addAddress('stonksappsoporte@gmail.com');
+            $mail->addAddress('soportetecnico@conexiondocente.com');
             $mail->isHTML(true);
             $mail->Subject = "Mensaje de: $nombre - $asunto";
 
@@ -137,6 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         } catch (Exception $e) {
             $errorEnvio = "Error al enviar el mensaje: " . $mail->ErrorInfo;
+            echo "<script>alert('Error al enviar el mensaje: " . htmlspecialchars($errorEnvio, ENT_QUOTES, 'UTF-8') . "');</script>";
         }
     }
     }
