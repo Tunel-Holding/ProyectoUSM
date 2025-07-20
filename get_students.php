@@ -8,12 +8,12 @@ include 'conexion.php';
 $debug = [];
 
 // Validar sesión
-if (!isset($_SESSION['idusuario']) || !isset($_SESSION['idmateria'])) {
-    $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
-    ob_end_clean();
-    echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
-    exit;
-}
+// if (!isset($_SESSION['idusuario']) || !isset($_SESSION['idmateria'])) {
+//     $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
+//     ob_end_clean();
+//     echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
+//     exit;
+// }
 
 $id_materia = $_SESSION['idmateria'];
 $debug['id_materia'] = $id_materia;
