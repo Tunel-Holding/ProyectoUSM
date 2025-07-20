@@ -1,5 +1,56 @@
 <?php
-require_once 'authGuard.php';
+// Mostrar errores en pantalla para depuración
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+// CORS y JSON para todas las respuestas
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+// Responder preflight
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
+// Registrar errores fatales y warnings en un archivo log y enviar respuesta JSON
+
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    $msg = "[PHP ERROR] $errstr en $errfile:$errline";
+    error_log($msg, 3, __DIR__ . '/error_backend.log');
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error fatal en el backend',
+        'details' => $msg
+    ]);
+    exit;
+});
+
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && ($error['type'] === E_ERROR || $error['type'] === E_PARSE || $error['type'] === E_CORE_ERROR || $error['type'] === E_COMPILE_ERROR)) {
+        $msg = "[PHP SHUTDOWN] {$error['message']} en {$error['file']}:{$error['line']}";
+        error_log($msg, 3, __DIR__ . '/error_backend.log');
+        if (!headers_sent()) {
+            http_response_code(500);
+            echo '<p style="color:red;font-weight:bold">' . htmlspecialchars($msg) . '</p>';
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error fatal en el backend',
+                'details' => $msg
+            ]);
+        }
+    }
+});
+$newHeaders = [
+    'Content-Type: application/json',
+    'Access-Control-Allow-Origin: *',
+    'Access-Control-Allow-Methods: POST',
+    'Access-Control-Allow-Headers: Content-Type'
+];
+foreach ($newHeaders as $hdr) {
+    header($hdr);
+}
 $auth = AuthGuard::getInstance();
 // Permitir acceso tanto a administradores como a profesores
 if (!$auth->checkAccess(AuthGuard::NIVEL_PROFESOR, false) && !$auth->checkAccess(AuthGuard::NIVEL_ADMIN, false)) {
@@ -36,7 +87,7 @@ $profesor_id = intval($input['profesor_id']);
 $materias_ids = $input['materias_ids']; // Array de IDs de materias
 
 // Validar que el profesor existe
-$stmt = $conn->prepare("SELECT id FROM Profesores WHERE id = ?");
+$stmt = $conn->prepare("SELECT id FROM profesores WHERE id = ?");
 if (!$stmt) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Error al validar profesor']);
@@ -109,7 +160,6 @@ try {
         if (!$stmt) {
             throw new Exception("Error al preparar la consulta de asignación: " . $conn->error);
         }
-        
         $params = array_merge([$profesor_id], $materias_ids);
         $types = 'i' . str_repeat('i', count($materias_ids));
         $stmt->bind_param($types, ...$params);
@@ -117,16 +167,14 @@ try {
             throw new Exception("Error al ejecutar la asignación: " . $stmt->error);
         }
     }
-    
     // Confirmar transacción
     $conn->commit();
-    
     // Obtener las materias actualizadas para devolver
-    $stmt = $conn->prepare("
-        SELECT GROUP_CONCAT(CONCAT(nombre, ' (', seccion, ')') SEPARATOR ', ') AS materias
-        FROM materias 
-        WHERE id_profesor = ?
-    ");
+    $stmt = $conn->prepare(
+        "SELECT GROUP_CONCAT(CONCAT(nombre, ' (', seccion, ')') SEPARATOR ', ') AS materias
+        FROM materias
+        WHERE id_profesor = ?"
+    );
     if (!$stmt) {
         throw new Exception("Error al preparar la consulta de obtención de materias: " . $conn->error);
     }

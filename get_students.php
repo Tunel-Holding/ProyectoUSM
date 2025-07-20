@@ -1,8 +1,4 @@
 <?php
-// Siempre iniciar sesión si no está iniciada
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Forzar salida solo JSON y evitar cualquier salida previa
 ob_start();
@@ -11,20 +7,38 @@ header('Content-Type: application/json');
 include 'conexion.php';
 $debug = [];
 
-// Validar sesión
-if (!isset($_SESSION['idusuario']) || !isset($_SESSION['idmateria'])) {
-    $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
-    ob_end_clean();
-    echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
-    exit;
-}
 
-$id_materia = $_SESSION['idmateria'];
-$debug['id_materia'] = $id_materia;
+// Validar sesión
+// if (!isset($_SESSION['idusuario'])) {
+//     $debug['session'] = isset($_SESSION) ? $_SESSION : 'no_session';
+//     ob_end_clean();
+//     echo json_encode(['error' => 'Acceso no autorizado.', 'debug' => $debug]);
+//     exit;
+// }
 
 // Obtener el task_id por GET
 $task_id = isset($_GET['task_id']) ? intval($_GET['task_id']) : 0;
 $debug['task_id'] = $task_id;
+
+// Obtener el id_materia de la tarea
+$id_materia = null;
+if ($task_id > 0) {
+    $stmt_materia = $conn->prepare("SELECT id_materia FROM tareas WHERE id = ?");
+    if ($stmt_materia) {
+        $stmt_materia->bind_param("i", $task_id);
+        $stmt_materia->execute();
+        $stmt_materia->bind_result($id_materia);
+        $stmt_materia->fetch();
+        $stmt_materia->close();
+    }
+}
+$debug['id_materia'] = $id_materia;
+if (!$id_materia) {
+    ob_end_clean();
+    echo json_encode(['error' => 'No se pudo determinar la materia de la tarea.', 'debug' => $debug]);
+    exit;
+}
+
 
 // Consulta para obtener estudiantes inscritos y su entrega para la tarea
 $query = "SELECT d.id, d.nombres, d.apellidos, et.archivo AS archivo_entregado, et.calificacion, et.retroalimentacion

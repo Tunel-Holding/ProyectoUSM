@@ -1,5 +1,8 @@
 <?php
 include 'comprobar_sesion.php';
+require_once 'authGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 include 'conexion.php';
 
 // Obtener todas las materias y sus secciones (asumiendo columna 'seccion' en la tabla materias)

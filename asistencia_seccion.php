@@ -1,5 +1,8 @@
 <?php
 include 'comprobar_sesion.php';
+require_once 'authGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 include 'conexion.php';
 
 // Obtener parámetros GET
@@ -61,8 +64,10 @@ $conn->close();
             <tbody>
                 <?php foreach ($estudiantes as $idx => $estudiante): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($estudiante['nombres']); ?></td>
-                        <td><?php echo htmlspecialchars($estudiante['apellidos']); ?></td>
+                        <?php $nombre_simple = explode(' ', $estudiante['nombres'])[0]; ?>
+                        <?php $apellido_simple = explode(' ', $estudiante['apellidos'])[0]; ?>
+                        <td><?php echo htmlspecialchars($nombre_simple); ?></td>
+                        <td><?php echo htmlspecialchars($apellido_simple); ?></td>
                         <td>
                             <button type="button" class="btn-asistencia" id="asistencia-btn-<?php echo $idx; ?>" onclick="toggleAsistencia(this)" disabled>Asistir</button>
                         </td>

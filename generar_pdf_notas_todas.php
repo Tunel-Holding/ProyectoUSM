@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 include 'conexion.php';
+// Iniciar sesión y obtener materia desde sesión
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (!isset($_SESSION['idmateria']) || intval($_SESSION['idmateria']) <= 0) {
+    die('ID de materia no válido.');
+}
+$materia_id = intval($_SESSION['idmateria']);
 
 // Configuración de mPDF
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);
@@ -23,12 +29,12 @@ $html = '<style>
 $html .= '<h2>Listado de Notas de Todas las Tareas</h2>';
 $html .= '<table>';
 
-// Consulta para obtener todas las tareas y sus notas
 $query = "SELECT t.id AS id_tarea, t.titulo_tarea, du.usuario_id, du.nombres, du.apellidos, et.calificacion
           FROM tareas t
           JOIN entregas_tareas et ON et.id_tarea = t.id
           JOIN estudiantes e ON et.id_alumno = e.id
           JOIN datos_usuario du ON e.id_usuario = du.usuario_id
+          WHERE t.id_materia = " . $materia_id . "
           ORDER BY du.nombres, du.apellidos, t.titulo_tarea";
 $result = $conn->query($query);
 
@@ -64,7 +70,7 @@ if ($result && $result->num_rows > 0) {
         $html .= '</tr>';
     }
 } else {
-    $html .= '<tr><td colspan="100" style="text-align:center;padding:12px;">No hay notas registradas.</td></tr>';
+    $html .= '<tr><td colspan="100" style="text-align:center;padding:12px;">No hay tareas registradas.</td></tr>';
 }
 $html .= '</tbody></table>';
 

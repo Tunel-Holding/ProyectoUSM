@@ -1161,15 +1161,42 @@ class ProfesoresScripts {
                                 materias_ids: selectedOptions.filter(id => id !== "")
                             })
                         })
-                        .then(response => response.json())
-                        .then(data => {
+                        .then(async response => {
+                            let data;
+                            try {
+                                data = await response.json();
+                            } catch (e) {
+                                // Si no es JSON válido, usar response.clone() para leer el texto
+                                let text = "";
+                                try {
+                                    text = await response.clone().text();
+                                } catch (err) {
+                                    text = "No se pudo leer el cuerpo de la respuesta.";
+                                }
+                                console.log("[BACKEND ERROR]", text); // Mostrar el error completo en consola
+                                let errorMsg = "✗ Error de conexión\n" + text;
+                                saveIndicator.textContent = errorMsg;
+                                saveIndicator.style.color = "#dc3545";
+                                saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
+                                setTimeout(() => {
+                                    saveIndicator.classList.remove("show");
+                                    saveIndicator.textContent = "✓ Guardado";
+                                    saveIndicator.style.color = "#28a745";
+                                    saveIndicator.style.background = "rgba(40, 167, 69, 0.1)";
+                                }, 3000);
+                                return;
+                            }
                             if (data.success) {
                                 timeoutId = setTimeout(() => {
                                     saveIndicator.classList.remove("show");
                                 }, 2000);
                             } else {
-                                // Mostrar el mensaje exacto del backend si existe
-                                saveIndicator.textContent = "✗ " + (data.message ? data.message : "Error al guardar");
+                                // Mostrar el mensaje exacto del backend y detalles si existen
+                                let errorMsg = "✗ " + (data.message ? data.message : "Error al guardar");
+                                if (data.details) {
+                                    errorMsg += "\n" + data.details;
+                                }
+                                saveIndicator.textContent = errorMsg;
                                 saveIndicator.style.color = "#dc3545";
                                 saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
                                 setTimeout(() => {
@@ -1181,7 +1208,11 @@ class ProfesoresScripts {
                             }
                         })
                         .catch(error => {
-                            saveIndicator.textContent = "✗ Error de conexión";
+                            let errorMsg = "✗ Error de conexión";
+                            if (error && error.message) {
+                                errorMsg += "\n" + error.message;
+                            }
+                            saveIndicator.textContent = errorMsg;
                             saveIndicator.style.color = "#dc3545";
                             saveIndicator.style.background = "rgba(220, 53, 69, 0.1)";
                             setTimeout(() => {

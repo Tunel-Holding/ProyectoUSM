@@ -1,5 +1,8 @@
 <?php
 include 'conexion.php';
+require_once 'authGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
 $materia_id = isset($_GET['materia_id']) ? intval($_GET['materia_id']) : 0;
 $seccion = isset($_GET['seccion']) ? $_GET['seccion'] : '';
@@ -21,7 +24,10 @@ $result = $stmt->get_result();
 
 $lista = [];
 while ($row = $result->fetch_assoc()) {
-    $lista[] = $row['nombres'] . ' ' . $row['apellidos'];
+    // Sólo primer nombre y primer apellido
+    $nombre = explode(' ', $row['nombres'])[0];
+    $apellido = explode(' ', $row['apellidos'])[0];
+    $lista[] = $nombre . ' ' . $apellido;
 }
 $stmt->close();
 $conn->close();

@@ -16,10 +16,6 @@ include 'comprobar_sesion.php';
 actualizar_actividad();
 require "conexion.php";
 
-// Iniciar sesión si no está iniciada
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Generar token CSRF si no existe
 if (!isset($_SESSION['csrf_token'])) {

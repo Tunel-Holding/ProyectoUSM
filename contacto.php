@@ -4,7 +4,10 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 require 'conexion.php';
 
-session_start();
+include 'comprobar_sesion.php';
+require_once 'authGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 
 // Validar sesión
 if (!isset($_SESSION['idusuario'])) {
