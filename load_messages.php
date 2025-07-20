@@ -361,13 +361,13 @@ $conn->close();
     .file-bubble .file {
         display: flex;
         align-items: center;
-        background: rgba(255, 255, 255, 0.7);
+        background: #174388;
         border-radius: 8px;
         padding: 6px 10px;
         margin: 4px 0;
         font-size: 1em;
         text-decoration: none;
-        color: #174388;
+        color: #fff;
         transition: background 0.2s;
         box-sizing: border-box;
         max-width: 220px;
@@ -394,7 +394,7 @@ $conn->close();
     }
 
     .file-bubble .file:hover {
-        background: #e3f2fd;
+        background: #2559b3;
         text-decoration: underline;
     }
 
