@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->Host       = 'mail.conexiondocente.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'soportetecnico@conexiondocente.com';
-            $mail->Password   = 'soportecnico**';
+            $mail->Password   = 'ZEZ^Q!@~Xgbv';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
             $mail->SMTPOptions = [
