@@ -525,10 +525,20 @@ $conn->close();
         background: #333;
     }
 
+    /* Para el usuario actual: menú a la izquierda del botón */
     .message-container-flex.current-user .menu-puntos {
-        left:50%;
-        right: auto;
+        left: auto;
+        right: 100%;
+        margin-right: 8px;
+        margin-left: 0;
+    }
 
+    /* Para otros usuarios: menú a la derecha del botón */
+    .message-container-flex.other-user .menu-puntos {
+        left: 100%;
+        right: auto;
+        margin-left: 8px;
+        margin-right: 0;
     }
 
     .reply-button,
