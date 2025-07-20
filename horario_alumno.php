@@ -204,16 +204,19 @@ $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
         if (empty($datos_horario) || empty($horas_disponibles)) {
             echo "<tr><td colspan='7' style='text-align: center; padding: 20px; color: #666;'>No hay clases programadas para este estudiante</td></tr>";
         } else {
+            // Inicializar control de saltos para cada día
+            $saltos = array_fill_keys($dias, 0);
             foreach ($horas_disponibles as $hora) {
                 $hora_para_mostrar = date("H:i", strtotime($hora));
                 echo "<tr>";
                 echo "<td><strong>$hora_para_mostrar</strong></td>";
-                // Solo 6 columnas para los días
                 for ($i = 0; $i < 6; $i++) {
                     $dia = $dias[$i];
+                    if ($saltos[$dia] > 0) {
+                        $saltos[$dia]--;
+                        continue;
+                    }
                     $contenido_celda = "";
-                    $rowspan = 1;
-                    $celda_ocupada = false;
                     if (isset($datos_horario[$dia][$hora])) {
                         $info = $datos_horario[$dia][$hora];
                         if ($info["inicio"]) {
@@ -222,10 +225,9 @@ $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
                                              htmlspecialchars($info["profesor"]);
                             $rowspan = $info["rowspan"];
                             echo "<td class='horario-celda' rowspan='$rowspan'>$contenido_celda</td>";
-                            $celda_ocupada = true;
+                            $saltos[$dia] = $rowspan - 1;
                         }
-                    }
-                    else if (!$celda_ocupada) {
+                    } else {
                         echo "<td class='celda-vacia'></td>";
                     }
                 }
