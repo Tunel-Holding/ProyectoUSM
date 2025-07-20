@@ -666,8 +666,8 @@ $conn->close();
     <div class="pagina">
         <div class="wecontainer">
             <h1>Modificar Datos</h1>
-            <div class="perfil-container">
-                <form method="POST" action="" enctype="multipart/form-data">
+            <form method="POST" action="" enctype="multipart/form-data">
+                <div class="perfil-container" style="justify-content: center; align-items: center;">
                     <div class="perfil-foto-wrapper" id="fotoWrapper">
                         <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
                         <input type="file" id="foto" name="foto" accept="image/*" style="display: none;">
@@ -678,51 +678,7 @@ $conn->close();
                             </svg>
                         </label>
                     </div>
-                    <?php if ($error_message): ?>
-                        <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
-                    <?php endif; ?>
-                    <?php if (isset($_GET['success'])): ?>
-                        <p class="success-message">Datos actualizados correctamente.</p>
-                    <?php endif; ?>
-                    <div class="form">
-                        <label for="cedula">Número de Cédula:</label>
-                        <div class="readonly-field">
-                            <?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?>
-                        </div>
-                        <label for="nombres">Nombres:</label>
-                        <div class="readonly-field">
-                            <?php echo htmlspecialchars($estudiante['nombres'] ?? ''); ?>
-                        </div>
-                        <label for="apellidos">Apellidos:</label>
-                        <div class="readonly-field">
-                            <?php echo htmlspecialchars($estudiante['apellidos'] ?? ''); ?>
-                        </div>
-                        <label for="correo">Correo:</label>
-                        <div class="readonly-field">
-                            <?php echo htmlspecialchars($estudiante['correo'] ?? ''); ?>
-                        </div>
-                        <label for="sexo">Sexo:</label>
-                        <select id="sexo" name="sexo"
-                            class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-                            <option value="" <?php if (($estudiante['sexo'] ?? '') == '') echo 'selected'; ?>>Seleccione</option>
-                            <option value="Masculino" <?php if (($estudiante['sexo'] ?? '') == 'Masculino') echo 'selected'; ?>>Masculino</option>
-                            <option value="Femenino" <?php if (($estudiante['sexo'] ?? '') == 'Femenino') echo 'selected'; ?>>Femenino</option>
-                        </select>
-                        <label for="telefono">Teléfono:</label>
-                        <input type="text" id="telefono" name="telefono"
-                            value="<?php echo htmlspecialchars($estudiante['telefono'] ?? ''); ?>"
-                            class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-                        <label for="direccion">Dirección:</label>
-                        <input type="text" id="direccion" name="direccion"
-                            value="<?php echo htmlspecialchars($estudiante['direccion'] ?? ''); ?>"
-                            class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
-                        <a href="forgotPassword.php">Cambiar contraseña</a>
-                        <input type="submit" class="button" value="Guardar cambios">
-                    </div>
-                </form>
-            </div>
-
-            <form method="POST" action="" enctype="multipart/form-data">
+                </div>
                 <?php if ($error_message): ?>
                     <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
                 <?php endif; ?>
