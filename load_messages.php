@@ -508,6 +508,58 @@ $conn->close();
         display: none !important;
     }
 
+    /* Limita el ancho de los archivos en la burbuja y recorta el nombre si es muy largo */
+    .message-bubble-alumno .file,
+    .message-bubble-profesor .file,
+    .message-bubble-administrador .file {
+        display: flex;
+        align-items: center;
+        max-width: 260px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+        padding: 6px 10px;
+        margin: 4px 0;
+        font-size: 1em;
+        text-decoration: none;
+        color: #174388;
+        transition: background 0.2s;
+    }
+
+    .message-bubble-alumno .file:hover,
+    .message-bubble-profesor .file:hover,
+    .message-bubble-administrador .file:hover {
+        background: #e3f2fd;
+        text-decoration: underline;
+    }
+
+    .message-bubble-alumno .file img,
+    .message-bubble-profesor .file img,
+    .message-bubble-administrador .file img {
+        width: 28px;
+        height: 28px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .message-bubble-alumno .file,
+    .message-bubble-profesor .file,
+    .message-bubble-administrador .file {
+        word-break: break-all;
+        min-width: 0;
+    }
+
+    .message-bubble-alumno .file,
+    .message-bubble-profesor .file,
+    .message-bubble-administrador .file {
+        /* El texto del nombre del archivo se recorta si es muy largo */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     @media (max-width: 768px) {
 
         .profile-icon-alumno,
@@ -540,6 +592,8 @@ $conn->close();
             max-width: 80px;
             max-height: 50px;
         }
+
+
     }
 </style>
 
