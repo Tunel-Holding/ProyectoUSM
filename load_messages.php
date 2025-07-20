@@ -473,7 +473,7 @@ $conn->close();
     .menu-puntos {
         display: none;
         position: absolute;
-        top: 10%;
+        top: 100%;
         left: 0;
         background: #fff;
         border: 1px solid #ddd;
@@ -526,7 +526,7 @@ $conn->close();
     }
 
     .message-container-flex.current-user .menu-puntos {
-        left: auto;
+        left: 500px;
         right: 0;
     }
 
