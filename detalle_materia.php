@@ -439,26 +439,7 @@ $conn->close();
         </div>
 
         <div class="info-grid">
-            <!-- Información General -->
-            <div class="info-card">
-                <h3>📋 Información General</h3>
-                <div class="info-item">
-                    <span class="icono">🏢</span>
-                    <span class="label">Salón:</span>
-                    <span class="value"><?php echo htmlspecialchars($materia['salon']); ?></span>
-                </div>
-                <div class="info-item">
-                    <span class="icono">📚</span>
-                    <span class="label">Créditos:</span>
-                    <span class="value"><?php echo htmlspecialchars($materia['creditos']); ?></span>
-                </div>
-                <div class="info-item">
-                    <span class="icono">🎓</span>
-                    <span class="label">Semestre:</span>
-                    <span class="value"><?php echo htmlspecialchars($materia['semestre']); ?></span>
-                </div>
-            </div>
-
+            
             <!-- Información del Profesor -->
             <div class="info-card">
                 <h3>👨‍🏫 Profesor</h3>
