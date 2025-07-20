@@ -1,4 +1,8 @@
 <?php
+// Mostrar errores en pantalla para depuración
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 // Registrar errores fatales y warnings en un archivo log y enviar respuesta JSON
 
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
