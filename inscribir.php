@@ -75,7 +75,7 @@ actualizar_actividad();
                     }
                     
                     // Insertar la información en la tabla notas
-                    $semestre = $_SESSION['semestre_usu']; // Asumiendo que el semestre está almacenado en la sesión
+                    $semestre = $_SESSION['semestre_usm']; // Asumiendo que el semestre está almacenado en la sesión
                     $stmt_notas = $conn->prepare("INSERT INTO notas (usuario_id, Parcial1, Parcial2, Parcial3, Parcial4, Final, materia_id, semestre) VALUES (?, NULL, NULL, NULL, NULL, NULL, ?, ?)");
                     $stmt_notas->bind_param("iii", $id_estudiante, $id_materia, $semestre);
                     $stmt_notas->execute();
