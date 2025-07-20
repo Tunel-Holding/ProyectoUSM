@@ -550,7 +550,7 @@ $conn->close();
     .message-container-flex.current-user .message-bubble-alumno p,
     .message-container-flex.current-user .message-bubble-profesor p,
     .message-container-flex.current-user .message-bubble-administrador p {
-        text-align: right;
+        text-align: right !important;
     }
 
     @media (max-width: 768px) {
