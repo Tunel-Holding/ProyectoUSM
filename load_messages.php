@@ -551,6 +551,8 @@ $conn->close();
     .message-container-flex.current-user .message-bubble-profesor p,
     .message-container-flex.current-user .message-bubble-administrador p {
         text-align: right !important;
+        margin-right: 0 !important;
+        
     }
 
     @media (max-width: 768px) {
