@@ -75,6 +75,7 @@ function obtenerMail($conn, $idusuario) {
 
 $errores = [];
 $datos = [];
+$idusuario = $_SESSION['idusuario'] ?? null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar token CSRF
