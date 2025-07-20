@@ -523,6 +523,29 @@ $conn->close();
         display: none !important;
     }
 
+    /* Mensajes del usuario actual alineados a la derecha */
+    .message-container-flex.current-user .message-bubble-alumno,
+    .message-container-flex.current-user .message-bubble-profesor,
+    .message-container-flex.current-user .message-bubble-administrador {
+        text-align: right;
+    }
+
+    /* Mensajes de otros usuarios alineados a la izquierda */
+    .message-container-flex.other-user .message-bubble-alumno,
+    .message-container-flex.other-user .message-bubble-profesor,
+    .message-container-flex.other-user .message-bubble-administrador {
+        text-align: left;
+    }
+
+    /* Previsualización de respuesta sigue la alineación del mensaje */
+    .message-container-flex.current-user .reply-preview-inside {
+        text-align: right;
+    }
+
+    .message-container-flex.other-user .reply-preview-inside {
+        text-align: left;
+    }
+
     @media (max-width: 768px) {
 
         .profile-icon-alumno,
