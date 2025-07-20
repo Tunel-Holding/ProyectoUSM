@@ -17,7 +17,7 @@
 
 body.dark-mode {
     --bg-color: #f0f4f8;
-    --card-bg-color: #7c7c7c;
+    --card-bg-color: #676767;
     --card-border-color: #e3e6eb;
     --text-color-primary: #ffffff;
     --text-color-secondary: #c7c7c9;
@@ -26,7 +26,7 @@ body.dark-mode {
     --light-blue: #93c5fd;
     --border-radius: 12px;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --darkbgtextinput: #bebebe;
+    --darkbgtextinput: #7b7b7b;
     --placeholder-color: #606060;
     --textcolorbuttonsecondary: #0c0c0c;
 }
