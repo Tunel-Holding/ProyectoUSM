@@ -50,7 +50,7 @@ actualizar_actividad();
 
         if (hasEnoughCredits($id_estudiante, $id_materia)) { 
             // Verificar si el estudiante ya está inscrito en la materia
-            $stmt = $conn->prepare("SELECT * FROM Inscripciones WHERE id_estudiante = ? AND id_materia = ?");
+            $stmt = $conn->prepare("SELECT * FROM inscripciones WHERE id_estudiante = ? AND id_materia = ?");
             $stmt->bind_param("ii", $id_estudiante, $id_materia);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -58,7 +58,7 @@ actualizar_actividad();
             if ($result->num_rows === 0) {
                 actualizar_actividad();
                 // Insertar la inscripción en la base de datos
-                $stmt = $conn->prepare("INSERT INTO Inscripciones (id_estudiante, id_materia, fecha_inscripcion) VALUES (?, ?, NOW())");
+                $stmt = $conn->prepare("INSERT INTO inscripciones (id_estudiante, id_materia, fecha_inscripcion) VALUES (?, ?, NOW())");
                 $stmt->bind_param("ii", $id_estudiante, $id_materia);
                 $stmt->execute();
                 actualizar_actividad();
@@ -75,7 +75,7 @@ actualizar_actividad();
                     }
                     
                     // Insertar la información en la tabla notas
-                    $semestre = $_SESSION['semestre_usu']; // Asumiendo que el semestre está almacenado en la sesión
+                    $semestre = $_SESSION['semestre_usm']; // Asumiendo que el semestre está almacenado en la sesión
                     $stmt_notas = $conn->prepare("INSERT INTO notas (usuario_id, Parcial1, Parcial2, Parcial3, Parcial4, Final, materia_id, semestre) VALUES (?, NULL, NULL, NULL, NULL, NULL, ?, ?)");
                     $stmt_notas->bind_param("iii", $id_estudiante, $id_materia, $semestre);
                     $stmt_notas->execute();
