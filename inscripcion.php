@@ -267,9 +267,7 @@ actualizar_actividad();
                     <tr>
                         <th>Nombre</th>
                         <th>Sección</th>
-                        <th>Créditos</th>
                         <th>Profesor</th>
-                        <th>Salón</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -293,9 +291,7 @@ actualizar_actividad();
 
                             echo "<td>" . $fila['nombre'] . "</td>";
                             echo "<td>" . $fila['seccion'] . "</td>";
-                            echo "<td>" . $fila['creditos'] . "</td>";
                             echo "<td>" . $fila['profesor'] . "</td>";
-                            echo "<td>" . $fila['salon'] . "</td>";
                             echo "<td><a href='detalle_materia.php?id=" . $fila['id'] . "' class='btn-detalle'><i class='fas fa-eye'></i>Ver detalle</a></td>";
                             echo "</tr>";
                         }
