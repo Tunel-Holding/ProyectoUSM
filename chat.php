@@ -646,7 +646,7 @@ if ($idgrupo) {
             if (sinMaterias) {
                 document.getElementById('message').disabled = true;
                 document.getElementById('send-button').disabled = true;
-                // document.getElementById('upload-button').disabled = true; // Comentado para depuración
+                document.getElementById('upload-button').disabled = true;
                 document.getElementById('call-button').disabled = true;
             }
         });
