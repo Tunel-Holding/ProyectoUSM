@@ -475,12 +475,17 @@ $conn->close();
     }
 
     .menu-puntos {
+        display: none;
         z-index: 9999;
         position: absolute;
         top: 100%;
         left: 0;
         right: auto;
         margin: 0;
+    }
+
+    .menu-puntos.show {
+        display: flex;
     }
 
     .message-container-flex.current-user .menu-puntos {
