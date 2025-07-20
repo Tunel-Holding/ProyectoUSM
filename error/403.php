@@ -133,7 +133,7 @@
 <body>
     <div class="error-container">
         <div class="logo">
-            <img src="../css/logo.png" alt="Logo USM" onerror="this.style.display='none'">
+            <img src="../css/logounihubblanco.png" alt="Logo UniHub" onerror="this.style.display='none'">
         </div>
         
         <h1 class="error-code">403</h1>
@@ -148,7 +148,6 @@
             <ul style="text-align: left; margin: 10px 0;">
                 <li>No tienes el nivel de acceso requerido</li>
                 <li>Tu sesión ha expirado</li>
-                <li>Estás intentando acceder a una página de otro rol</li>
             </ul>
         </div>
         
