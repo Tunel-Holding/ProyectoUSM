@@ -818,10 +818,6 @@ $conn->close();
                                             <span class="icono">👨‍🏫</span>
                                             <span class="texto"><?php echo !empty(trim($row['nombre_profesor'])) ? htmlspecialchars(trim($row['nombre_profesor'])) : 'No asignado'; ?></span>
                                         </div>
-                                        <div class="info-item">
-                                            <span class="icono">🏢</span>
-                                            <span class="texto">Salón <?php echo htmlspecialchars($row['salon']); ?></span>
-                                        </div>
                                     </div>
                                 </div>
                             </a>
