@@ -1,7 +1,12 @@
 <?php
 require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
-$auth->checkAccess(AuthGuard::NIVEL_PROFESOR);
+// Permitir acceso tanto a administradores como a profesores
+if (!$auth->checkAccess(AuthGuard::NIVEL_PROFESOR, false) && !$auth->checkAccess(AuthGuard::NIVEL_ADMIN, false)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Acceso denegado: solo profesores o administradores pueden modificar materias.']);
+    exit;
+}
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
