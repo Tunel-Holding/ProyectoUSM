@@ -7,31 +7,6 @@ include 'comprobar_sesion.php';
 actualizar_actividad();
 require 'conexion.php';
 
-// Obtener materias del usuario
-$id_usuario = $_SESSION['idusuario'];
-$materias = [];
-$sql = "SELECT m.id, m.nombre, m.seccion FROM inscripciones i JOIN materias m ON i.id_materia = m.id WHERE i.id_estudiante = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id_usuario);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    $materias[] = $row;
-}
-$stmt->close();
-
-// Si no tiene materias, mostrar mensaje y salir
-if (count($materias) === 0) {
-    echo "<div style='color:#888; text-align:center; margin-top:30px;'>No tienes materias inscritas.</div>";
-    exit();
-}
-
-// Si no hay materia seleccionada, selecciona la primera y recarga
-if (!isset($_SESSION['idmateria'])) {
-    $_SESSION['idmateria'] = $materias[0]['id'];
-    header("Location: chat.php");
-    exit();
-}
 
 // 🔐 Validación de sesión
 if (!isset($_SESSION['idusuario'])) {
