@@ -80,7 +80,7 @@ function obtenerMail($conn, $idusuario) {
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     $stmt->close();
-    return $row['email'];
+    return ($row && isset($row['email'])) ? $row['email'] : '';
 }
 
 $errores = [];
