@@ -597,6 +597,59 @@ $conn->close();
         display: block;
     }
 
+    /* Edición de mensajes moderna */
+    .edit-message-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1.5px solid #2196f3;
+        font-size: 1em;
+        font-family: inherit;
+        background: #f4f8fb;
+        color: #174388;
+        margin-bottom: 8px;
+        outline: none;
+        transition: border 0.2s;
+    }
+
+    .edit-message-input:focus {
+        border-color: #174388;
+        background: #fff;
+    }
+
+    .edit-message-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 2px;
+    }
+
+    .edit-message-btn {
+        padding: 5px 14px;
+        border-radius: 6px;
+        border: none;
+        font-size: 0.98em;
+        background: #2196f3;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .edit-message-btn.cancel {
+        background: #e0e0e0;
+        color: #174388;
+    }
+
+    .edit-message-btn:hover {
+        background: #174388;
+        color: #fff;
+    }
+
+    .edit-message-btn.cancel:hover {
+        background: #bdbdbd;
+        color: #174388;
+    }
+
     @media (max-width: 768px) {
 
         .profile-icon-alumno,
@@ -685,9 +738,11 @@ $conn->close();
         const original = msgText.textContent;
         // Reemplaza el texto por un input y botones
         msgText.innerHTML = `
-            <input id="edit-input-${id}" type="text" value="${original.replace(/"/g, '&quot;')}" style="width: 80%; padding: 4px; border-radius: 6px; border: 1px solid #aaa; font-size: 1em;">
-            <button onclick="guardarEdicion(${id})" style="margin-left:4px;">Guardar</button>
-            <button onclick="cancelarEdicion(${id}, '${original.replace(/'/g, "&#39;").replace(/"/g, '&quot;')}')" style="margin-left:2px;">Cancelar</button>
+            <input id="edit-input-${id}" class="edit-message-input" type="text" value="${original.replace(/"/g, '&quot;')}">
+            <div class="edit-message-actions">
+                <button class="edit-message-btn" onclick="guardarEdicion(${id})">Guardar</button>
+                <button class="edit-message-btn cancel" onclick="cancelarEdicion(${id}, '${original.replace(/'/g, "&#39;").replace(/\"/g, '&quot;')}')">Cancelar</button>
+            </div>
         `;
         document.getElementById('edit-input-' + id).focus();
     }
