@@ -100,9 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
     }
 
     // ✅ Sanitizar nombre de archivo
-    $file_extension = strtolower(pathinfo($image["name"], PATHINFO_EXTENSION));
-    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
-    $target_file = $target_dir . $new_filename;
+    // Mantener nombre original de archivo
+    $original_filename = basename($image["name"]);
+    $target_file = $target_dir . $original_filename;
 
     if (move_uploaded_file($image["tmp_name"], $target_file)) {
         $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'imagen', ?)");
@@ -158,9 +158,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
 
     // ✅ Sanitizar nombre de archivo
-    $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
-    $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
-    $target_file = $target_dir . $new_filename;
+    // Mantener nombre original de archivo
+    $original_filename = basename($file["name"]);
+    $target_file = $target_dir . $original_filename;
 
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
         $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'archivo', ?)");
@@ -461,6 +461,64 @@ if ($idgrupo) {
         .chat-dashboard-reply #cancel-reply {
             margin-left: auto;
         }
+
+        /* Modal de progreso de subida */
+        #upload-progress-modal {
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            display: none; /* Oculto por defecto */
+            align-items: center;
+            justify-content: center;
+        }
+
+        #upload-progress-modal .modal-content {
+            background-color: #fefefe;
+            padding: 20px 40px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode #upload-progress-modal .modal-content {
+            background-color: #2d2d2d;
+            border-color: #555;
+            color: #f1f1f1;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        body.dark-mode .progress-bar-container {
+            background-color: #404040;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 20px;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            border-radius: 5px;
+            transition: width 0.4s ease;
+        }
+
+        #progress-text {
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -561,6 +619,15 @@ if ($idgrupo) {
         <div class="upload-option" id="upload-image">Subir Imagen</div>
         <div class="upload-option" id="upload-file">Subir Archivo</div>
     </div>
+    <div id="upload-progress-modal">
+        <div class="modal-content">
+            <h2>Subiendo archivo...</h2>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <p id="progress-text">0%</p>
+        </div>
+    </div>
     <?php if ($advertencia) { ?>
         <div class="advertencia-flotante"
             style="position: fixed; top: 30px; right: 30px; z-index: 9999; background: #ffdddd; color: #a94442; border: 1px solid #a94442; border-radius: 8px; padding: 16px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-weight: bold;">
@@ -578,8 +645,8 @@ if ($idgrupo) {
         // 🔧 Configuración global
         const CONFIG = {
             maxMessageLength: 1000,
-            maxImageSize: 5 * 1024 * 1024, // 5MB
-            maxFileSize: 10 * 1024 * 1024, // 10MB
+            maxImageSize: 50 * 1024 * 1024, // 50MB
+            maxFileSize: 50 * 1024 * 1024, // 50MB
             allowedImageTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
             allowedFileTypes: [
                 'application/msword',
@@ -822,7 +889,7 @@ if ($idgrupo) {
                 return;
             }
 
-            uploadFile(file, 'image');
+            uploadFileWithProgress(file, 'image');
         }
 
         // 📄 Manejar subida de archivo
@@ -836,32 +903,47 @@ if ($idgrupo) {
             }
 
             if (file.size > CONFIG.maxFileSize) {
-                showError('El archivo es demasiado grande (máximo 10MB)');
+                showError('El archivo es demasiado grande (máximo 10MB), file.size: ' + file.size + ' bytes');
                 return;
             }
 
-            uploadFile(file, 'file');
+            uploadFileWithProgress(file, 'file');
         }
 
-        // 📤 Subir archivo genérico
-        function uploadFile(file, type) {
+        // 📤 Subir archivo genérico con progreso
+        function uploadFileWithProgress(file, type) {
             const formData = new FormData();
             formData.append(type, file);
             formData.append('reply_to', $('#reply-preview').data('reply-to') || 0);
 
-            fetch('chat.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.text())
-                .then(data => {
+            const modal = document.getElementById('upload-progress-modal');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            modal.style.display = 'flex';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'chat.php', true);
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                    progressText.textContent = Math.round(percentComplete) + '%';
+                }
+            };
+
+            xhr.onload = function () {
+                modal.style.display = 'none';
+                if (xhr.status === 200) {
                     try {
-                        const response = JSON.parse(data);
+                        const response = JSON.parse(xhr.responseText);
                         if (response.success) {
                             hideReplyPreview();
                             loadMessages();
                             document.getElementById('upload-menu').style.display = 'none';
-                            // Forzar scroll al final después de subir archivo
                             setTimeout(() => {
                                 forceScrollToBottom();
                             }, 100);
@@ -869,12 +951,19 @@ if ($idgrupo) {
                             showError(response.error || 'Error al subir el archivo');
                         }
                     } catch (e) {
-                        showError('Error al procesar la respuesta del servidor');
+                        showError('Error al procesar la respuesta del servidor: ' + xhr.responseText);
                     }
-                })
-                .catch(error => {
-                    showError('Error de conexión: ' + error);
-                });
+                } else {
+                    showError('Error en la subida: ' + xhr.statusText);
+                }
+            };
+
+            xhr.onerror = function () {
+                modal.style.display = 'none';
+                showError('Error de red al intentar subir el archivo.');
+            };
+
+            xhr.send(formData);
         }
 
         // 🔄 Cargar mensajes
