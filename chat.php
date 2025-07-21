@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
         'application/pdf'
     ];
-    $max_size = 50 * 1024 * 1024; // 10MB
+    $max_size = 50 * 1024 * 1024; // 50MB
 
     if (!in_array($file['type'], $allowed_types)) {
         echo json_encode(['error' => 'Tipo de archivo no permitido']);

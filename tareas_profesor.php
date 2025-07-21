@@ -243,6 +243,7 @@ $conn->close();
                                 <option value="proyecto">Proyecto</option>
                                 <option value="investigacion">Investigación</option>
                                 <option value="presentacion">Presentación</option>
+                                <option value="otros">Otros</option>
                             </select>
                         </div>
                         <div class="form-row">
