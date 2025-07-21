@@ -1,42 +1,3 @@
-<style>
-    /* Scrollbar personalizado para .div-horario (igual que pagina_principal.php) */
-    .div-horario::-webkit-scrollbar {
-        height: 10px;
-        background: #e3f2fd;
-        border-radius: 8px;
-    }
-    .div-horario::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #174388 0%, #1e5aa8 100%);
-        border-radius: 8px;
-    }
-    .div-horario::-webkit-scrollbar-thumb:hover {
-        background: #174388;
-    }
-    .div-horario::-webkit-scrollbar-corner {
-        background: #e3f2fd;
-    }
-    /* Firefox */
-    .div-horario {
-        scrollbar-width: thin;
-        scrollbar-color: #174388 #e3f2fd;
-    }
-    body.dark-mode .div-horario::-webkit-scrollbar {
-        background: #2d3748;
-    }
-    body.dark-mode .div-horario::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-    }
-    body.dark-mode .div-horario::-webkit-scrollbar-thumb:hover {
-        background: #4a5568;
-    }
-    body.dark-mode .div-horario::-webkit-scrollbar-corner {
-        background: #2d3748;
-    }
-    body.dark-mode .div-horario {
-        scrollbar-color: #4a5568 #2d3748;
-    }
-</style>
-
 <?php
 require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
@@ -147,6 +108,45 @@ $conn->close();
     <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Inicio - UniHub</title>
     <script src="js/control_inactividad.js"></script>
+
+    <style>
+    /* Scrollbar personalizado para .div-horario (igual que pagina_principal.php) */
+    .div-horario::-webkit-scrollbar {
+        height: 10px;
+        background: #e3f2fd;
+        border-radius: 8px;
+    }
+    .div-horario::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #174388 0%, #1e5aa8 100%);
+        border-radius: 8px;
+    }
+    .div-horario::-webkit-scrollbar-thumb:hover {
+        background: #174388;
+    }
+    .div-horario::-webkit-scrollbar-corner {
+        background: #e3f2fd;
+    }
+    /* Firefox */
+    .div-horario {
+        scrollbar-width: thin;
+        scrollbar-color: #174388 #e3f2fd;
+    }
+    body.dark-mode .div-horario::-webkit-scrollbar {
+        background: #2d3748;
+    }
+    body.dark-mode .div-horario::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    }
+    body.dark-mode .div-horario::-webkit-scrollbar-thumb:hover {
+        background: #4a5568;
+    }
+    body.dark-mode .div-horario::-webkit-scrollbar-corner {
+        background: #2d3748;
+    }
+    body.dark-mode .div-horario {
+        scrollbar-color: #4a5568 #2d3748;
+    }
+</style>
 </head>
 <body>
     <div class="cabecera">
