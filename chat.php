@@ -471,8 +471,9 @@ if ($idgrupo) {
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            display: none; /* Oculto por defecto */
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* Oculto por defecto */
             align-items: center;
             justify-content: center;
         }
@@ -485,7 +486,7 @@ if ($idgrupo) {
             max-width: 500px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         body.dark-mode #upload-progress-modal .modal-content {
@@ -523,7 +524,16 @@ if ($idgrupo) {
 </head>
 
 <body>
-   
+    <div class="cabecera">
+        <button type="button" id="logoButton">
+            <!-- <img src="css/logoazul.png" alt="Logo">-->
+            <img src="css/menu.png" alt="Menú" class="logo-menu">
+        </button>
+        <div class="logoempresa">
+            <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
+            <p>UniHub</p>
+        </div>
+    </div>
     <?php include 'menu_alumno.php'; ?>
     <div class="chat-dashboard-area">
         <?php
