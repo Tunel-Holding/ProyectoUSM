@@ -2,7 +2,6 @@
 require "conexion.php";
 
 if (isset($_GET['id'])) {
-    actualizar_actividad();
     $id_profesor = intval($_GET['id']);
     echo "<script>
         if (confirm('¿Está seguro de que desea eliminar este profesor?')) {
