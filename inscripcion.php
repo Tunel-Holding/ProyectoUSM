@@ -267,7 +267,7 @@ actualizar_actividad();
                     <tr>
                         <th>Nombre</th>
                         <th>Sección</th>
-                        <th>Profesor</th>
+                        <th>Tutor Influencer</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
