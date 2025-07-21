@@ -578,8 +578,8 @@ if ($idgrupo) {
         // 🔧 Configuración global
         const CONFIG = {
             maxMessageLength: 1000,
-            maxImageSize: 5 * 1024 * 1024, // 5MB
-            maxFileSize: 10 * 1024 * 1024, // 10MB
+            maxImageSize: 50 * 1024 * 1024, // 50MB
+            maxFileSize: 50 * 1024 * 1024, // 50MB
             allowedImageTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
             allowedFileTypes: [
                 'application/msword',
