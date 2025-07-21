@@ -11,7 +11,6 @@
 }
 
 body {
-  background: #f4f8fb !important;
   color: var(--text-color);
   height: 100vh;
   transition: 1s background-color ease-in-out;
@@ -23,7 +22,6 @@ body {
 body.dark-mode {
   --background-color: #23272f;
   --text-color: #fff;
-  background: #1a1a2e !important;
 }
 
 /* Header y navegación */

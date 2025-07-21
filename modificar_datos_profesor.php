@@ -230,7 +230,7 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
     <style>
         /* Variables CSS para el modo oscuro y colores base */
         :root {
-            --background-color-light: #f4f7f6; /* Fondo general claro, más suave */
+            --background-color-light: #f4f7f6  !importan; /* Fondo general claro, más suave */
             --text-color-light: #333; /* Color de texto general claro */
             --form-background-light: #ffffff; /* Fondo del formulario claro */
             --primary-color: #004c97; /* Azul USM para títulos, labels y énfasis */
@@ -243,7 +243,7 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
 
         /* Definiciones para el modo oscuro */
         body.dark-mode {
-            --background-color: rgb(50, 50, 50); /* Fondo general oscuro */
+            --background-color: rgb(50, 50, 50) !important; /* Fondo general oscuro */
             --text-color: white; /* Color de texto general oscuro */
             --form-background: rgb(80, 80, 80); /* Fondo del formulario oscuro, un poco más claro que el fondo general */
             --primary-color: #ffd700; /* Amarillo USM como primario en oscuro (para títulos, etc.) */
