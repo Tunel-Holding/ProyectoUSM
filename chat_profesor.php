@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
 
     //✅ Validación de imagen
     $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    $max_size = 5 * 1024 * 1024; // 5MB
+    $max_size = 50 * 1024 * 1024; // 5MB
 
     if (!in_array($image['type'], $allowed_types)) {
         echo json_encode(['error' => 'Tipo de imagen no permitido']);
