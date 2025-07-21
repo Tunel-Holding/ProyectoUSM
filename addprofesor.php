@@ -129,8 +129,8 @@ class AddProfesorManager {
             $mail->isHTML(true);
             $mail->Host = 'mail.conexiondocente.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'soportetecnico@conexiondocente.com';
-            $mail->Password = 'soportetecnico**';
+            $mail->Username = 'unihub@conexiondocente.com';
+            $mail->Password = 'unihubconexiondocente**';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = 465;
             
