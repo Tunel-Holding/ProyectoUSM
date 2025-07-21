@@ -135,7 +135,7 @@ class AddProfesorManager {
             $mail->Port = 465;
             
             // Destinatarios y contenido
-            $mail->setFrom('soportetecnico@conexiondocente.com', 'UniHub');
+            $mail->setFrom('unihub@conexiondocente.com', 'UniHub');
             $mail->addAddress($email);
             $mail->Subject = 'Creación de Perfil Profesor - UniHub';
             
