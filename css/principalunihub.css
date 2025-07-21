@@ -22,6 +22,7 @@ body {
 body.dark-mode {
   --background-color: #23272f;
   --text-color: #fff;
+  background: #1a1a1a !important;
 }
 
 /* Header y navegación */
