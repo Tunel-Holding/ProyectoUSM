@@ -523,3 +523,7 @@ body.dark-mode .texto {
     padding-bottom: 6px;
   }
 } 
+
+body.dark-mode .chat-dashboard-main {
+    background: #1a1a1a !important;
+} 
