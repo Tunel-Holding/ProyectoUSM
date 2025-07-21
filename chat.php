@@ -836,7 +836,7 @@ if ($idgrupo) {
             }
 
             if (file.size > CONFIG.maxFileSize) {
-                showError('El archivo es demasiado grande (máximo 10MB)');
+                showError('El archivo es demasiado grande (máximo 10MB), file.size: ' + file.size + ' bytes');
                 return;
             }
 
