@@ -548,13 +548,14 @@ if ($idgrupo) {
             color: #fff !important;
             font-weight: 600 !important;
             font-size: 1.08em !important;
-            border-bottom: 1px solid #444 !important;
             background: none !important;
             transition: background 0.2s, color 0.2s !important;
             white-space: nowrap !important;
+            border-bottom: none !important;
+            margin-bottom: 2px !important;
         }
         #upload-menu .upload-option:last-child {
-            border-bottom: none !important;
+            margin-bottom: 0 !important;
         }
         #upload-menu .upload-option:not(:last-child) {
             border-bottom: 1px solid #444 !important;
