@@ -534,7 +534,10 @@ if ($idgrupo) {
             padding: 0 !important;
             min-width: 160px !important;
             z-index: 1001 !important;
-            display: none !important;
+            display: none;
+        }
+        #upload-menu.show {
+            display: block;
         }
         #upload-menu .upload-option {
             padding: 14px 22px !important;
@@ -864,13 +867,13 @@ if ($idgrupo) {
 
             uploadButton.addEventListener('click', function (event) {
                 console.log('Botón SUBIR (plus) presionado');
-                uploadMenu.style.display = uploadMenu.style.display === 'block' ? 'none' : 'block';
+                uploadMenu.classList.toggle('show');
                 event.stopPropagation();
             });
 
             document.addEventListener('click', function (event) {
                 if (!uploadMenu.contains(event.target) && !uploadButton.contains(event.target)) {
-                    uploadMenu.style.display = 'none';
+                    uploadMenu.classList.remove('show');
                 }
             });
 
@@ -1012,7 +1015,7 @@ if ($idgrupo) {
                         if (response.success) {
                             hideReplyPreview();
                             loadMessages();
-                            document.getElementById('upload-menu').style.display = 'none';
+                            document.getElementById('upload-menu').classList.remove('show');
                             setTimeout(() => {
                                 forceScrollToBottom();
                             }, 100);
