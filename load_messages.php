@@ -322,7 +322,8 @@ $conn->close();
     /* Avatares */
     .profile-icon-alumno,
     .profile-icon-profesor,
-    .profile-icon-administrador {
+    .profile-icon-administrador,
+    .profile-icon-usuario {
         width: 40px !important;
         height: 40px !important;
         object-fit: cover !important;
@@ -330,13 +331,15 @@ $conn->close();
 
     .message-container-flex.other-user .profile-icon-alumno,
     .message-container-flex.other-user .profile-icon-profesor,
-    .message-container-flex.other-user .profile-icon-administrador {
+    .message-container-flex.other-user .profile-icon-administrador,
+    .message-container-flex.other-user .profile-icon-usuario {
         margin-right: 10px !important;
     }
 
     .message-container-flex.current-user .profile-icon-alumno,
     .message-container-flex.current-user .profile-icon-profesor,
-    .message-container-flex.current-user .profile-icon-administrador {
+    .message-container-flex.current-user .profile-icon-administrador,
+    .message-container-flex.current-user .profile-icon-usuario {
         margin-left: 10px !important;
     }
 
@@ -654,7 +657,8 @@ $conn->close();
 
         .profile-icon-alumno,
         .profile-icon-profesor,
-        .profile-icon-administrador {
+        .profile-icon-administrador,
+        .profile-icon-usuario {
             width: 32px !important;
             height: 32px !important;
         }
