@@ -346,7 +346,8 @@ $conn->close();
     /* Burbujas de mensaje */
     .message-bubble-alumno,
     .message-bubble-profesor,
-    .message-bubble-administrador {
+    .message-bubble-administrador,
+    .message-bubble-usuario {
         border-radius: 16px !important;
         padding: 12px 18px !important;
         min-width: 80px !important;
@@ -355,6 +356,8 @@ $conn->close();
         position: relative !important;
         margin-right: 0 !important;
         margin-left: 10px !important;
+        background: #174388 !important;
+        color: white !important;
     }
 
     /* Burbujas de archivos */
@@ -662,10 +665,10 @@ $conn->close();
             width: 32px !important;
             height: 32px !important;
         }
-
         .message-bubble-alumno,
         .message-bubble-profesor,
-        .message-bubble-administrador {
+        .message-bubble-administrador,
+        .message-bubble-usuario {
             max-width: 90vw !important;
             padding: 8px 10px !important;
         }
