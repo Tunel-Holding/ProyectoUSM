@@ -107,6 +107,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validar formato del teléfono (solo números y algunos caracteres especiales)
         if (!preg_match('/^[\\d\\s\\-\\+\\(\\)]+$/', $telefono)) {
             $error_message = "El formato del teléfono no es válido.";
+        } else if (strlen($telefono) > 11) {
+            $error_message = "El teléfono no puede tener más de 11 dígitos.";
+        } else if (strlen($direccion) > 100) {
+            $error_message = "La dirección no puede tener más de 100 caracteres.";
         } else {
             // Actualizar solo los campos editables en la base de datos usando prepared statement
             $sql_update = "UPDATE datos_usuario SET sexo = ?, telefono = ?, direccion = ? WHERE usuario_id = ?";
@@ -710,11 +714,11 @@ $conn->close();
                         <option value="Femenino" <?php if (($estudiante['sexo'] ?? '') == 'Femenino') echo 'selected'; ?>>Femenino</option>
                     </select>
                     <label for="telefono">Teléfono:</label>
-                    <input type="text" id="telefono" name="telefono"
+                    <input maxlength="11" type="text" id="telefono" name="telefono"
                         value="<?php echo htmlspecialchars($estudiante['telefono'] ?? ''); ?>"
                         class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
                     <label for="direccion">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion"
+                    <input maxlength="100" type="text" id="direccion" name="direccion"
                         value="<?php echo htmlspecialchars($estudiante['direccion'] ?? ''); ?>"
                         class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
                     <a href="forgotPassword.php">Cambiar contraseña</a>
