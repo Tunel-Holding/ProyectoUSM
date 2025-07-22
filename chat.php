@@ -682,6 +682,14 @@ if ($idgrupo) {
             opacity: 1;
         }
 
+        .reply-img-thumb {
+            max-width: 60px;
+            max-height: 40px;
+            border-radius: 4px;
+            margin-top: 2px;
+            display: block;
+        }
+
         .chat-entry-wrapper {
             display: flex;
             flex-direction: column;
@@ -953,7 +961,7 @@ if ($idgrupo) {
             const messageInput = document.getElementById('message');
             const cancelReplyButton = document.getElementById('cancel-reply');
 
-            sendButton.addEventListener('click', function () {
+            sendButton.addEventListener('click', function() {
                 console.log('Botón ENVIAR presionado');
                 sendMessage();
             });
@@ -975,9 +983,20 @@ if ($idgrupo) {
             $(document).on('click', '.reply-button', function () {
                 const messageId = $(this).data('message-id');
                 const userName = $(this).data('username');
-                const messageContent = $('#message-text-' + messageId).text();
-                console.log('Botón RESPONDER mensaje presionado, id:', messageId);
-                showReplyPreview(userName, messageContent, messageId);
+                const messageType = $(this).data('messagetype');
+                let messageContent = '';
+                let fileName = '';
+                if (messageType === 'texto') {
+                    messageContent = $('#message-text-' + messageId).text();
+                } else if (messageType === 'imagen') {
+                    messageContent = $('#message-img-' + messageId).attr('src');
+                } else if (messageType === 'archivo') {
+                    const fileElem = $('#message-file-' + messageId);
+                    messageContent = fileElem.attr('href');
+                    fileName = fileElem.find('span').text();
+                }
+                console.log('Botón RESPONDER mensaje presionado, id:', messageId, 'tipo:', messageType);
+                showReplyPreview(userName, messageContent, messageId, messageType, fileName);
             });
         }
 
@@ -1233,9 +1252,19 @@ if ($idgrupo) {
         setInterval(loadMessages, 2000);
 
         // 🎯 Funciones auxiliares
-        function showReplyPreview(userName, messageContent, messageId) {
+        function showReplyPreview(userName, messageContent, messageId, messageType, fileName) {
             $('#reply-to-user').text('Respondiendo a: ' + userName);
-            $('#reply-message').html(messageContent);
+            let html = '';
+            if (messageType === 'texto') {
+                html = messageContent;
+            } else if (messageType === 'imagen') {
+                html = '<span style="color:#aaa;">Imagen</span><br><img src="' + messageContent + '" class="reply-img-thumb">';
+            } else if (messageType === 'archivo') {
+                html = '<span style="color:#aaa;">Archivo</span><br><span>' + (fileName || messageContent.split('/').pop()) + '</span>';
+            } else {
+                html = messageContent;
+            }
+            $('#reply-message').html(html);
             $('#reply-preview').show().data('reply-to', messageId);
             $('#message').focus();
         }
