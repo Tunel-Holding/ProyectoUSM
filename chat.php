@@ -660,7 +660,7 @@ if ($idgrupo) {
             </div>
         </div>
     </div>
-    <div id="upload-menu" style="display: none;">
+    <div id="upload-menu">
         <div class="upload-option" id="upload-image">Subir Imagen</div>
         <div class="upload-option" id="upload-file">Subir Archivo</div>
     </div>
