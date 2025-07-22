@@ -766,6 +766,96 @@ if ($idgrupo) {
                 opacity: 1;
             }
         }
+
+        /* Modal para editar mensaje */
+        #edit-modal {
+            display: none;
+            position: fixed;
+            z-index: 20010;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            align-items: center;
+            justify-content: center;
+            animation: fadeInModal 0.25s;
+        }
+
+        #edit-modal.show {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background: #23272f;
+            border-radius: 18px;
+            padding: 32px 32px 24px 32px;
+            min-width: 350px;
+            max-width: 95vw;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            position: relative;
+            animation: zoomInModal 0.25s;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .edit-modal-header {
+            font-size: 1.2em;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .edit-modal-bubble {
+            background: #174388;
+            color: #fff;
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.08);
+        }
+
+        .edit-modal-input {
+            width: 100%;
+            min-height: 60px;
+            font-size: 1.08em;
+            border-radius: 8px;
+            border: 1.5px solid #174388;
+            padding: 10px 14px;
+            background: #23272f;
+            color: #fff;
+            margin-bottom: 8px;
+            resize: vertical;
+        }
+
+        .edit-modal-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+        }
+
+        .edit-modal-btn {
+            font-size: 1.5em;
+            border: none;
+            background: none;
+            color: #25d366;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .edit-modal-btn.cancel {
+            color: #fff;
+            background: #444;
+        }
+
+        .edit-modal-btn:hover {
+            background: #174388;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -890,6 +980,19 @@ if ($idgrupo) {
     <div id="image-modal">
         <button class="close-modal" title="Cerrar">&times;</button>
         <img src="" alt="Imagen ampliada" class="modal-img">
+    </div>
+
+    <!-- Modal para editar mensaje -->
+    <div id="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">Edita el mensaje</div>
+            <div class="edit-modal-bubble" id="edit-modal-original"></div>
+            <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000"></textarea>
+            <div class="edit-modal-actions">
+                <button class="edit-modal-btn cancel" id="edit-modal-cancel" title="Cancelar edición">&#10005;</button>
+                <button class="edit-modal-btn" id="edit-modal-save" title="Guardar edición">&#10003;</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1407,6 +1510,69 @@ if ($idgrupo) {
             });
         }
         document.addEventListener('DOMContentLoaded', setupImageModal);
+
+        // Modal de edición de mensaje
+        function setupEditModal() {
+            const modal = document.getElementById('edit-modal');
+            const original = document.getElementById('edit-modal-original');
+            const input = document.getElementById('edit-modal-input');
+            const cancelBtn = document.getElementById('edit-modal-cancel');
+            const saveBtn = document.getElementById('edit-modal-save');
+            let editingId = null;
+
+            // Delegación para botón editar
+            $(document).on('click', '.menu-puntos-opcion', function () {
+                if ($(this).text().trim().toLowerCase() === 'editar') {
+                    const messageId = $(this).closest('.menu-puntos').attr('id').replace('menu-puntos-', '');
+                    const messageElem = document.getElementById('message-text-' + messageId);
+                    if (!messageElem) return;
+                    const originalText = messageElem.textContent;
+                    original.textContent = originalText;
+                    input.value = originalText;
+                    editingId = messageId;
+                    modal.classList.add('show');
+                    input.focus();
+                }
+            });
+            // Guardar edición
+            saveBtn.addEventListener('click', function () {
+                const nuevoTexto = input.value.trim();
+                if (nuevoTexto.length === 0) {
+                    alert('El mensaje no puede estar vacío');
+                    return;
+                }
+                // AJAX para actualizar el mensaje
+                fetch('editar_mensaje.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${editingId}&nuevo_texto=${encodeURIComponent(nuevoTexto)}`
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            modal.classList.remove('show');
+                            editingId = null;
+                            loadMessages();
+                        } else {
+                            alert(data.error || 'Error al editar el mensaje');
+                        }
+                    })
+                    .catch(() => alert('Error de conexión al editar mensaje'));
+            });
+            // Cancelar edición
+            cancelBtn.addEventListener('click', function () {
+                modal.classList.remove('show');
+                editingId = null;
+            });
+            // Cerrar con ESC
+            document.addEventListener('keydown', function (e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                    editingId = null;
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', setupEditModal);
     </script>
 
 
