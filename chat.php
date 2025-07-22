@@ -1059,7 +1059,7 @@ if ($idgrupo) {
         }
 
         // 🔄 Actualizar mensajes cada 2 segundos
-        setInterval(loadMessages, 2000);
+        setInterval(loadMessages, 20000000);
 
         // 🎯 Funciones auxiliares
         function showReplyPreview(userName, messageContent, messageId) {
