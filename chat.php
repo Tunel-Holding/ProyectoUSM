@@ -626,6 +626,7 @@ if ($idgrupo) {
         .close-reply:hover {
             opacity: 1;
         }
+
         .reply-preview-blue {
             display: flex;
             align-items: center;
@@ -635,33 +636,37 @@ if ($idgrupo) {
             margin-bottom: 0;
             position: relative;
             border-left: 4px solid #174388;
-            box-shadow: 0 2px 8px rgba(23,67,136,0.08);
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.08);
             min-height: 40px;
             max-width: 100%;
         }
+
         .reply-content-blue {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            gap: 2px;
         }
+
         .reply-user-blue {
             color: #174388;
             font-weight: 700;
             font-size: 0.97em;
-            margin-bottom: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .reply-text-blue {
+
+        .reply-message-blue {
             color: #fff;
-            font-size: 1.05em;
+            font-size: 0.98em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-weight: 600;
+            font-weight: 400;
         }
+
         .close-reply-blue {
             background: none;
             border: none;
@@ -672,14 +677,17 @@ if ($idgrupo) {
             opacity: 0.7;
             transition: opacity 0.2s;
         }
+
         .close-reply-blue:hover {
             opacity: 1;
         }
+
         .chat-entry-wrapper {
             display: flex;
             flex-direction: column;
             gap: 0;
         }
+
         .reply-preview-blue {
             margin-bottom: 6px;
         }
@@ -743,8 +751,8 @@ if ($idgrupo) {
             <div class="chat-entry-wrapper">
                 <div id="reply-preview" class="reply-preview-blue" style="display: none;">
                     <div class="reply-content-blue">
-                        <span class="reply-user-blue" id="reply-to-user"></span>
-                        <span class="reply-text-blue" id="reply-message"></span>
+                        <div class="reply-user-blue" id="reply-to-user"></div>
+                        <div class="reply-message-blue" id="reply-message"></div>
                     </div>
                     <button id="cancel-reply" class="close-reply-blue" title="Cancelar respuesta">&times;</button>
                 </div>
