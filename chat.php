@@ -961,7 +961,7 @@ if ($idgrupo) {
             const messageInput = document.getElementById('message');
             const cancelReplyButton = document.getElementById('cancel-reply');
 
-            sendButton.addEventListener('click', function() {
+            sendButton.addEventListener('click', function () {
                 console.log('Botón ENVIAR presionado');
                 sendMessage();
             });
@@ -1282,8 +1282,9 @@ if ($idgrupo) {
         const sendButton = document.getElementById('send-button');
 
         function toggleSendButton() {
-            sendButton.disabled = messageInput.value.trim().length === 0;
-            if (sendButton.disabled) {
+            const isEmpty = messageInput.value.trim().length === 0;
+            sendButton.disabled = isEmpty;
+            if (isEmpty) {
                 sendButton.style.opacity = '0.5';
                 sendButton.style.cursor = 'not-allowed';
             } else {
@@ -1294,6 +1295,13 @@ if ($idgrupo) {
 
         messageInput.addEventListener('input', toggleSendButton);
         document.addEventListener('DOMContentLoaded', toggleSendButton);
+        // Refuerza el bloqueo al limpiar el input o cancelar respuesta
+        function forceDisableSendButton() {
+            setTimeout(toggleSendButton, 10);
+        }
+        document.getElementById('cancel-reply').addEventListener('click', forceDisableSendButton);
+        messageInput.addEventListener('change', toggleSendButton);
+        messageInput.addEventListener('keyup', toggleSendButton);
     </script>
 
 
