@@ -699,6 +699,73 @@ if ($idgrupo) {
         .reply-preview-blue {
             margin-bottom: 6px;
         }
+
+        /* Modal para vista ampliada de imagen */
+        #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 20000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            align-items: center;
+            justify-content: center;
+            animation: fadeInModal 0.25s;
+        }
+
+        #image-modal.show {
+            display: flex;
+        }
+
+        #image-modal .modal-img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            animation: zoomInModal 0.25s;
+        }
+
+        #image-modal .close-modal {
+            position: absolute;
+            top: 32px;
+            right: 48px;
+            font-size: 2.2em;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+            z-index: 20001;
+            transition: opacity 0.2s;
+        }
+
+        #image-modal .close-modal:hover {
+            opacity: 1;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomInModal {
+            from {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -818,6 +885,12 @@ if ($idgrupo) {
             }, 3500);
         </script>
     <?php } ?>
+
+    <!-- Modal para vista ampliada de imagen -->
+    <div id="image-modal">
+        <button class="close-modal" title="Cerrar">&times;</button>
+        <img src="" alt="Imagen ampliada" class="modal-img">
+    </div>
 
     <script>
         // 🔧 Configuración global
@@ -1302,6 +1375,38 @@ if ($idgrupo) {
         document.getElementById('cancel-reply').addEventListener('click', forceDisableSendButton);
         messageInput.addEventListener('change', toggleSendButton);
         messageInput.addEventListener('keyup', toggleSendButton);
+
+        // Modal de imagen ampliada
+        function setupImageModal() {
+            const modal = document.getElementById('image-modal');
+            const modalImg = modal.querySelector('.modal-img');
+            const closeBtn = modal.querySelector('.close-modal');
+            // Delegación para todas las imágenes del chat
+            document.getElementById('chat-box').addEventListener('click', function (e) {
+                if (e.target.tagName === 'IMG' && e.target.classList.contains('msg-foto')) {
+                    modalImg.src = e.target.src;
+                    modal.classList.add('show');
+                }
+            });
+            closeBtn.addEventListener('click', function () {
+                modal.classList.remove('show');
+                modalImg.src = '';
+            });
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    modalImg.src = '';
+                }
+            });
+            // Cerrar con ESC
+            document.addEventListener('keydown', function (e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                    modalImg.src = '';
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', setupImageModal);
     </script>
 
 
