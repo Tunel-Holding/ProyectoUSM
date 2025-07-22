@@ -278,45 +278,45 @@ $conn->close();
 <style>
     /* Contenedor de mensajes */
     .message-container-flex {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-        margin-bottom: 15px;
-        position: relative;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-end !important;
+        margin-bottom: 15px !important;
+        position: relative !important;
     }
 
     .message-container-flex.current-user {
-        justify-content: flex-end;
+        justify-content: flex-end !important;
     }
 
     .message-container-flex.other-user {
-        justify-content: flex-start;
+        justify-content: flex-start !important;
     }
 
     /* Acciones de mensaje */
     .message-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        align-self: flex-end;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        align-self: flex-end !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 0.2s !important;
     }
 
     .message-container-flex.current-user .message-actions {
-        margin-right: 8px;
-        order: -1;
+        margin-right: 8px !important;
+        order: -1 !important;
     }
 
     .message-container-flex.other-user .message-actions {
-        margin-left: 8px;
-        order: 1;
+        margin-left: 8px !important;
+        order: 1 !important;
     }
 
     .message-container-flex:hover .message-actions {
-        opacity: 1;
-        pointer-events: auto;
+        opacity: 1 !important;
+        pointer-events: auto !important;
     }
 
     /* Avatares */
@@ -331,13 +331,13 @@ $conn->close();
     .message-container-flex.other-user .profile-icon-alumno,
     .message-container-flex.other-user .profile-icon-profesor,
     .message-container-flex.other-user .profile-icon-administrador {
-        margin-right: 10px;
+        margin-right: 10px !important;
     }
 
     .message-container-flex.current-user .profile-icon-alumno,
     .message-container-flex.current-user .profile-icon-profesor,
     .message-container-flex.current-user .profile-icon-administrador {
-        margin-left: 10px;
+        margin-left: 10px !important;
     }
 
     /* Burbujas de mensaje */
@@ -360,193 +360,193 @@ $conn->close();
         min-width: 0 !important;
         padding-left: 14px !important;
         padding-right: 14px !important;
-        box-sizing: border-box;
+        box-sizing: border-box !important;
     }
 
     .file-bubble .file {
-        display: flex;
-        align-items: center;
-        background: #174388;
-        border-radius: 8px;
-        padding: 6px 10px;
-        margin: 4px 0;
-        font-size: 1em;
-        text-decoration: none;
-        color: #fff;
-        transition: background 0.2s;
-        box-sizing: border-box;
-        max-width: 220px;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        display: flex !important;
+        align-items: center !important;
+        background: #174388 !important;
+        border-radius: 8px !important;
+        padding: 6px 10px !important;
+        margin: 4px 0 !important;
+        font-size: 1em !important;
+        text-decoration: none !important;
+        color: #fff !important;
+        transition: background 0.2s !important;
+        box-sizing: border-box !important;
+        max-width: 220px !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
     }
 
     .file-bubble .file img {
-        width: 36px;
-        height: 36px;
-        margin-right: 10px;
-        flex-shrink: 0;
+        width: 36px !important;
+        height: 36px !important;
+        margin-right: 10px !important;
+        flex-shrink: 0 !important;
     }
 
     .file-bubble .file span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-        max-width: 150px;
-        vertical-align: middle;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        display: inline-block !important;
+        max-width: 150px !important;
+        vertical-align: middle !important;
     }
 
     .file-bubble .file:hover {
-        background: #2559b3;
-        text-decoration: underline;
+        background: #2559b3 !important;
+        text-decoration: underline !important;
     }
 
     /* Respuestas dentro de la burbuja */
     .reply-preview-inside {
-        background: rgba(33, 150, 243, 0.10);
-        border-left: 4px solid #2196f3;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin-top: 10px;
-        margin-bottom: 8px;
-        font-size: 1em;
-        color: #222;
-        font-weight: 500;
-        box-shadow: 0 1px 6px rgba(33, 150, 243, 0.07);
+        background: rgba(33, 150, 243, 0.10) !important;
+        border-left: 4px solid #2196f3 !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        margin-top: 10px !important;
+        margin-bottom: 8px !important;
+        font-size: 1em !important;
+        color: #222 !important;
+        font-weight: 500 !important;
+        box-shadow: 0 1px 6px rgba(33, 150, 243, 0.07) !important;
     }
 
     .dark-mode .reply-preview-inside {
-        background: rgba(33, 150, 243, 0.18);
-        border-left-color: #90caf9;
-        color: #e3e3e3;
+        background: rgba(33, 150, 243, 0.18) !important;
+        border-left-color: #90caf9 !important;
+        color: #e3e3e3 !important;
     }
 
     .reply-to-text {
-        font-size: 0.95em;
-        font-style: italic;
-        color: #1976d2;
-        margin-bottom: 2px;
-        display: inline;
-        opacity: 1;
-        vertical-align: middle;
+        font-size: 0.95em !important;
+        font-style: italic !important;
+        color: #1976d2 !important;
+        margin-bottom: 2px !important;
+        display: inline !important;
+        opacity: 1 !important;
+        vertical-align: middle !important;
     }
 
     .reply-to-text strong {
-        font-style: normal;
-        font-weight: bold;
-        color: #1976d2;
-        margin-left: 3px;
-        display: inline;
+        font-style: normal !important;
+        font-weight: bold !important;
+        color: #1976d2 !important;
+        margin-left: 3px !important;
+        display: inline !important;
     }
 
     .reply-content {
-        opacity: 0.9;
-        word-break: break-word;
+        opacity: 0.9 !important;
+        word-break: break-word !important;
     }
 
     .reply-image {
-        max-width: 100px;
-        max-height: 60px;
-        border-radius: 4px;
-        object-fit: cover;
+        max-width: 100px !important;
+        max-height: 60px !important;
+        border-radius: 4px !important;
+        object-fit: cover !important;
     }
 
     /* Menú de 3 puntitos */
     .menu-puntos-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 22px;
-        color: #888;
-        padding: 4px 8px;
-        border-radius: 50%;
-        transition: background 0.2s;
-        position: relative;
-        z-index: 2;
-        display: inline-block;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        font-size: 22px !important;
+        color: #888 !important;
+        padding: 4px 8px !important;
+        border-radius: 50% !important;
+        transition: background 0.2s !important;
+        position: relative !important;
+        z-index: 2 !important;
+        display: inline-block !important;
     }
 
     .menu-puntos-btn:hover {
-        background: #e0e0e0;
+        background: #e0e0e0 !important;
     }
 
     .menu-puntos {
-        display: none;
-        z-index: 9999;
-        position: absolute;
+        display: none !important;
+        z-index: 9999 !important;
+        position: absolute !important;
         top: calc(100% - 100px) !important;
-        left: 0;
-        right: auto;
-        margin: 0;
-        flex-direction: column;
+        left: 0 !important;
+        right: auto !important;
+        margin: 0 !important;
+        flex-direction: column !important;
     }
 
     .menu-puntos.show {
-        display: flex;
+        display: flex !important;
     }
 
     .message-container-flex.current-user .menu-puntos {
-        left: auto;
-        right: 0;
+        left: auto !important;
+        right: 0 !important;
     }
 
     .message-container-flex.other-user .menu-puntos {
         top: calc(100% - 40px) !important;
-        left: 0;
-        right: auto;
+        left: 0 !important;
+        right: auto !important;
     }
 
     .menu-puntos-opcion {
-        padding: 10px 18px;
-        cursor: pointer;
-        background: none;
-        border: none;
-        text-align: left;
-        font-size: 15px;
-        color: #213555;
-        transition: background 0.2s;
+        padding: 10px 18px !important;
+        cursor: pointer !important;
+        background: none !important;
+        border: none !important;
+        text-align: left !important;
+        font-size: 15px !important;
+        color: #213555 !important;
+        transition: background 0.2s !important;
     }
 
     .menu-puntos-opcion:hover {
-        background: #f4f8fb;
+        background: #f4f8fb !important;
     }
 
     .menu-puntos-opcion.disabled {
-        color: #aaa;
-        cursor: not-allowed;
-        background: none;
+        color: #aaa !important;
+        cursor: not-allowed !important;
+        background: none !important;
     }
 
     body.dark-mode .menu-puntos {
-        background: #232323;
-        border: 1px solid #444;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32);
+        background: #232323 !important;
+        border: 1px solid #444 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32) !important;
     }
 
     body.dark-mode .menu-puntos-opcion {
-        color: #e0e0e0;
+        color: #e0e0e0 !important;
     }
 
     body.dark-mode .menu-puntos-opcion:hover {
-        background: #333;
+        background: #333 !important;
     }
 
     /* Para el usuario actual: menú a la izquierda del botón */
     .message-container-flex.current-user .menu-puntos {
-        left: auto;
-        right: 100%;
-        margin-right: 8px;
-        margin-left: 0;
+        left: auto !important;
+        right: 100% !important;
+        margin-right: 8px !important;
+        margin-left: 0 !important;
     }
 
     /* Para otros usuarios: menú a la derecha del botón */
     .message-container-flex.other-user .menu-puntos {
-        left: 100%;
-        right: auto;
-        margin-left: 8px;
-        margin-right: 0;
+        left: 100% !important;
+        right: auto !important;
+        margin-left: 8px !important;
+        margin-right: 0 !important;
     }
 
     .reply-button,
@@ -558,23 +558,23 @@ $conn->close();
     .message-container-flex.current-user .message-bubble-alumno,
     .message-container-flex.current-user .message-bubble-profesor,
     .message-container-flex.current-user .message-bubble-administrador {
-        text-align: right;
+        text-align: right !important;
     }
 
     /* Mensajes de otros usuarios alineados a la izquierda */
     .message-container-flex.other-user .message-bubble-alumno,
     .message-container-flex.other-user .message-bubble-profesor,
     .message-container-flex.other-user .message-bubble-administrador {
-        text-align: left;
+        text-align: left !important;
     }
 
     /* Previsualización de respuesta sigue la alineación del mensaje */
     .message-container-flex.current-user .reply-preview-inside {
-        text-align: right;
+        text-align: right !important;
     }
 
     .message-container-flex.other-user .reply-preview-inside {
-        text-align: left;
+        text-align: left !important;
     }
 
     /* SOLO el texto del mensaje principal a la derecha si es tuyo */
@@ -588,66 +588,66 @@ $conn->close();
     }
 
     .reply-preview-inside .reply-to-text {
-        text-align: left;
-        display: block;
+        text-align: left !important;
+        display: block !important;
     }
 
     .reply-preview-inside .reply-content {
-        text-align: left;
-        display: block;
+        text-align: left !important;
+        display: block !important;
     }
 
     /* Edición de mensajes moderna */
     .edit-message-input {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 8px 12px;
-        border-radius: 8px;
-        border: 1.5px solid #2196f3;
-        font-size: 1em;
-        font-family: inherit;
-        background: #f4f8fb;
-        color: #174388;
-        margin-bottom: 8px;
-        outline: none;
-        transition: border 0.2s;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        border: 1.5px solid #2196f3 !important;
+        font-size: 1em !important;
+        font-family: inherit !important;
+        background: #f4f8fb !important;
+        color: #174388 !important;
+        margin-bottom: 8px !important;
+        outline: none !important;
+        transition: border 0.2s !important;
     }
 
     .edit-message-input:focus {
-        border-color: #174388;
-        background: #fff;
+        border-color: #174388 !important;
+        background: #fff !important;
     }
 
     .edit-message-actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 2px;
+        display: flex !important;
+        gap: 8px !important;
+        margin-top: 2px !important;
     }
 
     .edit-message-btn {
-        padding: 5px 14px;
-        border-radius: 6px;
-        border: none;
-        font-size: 0.98em;
-        background: #2196f3;
-        color: #fff;
-        cursor: pointer;
-        transition: background 0.2s;
+        padding: 5px 14px !important;
+        border-radius: 6px !important;
+        border: none !important;
+        font-size: 0.98em !important;
+        background: #2196f3 !important;
+        color: #fff !important;
+        cursor: pointer !important;
+        transition: background 0.2s !important;
     }
 
     .edit-message-btn.cancel {
-        background: #e0e0e0;
-        color: #174388;
+        background: #e0e0e0 !important;
+        color: #174388 !important;
     }
 
     .edit-message-btn:hover {
-        background: #174388;
-        color: #fff;
+        background: #174388 !important;
+        color: #fff !important;
     }
 
     .edit-message-btn.cancel:hover {
-        background: #bdbdbd;
-        color: #174388;
+        background: #bdbdbd !important;
+        color: #174388 !important;
     }
 
     @media (max-width: 768px) {
@@ -655,15 +655,15 @@ $conn->close();
         .profile-icon-alumno,
         .profile-icon-profesor,
         .profile-icon-administrador {
-            width: 32px;
-            height: 32px;
+            width: 32px !important;
+            height: 32px !important;
         }
 
         .message-bubble-alumno,
         .message-bubble-profesor,
         .message-bubble-administrador {
-            max-width: 90vw;
-            padding: 8px 10px;
+            max-width: 90vw !important;
+            padding: 8px 10px !important;
         }
 
         .file-bubble {
@@ -671,18 +671,18 @@ $conn->close();
         }
 
         .file-bubble .file img {
-            width: 28px;
-            height: 28px;
+            width: 28px !important;
+            height: 28px !important;
         }
 
         .reply-preview-inside {
-            padding: 6px 10px;
-            font-size: 0.95em;
+            padding: 6px 10px !important;
+            font-size: 0.95em !important;
         }
 
         .reply-image {
-            max-width: 80px;
-            max-height: 50px;
+            max-width: 80px !important;
+            max-height: 50px !important;
         }
     }
 </style>
