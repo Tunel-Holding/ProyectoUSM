@@ -670,7 +670,7 @@ $conn->close();
         width: 100% !important;
         text-align: center !important;
         margin: 18px 0 12px 0 !important;
-        color: #fff !important;
+        color: #111 !important;
         font-weight: 700 !important;
         font-size: 1.05em !important;
         background: #e6eaf3 !important;
