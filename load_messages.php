@@ -656,7 +656,12 @@ $conn->close();
         color: #174388 !important;
     }
 
-    body, .message-bubble-alumno, .message-bubble-profesor, .message-bubble-administrador, .message-bubble-usuario, .date-separator {
+    body,
+    .message-bubble-alumno,
+    .message-bubble-profesor,
+    .message-bubble-administrador,
+    .message-bubble-usuario,
+    .date-separator {
         font-family: 'Poppins', 'Afacad Flux', 'Noto Sans KR', 'Raleway', sans-serif !important;
     }
 
@@ -665,7 +670,7 @@ $conn->close();
         width: 100% !important;
         text-align: center !important;
         margin: 18px 0 12px 0 !important;
-        color: #174388 !important;
+        color: #fff !important;
         font-weight: 700 !important;
         font-size: 1.05em !important;
         background: #e6eaf3 !important;
@@ -674,10 +679,11 @@ $conn->close();
         letter-spacing: 1px !important;
         box-shadow: 0 1px 4px rgba(33, 53, 85, 0.07) !important;
     }
+
     body.dark-mode .date-separator {
         background: #23272f !important;
-        color: #ffd166 !important;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.18) !important;
+        color: #fff !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18) !important;
     }
 
     @media (max-width: 768px) {
@@ -689,6 +695,7 @@ $conn->close();
             width: 32px !important;
             height: 32px !important;
         }
+
         .message-bubble-alumno,
         .message-bubble-profesor,
         .message-bubble-administrador,
@@ -716,6 +723,7 @@ $conn->close();
             max-height: 50px !important;
         }
     }
+
     .message-bubble-alumno img,
     .message-bubble-profesor img,
     .message-bubble-administrador img,
@@ -728,7 +736,7 @@ $conn->close();
         margin: 8px 0 !important;
         border-radius: 8px !important;
         object-fit: contain !important;
-        box-shadow: 0 2px 8px rgba(33,53,85,0.10) !important;
+        box-shadow: 0 2px 8px rgba(33, 53, 85, 0.10) !important;
         background: #fff !important;
     }
 </style>
