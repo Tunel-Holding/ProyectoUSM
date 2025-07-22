@@ -556,9 +556,13 @@ if ($idgrupo) {
         #upload-menu .upload-option:last-child {
             border-bottom: none !important;
         }
+        #upload-menu .upload-option:not(:last-child) {
+            border-bottom: 1px solid #444 !important;
+        }
         #upload-menu .upload-option:hover {
             background: #333 !important;
             color: #fff !important;
+            border-bottom: none !important;
         }
     </style>
 </head>
