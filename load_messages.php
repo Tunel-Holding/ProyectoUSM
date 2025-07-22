@@ -656,6 +656,30 @@ $conn->close();
         color: #174388 !important;
     }
 
+    body, .message-bubble-alumno, .message-bubble-profesor, .message-bubble-administrador, .message-bubble-usuario, .date-separator {
+        font-family: 'Poppins', 'Afacad Flux', 'Noto Sans KR', 'Raleway', sans-serif !important;
+    }
+
+    .date-separator {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin: 18px 0 12px 0 !important;
+        color: #174388 !important;
+        font-weight: 700 !important;
+        font-size: 1.05em !important;
+        background: #e6eaf3 !important;
+        border-radius: 8px !important;
+        padding: 6px 0 !important;
+        letter-spacing: 1px !important;
+        box-shadow: 0 1px 4px rgba(33, 53, 85, 0.07) !important;
+    }
+    body.dark-mode .date-separator {
+        background: #23272f !important;
+        color: #ffd166 !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.18) !important;
+    }
+
     @media (max-width: 768px) {
 
         .profile-icon-alumno,
