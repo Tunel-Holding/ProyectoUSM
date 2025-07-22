@@ -182,7 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 // 💬 Mostrar historial de mensajes
 $idgrupo = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
 if ($idgrupo) {
-    echo "Mostrando historial de mensajes";
     $stmt = $conn->prepare("
         SELECT 
             messages.id, 
@@ -523,10 +522,14 @@ if ($idgrupo) {
         #progress-text {
             font-weight: bold;
         }
+        .upload-wrapper {
+            position: relative;
+            display: inline-block;
+        }
         #upload-menu {
             position: absolute !important;
-            bottom: 70px !important;
-            left: 20px !important;
+            top: 60px !important;
+            left: 0 !important;
             background: #fff !important;
             border: 1.5px solid #174388 !important;
             border-radius: 12px !important;
@@ -635,10 +638,16 @@ if ($idgrupo) {
                         <button id="cancel-reply" class="buttoncancel">Cancelar</button>
                     </div>
                     <?php $sin_materias = empty($materias); ?>
-                    <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
-                        echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
-                        <img src="css/plus-pequeno.png" alt="Upload">
-                    </button>
+                    <div class="upload-wrapper">
+                        <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
+                            echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
+                            <img src="css/plus-pequeno.png" alt="Upload">
+                        </button>
+                        <div id="upload-menu">
+                            <div class="upload-option" id="upload-image">Subir Imagen</div>
+                            <div class="upload-option" id="upload-file">Subir Archivo</div>
+                        </div>
+                    </div>
                     <input type="text" id="message"
                         placeholder="<?php echo $sin_materias ? 'No tienes materias disponibles' : 'Escribe un mensaje...'; ?>"
                         maxlength="1000" autocomplete="off" <?php if ($sin_materias)
@@ -659,10 +668,6 @@ if ($idgrupo) {
                 </div>
             </div>
         </div>
-    </div>
-    <div id="upload-menu">
-        <div class="upload-option" id="upload-image">Subir Imagen</div>
-        <div class="upload-option" id="upload-file">Subir Archivo</div>
     </div>
     <div id="upload-progress-modal">
         <div class="modal-content">
