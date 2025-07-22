@@ -523,6 +523,49 @@ if ($idgrupo) {
         #progress-text {
             font-weight: bold;
         }
+        #upload-menu {
+            position: absolute !important;
+            bottom: 70px !important;
+            left: 50px !important;
+            background: #fff !important;
+            border: 1.5px solid #174388 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 16px rgba(33,53,85,0.13) !important;
+            padding: 0 !important;
+            min-width: 160px !important;
+            z-index: 1001 !important;
+            display: none !important;
+        }
+        #upload-menu .upload-option {
+            padding: 14px 22px !important;
+            cursor: pointer !important;
+            color: #174388 !important;
+            font-weight: 600 !important;
+            font-size: 1.05em !important;
+            border-bottom: 1px solid #e6eaf3 !important;
+            background: none !important;
+            transition: background 0.2s, color 0.2s !important;
+        }
+        #upload-menu .upload-option:last-child {
+            border-bottom: none !important;
+        }
+        #upload-menu .upload-option:hover {
+            background: #e6eaf3 !important;
+            color: #0e3470 !important;
+        }
+        body.dark-mode #upload-menu {
+            background: #23272f !important;
+            border-color: #ffd166 !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.22) !important;
+        }
+        body.dark-mode #upload-menu .upload-option {
+            color: #ffd166 !important;
+            border-bottom: 1px solid #333 !important;
+        }
+        body.dark-mode #upload-menu .upload-option:hover {
+            background: #333 !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 
