@@ -191,7 +191,7 @@
             redirigir('inscripcion.php');
         });
         document.getElementById('chat').addEventListener('click', function () {
-            redirigir('dirigirchat.php');
+            redirigir('chat.php');
         });
         document.getElementById('desempeño').addEventListener('click', function () {
             redirigir('Seleccion_de_materias_tareas.php');
