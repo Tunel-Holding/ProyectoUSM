@@ -675,6 +675,14 @@ if ($idgrupo) {
         .close-reply-blue:hover {
             opacity: 1;
         }
+        .chat-entry-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .reply-preview-blue {
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 
@@ -733,14 +741,14 @@ if ($idgrupo) {
             </div>
 
             <div class="chat-entry-wrapper">
-                <div class="chat-dashboard-entry">
-                    <div id="reply-preview" class="reply-preview-blue" style="display: none;">
-                        <div class="reply-content-blue">
-                            <span class="reply-user-blue" id="reply-to-user"></span>
-                            <span class="reply-text-blue" id="reply-message"></span>
-                        </div>
-                        <button id="cancel-reply" class="close-reply-blue" title="Cancelar respuesta">&times;</button>
+                <div id="reply-preview" class="reply-preview-blue" style="display: none;">
+                    <div class="reply-content-blue">
+                        <span class="reply-user-blue" id="reply-to-user"></span>
+                        <span class="reply-text-blue" id="reply-message"></span>
                     </div>
+                    <button id="cancel-reply" class="close-reply-blue" title="Cancelar respuesta">&times;</button>
+                </div>
+                <div class="chat-dashboard-entry">
                     <?php $sin_materias = empty($materias); ?>
                     <div class="upload-wrapper">
                         <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
