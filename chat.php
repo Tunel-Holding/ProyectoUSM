@@ -206,9 +206,10 @@ if ($idgrupo) {
     $last_date = null;
     $last_user_id = null;
 }else{
-    echo "$_SESSION";
-    echo "$_SESSION[1]";
-    echo "Errro no se ha seleccionado una materia";
+    echo '<pre>';
+    print_r($_SESSION);
+    echo '</pre>';
+    echo "Error: no se ha seleccionado una materia";
     exit();
 }
 ?>
