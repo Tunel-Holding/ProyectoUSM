@@ -205,12 +205,6 @@ if ($idgrupo) {
     $result = $stmt->get_result();
     $last_date = null;
     $last_user_id = null;
-}else{
-    echo '<pre>';
-    print_r($_SESSION);
-    echo '</pre>';
-    echo "Error: no se ha seleccionado una materia";
-    exit();
 }
 ?>
 

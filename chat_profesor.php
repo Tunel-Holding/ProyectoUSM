@@ -8,6 +8,13 @@ include 'comprobar_sesion.php';
 require 'conexion.php';
 actualizar_actividad();
 // Obtener el nombre y sección de la materia
+if (!isset($_SESSION['idmateria']) || empty($_SESSION['idmateria'])) {
+    echo '<pre>';
+    print_r($_SESSION);
+    echo '</pre>';
+    echo "Error: no se ha seleccionado una materia";
+    exit();
+}
 $id_materia = $_SESSION['idmateria']; // Usar el id de materia de la sesión
 $stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
 $stmt->bind_param("i", $id_materia);
