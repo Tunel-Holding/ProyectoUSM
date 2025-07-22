@@ -657,6 +657,10 @@ $conn->close();
     }
 
     body {
+        background: #f4f8fb !important;
+    }
+
+    body.dark-mode {
         background: #1a1a1a !important;
     }
 

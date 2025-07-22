@@ -522,10 +522,12 @@ if ($idgrupo) {
         #progress-text {
             font-weight: bold;
         }
+
         .upload-wrapper {
             position: relative;
             display: inline-block;
         }
+
         #upload-menu {
             position: absolute !important;
             bottom: 20px !important;
@@ -533,15 +535,17 @@ if ($idgrupo) {
             background: #23272f !important;
             border: 1.5px solid #fff !important;
             border-radius: 12px !important;
-            box-shadow: 0 4px 16px rgba(33,53,85,0.13) !important;
+            box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13) !important;
             padding: 0 !important;
             min-width: 180px !important;
             z-index: 1001 !important;
             display: none;
         }
+
         #upload-menu.show {
             display: block;
         }
+
         #upload-menu .upload-option {
             padding: 12px 18px !important;
             cursor: pointer !important;
@@ -554,16 +558,73 @@ if ($idgrupo) {
             border-bottom: none !important;
             margin-bottom: 2px !important;
         }
+
         #upload-menu .upload-option:last-child {
             margin-bottom: 0 !important;
         }
+
         #upload-menu .upload-option:not(:last-child) {
             border-bottom: 1px solid #444 !important;
         }
+
         #upload-menu .upload-option:hover {
             background: #333 !important;
             color: #fff !important;
             border-bottom: none !important;
+        }
+
+        .reply-preview {
+            display: flex;
+            align-items: center;
+            background: #23272f;
+            border-radius: 10px 10px 0 0;
+            padding: 8px 12px;
+            margin-bottom: 0;
+            position: relative;
+            border-left: 4px solid #25d366;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            min-height: 40px;
+            max-width: 100%;
+        }
+
+        .reply-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .reply-user {
+            color: #25d366;
+            font-weight: 600;
+            font-size: 0.98em;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .reply-text {
+            color: #fff;
+            font-size: 0.97em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .close-reply {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3em;
+            margin-left: 10px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .close-reply:hover {
+            opacity: 1;
         }
     </style>
 </head>
@@ -624,10 +685,12 @@ if ($idgrupo) {
 
             <div class="chat-entry-wrapper">
                 <div class="chat-dashboard-entry">
-                    <div id="reply-preview" class="chat-dashboard-reply" style="display: none;">
-                        <div id="reply-to-user"></div>
-                        <div id="reply-message"></div>
-                        <button id="cancel-reply" class="buttoncancel">Cancelar</button>
+                    <div id="reply-preview" class="reply-preview" style="display: none;">
+                        <div class="reply-content">
+                            <span class="reply-user" id="reply-to-user"></span>
+                            <span class="reply-text" id="reply-message"></span>
+                        </div>
+                        <button id="cancel-reply" class="close-reply" title="Cancelar respuesta">&times;</button>
                     </div>
                     <?php $sin_materias = empty($materias); ?>
                     <div class="upload-wrapper">
@@ -825,7 +888,7 @@ if ($idgrupo) {
             const messageInput = document.getElementById('message');
             const cancelReplyButton = document.getElementById('cancel-reply');
 
-            sendButton.addEventListener('click', function() {
+            sendButton.addEventListener('click', function () {
                 console.log('Botón ENVIAR presionado');
                 sendMessage();
             });
@@ -874,20 +937,20 @@ if ($idgrupo) {
                 }
             });
 
-            uploadImage.addEventListener('click', function() {
+            uploadImage.addEventListener('click', function () {
                 console.log('Opción SUBIR IMAGEN presionada');
                 imageInput.click();
             });
-            uploadFile.addEventListener('click', function() {
+            uploadFile.addEventListener('click', function () {
                 console.log('Opción SUBIR ARCHIVO presionada');
                 fileInput.click();
             });
 
-            imageInput.addEventListener('change', function(e) {
+            imageInput.addEventListener('change', function (e) {
                 console.log('Archivo de imagen seleccionado');
                 handleImageUpload(e);
             });
-            fileInput.addEventListener('change', function(e) {
+            fileInput.addEventListener('change', function (e) {
                 console.log('Archivo de documento seleccionado');
                 handleFileUpload(e);
             });
@@ -895,7 +958,7 @@ if ($idgrupo) {
             // Botón de llamada
             const callButton = document.getElementById('call-button');
             if (callButton) {
-                callButton.addEventListener('click', function() {
+                callButton.addEventListener('click', function () {
                     console.log('Botón LLAMADA presionado');
                 });
             }
