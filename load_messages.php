@@ -716,6 +716,21 @@ $conn->close();
             max-height: 50px !important;
         }
     }
+    .message-bubble-alumno img,
+    .message-bubble-profesor img,
+    .message-bubble-administrador img,
+    .message-bubble-usuario img {
+        max-width: 220px !important;
+        max-height: 180px !important;
+        width: auto !important;
+        height: auto !important;
+        display: block !important;
+        margin: 8px 0 !important;
+        border-radius: 8px !important;
+        object-fit: contain !important;
+        box-shadow: 0 2px 8px rgba(33,53,85,0.10) !important;
+        background: #fff !important;
+    }
 </style>
 
 <script>
