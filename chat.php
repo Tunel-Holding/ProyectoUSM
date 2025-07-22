@@ -528,7 +528,7 @@ if ($idgrupo) {
         }
         #upload-menu {
             position: absolute !important;
-            top: 60px !important;
+            top: 10px !important;
             left: 0 !important;
             background: #fff !important;
             border: 1.5px solid #174388 !important;
