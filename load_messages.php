@@ -323,9 +323,9 @@ $conn->close();
     .profile-icon-alumno,
     .profile-icon-profesor,
     .profile-icon-administrador {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
+        width: 40px !important;
+        height: 40px !important;
+        object-fit: cover !important;
     }
 
     .message-container-flex.other-user .profile-icon-alumno,
@@ -344,14 +344,14 @@ $conn->close();
     .message-bubble-alumno,
     .message-bubble-profesor,
     .message-bubble-administrador {
-        border-radius: 16px;
-        padding: 12px 18px;
-        min-width: 80px;
-        max-width: 400px;
-        word-break: break-word;
-        position: relative;
-        margin-right: 0;
-        margin-left: 10px;
+        border-radius: 16px !important;
+        padding: 12px 18px !important;
+        min-width: 80px !important;
+        max-width: 400px !important;
+        word-break: break-word !important;
+        position: relative !important;
+        margin-right: 0 !important;
+        margin-left: 10px !important;
     }
 
     /* Burbujas de archivos */
