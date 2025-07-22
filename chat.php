@@ -524,14 +524,20 @@ if ($idgrupo) {
 </head>
 
 <body>
-    <div class="cabecera">
+    <div class="contenedorentrante3">
+        <img src="css/logo.png">
+    </div>
+    <div class="cabecera cabecera-chat">
         <button type="button" id="logoButton">
-            <!-- <img src="css/logoazul.png" alt="Logo">-->
+            <!-- <img src="css/logo.png" alt="Logo"> -->
             <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
+        <div class="nombremateria">
+            <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>
+        </div>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UniHub</p>
+            <p>UH</p>
         </div>
     </div>
     <?php include 'menu_alumno.php'; ?>
