@@ -600,7 +600,6 @@ if ($idgrupo) {
         if (!$materia_actual && count($materias) > 0) {
             $_SESSION['idmateria'] = $materias[0]['id'];
             $materia_actual = $materias[0]['id'];
-            echo "$materias";
         }
         ?>
         <div class="sidebar-materias">
