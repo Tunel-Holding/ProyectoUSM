@@ -158,7 +158,7 @@ while ($row = $result->fetch_assoc()) {
     // Botones de acción
     echo '<div class="message-actions">';
     // Botón para responder
-    echo '<button class="reply-button" data-message-id="' . intval($message_id) . '" data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '" title="Responder">
+    echo '<button class="reply-button" data-message-id="' . intval($message_id) . '" data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '" data-messagetype="' . htmlspecialchars($tipo) . '" title="Responder">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-responder" viewBox="0 0 16 16">
                 <path d="M6.854 4.146a.5.5 0 0 0-.708.708L8.293 7H1.5a.5.5 0 0 0 0 1h6.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/>
                 <path d="M13.5 8a.5.5 0 0 1-.5.5H9a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5z"/>
@@ -234,7 +234,7 @@ while ($row = $result->fetch_assoc()) {
     if ($tipo === "texto") {
         echo "<p id='message-text-" . intval($message_id) . "'>" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "</p>";
     } elseif ($tipo === "imagen") {
-        echo "<img class='msg-foto' src='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' alt='Imagen'>";
+        echo "<img class='msg-foto' id='message-img-" . intval($message_id) . "' src='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' alt='Imagen'>";
     } elseif ($tipo === "archivo") {
         $file_name = basename($mensaje);
         $ext = strtolower(pathinfo($mensaje, PATHINFO_EXTENSION));
@@ -248,7 +248,7 @@ while ($row = $result->fetch_assoc()) {
             'pdf' => 'pdf.png'
         ];
         $icon = isset($icon_map[$ext]) ? 'css/' . $icon_map[$ext] : 'css/file.png';
-        echo "<a class='file' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''><span>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</span></a>";
+        echo "<a class='file' id='message-file-" . intval($message_id) . "' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''><span>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</span></a>";
     }
 
     echo "<p class='timestamp'>" . htmlspecialchars($timestamp, ENT_QUOTES, 'UTF-8') . "</p>";
