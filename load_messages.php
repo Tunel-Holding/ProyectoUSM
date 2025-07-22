@@ -656,6 +656,10 @@ $conn->close();
         color: #174388 !important;
     }
 
+    body {
+        background: #1a1a1a !important;
+    }
+
     body,
     .message-bubble-alumno,
     .message-bubble-profesor,
