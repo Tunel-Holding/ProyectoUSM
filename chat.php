@@ -38,6 +38,7 @@ if ($id_materia) {
 
 // 📨 Enviar mensaje de texto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
+    echo "Enviando mensaje";
 
     // Actualizar actividad del usuario
     actualizar_actividad();
@@ -181,6 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 // 💬 Mostrar historial de mensajes
 $idgrupo = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
 if ($idgrupo) {
+    echo "Mostrando historial de mensajes";
     $stmt = $conn->prepare("
         SELECT 
             messages.id, 
@@ -203,6 +205,9 @@ if ($idgrupo) {
     $result = $stmt->get_result();
     $last_date = null;
     $last_user_id = null;
+}else{
+    echo "No hay grupo seleccionado";
+    exit();
 }
 ?>
 
