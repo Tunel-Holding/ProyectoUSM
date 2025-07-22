@@ -227,6 +227,7 @@ if ($idgrupo) {
         rel="stylesheet">
     <title>Chat - UniHub</title>
     <script src="js/control_inactividad.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* SOLO rediseño el área central del chat y barra de entrada, sin tocar header ni menú */
         .chat-dashboard-area {
