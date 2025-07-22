@@ -626,6 +626,55 @@ if ($idgrupo) {
         .close-reply:hover {
             opacity: 1;
         }
+        .reply-preview-blue {
+            display: flex;
+            align-items: center;
+            background: rgba(23, 67, 136, 0.18);
+            border-radius: 12px;
+            padding: 10px 16px 10px 12px;
+            margin-bottom: 0;
+            position: relative;
+            border-left: 4px solid #174388;
+            box-shadow: 0 2px 8px rgba(23,67,136,0.08);
+            min-height: 40px;
+            max-width: 100%;
+        }
+        .reply-content-blue {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .reply-user-blue {
+            color: #174388;
+            font-weight: 700;
+            font-size: 0.97em;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .reply-text-blue {
+            color: #fff;
+            font-size: 1.05em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 600;
+        }
+        .close-reply-blue {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3em;
+            margin-left: 10px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .close-reply-blue:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -685,12 +734,12 @@ if ($idgrupo) {
 
             <div class="chat-entry-wrapper">
                 <div class="chat-dashboard-entry">
-                    <div id="reply-preview" class="reply-preview" style="display: none;">
-                        <div class="reply-content">
-                            <span class="reply-user" id="reply-to-user"></span>
-                            <span class="reply-text" id="reply-message"></span>
+                    <div id="reply-preview" class="reply-preview-blue" style="display: none;">
+                        <div class="reply-content-blue">
+                            <span class="reply-user-blue" id="reply-to-user"></span>
+                            <span class="reply-text-blue" id="reply-message"></span>
                         </div>
-                        <button id="cancel-reply" class="close-reply" title="Cancelar respuesta">&times;</button>
+                        <button id="cancel-reply" class="close-reply-blue" title="Cancelar respuesta">&times;</button>
                     </div>
                     <?php $sin_materias = empty($materias); ?>
                     <div class="upload-wrapper">
