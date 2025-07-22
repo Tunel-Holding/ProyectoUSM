@@ -38,7 +38,7 @@ if ($id_materia) {
 
 // 📨 Enviar mensaje de texto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
-    echo "Enviando mensaje";
+    error_log("Enviando mensaje");
 
     // Actualizar actividad del usuario
     actualizar_actividad();
@@ -789,16 +789,21 @@ if ($idgrupo) {
             const messageInput = document.getElementById('message');
             const cancelReplyButton = document.getElementById('cancel-reply');
 
-            sendButton.addEventListener('click', sendMessage);
+            sendButton.addEventListener('click', function() {
+                console.log('Botón ENVIAR presionado');
+                sendMessage();
+            });
 
             messageInput.addEventListener('keypress', function (e) {
                 if (e.which === 13) {
+                    console.log('Enter presionado en input de mensaje');
                     sendMessage();
                     return false;
                 }
             });
 
             cancelReplyButton.addEventListener('click', function () {
+                console.log('Botón CANCELAR RESPUESTA presionado');
                 hideReplyPreview();
             });
 
@@ -807,6 +812,7 @@ if ($idgrupo) {
                 const messageId = $(this).data('message-id');
                 const userName = $(this).data('username');
                 const messageContent = $('#message-text-' + messageId).text();
+                console.log('Botón RESPONDER mensaje presionado, id:', messageId);
                 showReplyPreview(userName, messageContent, messageId);
             });
         }
@@ -821,6 +827,7 @@ if ($idgrupo) {
             const fileInput = document.getElementById('fileInput');
 
             uploadButton.addEventListener('click', function (event) {
+                console.log('Botón SUBIR (plus) presionado');
                 uploadMenu.style.display = uploadMenu.style.display === 'block' ? 'none' : 'block';
                 event.stopPropagation();
             });
@@ -831,11 +838,31 @@ if ($idgrupo) {
                 }
             });
 
-            uploadImage.addEventListener('click', () => imageInput.click());
-            uploadFile.addEventListener('click', () => fileInput.click());
+            uploadImage.addEventListener('click', function() {
+                console.log('Opción SUBIR IMAGEN presionada');
+                imageInput.click();
+            });
+            uploadFile.addEventListener('click', function() {
+                console.log('Opción SUBIR ARCHIVO presionada');
+                fileInput.click();
+            });
 
-            imageInput.addEventListener('change', handleImageUpload);
-            fileInput.addEventListener('change', handleFileUpload);
+            imageInput.addEventListener('change', function(e) {
+                console.log('Archivo de imagen seleccionado');
+                handleImageUpload(e);
+            });
+            fileInput.addEventListener('change', function(e) {
+                console.log('Archivo de documento seleccionado');
+                handleFileUpload(e);
+            });
+
+            // Botón de llamada
+            const callButton = document.getElementById('call-button');
+            if (callButton) {
+                callButton.addEventListener('click', function() {
+                    console.log('Botón LLAMADA presionado');
+                });
+            }
         }
 
         // 📤 Enviar mensaje
