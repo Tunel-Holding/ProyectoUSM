@@ -1755,24 +1755,30 @@ if ($idgrupo) {
                 const menu = document.createElement('div');
                 menu.id = 'menu-puntos-flotante';
                 menu.className = 'menu-puntos-flotante';
-                // Pasa el tipo de mensaje y nombre de usuario a las funciones
                 menu.innerHTML = `
-                    <button class="menu-puntos-opcion" onclick="responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')">Responder</button>
-                    ${messageType === 'texto' ? `<button class="menu-puntos-opcion" onclick="editarMensaje(${messageId})">Editar</button>` : ''}
-                    <button class="menu-puntos-opcion" onclick="eliminarMensaje(${messageId})">Eliminar</button>
+                    <button class=\"menu-puntos-opcion\" onclick=\"responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')\">Responder</button>
+                    ${messageType === 'texto' ? `<button class=\"menu-puntos-opcion\" onclick=\"editarMensaje(${messageId})\">Editar</button>` : ''}
+                    <button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>
                 `;
                 document.body.appendChild(menu);
-                // Posiciona el menú
-                const rect = btn.getBoundingClientRect();
-                menu.style.position = 'absolute';
-                menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
-                menu.style.left = (window.scrollX + rect.left) + 'px';
-                menu.style.zIndex = 99999;
+                // Posiciona el menú de forma fija respecto a la ventana
+                function updateMenuPosition() {
+                    const rect = btn.getBoundingClientRect();
+                    menu.style.position = 'fixed';
+                    menu.style.top = (rect.bottom + 4) + 'px';
+                    menu.style.left = rect.left + 'px';
+                    menu.style.zIndex = 99999;
+                }
+                updateMenuPosition();
+                window.addEventListener('scroll', updateMenuPosition);
+                window.addEventListener('resize', updateMenuPosition);
                 // Cierra al hacer click fuera
                 setTimeout(() => {
                     document.addEventListener('mousedown', function handler(ev) {
                         if (!menu.contains(ev.target) && ev.target !== btn) {
                             menu.remove();
+                            window.removeEventListener('scroll', updateMenuPosition);
+                            window.removeEventListener('resize', updateMenuPosition);
                             document.removeEventListener('mousedown', handler);
                         }
                     });
