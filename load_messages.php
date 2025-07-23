@@ -277,9 +277,13 @@ while ($row = $result->fetch_assoc()) {
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
-            </div>';
+        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '" style="border-radius:12px;">';
+        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
+        if ($tipo === "texto") {
+            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
+        }
+        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
+        echo '</div>';
         echo '</div>';
     }
 
