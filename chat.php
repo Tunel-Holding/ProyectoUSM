@@ -1473,34 +1473,73 @@ if ($idgrupo) {
         let menuPuntosAbierto = null;
         // Sobrescribo mostrarMenuPuntos para guardar el menú abierto
         function mostrarMenuPuntos(btn, messageId, esPropio) {
-            document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
-            const menu = document.getElementById('menu-puntos-' + messageId);
-            menu.classList.toggle('show');
-            if (menu.classList.contains('show')) {
-                // Pausa la recarga automática
-                if (chatIntervalId) {
-                    clearInterval(chatIntervalId);
-                    chatIntervalId = null;
+            // Cierra cualquier menú flotante existente
+            const existingMenu = document.getElementById('menu-puntos-flotante');
+            if (existingMenu) existingMenu.remove();
+
+            // Crea el menú flotante
+            const menu = document.createElement('div');
+            menu.id = 'menu-puntos-flotante';
+            menu.className = 'menu-puntos show';
+            menu.style.position = 'absolute';
+            menu.style.zIndex = 99999;
+            menu.style.minWidth = '180px';
+            menu.style.boxShadow = '0 4px 16px rgba(33, 53, 85, 0.13)';
+            menu.style.borderRadius = '12px';
+            menu.style.background = document.body.classList.contains('dark-mode') ? '#232323' : '#fff';
+            menu.style.border = document.body.classList.contains('dark-mode') ? '1px solid #444' : '1.5px solid #fff';
+            menu.style.padding = '0';
+
+            // Opciones del menú
+            const responderBtn = document.createElement('button');
+            responderBtn.className = 'menu-puntos-opcion';
+            responderBtn.textContent = 'Responder';
+            responderBtn.onclick = function () {
+                responderMensaje(messageId);
+                menu.remove();
+            };
+            menu.appendChild(responderBtn);
+
+            // Solo permitir editar si es propio y tipo texto
+            if (esPropio) {
+                const msgElem = document.getElementById('message-text-' + messageId);
+                if (msgElem) {
+                    const editarBtn = document.createElement('button');
+                    editarBtn.className = 'menu-puntos-opcion';
+                    editarBtn.textContent = 'Editar';
+                    editarBtn.onclick = function () {
+                        editarMensaje(messageId);
+                        menu.remove();
+                    };
+                    menu.appendChild(editarBtn);
                 }
-                menuPuntosAbierto = messageId;
-            } else {
-                // Reanuda la recarga automática
-                if (!chatIntervalId) {
-                    chatIntervalId = setInterval(loadMessages, 2000);
-                }
-                menuPuntosAbierto = null;
+                const eliminarBtn = document.createElement('button');
+                eliminarBtn.className = 'menu-puntos-opcion';
+                eliminarBtn.textContent = 'Eliminar';
+                eliminarBtn.onclick = function () {
+                    eliminarMensaje(messageId);
+                    menu.remove();
+                };
+                menu.appendChild(eliminarBtn);
             }
-            document.addEventListener('mousedown', function handler(e) {
-                if (!btn.contains(e.target) && !menu.contains(e.target)) {
-                    menu.classList.remove('show');
-                    // Reanuda la recarga automática
-                    if (!chatIntervalId) {
-                        chatIntervalId = setInterval(loadMessages, 2000);
+
+            // Posiciona el menú junto al botón
+            const rect = btn.getBoundingClientRect();
+            menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+            menu.style.left = (window.scrollX + rect.left) + 'px';
+
+            // Añade el menú al body
+            document.body.appendChild(menu);
+
+            // Cierra el menú al hacer clic fuera
+            setTimeout(() => {
+                document.addEventListener('mousedown', function handler(e) {
+                    if (!menu.contains(e.target) && e.target !== btn) {
+                        menu.remove();
+                        document.removeEventListener('mousedown', handler);
                     }
-                    menuPuntosAbierto = null;
-                    document.removeEventListener('mousedown', handler);
-                }
-            });
+                });
+            }, 10);
         }
 
         // Modifico loadMessages para reabrir el menú si corresponde
