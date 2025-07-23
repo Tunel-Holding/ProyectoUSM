@@ -1471,53 +1471,45 @@ if ($idgrupo) {
 
         // 🔄 Cargar mensajes
         let menuPuntosAbierto = null;
-        // Eliminar la lógica anterior de mostrarMenuPuntos y reabrir menú
-        // NUEVA LÓGICA: Menú flotante fuera de #chat-box
-        function mostrarMenuPuntosFlotante(btn, messageId, esPropio, tipoMensaje) {
-            // Cerrar cualquier menú flotante existente
-            const menuExistente = document.getElementById('menu-puntos-flotante');
-            if (menuExistente) menuExistente.remove();
-            // Crear menú
-            const menu = document.createElement('div');
-            menu.id = 'menu-puntos-flotante';
-            menu.className = 'menu-puntos show';
-            // Opciones
-            let opciones = '';
-            opciones += `<button class="menu-puntos-opcion" onclick="responderMensaje(${messageId})">Responder</button>`;
-            if (esPropio && tipoMensaje === 'texto') {
-                opciones += `<button class="menu-puntos-opcion" onclick="editarMensaje(${messageId})">Editar</button>`;
+        // Sobrescribo mostrarMenuPuntos para guardar el menú abierto
+        function mostrarMenuPuntos(btn, messageId, esPropio) {
+            document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
+            const menu = document.getElementById('menu-puntos-' + messageId);
+            menu.classList.toggle('show');
+            if (menu.classList.contains('show')) {
+                menuPuntosAbierto = messageId;
+            } else {
+                menuPuntosAbierto = null;
             }
-            if (esPropio) {
-                opciones += `<button class="menu-puntos-opcion" onclick="eliminarMensaje(${messageId})">Eliminar</button>`;
-            }
-            menu.innerHTML = opciones;
-            document.body.appendChild(menu);
-            // Posicionar el menú junto al botón
-            const rect = btn.getBoundingClientRect();
-            menu.style.position = 'absolute';
-            menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
-            menu.style.left = (window.scrollX + rect.left) + 'px';
-            menu.style.zIndex = 99999;
-            // Cerrar al hacer clic fuera
-            setTimeout(() => {
-                document.addEventListener('mousedown', handler);
-            }, 0);
-            function handler(e) {
-                if (!menu.contains(e.target) && e.target !== btn) {
-                    menu.remove();
+            document.addEventListener('mousedown', function handler(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('show');
+                    menuPuntosAbierto = null;
                     document.removeEventListener('mousedown', handler);
                 }
-            }
+            });
         }
-        // Delegación para los botones de 3 puntos
-        $(document).on('click', '.menu-puntos-btn', function (e) {
-            e.stopPropagation();
-            const btn = this;
-            const messageId = $(btn).data('message-id');
-            const esPropio = $(btn).data('propio') === true || $(btn).data('propio') === 'true';
-            const tipoMensaje = $(btn).data('tipo');
-            mostrarMenuPuntosFlotante(btn, messageId, esPropio, tipoMensaje);
-        });
+
+        // Modifico loadMessages para reabrir el menú si corresponde
+        function loadMessages() {
+            $.get('load_messages.php')
+                .done(function (data) {
+                    $('#chat-box').html(data);
+                    autoScroll();
+                    // Reabrir menú si estaba abierto
+                    if (menuPuntosAbierto) {
+                        const btn = document.querySelector('.menu-puntos-btn[onclick*="' + menuPuntosAbierto + '"]');
+                        if (btn) {
+                            setTimeout(() => btn.click(), 50);
+                        }
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    console.error('Error loading messages:', error);
+                });
+        }
+
+
 
         // 🗑️ Eliminar mensaje
         function deleteMessage(messageId) {
@@ -1751,7 +1743,5 @@ if ($idgrupo) {
 
 
 </body>
-
-</html>
 
 </html>
