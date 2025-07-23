@@ -895,7 +895,8 @@ if ($idgrupo) {
         .edit-modal-flex-row {
             display: flex;
             flex-direction: row;
-            align-items: flex-end;
+            align-items: center;
+            /* Cambiado para alinear verticalmente */
             gap: 12px;
             width: 100%;
         }
@@ -903,6 +904,29 @@ if ($idgrupo) {
         .edit-modal-input {
             flex: 1 1 auto;
             min-width: 0;
+        }
+
+        .edit-modal-save {
+            flex: 0 0 auto;
+            height: 48px;
+            margin-bottom: 0;
+            align-self: center;
+        }
+
+        .edit-modal-textarea-container {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .edit-modal-btn-container {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .edit-modal-input {
+            width: 100%;
             min-height: 40px;
             max-height: 160px;
             font-size: 1.13em;
@@ -919,7 +943,6 @@ if ($idgrupo) {
         }
 
         .edit-modal-save {
-            flex: 0 0 auto;
             height: 40px;
             min-width: 48px;
             border-radius: 50%;
@@ -1067,9 +1090,13 @@ if ($idgrupo) {
             <button class="edit-modal-close" id="edit-modal-close" title="Cerrar">&times;</button>
             <div class="edit-modal-bubble" id="edit-modal-original"></div>
             <div class="edit-modal-flex-row">
-                <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000"
-                    placeholder="Escribe el nuevo mensaje..."></textarea>
-                <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
+                <div class="edit-modal-textarea-container" style="flex:1;display:flex;align-items:flex-end;">
+                    <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000"
+                        placeholder="Escribe el nuevo mensaje..."></textarea>
+                </div>
+                <div class="edit-modal-btn-container" style="display:flex;align-items:flex-end;">
+                    <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
+                </div>
             </div>
         </div>
     </div>
