@@ -790,14 +790,15 @@ if ($idgrupo) {
         .edit-modal-content {
             background: #23272f;
             border-radius: 22px;
-            padding: 32px;
-            min-width: 350px;
-            max-width: 95vw;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+            padding: 40px 48px 48px 48px;
+            min-width: 520px;
+            max-width: 700px;
+            min-height: 320px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 28px;
         }
 
         .edit-modal-close {
