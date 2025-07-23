@@ -1412,6 +1412,186 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
         });
         // El botón de videollamada sigue funcionando porque es un <a> con href a videollamada_profesor.php
+        // --- MENÚ DE 3 PUNTOS FLOTANTE ---
+        document.addEventListener('click', function (e) {
+            // Abrir menú flotante al hacer click en los 3 puntos
+            if (e.target.classList.contains('menu-puntos-btn')) {
+                const btn = e.target;
+                const messageId = btn.getAttribute('data-message-id');
+                const messageType = btn.getAttribute('data-message-type');
+                const userName = btn.getAttribute('data-username');
+                // Elimina menú anterior si existe
+                const oldMenu = document.getElementById('menu-puntos-flotante');
+                if (oldMenu) oldMenu.remove();
+                // Detectar si el mensaje es del usuario actual o de otro
+                let isCurrentUser = false;
+                let parent = btn.parentElement;
+                while (parent) {
+                    if (parent.classList && parent.classList.contains('message-container-flex')) {
+                        isCurrentUser = parent.classList.contains('current-user');
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+                // Crea el menú
+                const menu = document.createElement('div');
+                menu.id = 'menu-puntos-flotante';
+                menu.className = 'menu-puntos-flotante';
+                // Opciones del menú según el usuario
+                let menuHtml = '';
+                menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')\">Responder</button>`;
+                if (isCurrentUser) {
+                    if (messageType === 'texto') {
+                        menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"editarMensaje(${messageId})\">Editar</button>`;
+                    }
+                    menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>`;
+                }
+                menu.innerHTML = menuHtml;
+                document.body.appendChild(menu);
+                // Posiciona el menú igual que el menú anterior
+                function updateMenuPosition() {
+                    const rect = btn.getBoundingClientRect();
+                    menu.style.position = 'fixed';
+                    menu.style.zIndex = 99999;
+                    // Medidas del menú
+                    menu.style.visibility = 'hidden';
+                    menu.style.display = 'block';
+                    const menuWidth = menu.offsetWidth;
+                    const menuHeight = menu.offsetHeight;
+                    menu.style.visibility = '';
+                    menu.style.display = '';
+                    // Ajustar posición según lado
+                    if (isCurrentUser) {
+                        // Usuario actual: menú a la izquierda del botón
+                        menu.style.left = (rect.left - menuWidth - 8) + 'px';
+                        menu.style.top = (rect.top - menuHeight + rect.height + 8) + 'px';
+                    } else {
+                        // Otro usuario: menú a la derecha del botón
+                        menu.style.left = (rect.right + 8) + 'px';
+                        menu.style.top = (rect.top - menuHeight + rect.height + 8) + 'px';
+                    }
+                }
+                updateMenuPosition();
+                // Al hacer scroll en el chat o resize, cerrar el menú
+                const chatBox = document.getElementById('chat-box');
+                function closeMenuOnScrollOrResize() {
+                    if (menu.parentNode) menu.remove();
+                    if (chatBox) chatBox.removeEventListener('scroll', closeMenuOnScrollOrResize);
+                    window.removeEventListener('resize', closeMenuOnScrollOrResize);
+                }
+                if (chatBox) chatBox.addEventListener('scroll', closeMenuOnScrollOrResize);
+                window.addEventListener('resize', closeMenuOnScrollOrResize);
+                // Cierra al hacer click fuera
+                setTimeout(() => {
+                    document.addEventListener('mousedown', function handler(ev) {
+                        if (!menu.contains(ev.target) && ev.target !== btn) {
+                            menu.remove();
+                            if (chatBox) chatBox.removeEventListener('scroll', closeMenuOnScrollOrResize);
+                            window.removeEventListener('resize', closeMenuOnScrollOrResize);
+                            document.removeEventListener('mousedown', handler);
+                        }
+                    });
+                }, 10);
+                // Evita scroll automático al abrir menú
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+        // Función global para editar mensaje desde el menú flotante
+        function editarMensaje(id) {
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
+            // Busca el elemento del mensaje
+            const messageElem = document.getElementById('message-text-' + id);
+            if (!messageElem) return;
+            const originalText = messageElem.textContent;
+            // Abre el modal de edición
+            const modal = document.getElementById('edit-modal');
+            const original = document.getElementById('edit-modal-original');
+            const input = document.getElementById('edit-modal-input');
+            original.textContent = originalText;
+            input.value = originalText;
+            input.placeholder = 'Escribe el nuevo mensaje...';
+            modal.classList.add('show');
+            input.focus();
+            // Ajustar altura del textarea
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+            // Guarda el id que se está editando
+            window._editingMessageId = id;
+        }
+        function eliminarMensaje(id) {
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
+            // Simula click en el botón original (que está oculto)
+            document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
+        }
+        function responderMensajeConTipo(messageId, userName, messageType) {
+            // Busca el contenido del mensaje según el tipo
+            let messageContent = '';
+            let fileName = '';
+            if (messageType === 'texto') {
+                const elem = document.getElementById('message-text-' + messageId);
+                if (elem) messageContent = elem.textContent;
+            } else if (messageType === 'imagen') {
+                const elem = document.getElementById('message-img-' + messageId);
+                if (elem) messageContent = elem.getAttribute('src');
+            } else if (messageType === 'archivo') {
+                const fileElem = document.getElementById('message-file-' + messageId);
+                if (fileElem) {
+                    messageContent = fileElem.getAttribute('href');
+                    const span = fileElem.querySelector('span');
+                    if (span) fileName = span.textContent;
+                }
+            }
+            showReplyPreview(userName, messageContent, messageId, messageType, fileName);
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
+        }
+        // Agrega estilos para el menú flotante (idénticos al menú anterior)
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .menu-puntos-flotante {
+            background: #fff !important;
+            border: 1.5px solid #fff !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13) !important;
+            min-width: 180px !important;
+            padding: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            position: fixed !important;
+            z-index: 99999 !important;
+        }
+        .menu-puntos-flotante .menu-puntos-opcion {
+            padding: 10px 18px !important;
+            cursor: pointer !important;
+            background: none !important;
+            border: none !important;
+            text-align: left !important;
+            font-size: 15px !important;
+            color: #213555 !important;
+            transition: background 0.2s !important;
+        }
+        .menu-puntos-flotante .menu-puntos-opcion:hover {
+            background: #f4f8fb !important;
+        }
+        body.dark-mode .menu-puntos-flotante {
+            background: #232323 !important;
+            border: 1px solid #444 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32) !important;
+        }
+        body.dark-mode .menu-puntos-flotante .menu-puntos-opcion {
+            color: #e0e0e0 !important;
+        }
+        body.dark-mode .menu-puntos-flotante .menu-puntos-opcion:hover {
+            background: #333 !important;
+        }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 
