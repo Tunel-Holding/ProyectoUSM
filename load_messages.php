@@ -254,12 +254,8 @@ while ($row = $result->fetch_assoc()) {
         echo "<a class='file' id='message-file-" . intval($message_id) . "' href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank'><img src='$icon' alt=''><span>" . htmlspecialchars($file_name, ENT_QUOTES, 'UTF-8') . "</span></a>";
     }
 
-    // Modificación: la hora de los mensajes de otros usuarios se alinea a la derecha
-    if ($is_current_user) {
-        echo "<p class='timestamp'>" . htmlspecialchars($timestamp, ENT_QUOTES, 'UTF-8') . "</p>";
-    } else {
-        echo "<p class='timestamp timestamp-right'>" . htmlspecialchars($timestamp, ENT_QUOTES, 'UTF-8') . "</p>";
-    }
+    // Hora alineada a la derecha, debajo del contenido, para todos
+    echo "<div class='timestamp-new'>" . htmlspecialchars($timestamp, ENT_QUOTES, 'UTF-8') . "</div>";
     echo '</div>'; // Cierre de burbuja
 
     // Agregar avatar después de la burbuja para el usuario actual
@@ -791,6 +787,22 @@ $conn->close();
         text-align: right;
         width: 100%;
         display: block;
+    }
+    .timestamp-new {
+        text-align: right;
+        font-size: 12px;
+        color: #e0e0e0;
+        margin-top: 8px;
+        margin-bottom: 0;
+        padding-right: 2px;
+        width: 100%;
+        font-family: inherit;
+    }
+    .message-bubble-alumno .timestamp-new,
+    .message-bubble-profesor .timestamp-new,
+    .message-bubble-administrador .timestamp-new,
+    .message-bubble-usuario .timestamp-new {
+        color: #e0e0e0;
     }
 </style>
 
