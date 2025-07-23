@@ -1755,8 +1755,9 @@ if ($idgrupo) {
                 const menu = document.createElement('div');
                 menu.id = 'menu-puntos-flotante';
                 menu.className = 'menu-puntos-flotante';
+                // Pasa el tipo de mensaje y nombre de usuario a las funciones
                 menu.innerHTML = `
-                    <button class="menu-puntos-opcion" onclick="responderMensaje(${messageId})">Responder</button>
+                    <button class="menu-puntos-opcion" onclick="responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')">Responder</button>
                     ${messageType === 'texto' ? `<button class="menu-puntos-opcion" onclick="editarMensaje(${messageId})">Editar</button>` : ''}
                     <button class="menu-puntos-opcion" onclick="eliminarMensaje(${messageId})">Eliminar</button>
                 `;
@@ -1781,6 +1782,31 @@ if ($idgrupo) {
                 e.preventDefault();
             }
         });
+
+        // Nueva función para responder con tipo de mensaje y nombre de usuario
+        function responderMensajeConTipo(messageId, userName, messageType) {
+            // Busca el contenido del mensaje según el tipo
+            let messageContent = '';
+            let fileName = '';
+            if (messageType === 'texto') {
+                const elem = document.getElementById('message-text-' + messageId);
+                if (elem) messageContent = elem.textContent;
+            } else if (messageType === 'imagen') {
+                const elem = document.getElementById('message-img-' + messageId);
+                if (elem) messageContent = elem.getAttribute('src');
+            } else if (messageType === 'archivo') {
+                const fileElem = document.getElementById('message-file-' + messageId);
+                if (fileElem) {
+                    messageContent = fileElem.getAttribute('href');
+                    const span = fileElem.querySelector('span');
+                    if (span) fileName = span.textContent;
+                }
+            }
+            showReplyPreview(userName, messageContent, messageId, messageType, fileName);
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
+        }
 
         // Agrega estilos para el menú flotante (idénticos al menú anterior)
         const style = document.createElement('style');
