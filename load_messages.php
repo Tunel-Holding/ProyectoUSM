@@ -168,7 +168,7 @@ while ($row = $result->fetch_assoc()) {
 
     // Botón para eliminar (solo si tiene permiso)
     if ($can_delete) {
-        echo '<button class="delete-button" data-message-id="' . intval($message_id) . '" onclick="eliminarMensaje(' . intval($message_id) . ')" title="Eliminar">
+        echo '<button class="delete-button" data-message-id="' . intval($message_id) . '" onclick="deleteMessage(' . intval($message_id) . ')" title="Eliminar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="icono-eliminar" viewBox="0 0 16 16">
                     <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1 0-2h3.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1H14.5a1 1 0 0 1 1 1zm-11 1v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4h-8z"/>
@@ -807,31 +807,29 @@ $conn->close();
 </style>
 
 <script>
-    // Elimino confirm nativo para eliminar mensajes
-    // function deleteMessage(messageId) {
-    //     if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
-    //         $.post('delete_message.php', {
-    //             message_id: messageId
-    //         })
-    //             .done(function (data) {
-    //                 try {
-    //                     const response = JSON.parse(data);
-    //                     if (response.success) {
-    //                         // Recargar mensajes para mostrar el cambio
-    //                         loadMessages();
-    //                     } else {
-    //                         alert('Error: ' + response.error);
-    //                     }
-    //                 } catch (e) {
-    //                     alert('Error al procesar la respuesta del servidor');
-    //                 }
-    //             })
-    //             .fail(function (xhr, status, error) {
-    //                 alert('Error de conexión: ' + error);
-    //             });
-    //     }
-    // }
-    // Ahora la eliminación debe pasar por el modal personalizado en chat.php/chat_profesor.php
+    function deleteMessage(messageId) {
+        if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
+            $.post('delete_message.php', {
+                message_id: messageId
+            })
+                .done(function (data) {
+                    try {
+                        const response = JSON.parse(data);
+                        if (response.success) {
+                            // Recargar mensajes para mostrar el cambio
+                            loadMessages();
+                        } else {
+                            alert('Error: ' + response.error);
+                        }
+                    } catch (e) {
+                        alert('Error al procesar la respuesta del servidor');
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    alert('Error de conexión: ' + error);
+                });
+        }
+    }
 
     function mostrarMenuPuntos(btn, messageId, esPropio) {
         // Cerrar otros menús
