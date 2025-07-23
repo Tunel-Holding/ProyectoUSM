@@ -221,8 +221,10 @@ while ($row = $result->fetch_assoc()) {
             $reply_mensaje = htmlspecialchars($reply_row['message']);
 
             echo "<div class='reply-preview-inside'>";
-            // Un solo <span> para 'Respondiendo a' y el nombre en la misma línea, ahora como enlace
-            echo "<span class='reply-to-text reply-link' data-reply-id='$reply_to' style='cursor:pointer;text-decoration:underline;'>Respondiendo a <strong>$reply_nombre</strong></span>";
+            // Hacer el contenedor clickable y pasar el id
+            echo "<div class='reply-preview-inside reply-link' data-reply-id='$reply_to' style='cursor:pointer;'>";
+            // Un solo <span> para 'Respondiendo a' y el nombre en la misma línea (sin enlace)
+            echo "<span class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></span>";
 
             if ($reply_row['tipo'] === 'imagen') {
                 echo "<div class='reply-content'><img src='" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "' class='reply-image' alt='Imagen'></div>";
@@ -765,6 +767,10 @@ $conn->close();
         box-shadow: 0 0 0 3px #2196f3, 0 2px 8px rgba(33, 53, 85, 0.10) !important;
         transition: box-shadow 0.3s;
     }
+
+    .reply-preview-inside.reply-link {
+        cursor: pointer !important;
+    }
 </style>
 
 <script>
@@ -860,14 +866,18 @@ $conn->close();
         document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
     }
 
-    // Scroll suave al mensaje original al hacer click en 'Respondiendo a ...'
+    // Scroll suave al mensaje original al hacer click en el contenedor de respuesta
     document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('reply-to-text') && e.target.classList.contains('reply-link')) {
-            const replyId = e.target.getAttribute('data-reply-id');
+        // Buscar el contenedor reply-preview-inside con la clase reply-link
+        let replyDiv = e.target;
+        while (replyDiv && !replyDiv.classList.contains('reply-preview-inside')) {
+            replyDiv = replyDiv.parentElement;
+        }
+        if (replyDiv && replyDiv.classList.contains('reply-link') && replyDiv.hasAttribute('data-reply-id')) {
+            const replyId = replyDiv.getAttribute('data-reply-id');
             const target = document.getElementById('message-container-' + replyId);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // Opcional: resaltar el mensaje destino
                 target.classList.add('highlight-reply');
                 setTimeout(() => target.classList.remove('highlight-reply'), 1500);
             }
