@@ -1684,17 +1684,23 @@ if ($idgrupo) {
                     alert('El mensaje no puede estar vacío');
                     return;
                 }
-                // AJAX para actualizar el mensaje
+                // Usar el id global si existe, si no el local
+                const idToEdit = (typeof editingId !== 'undefined' && editingId !== null) ? editingId : window._editingMessageId;
+                if (!idToEdit) {
+                    alert('No se pudo identificar el mensaje a editar');
+                    return;
+                }
                 fetch('editar_mensaje.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `id=${editingId}&nuevo_texto=${encodeURIComponent(nuevoTexto)}`
+                    body: `id=${idToEdit}&nuevo_texto=${encodeURIComponent(nuevoTexto)}`
                 })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
                             modal.classList.remove('show');
-                            editingId = null;
+                            if (typeof editingId !== 'undefined') editingId = null;
+                            window._editingMessageId = null;
                             loadMessages();
                         } else {
                             alert(data.error || 'Error al editar el mensaje');
@@ -1707,6 +1713,7 @@ if ($idgrupo) {
                 if (e.target === modal) {
                     modal.classList.remove('show');
                     editingId = null;
+                    window._editingMessageId = null;
                 }
             });
 
@@ -1714,6 +1721,7 @@ if ($idgrupo) {
             closeBtn.addEventListener('click', function () {
                 modal.classList.remove('show');
                 editingId = null;
+                window._editingMessageId = null;
             });
 
             // Cerrar con ESC
@@ -1721,6 +1729,7 @@ if ($idgrupo) {
                 if (modal.classList.contains('show') && e.key === 'Escape') {
                     modal.classList.remove('show');
                     editingId = null;
+                    window._editingMessageId = null;
                 }
             });
         }
