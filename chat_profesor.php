@@ -1221,6 +1221,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 });
         }
         function deleteMessage(messageId) {
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
             if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
                 $.post('delete_message.php', {
                     message_id: messageId
