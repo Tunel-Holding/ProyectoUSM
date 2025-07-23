@@ -895,7 +895,8 @@ if ($idgrupo) {
         .edit-modal-flex-row {
             display: flex;
             flex-direction: row;
-            align-items: flex-end;
+            align-items: center;
+            /* Cambiado para alinear verticalmente */
             gap: 12px;
             width: 100%;
         }
@@ -907,7 +908,9 @@ if ($idgrupo) {
 
         .edit-modal-save {
             flex: 0 0 auto;
-            margin-bottom: 6px;
+            height: 48px;
+            margin-bottom: 0;
+            align-self: center;
         }
     </style>
 </head>
