@@ -932,7 +932,6 @@ $conn->close();
         // Posicionar el menú junto al botón
         const rect = btn.getBoundingClientRect();
         menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-        // Si cabe a la derecha, lo pone ahí, si no, a la izquierda
         if (rect.left + menu.offsetWidth < window.innerWidth) {
             menu.style.left = (rect.left + window.scrollX) + 'px';
             menu.style.right = '';
@@ -941,8 +940,6 @@ $conn->close();
             menu.style.right = (window.innerWidth - rect.right - window.scrollX) + 'px';
         }
         menu.classList.add('show');
-        menuGlobalActivo = messageId;
-        menuGlobalBtn = btn;
         // Cerrar al hacer click fuera
         setTimeout(() => {
             document.addEventListener('mousedown', cerrarMenuGlobalHandler);
@@ -950,15 +947,13 @@ $conn->close();
     }
     function cerrarMenuGlobalHandler(e) {
         const menu = document.getElementById('menu-global-puntos');
-        if (!menu.contains(e.target) && (!menuGlobalBtn || !menuGlobalBtn.contains(e.target))) {
+        if (!menu.contains(e.target)) {
             ocultarMenuGlobalPuntos();
         }
     }
     function ocultarMenuGlobalPuntos() {
         const menu = document.getElementById('menu-global-puntos');
         menu.classList.remove('show');
-        menuGlobalActivo = null;
-        menuGlobalBtn = null;
         document.removeEventListener('mousedown', cerrarMenuGlobalHandler);
     }
     // Ocultar menú global al recargar mensajes
