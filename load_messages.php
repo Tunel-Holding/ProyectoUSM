@@ -755,6 +755,22 @@ $conn->close();
         box-shadow: 0 2px 8px rgba(33, 53, 85, 0.10) !important;
         background: #fff !important;
     }
+
+    /* Animación para menús flotantes */
+    .menu-puntos,
+    #upload-menu {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        pointer-events: none;
+        transition: opacity 0.22s cubic-bezier(.4, 0, .2, 1), transform 0.22s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .menu-puntos.show,
+    #upload-menu.show {
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+        pointer-events: auto !important;
+    }
 </style>
 
 <script>
