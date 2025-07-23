@@ -38,6 +38,7 @@ if ($id_materia) {
 
 // 📨 Enviar mensaje de texto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
+    error_log("Enviando mensaje");
 
     // Actualizar actividad del usuario
     actualizar_actividad();
@@ -211,21 +212,22 @@ if ($idgrupo) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Chat - UniHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
     <link rel="icon" href="css/logounihubblanco.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
-    <link rel="stylesheet" href="css/chat.css">
-    <link rel="stylesheet" href="css/chat_actions.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+    <title>Chat - UniHub</title>
+    <script src="js/control_inactividad.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
+
         /* SOLO rediseño el área central del chat y barra de entrada, sin tocar header ni menú */
         .chat-dashboard-area {
             display: flex;
@@ -471,8 +473,9 @@ if ($idgrupo) {
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            display: none; /* Oculto por defecto */
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* Oculto por defecto */
             align-items: center;
             justify-content: center;
         }
@@ -485,7 +488,7 @@ if ($idgrupo) {
             max-width: 500px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         body.dark-mode #upload-progress-modal .modal-content {
@@ -519,24 +522,459 @@ if ($idgrupo) {
         #progress-text {
             font-weight: bold;
         }
+
+        .upload-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #upload-menu {
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 50px !important;
+            background: #23272f !important;
+            border: 1.5px solid #fff !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13) !important;
+            padding: 0 !important;
+            min-width: 180px !important;
+            z-index: 1001 !important;
+            display: none;
+        }
+
+        #upload-menu.show {
+            display: block;
+        }
+
+        #upload-menu .upload-option {
+            padding: 12px 18px !important;
+            cursor: pointer !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            font-size: 1.08em !important;
+            background: none !important;
+            transition: background 0.2s, color 0.2s !important;
+            white-space: nowrap !important;
+            border-bottom: none !important;
+            margin-bottom: 2px !important;
+        }
+
+        #upload-menu .upload-option:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        #upload-menu .upload-option:not(:last-child) {
+            border-bottom: 1px solid #444 !important;
+        }
+
+        #upload-menu .upload-option:hover {
+            background: #333 !important;
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+
+        .reply-preview {
+            display: flex;
+            align-items: center;
+            background: #23272f;
+            border-radius: 10px 10px 0 0;
+            padding: 8px 12px;
+            margin-bottom: 0;
+            position: relative;
+            border-left: 4px solid #25d366;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            min-height: 40px;
+            max-width: 100%;
+        }
+
+        .reply-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .reply-user {
+            color: #25d366;
+            font-weight: 600;
+            font-size: 0.98em;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .reply-text {
+            color: #fff;
+            font-size: 0.97em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .close-reply {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3em;
+            margin-left: 10px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .close-reply:hover {
+            opacity: 1;
+        }
+
+        .reply-preview-blue {
+            display: flex;
+            align-items: center;
+            background: rgba(23, 67, 136, 0.18);
+            border-radius: 12px;
+            padding: 10px 16px 10px 12px;
+            margin-bottom: 0;
+            position: relative;
+            border-left: 4px solid #174388;
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.08);
+            min-height: 40px;
+            max-width: 100%;
+        }
+
+        .reply-content-blue {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            gap: 2px;
+        }
+
+        .reply-user-blue {
+            color: #174388;
+            font-weight: 700;
+            font-size: 0.97em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .reply-message-blue {
+            color: #fff;
+            font-size: 0.98em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 400;
+        }
+
+        .close-reply-blue {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3em;
+            margin-left: 10px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .close-reply-blue:hover {
+            opacity: 1;
+        }
+
+        .reply-img-thumb {
+            max-width: 60px;
+            max-height: 40px;
+            border-radius: 4px;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .chat-entry-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .reply-preview-blue {
+            margin-bottom: 6px;
+        }
+
+        /* Modal para vista ampliada de imagen */
+        #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 20000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            align-items: center;
+            justify-content: center;
+            animation: fadeInModal 0.25s;
+        }
+
+        #image-modal.show {
+            display: flex;
+        }
+
+        #image-modal .modal-img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            animation: zoomInModal 0.25s;
+        }
+
+        #image-modal .close-modal {
+            position: absolute;
+            top: 32px;
+            right: 48px;
+            font-size: 2.2em;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+            z-index: 20001;
+            transition: opacity 0.2s;
+        }
+
+        #image-modal .close-modal:hover {
+            opacity: 1;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomInModal {
+            from {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Modal para editar mensaje */
+        #edit-modal {
+            display: none;
+            position: fixed;
+            z-index: 20010;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(24, 26, 27, 0.96);
+            /* Más oscuro */
+            align-items: center;
+            justify-content: center;
+            animation: fadeInModal 0.25s;
+        }
+
+        #edit-modal.show {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background: #23272f;
+            border-radius: 22px;
+            padding: 40px 48px 48px 48px;
+            min-width: 520px;
+            max-width: 700px;
+            min-height: 320px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .edit-modal-close {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.8em;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+            z-index: 1;
+        }
+
+        .edit-modal-close:hover {
+            opacity: 1;
+        }
+
+        .edit-modal-bubble {
+            background: #174388;
+            color: #fff;
+            border-radius: 14px 14px 14px 4px;
+            padding: 12px 16px;
+            font-size: 1em;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.18);
+            max-width: 70%;
+            align-self: flex-start;
+            word-break: break-word;
+            margin-top: 20px;
+        }
+
+        .edit-modal-input {
+            width: 100%;
+            min-height: 40px;
+            max-height: 160px;
+            font-size: 1.13em;
+            border: none;
+            border-bottom: 2px solid #25d366;
+            background: transparent;
+            color: #fff;
+            margin-bottom: 0;
+            padding: 10px 0 6px 0;
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+            transition: border-color 0.2s;
+        }
+
+        .edit-modal-input:focus {
+            border-bottom: 2px solid #34b7f1;
+        }
+
+        .edit-modal-input::placeholder {
+            color: #888;
+        }
+
+        .edit-modal-save {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: #25d366;
+            color: #fff;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
+        }
+
+        .edit-modal-save:hover {
+            background: #22c55e;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .edit-modal-content {
+                padding: 18px 8px 18px 8px;
+            }
+
+            .edit-modal-bubble {
+                max-width: 100%;
+            }
+        }
+
+        .edit-modal-flex-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            /* Cambiado para alinear verticalmente */
+            gap: 12px;
+            width: 100%;
+        }
+
+        .edit-modal-input {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .edit-modal-save {
+            flex: 0 0 auto;
+            height: 48px;
+            margin-bottom: 0;
+            align-self: center;
+        }
+
+        .edit-modal-textarea-container {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .edit-modal-btn-container {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .edit-modal-input {
+            width: 100%;
+            min-height: 40px;
+            max-height: 160px;
+            font-size: 1.13em;
+            border: none;
+            border-bottom: 2px solid #25d366;
+            background: transparent;
+            color: #fff;
+            padding: 10px 0 6px 0;
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .edit-modal-save {
+            height: 40px;
+            min-width: 48px;
+            border-radius: 50%;
+            border: none;
+            background: #174388;
+            color: #fff;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.2);
+            margin-bottom: 2px;
+        }
+
+        .edit-modal-save:hover {
+            background: #0e3470;
+            box-shadow: 0 4px 16px rgba(23, 67, 136, 0.3);
+        }
     </style>
 </head>
 
 <body>
-    <div class="contenedorentrante3">
-        <img src="css/logo.png">
-    </div>
-    <div class="cabecera cabecera-chat">
+    <div class="cabecera">
         <button type="button" id="logoButton">
-            <!-- <img src="css/logo.png" alt="Logo"> -->
+            <!-- <img src="css/logoazul.png" alt="Logo">-->
             <img src="css/menu.png" alt="Menú" class="logo-menu">
         </button>
-        <div class="nombremateria">
-            <h1><?php echo htmlspecialchars($_SESSION['nombremateria'] ?? 'Chat') ?></h1>
-        </div>
         <div class="logoempresa">
             <img src="css/logounihubblanco.png" alt="Logo" class="logounihub">
-            <p>UH</p>
+            <p>UniHub</p>
         </div>
     </div>
     <?php include 'menu_alumno.php'; ?>
@@ -583,17 +1021,25 @@ if ($idgrupo) {
             </div>
 
             <div class="chat-entry-wrapper">
-                <div class="chat-dashboard-entry">
-                    <div id="reply-preview" class="chat-dashboard-reply" style="display: none;">
-                        <div id="reply-to-user"></div>
-                        <div id="reply-message"></div>
-                        <button id="cancel-reply" class="buttoncancel">Cancelar</button>
+                <div id="reply-preview" class="reply-preview-blue" style="display: none;">
+                    <div class="reply-content-blue">
+                        <div class="reply-user-blue" id="reply-to-user"></div>
+                        <div class="reply-message-blue" id="reply-message"></div>
                     </div>
+                    <button id="cancel-reply" class="close-reply-blue" title="Cancelar respuesta">&times;</button>
+                </div>
+                <div class="chat-dashboard-entry">
                     <?php $sin_materias = empty($materias); ?>
-                    <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
-                        echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
-                        <img src="css/plus-pequeno.png" alt="Upload">
-                    </button>
+                    <div class="upload-wrapper">
+                        <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
+                            echo 'disabled style="opacity:0.5;cursor:not-allowed;"'; ?>>
+                            <img src="css/plus-pequeno.png" alt="Upload">
+                        </button>
+                        <div id="upload-menu">
+                            <div class="upload-option" id="upload-image">Subir Imagen</div>
+                            <div class="upload-option" id="upload-file">Subir Archivo</div>
+                        </div>
+                    </div>
                     <input type="text" id="message"
                         placeholder="<?php echo $sin_materias ? 'No tienes materias disponibles' : 'Escribe un mensaje...'; ?>"
                         maxlength="1000" autocomplete="off" <?php if ($sin_materias)
@@ -614,10 +1060,6 @@ if ($idgrupo) {
                 </div>
             </div>
         </div>
-    </div>
-    <div id="upload-menu" style="display: none;">
-        <div class="upload-option" id="upload-image">Subir Imagen</div>
-        <div class="upload-option" id="upload-file">Subir Archivo</div>
     </div>
     <div id="upload-progress-modal">
         <div class="modal-content">
@@ -640,6 +1082,29 @@ if ($idgrupo) {
             }, 3500);
         </script>
     <?php } ?>
+
+    <!-- Modal para vista ampliada de imagen -->
+    <div id="image-modal">
+        <button class="close-modal" title="Cerrar">&times;</button>
+        <img src="" alt="Imagen ampliada" class="modal-img">
+    </div>
+
+    <!-- Modal para editar mensaje -->
+    <div id="edit-modal">
+        <div class="edit-modal-content">
+            <button class="edit-modal-close" id="edit-modal-close" title="Cerrar">&times;</button>
+            <div class="edit-modal-bubble" id="edit-modal-original"></div>
+            <div class="edit-modal-flex-row">
+                <div class="edit-modal-textarea-container" style="flex:1;display:flex;align-items:flex-end;">
+                    <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000"
+                        placeholder="Escribe el nuevo mensaje..."></textarea>
+                </div>
+                <div class="edit-modal-btn-container" style="display:flex;align-items:flex-end;">
+                    <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // 🔧 Configuración global
@@ -783,16 +1248,21 @@ if ($idgrupo) {
             const messageInput = document.getElementById('message');
             const cancelReplyButton = document.getElementById('cancel-reply');
 
-            sendButton.addEventListener('click', sendMessage);
+            sendButton.addEventListener('click', function () {
+                console.log('Botón ENVIAR presionado');
+                sendMessage();
+            });
 
             messageInput.addEventListener('keypress', function (e) {
                 if (e.which === 13) {
+                    console.log('Enter presionado en input de mensaje');
                     sendMessage();
                     return false;
                 }
             });
 
             cancelReplyButton.addEventListener('click', function () {
+                console.log('Botón CANCELAR RESPUESTA presionado');
                 hideReplyPreview();
             });
 
@@ -800,8 +1270,20 @@ if ($idgrupo) {
             $(document).on('click', '.reply-button', function () {
                 const messageId = $(this).data('message-id');
                 const userName = $(this).data('username');
-                const messageContent = $('#message-text-' + messageId).text();
-                showReplyPreview(userName, messageContent, messageId);
+                const messageType = $(this).data('messagetype');
+                let messageContent = '';
+                let fileName = '';
+                if (messageType === 'texto') {
+                    messageContent = $('#message-text-' + messageId).text();
+                } else if (messageType === 'imagen') {
+                    messageContent = $('#message-img-' + messageId).attr('src');
+                } else if (messageType === 'archivo') {
+                    const fileElem = $('#message-file-' + messageId);
+                    messageContent = fileElem.attr('href');
+                    fileName = fileElem.find('span').text();
+                }
+                console.log('Botón RESPONDER mensaje presionado, id:', messageId, 'tipo:', messageType);
+                showReplyPreview(userName, messageContent, messageId, messageType, fileName);
             });
         }
 
@@ -815,21 +1297,42 @@ if ($idgrupo) {
             const fileInput = document.getElementById('fileInput');
 
             uploadButton.addEventListener('click', function (event) {
-                uploadMenu.style.display = uploadMenu.style.display === 'block' ? 'none' : 'block';
+                console.log('Botón SUBIR (plus) presionado');
+                uploadMenu.classList.toggle('show');
                 event.stopPropagation();
             });
 
             document.addEventListener('click', function (event) {
                 if (!uploadMenu.contains(event.target) && !uploadButton.contains(event.target)) {
-                    uploadMenu.style.display = 'none';
+                    uploadMenu.classList.remove('show');
                 }
             });
 
-            uploadImage.addEventListener('click', () => imageInput.click());
-            uploadFile.addEventListener('click', () => fileInput.click());
+            uploadImage.addEventListener('click', function () {
+                console.log('Opción SUBIR IMAGEN presionada');
+                imageInput.click();
+            });
+            uploadFile.addEventListener('click', function () {
+                console.log('Opción SUBIR ARCHIVO presionada');
+                fileInput.click();
+            });
 
-            imageInput.addEventListener('change', handleImageUpload);
-            fileInput.addEventListener('change', handleFileUpload);
+            imageInput.addEventListener('change', function (e) {
+                console.log('Archivo de imagen seleccionado');
+                handleImageUpload(e);
+            });
+            fileInput.addEventListener('change', function (e) {
+                console.log('Archivo de documento seleccionado');
+                handleFileUpload(e);
+            });
+
+            // Botón de llamada
+            const callButton = document.getElementById('call-button');
+            if (callButton) {
+                callButton.addEventListener('click', function () {
+                    console.log('Botón LLAMADA presionado');
+                });
+            }
         }
 
         // 📤 Enviar mensaje
@@ -943,7 +1446,7 @@ if ($idgrupo) {
                         if (response.success) {
                             hideReplyPreview();
                             loadMessages();
-                            document.getElementById('upload-menu').style.display = 'none';
+                            document.getElementById('upload-menu').classList.remove('show');
                             setTimeout(() => {
                                 forceScrollToBottom();
                             }, 100);
@@ -967,11 +1470,39 @@ if ($idgrupo) {
         }
 
         // 🔄 Cargar mensajes
+        let menuPuntosAbierto = null;
+        // Sobrescribo mostrarMenuPuntos para guardar el menú abierto
+        function mostrarMenuPuntos(btn, messageId, esPropio) {
+            document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
+            const menu = document.getElementById('menu-puntos-' + messageId);
+            menu.classList.toggle('show');
+            if (menu.classList.contains('show')) {
+                menuPuntosAbierto = messageId;
+            } else {
+                menuPuntosAbierto = null;
+            }
+            document.addEventListener('mousedown', function handler(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('show');
+                    menuPuntosAbierto = null;
+                    document.removeEventListener('mousedown', handler);
+                }
+            });
+        }
+
+        // Modifico loadMessages para reabrir el menú si corresponde
         function loadMessages() {
             $.get('load_messages.php')
                 .done(function (data) {
                     $('#chat-box').html(data);
                     autoScroll();
+                    // Reabrir menú si estaba abierto
+                    if (menuPuntosAbierto) {
+                        const btn = document.querySelector('.menu-puntos-btn[onclick*="' + menuPuntosAbierto + '"]');
+                        if (btn) {
+                            setTimeout(() => btn.click(), 50);
+                        }
+                    }
                 })
                 .fail(function (xhr, status, error) {
                     console.error('Error loading messages:', error);
@@ -1036,9 +1567,19 @@ if ($idgrupo) {
         setInterval(loadMessages, 2000);
 
         // 🎯 Funciones auxiliares
-        function showReplyPreview(userName, messageContent, messageId) {
+        function showReplyPreview(userName, messageContent, messageId, messageType, fileName) {
             $('#reply-to-user').text('Respondiendo a: ' + userName);
-            $('#reply-message').html(messageContent);
+            let html = '';
+            if (messageType === 'texto') {
+                html = messageContent;
+            } else if (messageType === 'imagen') {
+                html = '<span style="color:#aaa;">Imagen</span><br><img src="' + messageContent + '" class="reply-img-thumb">';
+            } else if (messageType === 'archivo') {
+                html = '<span style="color:#aaa;">Archivo</span><br><span>' + (fileName || messageContent.split('/').pop()) + '</span>';
+            } else {
+                html = messageContent;
+            }
+            $('#reply-message').html(html);
             $('#reply-preview').show().data('reply-to', messageId);
             $('#message').focus();
         }
@@ -1056,8 +1597,9 @@ if ($idgrupo) {
         const sendButton = document.getElementById('send-button');
 
         function toggleSendButton() {
-            sendButton.disabled = messageInput.value.trim().length === 0;
-            if (sendButton.disabled) {
+            const isEmpty = messageInput.value.trim().length === 0;
+            sendButton.disabled = isEmpty;
+            if (isEmpty) {
                 sendButton.style.opacity = '0.5';
                 sendButton.style.cursor = 'not-allowed';
             } else {
@@ -1068,6 +1610,135 @@ if ($idgrupo) {
 
         messageInput.addEventListener('input', toggleSendButton);
         document.addEventListener('DOMContentLoaded', toggleSendButton);
+        // Refuerza el bloqueo al limpiar el input o cancelar respuesta
+        function forceDisableSendButton() {
+            setTimeout(toggleSendButton, 10);
+        }
+        document.getElementById('cancel-reply').addEventListener('click', forceDisableSendButton);
+        messageInput.addEventListener('change', toggleSendButton);
+        messageInput.addEventListener('keyup', toggleSendButton);
+
+        // Modal de imagen ampliada
+        function setupImageModal() {
+            const modal = document.getElementById('image-modal');
+            const modalImg = modal.querySelector('.modal-img');
+            const closeBtn = modal.querySelector('.close-modal');
+            // Delegación para todas las imágenes del chat
+            document.getElementById('chat-box').addEventListener('click', function (e) {
+                if (e.target.tagName === 'IMG' && e.target.classList.contains('msg-foto')) {
+                    modalImg.src = e.target.src;
+                    modal.classList.add('show');
+                }
+            });
+            closeBtn.addEventListener('click', function () {
+                modal.classList.remove('show');
+                modalImg.src = '';
+            });
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    modalImg.src = '';
+                }
+            });
+            // Cerrar con ESC
+            document.addEventListener('keydown', function (e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                    modalImg.src = '';
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', setupImageModal);
+
+        // Modal de edición de mensaje
+        function setupEditModal() {
+            const modal = document.getElementById('edit-modal');
+            const original = document.getElementById('edit-modal-original');
+            const input = document.getElementById('edit-modal-input');
+            const saveBtn = document.getElementById('edit-modal-save');
+            const closeBtn = document.getElementById('edit-modal-close');
+            let editingId = null;
+
+            // Delegación para botón editar
+            $(document).on('click', '.menu-puntos-opcion', function () {
+                if ($(this).text().trim().toLowerCase() === 'editar') {
+                    const messageId = $(this).closest('.menu-puntos').attr('id').replace('menu-puntos-', '');
+                    const messageElem = document.getElementById('message-text-' + messageId);
+                    if (!messageElem) return;
+                    const originalText = messageElem.textContent;
+                    original.textContent = originalText; // La burbuja solo muestra el mensaje original
+                    input.value = originalText; // El textarea tiene el mensaje editable
+                    input.placeholder = 'Escribe el nuevo mensaje...'; // Placeholder fijo
+                    editingId = messageId;
+                    modal.classList.add('show');
+                    input.focus();
+                    // Ajustar altura del textarea al abrir
+                    input.style.height = 'auto';
+                    input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+                }
+            });
+            // Guardar edición
+            saveBtn.addEventListener('click', function () {
+                const nuevoTexto = input.value.trim();
+                if (nuevoTexto.length === 0) {
+                    alert('El mensaje no puede estar vacío');
+                    return;
+                }
+                // AJAX para actualizar el mensaje
+                fetch('editar_mensaje.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${editingId}&nuevo_texto=${encodeURIComponent(nuevoTexto)}`
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            modal.classList.remove('show');
+                            editingId = null;
+                            loadMessages();
+                        } else {
+                            alert(data.error || 'Error al editar el mensaje');
+                        }
+                    })
+                    .catch(() => alert('Error de conexión al editar mensaje'));
+            });
+            // Cerrar modal al hacer clic fuera
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    editingId = null;
+                }
+            });
+
+            // Cerrar con botón X
+            closeBtn.addEventListener('click', function () {
+                modal.classList.remove('show');
+                editingId = null;
+            });
+
+            // Cerrar con ESC
+            document.addEventListener('keydown', function (e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                    editingId = null;
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', setupEditModal);
+
+        // --- Autoajuste de altura del textarea en el modal de edición ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const editInput = document.getElementById('edit-modal-input');
+            if (editInput) {
+                editInput.addEventListener('input', function () {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 160) + 'px';
+                });
+                // Ajustar altura al abrir el modal si ya tiene texto
+                editInput.style.height = 'auto';
+                editInput.style.height = Math.min(editInput.scrollHeight, 160) + 'px';
+            }
+        });
     </script>
 
 

@@ -141,8 +141,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Todos los campos de datos personales son obligatorios.";
     } elseif (!$error_message) { // Solo si no hay errores previos (ej. de foto)
         // Validar formato del teléfono (solo números y longitud 10)
-        if (!preg_match('/^[0-9]{10}$/', $telefono)) {
+        if (!preg_match('/^[0-9]{11}$/', $telefono)) {
             $error_message = "El formato del teléfono no es válido. Debe contener 10 dígitos numéricos.";
+        } else if (strlen($telefono) > 11) {
+            $error_message = "El teléfono no puede tener más de 11 dígitos.";
+        } else if (strlen($direccion) > 100) {
+            $error_message = "La dirección no puede tener más de 100 caracteres.";
         } else {
             // Actualizar los datos en la base de datos usando prepared statement
             $sql_update = "UPDATE datos_usuario SET sexo = ?, telefono = ?, direccion = ? WHERE usuario_id = ?";
@@ -230,7 +234,7 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
     <style>
         /* Variables CSS para el modo oscuro y colores base */
         :root {
-            --background-color-light: #f4f7f6; /* Fondo general claro, más suave */
+            --background-color-light: #f4f7f6  !important; /* Fondo general claro, más suave */
             --text-color-light: #333; /* Color de texto general claro */
             --form-background-light: #ffffff; /* Fondo del formulario claro */
             --primary-color: #004c97; /* Azul USM para títulos, labels y énfasis */
@@ -243,7 +247,7 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
 
         /* Definiciones para el modo oscuro */
         body.dark-mode {
-            --background-color: rgb(50, 50, 50); /* Fondo general oscuro */
+            --background-color: rgb(50, 50, 50) !important; /* Fondo general oscuro */
             --text-color: white; /* Color de texto general oscuro */
             --form-background: rgb(80, 80, 80); /* Fondo del formulario oscuro, un poco más claro que el fondo general */
             --primary-color: #ffd700; /* Amarillo USM como primario en oscuro (para títulos, etc.) */

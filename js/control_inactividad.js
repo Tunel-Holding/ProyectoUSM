@@ -2,32 +2,30 @@
 // Control de inactividad y actualización de sesión PHP
 
 // Tiempo máximo de inactividad en milisegundos (5 minutos)
-const tiempoMaximo = 5 * 60 * 1000; // 300000 ms
-const tiempoAdvertencia = 4 * 60 * 1000; // 240000 ms
-
-let tiempoInactividad;
+const DURACION_MAXIMA = 5 * 60 * 1000; // 300000 ms
+const DURACION_ADVERTENCIA = 4 * 60 * 1000; // 240000 ms
+let timeoutInactividad;
+let timeoutAdvertencia;
 let advertenciaMostrada = false;
 
 function resetearTemporizador() {
-    clearTimeout(tiempoInactividad);
-    clearTimeout(tiempoAdvertencia);
+    clearTimeout(timeoutInactividad);
+    clearTimeout(timeoutAdvertencia);
     advertenciaMostrada = false;
     // Oculta la advertencia si existe
     const advertencia = document.getElementById('advertencia-inactividad');
     if (advertencia) advertencia.style.display = 'none';
 
-    tiempoInactividad = setTimeout(() => {
-        // Redirige al login después de 5 minutos de inactividad
+    timeoutInactividad = setTimeout(() => {
         window.location.href = 'inicio.php?mensaje=expirado';
-    }, tiempoMaximo);
+    }, DURACION_MAXIMA);
 
-    // Mostrar advertencia al minuto 4
-    tiempoAdvertencia = setTimeout(() => {
+    timeoutAdvertencia = setTimeout(() => {
         if (!advertenciaMostrada) {
             mostrarAdvertencia();
             advertenciaMostrada = true;
         }
-    }, tiempoAdvertencia);
+    }, DURACION_ADVERTENCIA);
 }
 
 function mostrarAdvertencia() {
