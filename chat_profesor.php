@@ -365,7 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         #upload-menu {
             position: absolute !important;
             bottom: 80px !important;
-            left: 1px !important;
+            right: 10px !important;
             background: #23272f !important;
             border: 1.5px solid #fff !important;
             border-radius: 12px !important;
