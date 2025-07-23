@@ -43,7 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     $message = trim($_POST['message']);
 
     if (strlen($message) > 0 && strlen($message) <= 250) {
-        if (preg_match('/^[\p{L}\p{N}\s\.,!?;:()@#$%*+\-=_<>\/\\\\]+$/u', $message)) {
+        // Permitir cualquier carácter excepto saltos de línea (incluye comillas y emojis)
+        if (preg_match('/^[^\r\n]+$/u', $message)) {
             $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
             $stmt->bind_param("isii", $user_id, $message, $group_id, $reply_to);
             if ($stmt->execute()) {
