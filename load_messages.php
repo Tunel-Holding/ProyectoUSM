@@ -186,13 +186,6 @@ while ($row = $result->fetch_assoc()) {
             . 'data-message-type="' . $tipo . '" '
             . 'data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '"'
             . ' onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">';
-        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
-        if ($tipo === "texto") {
-            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
-        }
-        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
-        echo '</div>';
         echo '</div>';
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
@@ -275,9 +268,6 @@ while ($row = $result->fetch_assoc()) {
             . 'data-message-type="' . $tipo . '" '
             . 'data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '"'
             . ' onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
-            </div>';
         echo '</div>';
     }
 
