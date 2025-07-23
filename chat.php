@@ -1862,6 +1862,9 @@ if ($idgrupo) {
 
         // Función global para editar mensaje desde el menú flotante
         function editarMensaje(id) {
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
             // Busca el elemento del mensaje
             const messageElem = document.getElementById('message-text-' + id);
             if (!messageElem) return;
@@ -1880,6 +1883,14 @@ if ($idgrupo) {
             input.style.height = Math.min(input.scrollHeight, 160) + 'px';
             // Guarda el id que se está editando
             window._editingMessageId = id;
+        }
+
+        function eliminarMensaje(id) {
+            // Cierra el menú flotante si está abierto
+            const menu = document.getElementById('menu-puntos-flotante');
+            if (menu) menu.remove();
+            // Simula click en el botón original (que está oculto)
+            document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
         }
 
         // Agrega estilos para el menú flotante (idénticos al menú anterior)
