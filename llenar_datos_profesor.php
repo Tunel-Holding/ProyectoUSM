@@ -107,11 +107,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 // Validar y sanitizar cada campo
                 $campos = [
-                    'numero_cedula' => ['tipo' => 'cedula', 'requerido' => false],
+                    'numero_cedula' => ['tipo' => 'cedula', 'requerido' => true],
                     'nombres' => ['tipo' => 'nombre', 'requerido' => true],
                     'apellidos' => ['tipo' => 'nombre', 'requerido' => true],
-                    'sexo' => ['tipo' => 'sexo', 'requerido' => false],
-                    'telefono' => ['tipo' => 'telefono', 'requerido' => false],
+                    'sexo' => ['tipo' => 'sexo', 'requerido' => true],
+                    'telefono' => ['tipo' => 'telefono', 'requerido' => true],
                     'direccion' => ['tipo' => 'texto', 'requerido' => false]
                 ];
                 
@@ -224,13 +224,12 @@ actualizar_actividad();
 
         .wecontainer h1 {
             text-align: center;
-            color: #26c8dd
+            color: #26c8dd;
             margin-bottom: 30px;
             font-size: 2.2em;
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
         }
-
         /* Estilos para el formulario GRID */
         .wecontainer .form-grid { /* Cambié a .form-grid para evitar conflicto con .form general */
             display: grid;
@@ -472,7 +471,8 @@ actualizar_actividad();
                                 pattern="\d{2,8}"
                                 title="La cédula debe tener entre 2 y 8 dígitos"
                                 value="<?php echo isset($datos['numero_cedula']) ? htmlspecialchars($datos['numero_cedula']) : ''; ?>"
-                                maxlength="8">
+                                maxlength="8"
+                                required>
                     </div>
 
                     <div class="form-group">
@@ -482,7 +482,8 @@ actualizar_actividad();
                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
                                 title="Solo se permiten letras y espacios"
                                 value="<?php echo isset($datos['nombres']) ? htmlspecialchars($datos['nombres']) : ''; ?>"
-                                maxlength="100">
+                                maxlength="100"
+                                required>
                     </div>
 
                     <div class="form-group">
@@ -492,7 +493,8 @@ actualizar_actividad();
                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
                                 title="Solo se permiten letras y espacios"
                                 value="<?php echo isset($datos['apellidos']) ? htmlspecialchars($datos['apellidos']) : ''; ?>"
-                                maxlength="100">
+                                maxlength="100"
+                                required>
                     </div>
 
                     <div class="form-group">
@@ -510,7 +512,8 @@ actualizar_actividad();
                                 pattern="\d{11}"
                                 title="El teléfono debe tener exactamente 11 dígitos"
                                 value="<?php echo isset($datos['telefono']) ? htmlspecialchars($datos['telefono']) : ''; ?>"
-                                maxlength="11">
+                                maxlength="11"
+                                required>
                     </div>
 
                     <div class="form-group">
