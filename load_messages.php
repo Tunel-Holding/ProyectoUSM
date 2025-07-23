@@ -281,7 +281,7 @@ while ($row = $result->fetch_assoc()) {
         echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
         if ($tipo === "texto") {
             echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
-        }
+        }//probando
         echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
         echo '</div>';
         echo '</div>';
