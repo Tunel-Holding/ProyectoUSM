@@ -43,8 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     $message = trim($_POST['message']);
 
     if (strlen($message) > 0 && strlen($message) <= 250) {
-        // Permitir cualquier carácter excepto saltos de línea (incluye comillas y emojis)
-        if (preg_match('/^[^\r\n]+$/u', $message)) {
+        if (preg_match('/^[\p{L}\p{N}\s\.,!?;:()@#$%*+\-=_<>\/\\\\]+$/u', $message)) {
             $stmt = $conn->prepare("INSERT INTO messages (user_id, message, group_id, tipo, reply_to) VALUES (?, ?, ?, 'texto', ?)");
             $stmt->bind_param("isii", $user_id, $message, $group_id, $reply_to);
             if ($stmt->execute()) {
@@ -1270,9 +1269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $('#reply-to-user').text('Respondiendo a: ' + userName);
             let html = '';
             if (messageType === 'texto') {
-                // Decodificar entidades antes de escapar para HTML
-                $mensaje_decodificado = html_entity_decode($messageContent, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                html = htmlspecialchars($mensaje_decodificado, ENT_QUOTES, 'UTF-8');
+                html = messageContent;
             } else if (messageType === 'imagen') {
                 html = '<span style="color:#aaa;">Imagen</span><br><img src="' + messageContent + '" class="reply-img-thumb">';
             } else if (messageType === 'archivo') {
