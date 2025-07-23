@@ -179,15 +179,9 @@ while ($row = $result->fetch_assoc()) {
     // Avatar y burbuja según el usuario
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
+        // --- Cambiar botón de 3 puntos para usar menú global ---
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">';
-        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
-        if ($tipo === "texto") {
-            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
-        }
-        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
-        echo '</div>';
+        echo '<button class="menu-puntos-btn" onclick="abrirMenuGlobalPuntos(this, ' . $message_id . ', true, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
         echo '</div>';
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
@@ -264,10 +258,7 @@ while ($row = $result->fetch_assoc()) {
     // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos envuelto
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
-            </div>';
+        echo '<button class="menu-puntos-btn" onclick="abrirMenuGlobalPuntos(this, ' . $message_id . ', false, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
         echo '</div>';
     }
 
@@ -276,7 +267,7 @@ while ($row = $result->fetch_assoc()) {
 actualizar_actividad();
 $conn->close();
 ?>
-
+<div id="menu-global-puntos" style="display:none;"></div>
 <style>
     /* Contenedor de mensajes */
     .message-container-flex {
@@ -755,6 +746,52 @@ $conn->close();
         box-shadow: 0 2px 8px rgba(33, 53, 85, 0.10) !important;
         background: #fff !important;
     }
+
+    #menu-global-puntos {
+        position: fixed !important;
+        z-index: 99999 !important;
+        min-width: 180px !important;
+        background: #fff !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13) !important;
+        border: 1.5px solid #fff !important;
+        padding: 0 !important;
+        flex-direction: column !important;
+        display: none !important;
+    }
+
+    #menu-global-puntos.show {
+        display: flex !important;
+    }
+
+    #menu-global-puntos .menu-puntos-opcion {
+        padding: 10px 18px !important;
+        cursor: pointer !important;
+        background: none !important;
+        border: none !important;
+        text-align: left !important;
+        font-size: 15px !important;
+        color: #213555 !important;
+        transition: background 0.2s !important;
+    }
+
+    #menu-global-puntos .menu-puntos-opcion:hover {
+        background: #f4f8fb !important;
+    }
+
+    body.dark-mode #menu-global-puntos {
+        background: #232323 !important;
+        border: 1px solid #444 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32) !important;
+    }
+
+    body.dark-mode #menu-global-puntos .menu-puntos-opcion {
+        color: #e0e0e0 !important;
+    }
+
+    body.dark-mode #menu-global-puntos .menu-puntos-opcion:hover {
+        background: #333 !important;
+    }
 </style>
 
 <script>
@@ -848,5 +885,74 @@ $conn->close();
     function eliminarMensaje(id) {
         // Simula click en el botón original (que está oculto)
         document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
+    }
+
+    // --- Menú global de 3 puntos ---
+    let menuGlobalTimeout = null;
+    let menuGlobalActivo = null;
+    let menuGlobalBtn = null;
+
+    function abrirMenuGlobalPuntos(btn, messageId, esPropio, tipo, puedeEliminar) {
+        const menu = document.getElementById('menu-global-puntos');
+        // Limpiar menú
+        menu.innerHTML = '';
+        // Opciones comunes
+        const responderBtn = document.createElement('button');
+        responderBtn.className = 'menu-puntos-opcion';
+        responderBtn.textContent = 'Responder';
+        responderBtn.onclick = function () { responderMensaje(messageId); ocultarMenuGlobalPuntos(); };
+        menu.appendChild(responderBtn);
+        // Si es propio y tipo texto, permitir editar
+        if (esPropio && tipo === 'texto') {
+            const editarBtn = document.createElement('button');
+            editarBtn.className = 'menu-puntos-opcion';
+            editarBtn.textContent = 'Editar';
+            editarBtn.onclick = function () { editarMensaje(messageId); ocultarMenuGlobalPuntos(); };
+            menu.appendChild(editarBtn);
+        }
+        // Si puede eliminar
+        if (puedeEliminar) {
+            const eliminarBtn = document.createElement('button');
+            eliminarBtn.className = 'menu-puntos-opcion';
+            eliminarBtn.textContent = 'Eliminar';
+            eliminarBtn.onclick = function () { eliminarMensaje(messageId); ocultarMenuGlobalPuntos(); };
+            menu.appendChild(eliminarBtn);
+        }
+        // Posicionar el menú junto al botón
+        const rect = btn.getBoundingClientRect();
+        menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+        // Si cabe a la derecha, lo pone ahí, si no, a la izquierda
+        if (rect.left + menu.offsetWidth < window.innerWidth) {
+            menu.style.left = (rect.left + window.scrollX) + 'px';
+            menu.style.right = '';
+        } else {
+            menu.style.left = '';
+            menu.style.right = (window.innerWidth - rect.right - window.scrollX) + 'px';
+        }
+        menu.classList.add('show');
+        menuGlobalActivo = messageId;
+        menuGlobalBtn = btn;
+        // Cerrar al hacer click fuera
+        setTimeout(() => {
+            document.addEventListener('mousedown', cerrarMenuGlobalHandler);
+        }, 0);
+    }
+    function cerrarMenuGlobalHandler(e) {
+        const menu = document.getElementById('menu-global-puntos');
+        if (!menu.contains(e.target) && (!menuGlobalBtn || !menuGlobalBtn.contains(e.target))) {
+            ocultarMenuGlobalPuntos();
+        }
+    }
+    function ocultarMenuGlobalPuntos() {
+        const menu = document.getElementById('menu-global-puntos');
+        menu.classList.remove('show');
+        menuGlobalActivo = null;
+        menuGlobalBtn = null;
+        document.removeEventListener('mousedown', cerrarMenuGlobalHandler);
+    }
+    // Ocultar menú global al recargar mensajes
+    function loadMessages() {
+        ocultarMenuGlobalPuntos();
+        // ... aquí va tu lógica AJAX para recargar mensajes ...
     }
 </script>
