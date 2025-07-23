@@ -1770,20 +1770,21 @@ if ($idgrupo) {
                     menu.style.zIndex = 99999;
                 }
                 updateMenuPosition();
-                // Al hacer scroll o resize, cerrar el menú
+                // Al hacer scroll en el chat o resize, cerrar el menú
+                const chatBox = document.getElementById('chat-box');
                 function closeMenuOnScrollOrResize() {
                     if (menu.parentNode) menu.remove();
-                    window.removeEventListener('scroll', closeMenuOnScrollOrResize);
+                    if (chatBox) chatBox.removeEventListener('scroll', closeMenuOnScrollOrResize);
                     window.removeEventListener('resize', closeMenuOnScrollOrResize);
                 }
-                window.addEventListener('scroll', closeMenuOnScrollOrResize);
+                if (chatBox) chatBox.addEventListener('scroll', closeMenuOnScrollOrResize);
                 window.addEventListener('resize', closeMenuOnScrollOrResize);
                 // Cierra al hacer click fuera
                 setTimeout(() => {
                     document.addEventListener('mousedown', function handler(ev) {
                         if (!menu.contains(ev.target) && ev.target !== btn) {
                             menu.remove();
-                            window.removeEventListener('scroll', closeMenuOnScrollOrResize);
+                            if (chatBox) chatBox.removeEventListener('scroll', closeMenuOnScrollOrResize);
                             window.removeEventListener('resize', closeMenuOnScrollOrResize);
                             document.removeEventListener('mousedown', handler);
                         }
