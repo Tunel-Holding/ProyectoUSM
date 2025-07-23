@@ -489,6 +489,12 @@ $conn->close();
         right: auto !important;
         margin: 0 !important;
         flex-direction: column !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13) !important;
+        background: #fff !important;
+        border: 1.5px solid #fff !important;
+        padding: 0 !important;
+        min-width: 180px !important;
     }
 
     .menu-puntos.show {
