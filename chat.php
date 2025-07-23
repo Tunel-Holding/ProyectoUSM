@@ -1772,6 +1772,8 @@ if ($idgrupo) {
                 updateMenuPosition();
                 window.addEventListener('scroll', updateMenuPosition);
                 window.addEventListener('resize', updateMenuPosition);
+                // Deshabilita el scroll del body
+                document.body.style.overflow = 'hidden';
                 // Cierra al hacer click fuera
                 setTimeout(() => {
                     document.addEventListener('mousedown', function handler(ev) {
@@ -1779,6 +1781,7 @@ if ($idgrupo) {
                             menu.remove();
                             window.removeEventListener('scroll', updateMenuPosition);
                             window.removeEventListener('resize', updateMenuPosition);
+                            document.body.style.overflow = '';
                             document.removeEventListener('mousedown', handler);
                         }
                     });
