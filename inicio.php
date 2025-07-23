@@ -33,15 +33,15 @@
                 <span>Usa tu usuario y contraseña</span>
                 <div class="container-input">
                     <ion-icon name="person-outline"></ion-icon>
-                    <input type="text" name="usuario" placeholder="Usuario" required>
+                    <input type="text" name="usuario" placeholder="Usuario" maxlength="50" required>
                 </div>
                 <div class="container-input">
                     <ion-icon name="lock-closed-outline"></ion-icon>
-                    <input type="password" name="Password1" placeholder="Contraseña" id="pass" required>
+                    <input type="password" name="Password1" placeholder="Contraseña" maxlength="50" id="pass" required>
                     <i class='bx bx-show'></i>
                 </div>
                 <span class="errorcontraseña"></span>
-                <a href="olvidarcontraseña.php" class="olvido">¿Olvidaste tu contraseña?</a>
+                <a href="forgotPassword.php" class="olvido">¿Olvidaste tu contraseña?</a>
                 <button type="submit" class="button">Iniciar Sesión</button>
 
             </form>
@@ -57,15 +57,15 @@
                 <span>Ingrese su nombre, correo y contraseña para Registrarse</span>
                 <div class="container-input">
                     <ion-icon name="person-outline"></ion-icon>
-                    <input type="text" name="nombre" placeholder="Nombre de Usuario" required>
+                    <input type="text" name="nombre" placeholder="Nombre de Usuario" maxlength="50" required>
                 </div>
                 <div class="container-input">
                     <ion-icon name="mail-outline"></ion-icon>
-                    <input type="text" name="mail" placeholder="Email" required>
+                    <input type="text" name="mail" placeholder="Email" maxlength="50" required>
                 </div>
                 <div class="container-input" id="container-pass">
                     <ion-icon name="lock-closed-outline"></ion-icon>
-                    <input type="password" name="Password" placeholder="Contraseña" id="passs" required>
+                    <input type="password" name="Password"  placeholder="Contraseña" id="passs" maxlength="50" required>
                     <div id="tooltip" class="tooltip">La contraseña debe contener al menos una letra minúscula, mayúscula, un numero y un carácter especial.</div>
                     <i class='bx bx-show' id="icons"></i>
                 </div>
