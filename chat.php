@@ -776,7 +776,8 @@ if ($idgrupo) {
             top: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(24, 26, 27, 0.96);
+            /* Más oscuro */
             align-items: center;
             justify-content: center;
             animation: fadeInModal 0.25s;
@@ -788,73 +789,101 @@ if ($idgrupo) {
 
         .edit-modal-content {
             background: #23272f;
-            border-radius: 18px;
-            padding: 32px 32px 24px 32px;
+            border-radius: 22px;
+            padding: 44px 36px 32px 36px;
             min-width: 350px;
             max-width: 95vw;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
             position: relative;
-            animation: zoomInModal 0.25s;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 28px;
         }
 
         .edit-modal-header {
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: #fff;
             font-weight: 700;
             margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .edit-modal-bubble {
             background: #174388;
             color: #fff;
-            border-radius: 12px;
-            padding: 16px 18px;
-            font-size: 1.05em;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.08);
+            border-radius: 14px 14px 14px 4px;
+            padding: 12px 18px 10px 18px;
+            font-size: 1.02em;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.18);
+            max-width: 70%;
+            align-self: flex-start;
+            word-break: break-word;
         }
 
         .edit-modal-input {
             width: 100%;
-            min-height: 60px;
-            font-size: 1.08em;
-            border-radius: 8px;
-            border: 1.5px solid #174388;
-            padding: 10px 14px;
-            background: #23272f;
+            min-height: 48px;
+            font-size: 1.13em;
+            border: none;
+            border-bottom: 2.5px solid #25d366;
+            background: transparent;
             color: #fff;
-            margin-bottom: 8px;
-            resize: vertical;
+            margin-bottom: 0;
+            padding: 10px 0 6px 0;
+            outline: none;
+            resize: none;
+            transition: border-color 0.2s;
+        }
+
+        .edit-modal-input:focus {
+            border-bottom: 2.5px solid #34b7f1;
         }
 
         .edit-modal-actions {
             display: flex;
-            gap: 16px;
+            gap: 18px;
             justify-content: flex-end;
+            margin-top: 18px;
         }
 
         .edit-modal-btn {
-            font-size: 1.5em;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
             border: none;
-            background: none;
-            color: #25d366;
+            font-size: 2.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: background 0.2s, color 0.2s;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
         }
 
         .edit-modal-btn.cancel {
-            color: #fff;
             background: #444;
+            color: #eee;
+        }
+
+        .edit-modal-btn:not(.cancel) {
+            background: #25d366;
+            color: #fff;
         }
 
         .edit-modal-btn:hover {
-            background: #174388;
-            color: #fff;
+            filter: brightness(1.1);
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.18);
+        }
+
+        @media (max-width: 600px) {
+            .edit-modal-content {
+                padding: 18px 8px 18px 8px;
+            }
+
+            .edit-modal-bubble {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
