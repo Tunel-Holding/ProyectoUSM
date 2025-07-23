@@ -858,6 +858,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         .msg-foto {
             cursor: pointer !important;
         }
+
+        .reply-preview-inside {
+            cursor: pointer !important;
+        }
+
+        .highlight-reply {
+            box-shadow: 0 0 0 3px #2196f3, 0 2px 8px rgba(33, 53, 85, 0.10) !important;
+            transition: box-shadow 0.3s;
+        }
     </style>
 </head>
 
