@@ -961,6 +961,7 @@ if ($idgrupo) {
 
         .edit-modal-save:hover {
             background: #0e3470;
+            box-shadow: 0 4px 16px rgba(23, 67, 136, 0.3);
         }
     </style>
 </head>
