@@ -96,12 +96,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errores[] = "Error: Ya existen datos para este usuario. No se permite duplicar.";
             } else {
                 $campos = [
-                    'numero_cedula' => ['tipo' => 'cedula', 'requerido' => false, 'etiqueta' => 'Número de Cédula'],
+                    'numero_cedula' => ['tipo' => 'cedula', 'requerido' => true, 'etiqueta' => 'Número de Cédula'],
                     'nombres' => ['tipo' => 'nombre', 'requerido' => true, 'etiqueta' => 'Nombres'],
                     'apellidos' => ['tipo' => 'nombre', 'requerido' => true, 'etiqueta' => 'Apellidos'],
                     'sexo' => ['tipo' => 'sexo', 'requerido' => false, 'etiqueta' => 'Sexo'],
-                    'telefono' => ['tipo' => 'telefono', 'requerido' => false, 'etiqueta' => 'Teléfono'],
-                    'direccion' => ['tipo' => 'texto', 'requerido' => false, 'etiqueta' => 'Dirección']
+                    'telefono' => ['tipo' => 'telefono', 'requerido' => true, 'etiqueta' => 'Teléfono'],
+                    'direccion' => ['tipo' => 'texto', 'requerido' => true, 'etiqueta' => 'Dirección']
                 ];
                 foreach ($campos as $campo => $config) {
                     $valor = $_POST[$campo] ?? '';
@@ -556,7 +556,8 @@ $conn->close();
                             title="Solo se permiten letras y espacios."
                             value="<?php echo isset($datos['nombres']) ? htmlspecialchars($datos['nombres']) : ''; ?>"
                             maxlength="100"
-                            class="<?php echo isset($errores) && (in_array("El campo Nombres es requerido.", $errores) || in_array("El campo Nombres tiene un formato inválido.", $errores)) ? 'error' : ''; ?>">
+                            class="<?php echo isset($errores) && (in_array("El campo Nombres es requerido.", $errores) || in_array("El campo Nombres tiene un formato inválido.", $errores)) ? 'error' : ''; ?>"
+                            required>
 
                     <label for="apellidos">Apellidos: <span class="required">*</span></label>
                     <input type="text" id="apellidos" name="apellidos"
@@ -565,7 +566,8 @@ $conn->close();
                             title="Solo se permiten letras y espacios."
                             value="<?php echo isset($datos['apellidos']) ? htmlspecialchars($datos['apellidos']) : ''; ?>"
                             maxlength="100"
-                            class="<?php echo isset($errores) && (in_array("El campo Apellidos es requerido.", $errores) || in_array("El campo Apellidos tiene un formato inválido.", $errores)) ? 'error' : ''; ?>">
+                            class="<?php echo isset($errores) && (in_array("El campo Apellidos es requerido.", $errores) || in_array("El campo Apellidos tiene un formato inválido.", $errores)) ? 'error' : ''; ?>"
+                            required>
 
                     <label for="sexo">Sexo:</label>
                     <select id="sexo" name="sexo"
@@ -581,7 +583,8 @@ $conn->close();
                             title="El teléfono debe tener exactamente 11 dígitos numéricos."
                             value="<?php echo isset($datos['telefono']) ? htmlspecialchars($datos['telefono']) : ''; ?>"
                             maxlength="11"
-                            class="<?php echo isset($errores) && in_array("El campo Teléfono tiene un formato inválido.", $errores) ? 'error' : ''; ?>">
+                            class="<?php echo isset($errores) && in_array("El campo Teléfono tiene un formato inválido.", $errores) ? 'error' : ''; ?>"
+                            required>
 
                     <label for="correo">Correo:</label>
                     <div class="correo-display">
@@ -592,7 +595,8 @@ $conn->close();
                     <input type="text" id="direccion" name="direccion"
                             value="<?php echo isset($datos['direccion']) ? htmlspecialchars($datos['direccion']) : ''; ?>"
                             maxlength="200"
-                            class="<?php echo isset($errores) && in_array("El campo Dirección tiene un formato inválido.", $errores) ? 'error' : ''; ?>">
+                            class="<?php echo isset($errores) && in_array("El campo Dirección tiene un formato inválido.", $errores) ? 'error' : ''; ?>"
+                            required>
                 </div>
                 <input type="submit" class="button" value="Guardar datos">
             </form>
