@@ -1477,13 +1477,26 @@ if ($idgrupo) {
             const menu = document.getElementById('menu-puntos-' + messageId);
             menu.classList.toggle('show');
             if (menu.classList.contains('show')) {
+                // Pausa la recarga automática
+                if (chatIntervalId) {
+                    clearInterval(chatIntervalId);
+                    chatIntervalId = null;
+                }
                 menuPuntosAbierto = messageId;
             } else {
+                // Reanuda la recarga automática
+                if (!chatIntervalId) {
+                    chatIntervalId = setInterval(loadMessages, 2000);
+                }
                 menuPuntosAbierto = null;
             }
             document.addEventListener('mousedown', function handler(e) {
                 if (!btn.contains(e.target) && !menu.contains(e.target)) {
                     menu.classList.remove('show');
+                    // Reanuda la recarga automática
+                    if (!chatIntervalId) {
+                        chatIntervalId = setInterval(loadMessages, 2000);
+                    }
                     menuPuntosAbierto = null;
                     document.removeEventListener('mousedown', handler);
                 }
@@ -1564,7 +1577,8 @@ if ($idgrupo) {
         }
 
         // 🔄 Actualizar mensajes cada 2 segundos
-        setInterval(loadMessages, 2000);
+        let chatIntervalId = null;
+        chatIntervalId = setInterval(loadMessages, 2000);
 
         // 🎯 Funciones auxiliares
         function showReplyPreview(userName, messageContent, messageId, messageType, fileName) {
