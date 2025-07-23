@@ -895,8 +895,7 @@ if ($idgrupo) {
         .edit-modal-flex-row {
             display: flex;
             flex-direction: row;
-            align-items: center;
-            /* Cambiado para alinear verticalmente */
+            align-items: flex-end;
             gap: 12px;
             width: 100%;
         }
@@ -904,13 +903,37 @@ if ($idgrupo) {
         .edit-modal-input {
             flex: 1 1 auto;
             min-width: 0;
+            min-height: 40px;
+            max-height: 160px;
+            font-size: 1.13em;
+            border: none;
+            border-bottom: 2px solid #25d366;
+            background: transparent;
+            color: #fff;
+            padding: 10px 0 6px 0;
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
         }
 
         .edit-modal-save {
             flex: 0 0 auto;
-            height: 48px;
-            margin-bottom: 0;
-            align-self: center;
+            height: 40px;
+            min-width: 48px;
+            border-radius: 50%;
+            border: none;
+            background: #25d366;
+            color: #fff;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
+            margin-bottom: 2px;
         }
     </style>
 </head>
