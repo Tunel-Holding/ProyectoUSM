@@ -14,13 +14,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $archivo_subido = isset($_FILES['archivo_tarea']) && $_FILES['archivo_tarea']['error'] === UPLOAD_ERR_OK;
 
     $directorio_subida = 'uploads/';
-    $ruta_archivo = null;
+    $ruta_archivo = '';
+    // Validaciones antes de mover el archivo
+    $max_file_size = 25 * 1024 * 1024; // 25 MB
+    $allowed_extensions = ['pdf', 'docx', 'zip', 'jpg', 'jpeg', 'png'];
+
     if ($archivo_subido) {
-        $nombre_archivo_original = basename($_FILES['archivo_tarea']['name']);
-        $nombre_archivo_unico = time() . '_' . uniqid() . '_' . $nombre_archivo_original;
-        $ruta_archivo = $directorio_subida . $nombre_archivo_unico;
-    } elseif ($link_tarea !== '') {
-        $ruta_archivo = $link_tarea;
+        $file_size = $_FILES['archivo_tarea']['size'];
+        $file_ext = strtolower(pathinfo($_FILES['archivo_tarea']['name'], PATHINFO_EXTENSION));
+
+        if ($file_size > $max_file_size) {
+            $response['success'] = false;
+            $response['error'] = "El archivo es demasiado grande. El tamaño máximo permitido es 25 MB.";
+            echo json_encode($response);
+            exit();
+        }
+
+        if (!in_array($file_ext, $allowed_extensions)) {
+            $response['success'] = false;
+            $response['error'] = "Tipo de archivo no permitido. Solo se permiten: PDF, DOCX, ZIP, JPG, JPEG, PNG.";
+            echo json_encode($response);
+            exit();
+        }
+    }
+
+    if (!$archivo_subido && $link_tarea !== '') {
+        // Validar que el link sea una URL válida
+        if (!filter_var($link_tarea, FILTER_VALIDATE_URL)) {
+            $response['success'] = false;
+            $response['error'] = "El enlace ingresado no es una URL válida.";
+            echo json_encode($response);
+            exit();
+        }
     }
 
     if ($archivo_subido && move_uploaded_file($_FILES['archivo_tarea']['tmp_name'], $ruta_archivo)) {

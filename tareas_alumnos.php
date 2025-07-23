@@ -366,6 +366,9 @@ if (isset($conn) && $conn instanceof mysqli) {
                     </label>
                 </div>
                 <div id="uploadErrorMsg" style="color: #d32f2f; margin-bottom: 10px; display: none;"></div>
+                <div style="color: #174388; background: #fffbe6; border: 1px solid #ffd700; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 0.98em;">
+                    <strong>Advertencia:</strong> El archivo debe ser de máximo <b>25MB</b> y solo se permiten los formatos: <b>PDF, DOCX, ZIP, JPG, JPEG, PNG</b>.
+                </div>
                 <div id="entrega_archivo">
                     <input type="file" name="archivo_tarea" id="archivo_tarea" accept=".pdf,.docx,.zip" style="display:none;">
                     <button type="button" id="archivo_tarea_btn" class="upload_button">
