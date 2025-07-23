@@ -1761,13 +1761,38 @@ if ($idgrupo) {
                     <button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>
                 `;
                 document.body.appendChild(menu);
-                // Posiciona el menú de forma fija respecto a la ventana
+                // Posiciona el menú igual que el menú anterior
                 function updateMenuPosition() {
                     const rect = btn.getBoundingClientRect();
                     menu.style.position = 'fixed';
-                    menu.style.top = (rect.bottom + 4) + 'px';
-                    menu.style.left = rect.left + 'px';
                     menu.style.zIndex = 99999;
+                    // Detectar si el mensaje es del usuario actual o de otro
+                    let isCurrentUser = false;
+                    let parent = btn.parentElement;
+                    while (parent) {
+                        if (parent.classList && parent.classList.contains('message-container-flex')) {
+                            isCurrentUser = parent.classList.contains('current-user');
+                            break;
+                        }
+                        parent = parent.parentElement;
+                    }
+                    // Medidas del menú
+                    menu.style.visibility = 'hidden';
+                    menu.style.display = 'block';
+                    const menuWidth = menu.offsetWidth;
+                    const menuHeight = menu.offsetHeight;
+                    menu.style.visibility = '';
+                    menu.style.display = '';
+                    // Ajustar posición según lado
+                    if (isCurrentUser) {
+                        // Usuario actual: menú a la izquierda del botón
+                        menu.style.left = (rect.left - menuWidth - 8) + 'px';
+                        menu.style.top = (rect.top - menuHeight + rect.height + 8) + 'px';
+                    } else {
+                        // Otro usuario: menú a la derecha del botón
+                        menu.style.left = (rect.right + 8) + 'px';
+                        menu.style.top = (rect.top - menuHeight + rect.height + 8) + 'px';
+                    }
                 }
                 updateMenuPosition();
                 // Al hacer scroll en el chat o resize, cerrar el menú
