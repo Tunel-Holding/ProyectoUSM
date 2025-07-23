@@ -836,6 +836,7 @@ if ($idgrupo) {
         .edit-modal-input {
             width: 100%;
             min-height: 40px;
+            max-height: 160px;
             font-size: 1.13em;
             border: none;
             border-bottom: 2px solid #25d366;
@@ -845,6 +846,7 @@ if ($idgrupo) {
             padding: 10px 0 6px 0;
             outline: none;
             resize: none;
+            overflow-y: auto;
             transition: border-color 0.2s;
         }
 
@@ -1612,6 +1614,20 @@ if ($idgrupo) {
             });
         }
         document.addEventListener('DOMContentLoaded', setupEditModal);
+
+        // --- Autoajuste de altura del textarea en el modal de edición ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const editInput = document.getElementById('edit-modal-input');
+            if (editInput) {
+                editInput.addEventListener('input', function () {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 160) + 'px';
+                });
+                // Ajustar altura al abrir el modal si ya tiene texto
+                editInput.style.height = 'auto';
+                editInput.style.height = Math.min(editInput.scrollHeight, 160) + 'px';
+            }
+        });
     </script>
 
 
