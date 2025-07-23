@@ -1470,76 +1470,24 @@ if ($idgrupo) {
         }
 
         // 🔄 Cargar mensajes
-        let menuPuntosAbierto = null;
+        let menuPuntosAbierto = null; // Guardar el ID del menú abierto
         // Sobrescribo mostrarMenuPuntos para guardar el menú abierto
         function mostrarMenuPuntos(btn, messageId, esPropio) {
-            // Cierra cualquier menú flotante existente
-            const existingMenu = document.getElementById('menu-puntos-flotante');
-            if (existingMenu) existingMenu.remove();
-
-            // Crea el menú flotante
-            const menu = document.createElement('div');
-            menu.id = 'menu-puntos-flotante';
-            menu.className = 'menu-puntos show';
-            menu.style.position = 'absolute';
-            menu.style.zIndex = 99999;
-            menu.style.minWidth = '180px';
-            menu.style.boxShadow = '0 4px 16px rgba(33, 53, 85, 0.13)';
-            menu.style.borderRadius = '12px';
-            menu.style.background = document.body.classList.contains('dark-mode') ? '#232323' : '#fff';
-            menu.style.border = document.body.classList.contains('dark-mode') ? '1px solid #444' : '1.5px solid #fff';
-            menu.style.padding = '0';
-
-            // Opciones del menú
-            const responderBtn = document.createElement('button');
-            responderBtn.className = 'menu-puntos-opcion';
-            responderBtn.textContent = 'Responder';
-            responderBtn.onclick = function () {
-                responderMensaje(messageId);
-                menu.remove();
-            };
-            menu.appendChild(responderBtn);
-
-            // Solo permitir editar si es propio y tipo texto
-            if (esPropio) {
-                const msgElem = document.getElementById('message-text-' + messageId);
-                if (msgElem) {
-                    const editarBtn = document.createElement('button');
-                    editarBtn.className = 'menu-puntos-opcion';
-                    editarBtn.textContent = 'Editar';
-                    editarBtn.onclick = function () {
-                        editarMensaje(messageId);
-                        menu.remove();
-                    };
-                    menu.appendChild(editarBtn);
-                }
-                const eliminarBtn = document.createElement('button');
-                eliminarBtn.className = 'menu-puntos-opcion';
-                eliminarBtn.textContent = 'Eliminar';
-                eliminarBtn.onclick = function () {
-                    eliminarMensaje(messageId);
-                    menu.remove();
-                };
-                menu.appendChild(eliminarBtn);
+            document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
+            const menu = document.getElementById('menu-puntos-' + messageId);
+            menu.classList.toggle('show');
+            if (menu.classList.contains('show')) {
+                menuPuntosAbierto = messageId;
+            } else {
+                menuPuntosAbierto = null;
             }
-
-            // Posiciona el menú junto al botón
-            const rect = btn.getBoundingClientRect();
-            menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
-            menu.style.left = (window.scrollX + rect.left) + 'px';
-
-            // Añade el menú al body
-            document.body.appendChild(menu);
-
-            // Cierra el menú al hacer clic fuera
-            setTimeout(() => {
-                document.addEventListener('mousedown', function handler(e) {
-                    if (!menu.contains(e.target) && e.target !== btn) {
-                        menu.remove();
-                        document.removeEventListener('mousedown', handler);
-                    }
-                });
-            }, 10);
+            document.addEventListener('mousedown', function handler(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('show');
+                    menuPuntosAbierto = null;
+                    document.removeEventListener('mousedown', handler);
+                }
+            });
         }
 
         // Modifico loadMessages para reabrir el menú si corresponde
@@ -1550,10 +1498,10 @@ if ($idgrupo) {
                     autoScroll();
                     // Reabrir menú si estaba abierto
                     if (menuPuntosAbierto) {
-                        const btn = document.querySelector('.menu-puntos-btn[onclick*="' + menuPuntosAbierto + '"]');
-                        if (btn) {
-                            setTimeout(() => btn.click(), 50);
-                        }
+                        setTimeout(() => {
+                            const btn = document.querySelector('.menu-puntos-btn[onclick*="' + menuPuntosAbierto + '"]');
+                            if (btn) btn.click();
+                        }, 100); // Espera para asegurar que el DOM esté listo
                     }
                 })
                 .fail(function (xhr, status, error) {
@@ -1616,8 +1564,7 @@ if ($idgrupo) {
         }
 
         // 🔄 Actualizar mensajes cada 2 segundos
-        let chatIntervalId = null;
-        chatIntervalId = setInterval(loadMessages, 2000);
+        setInterval(loadMessages, 2000);
 
         // 🎯 Funciones auxiliares
         function showReplyPreview(userName, messageContent, messageId, messageType, fileName) {
