@@ -1106,6 +1106,23 @@ if ($idgrupo) {
         </div>
     </div>
 
+    <!-- --- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN --- -->
+    <!-- Agrega el HTML del modal al final del body -->
+    <div id="delete-confirm-modal"
+        style="display:none;position:fixed;z-index:20000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;padding:32px 36px;border-radius:16px;box-shadow:0 4px 32px rgba(0,0,0,0.18);max-width:90vw;min-width:320px;text-align:center;position:relative;">
+            <h2 style="margin-bottom:18px;color:#213555;">¿Eliminar mensaje?</h2>
+            <p style="color:#555;margin-bottom:28px;">Esta acción no se puede deshacer.</p>
+            <div style="display:flex;gap:18px;justify-content:center;">
+                <button id="delete-confirm-btn"
+                    style="background:#d32f2f;color:#fff;padding:10px 28px;border:none;border-radius:8px;font-size:1.1em;cursor:pointer;">Eliminar</button>
+                <button id="delete-cancel-btn"
+                    style="background:#e0e0e0;color:#213555;padding:10px 28px;border:none;border-radius:8px;font-size:1.1em;cursor:pointer;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 🔧 Configuración global
         const CONFIG = {
@@ -1885,13 +1902,56 @@ if ($idgrupo) {
             window._editingMessageId = id;
         }
 
+        // Variable para guardar el id del mensaje a eliminar
+        let mensajeAEliminar = null;
+
+        // Sobrescribe la función eliminarMensaje para usar el modal
         function eliminarMensaje(id) {
             // Cierra el menú flotante si está abierto
             const menu = document.getElementById('menu-puntos-flotante');
             if (menu) menu.remove();
-            // Simula click en el botón original (que está oculto)
-            document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
+            mensajeAEliminar = id;
+            document.getElementById('delete-confirm-modal').style.display = 'flex';
         }
+        // Manejo de botones del modal
+        const deleteModal = document.getElementById('delete-confirm-modal');
+        document.getElementById('delete-cancel-btn').onclick = function () {
+            deleteModal.style.display = 'none';
+            mensajeAEliminar = null;
+        };
+        document.getElementById('delete-confirm-btn').onclick = function () {
+            if (!mensajeAEliminar) return;
+            // AJAX para eliminar
+            $.post('delete_message.php', {
+                message_id: mensajeAEliminar
+            })
+                .done(function (data) {
+                    try {
+                        const response = JSON.parse(data);
+                        if (response.success) {
+                            loadMessages();
+                        } else {
+                            alert(response.error || 'Error al eliminar el mensaje');
+                        }
+                    } catch (e) {
+                        alert('Error al procesar la respuesta del servidor');
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    alert('Error de conexión: ' + error);
+                })
+                .always(function () {
+                    deleteModal.style.display = 'none';
+                    mensajeAEliminar = null;
+                });
+        };
+        // Cierra el modal al hacer click fuera del cuadro
+        deleteModal.addEventListener('click', function (e) {
+            if (e.target === deleteModal) {
+                deleteModal.style.display = 'none';
+                mensajeAEliminar = null;
+            }
+        });
 
         // Agrega estilos para el menú flotante (idénticos al menú anterior)
         const style = document.createElement('style');
