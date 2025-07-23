@@ -807,29 +807,31 @@ $conn->close();
 </style>
 
 <script>
-    function deleteMessage(messageId) {
-        if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
-            $.post('delete_message.php', {
-                message_id: messageId
-            })
-                .done(function (data) {
-                    try {
-                        const response = JSON.parse(data);
-                        if (response.success) {
-                            // Recargar mensajes para mostrar el cambio
-                            loadMessages();
-                        } else {
-                            alert('Error: ' + response.error);
-                        }
-                    } catch (e) {
-                        alert('Error al procesar la respuesta del servidor');
-                    }
-                })
-                .fail(function (xhr, status, error) {
-                    alert('Error de conexión: ' + error);
-                });
-        }
-    }
+    // Elimino confirm nativo para eliminar mensajes
+    // function deleteMessage(messageId) {
+    //     if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
+    //         $.post('delete_message.php', {
+    //             message_id: messageId
+    //         })
+    //             .done(function (data) {
+    //                 try {
+    //                     const response = JSON.parse(data);
+    //                     if (response.success) {
+    //                         // Recargar mensajes para mostrar el cambio
+    //                         loadMessages();
+    //                     } else {
+    //                         alert('Error: ' + response.error);
+    //                     }
+    //                 } catch (e) {
+    //                     alert('Error al procesar la respuesta del servidor');
+    //                 }
+    //             })
+    //             .fail(function (xhr, status, error) {
+    //                 alert('Error de conexión: ' + error);
+    //             });
+    //     }
+    // }
+    // Ahora la eliminación debe pasar por el modal personalizado en chat.php/chat_profesor.php
 
     function mostrarMenuPuntos(btn, messageId, esPropio) {
         // Cerrar otros menús
