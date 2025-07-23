@@ -180,6 +180,8 @@ while ($row = $result->fetch_assoc()) {
     // Avatar y burbuja según el usuario
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
+        // --- INICIO BLOQUE MENÚ 3 PUNTOS (comentado por migración a menú flotante JS) ---
+        /*
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">';
@@ -190,6 +192,8 @@ while ($row = $result->fetch_assoc()) {
         echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
         echo '</div>';
         echo '</div>';
+        */
+        // --- FIN BLOQUE MENÚ 3 PUNTOS ---
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
         echo '<div class="message-bubble-' . $nivel_usuario . $extra_class . '" ' . $styleBurbuja . '>';
@@ -264,14 +268,16 @@ while ($row = $result->fetch_assoc()) {
     }
 
     // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos envuelto
+    /*
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
+                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
             </div>';
         echo '</div>';
     }
+    */
 
     echo '</div>'; // Cierre de contenedor flex
 }
@@ -788,6 +794,7 @@ $conn->close();
         width: 100%;
         display: block;
     }
+
     .timestamp-new {
         text-align: right;
         font-size: 12px;
@@ -798,6 +805,7 @@ $conn->close();
         width: 100%;
         font-family: inherit;
     }
+
     .message-bubble-alumno .timestamp-new,
     .message-bubble-profesor .timestamp-new,
     .message-bubble-administrador .timestamp-new,
