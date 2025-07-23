@@ -180,14 +180,7 @@ while ($row = $result->fetch_assoc()) {
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">';
-        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
-        if ($tipo === "texto") {
-            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
-        }
-        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
-        echo '</div>';
+        echo '<button class="menu-puntos-btn" onclick="abrirMenuGlobalPuntos(this, ' . $message_id . ', true, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
         echo '</div>';
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
@@ -264,10 +257,7 @@ while ($row = $result->fetch_assoc()) {
     // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos envuelto
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
-                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
-            </div>';
+        echo '<button class="menu-puntos-btn" onclick="abrirMenuGlobalPuntos(this, ' . $message_id . ', false, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
         echo '</div>';
     }
 
@@ -970,5 +960,17 @@ $conn->close();
         menuGlobalActivo = null;
         menuGlobalBtn = null;
         document.removeEventListener('mousedown', cerrarMenuGlobalHandler);
+    }
+    // Ocultar menú global al recargar mensajes
+    function loadMessages() {
+        ocultarMenuGlobalPuntos();
+        // Aquí va tu lógica AJAX para recargar mensajes
+        $.get('load_messages.php')
+            .done(function (data) {
+                $('#chat-box').html(data);
+            })
+            .fail(function (xhr, status, error) {
+                alert('Error al recargar mensajes: ' + error);
+            });
     }
 </script>
