@@ -1751,31 +1751,36 @@ if ($idgrupo) {
                 // Elimina menú anterior si existe
                 const oldMenu = document.getElementById('menu-puntos-flotante');
                 if (oldMenu) oldMenu.remove();
+                // Detectar si el mensaje es del usuario actual o de otro
+                let isCurrentUser = false;
+                let parent = btn.parentElement;
+                while (parent) {
+                    if (parent.classList && parent.classList.contains('message-container-flex')) {
+                        isCurrentUser = parent.classList.contains('current-user');
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
                 // Crea el menú
                 const menu = document.createElement('div');
                 menu.id = 'menu-puntos-flotante';
                 menu.className = 'menu-puntos-flotante';
-                menu.innerHTML = `
-                    <button class=\"menu-puntos-opcion\" onclick=\"responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')\">Responder</button>
-                    ${messageType === 'texto' ? `<button class=\"menu-puntos-opcion\" onclick=\"editarMensaje(${messageId})\">Editar</button>` : ''}
-                    <button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>
-                `;
+                // Opciones del menú según el usuario
+                let menuHtml = '';
+                menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')\">Responder</button>`;
+                if (isCurrentUser) {
+                    if (messageType === 'texto') {
+                        menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"editarMensaje(${messageId})\">Editar</button>`;
+                    }
+                    menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>`;
+                }
+                menu.innerHTML = menuHtml;
                 document.body.appendChild(menu);
                 // Posiciona el menú igual que el menú anterior
                 function updateMenuPosition() {
                     const rect = btn.getBoundingClientRect();
                     menu.style.position = 'fixed';
                     menu.style.zIndex = 99999;
-                    // Detectar si el mensaje es del usuario actual o de otro
-                    let isCurrentUser = false;
-                    let parent = btn.parentElement;
-                    while (parent) {
-                        if (parent.classList && parent.classList.contains('message-container-flex')) {
-                            isCurrentUser = parent.classList.contains('current-user');
-                            break;
-                        }
-                        parent = parent.parentElement;
-                    }
                     // Medidas del menú
                     menu.style.visibility = 'hidden';
                     menu.style.display = 'block';
