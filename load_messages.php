@@ -153,7 +153,8 @@ while ($row = $result->fetch_assoc()) {
     // 🧱 Contenedor del mensaje
     $is_current_user = ($user_id == $current_user_id);
     $container_class = $is_current_user ? 'message-container-flex current-user' : 'message-container-flex other-user';
-    echo '<div class="' . htmlspecialchars($container_class, ENT_QUOTES, 'UTF-8') . '">';
+    // Agregar id único al contenedor del mensaje
+    echo '<div class="' . htmlspecialchars($container_class, ENT_QUOTES, 'UTF-8') . '" id="message-container-' . intval($message_id) . '">';
 
     // Botones de acción
     echo '<div class="message-actions">';
@@ -220,8 +221,8 @@ while ($row = $result->fetch_assoc()) {
             $reply_mensaje = htmlspecialchars($reply_row['message']);
 
             echo "<div class='reply-preview-inside'>";
-            // Un solo <span> para 'Respondiendo a' y el nombre en la misma línea
-            echo "<span class='reply-to-text'>Respondiendo a <strong>$reply_nombre</strong></span>";
+            // Un solo <span> para 'Respondiendo a' y el nombre en la misma línea, ahora como enlace
+            echo "<span class='reply-to-text reply-link' data-reply-id='$reply_to' style='cursor:pointer;text-decoration:underline;'>Respondiendo a <strong>$reply_nombre</strong></span>";
 
             if ($reply_row['tipo'] === 'imagen') {
                 echo "<div class='reply-content'><img src='" . htmlspecialchars($reply_mensaje, ENT_QUOTES, 'UTF-8') . "' class='reply-image' alt='Imagen'></div>";
@@ -759,6 +760,11 @@ $conn->close();
     .msg-foto {
         cursor: pointer !important;
     }
+
+    .highlight-reply {
+        box-shadow: 0 0 0 3px #2196f3, 0 2px 8px rgba(33, 53, 85, 0.10) !important;
+        transition: box-shadow 0.3s;
+    }
 </style>
 
 <script>
@@ -853,4 +859,18 @@ $conn->close();
         // Simula click en el botón original (que está oculto)
         document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
     }
+
+    // Scroll suave al mensaje original al hacer click en 'Respondiendo a ...'
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('reply-to-text') && e.target.classList.contains('reply-link')) {
+            const replyId = e.target.getAttribute('data-reply-id');
+            const target = document.getElementById('message-container-' + replyId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Opcional: resaltar el mensaje destino
+                target.classList.add('highlight-reply');
+                setTimeout(() => target.classList.remove('highlight-reply'), 1500);
+            }
+        }
+    });
 </script>
