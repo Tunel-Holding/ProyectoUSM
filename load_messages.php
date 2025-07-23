@@ -804,10 +804,6 @@ $conn->close();
 </style>
 
 <script>
-    // Variables para recordar el menú abierto
-    let menuPuntosAbierto = null;
-    let menuPuntosEsPropio = null;
-
     function deleteMessage(messageId) {
         if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
             $.post('delete_message.php', {
@@ -838,20 +834,10 @@ $conn->close();
         // Mostrar el menú de este mensaje
         const menu = document.getElementById('menu-puntos-' + messageId);
         menu.classList.toggle('show');
-        // Guardar el menú abierto
-        if (menu.classList.contains('show')) {
-            menuPuntosAbierto = messageId;
-            menuPuntosEsPropio = esPropio;
-        } else {
-            menuPuntosAbierto = null;
-            menuPuntosEsPropio = null;
-        }
         // Cerrar al hacer click fuera del botón y del menú
         document.addEventListener('mousedown', function handler(e) {
             if (!btn.contains(e.target) && !menu.contains(e.target)) {
                 menu.classList.remove('show');
-                menuPuntosAbierto = null;
-                menuPuntosEsPropio = null;
                 document.removeEventListener('mousedown', handler);
             }
         });
@@ -910,24 +896,12 @@ $conn->close();
         document.querySelector('.delete-button[data-message-id="' + id + '"]').click();
     }
 
-    // --- Mantener menú abierto tras recarga de mensajes ---
-    // Sobrescribe loadMessages si existe, o añade esta función si no existe
+    // Restaurar loadMessages a su versión simple
     function loadMessages() {
-        // Ocultar todos los menús antes de recargar
-        document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
         // Aquí va tu lógica AJAX para recargar mensajes
         $.get('load_messages.php')
             .done(function (data) {
                 $('#chat-box').html(data);
-                // Reabrir el menú si estaba abierto
-                if (menuPuntosAbierto !== null) {
-                    const btn = document.querySelector('.menu-puntos-btn[onclick*="' + menuPuntosAbierto + '"]');
-                    if (btn) {
-                        setTimeout(() => {
-                            mostrarMenuPuntos(btn, menuPuntosAbierto, menuPuntosEsPropio);
-                        }, 50);
-                    }
-                }
             })
             .fail(function (xhr, status, error) {
                 alert('Error al recargar mensajes: ' + error);
