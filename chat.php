@@ -1559,11 +1559,15 @@ if ($idgrupo) {
                     const messageElem = document.getElementById('message-text-' + messageId);
                     if (!messageElem) return;
                     const originalText = messageElem.textContent;
-                    original.textContent = originalText;
-                    input.value = originalText;
+                    original.textContent = originalText; // La burbuja solo muestra el mensaje original
+                    input.value = originalText; // El textarea tiene el mensaje editable
+                    input.placeholder = 'Escribe el nuevo mensaje...'; // Placeholder fijo
                     editingId = messageId;
                     modal.classList.add('show');
                     input.focus();
+                    // Ajustar altura del textarea al abrir
+                    input.style.height = 'auto';
+                    input.style.height = Math.min(input.scrollHeight, 160) + 'px';
                 }
             });
             // Guardar edición
