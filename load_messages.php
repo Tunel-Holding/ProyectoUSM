@@ -792,22 +792,23 @@ $conn->close();
         // Simula click en el botón original (que está oculto)
         document.querySelector('.reply-button[data-message-id="' + id + '"]').click();
     }
-    function editarMensaje(id) {
-        const msgText = document.getElementById('message-text-' + id);
-        if (!msgText) return;
-        // Evita múltiples ediciones simultáneas
-        if (document.getElementById('edit-input-' + id)) return;
-        const original = msgText.textContent;
-        // Reemplaza el texto por un input y botones
-        msgText.innerHTML = `
-            <input id="edit-input-${id}" class="edit-message-input" type="text" value="${original.replace(/"/g, '&quot;')}">
-            <div class="edit-message-actions">
-                <button class="edit-message-btn" onclick="guardarEdicion(${id})">Guardar</button>
-                <button class="edit-message-btn cancel" onclick="cancelarEdicion(${id}, '${original.replace(/'/g, "&#39;").replace(/\"/g, '&quot;')}')">Cancelar</button>
-            </div>
-        `;
-        document.getElementById('edit-input-' + id).focus();
-    }
+    // --- Eliminación de edición en línea ---
+    // function editarMensaje(id) {
+    //     const msgText = document.getElementById('message-text-' + id);
+    //     if (!msgText) return;
+    //     // Evita múltiples ediciones simultáneas
+    //     if (document.getElementById('edit-input-' + id)) return;
+    //     const original = msgText.textContent;
+    //     // Reemplaza el texto por un input y botones
+    //     msgText.innerHTML = `
+    //         <input id="edit-input-${id}" class="edit-message-input" type="text" value="${original.replace(/"/g, '&quot;')}">
+    //         <div class="edit-message-actions">
+    //             <button class="edit-message-btn" onclick="guardarEdicion(${id})">Guardar</button>
+    //             <button class="edit-message-btn cancel" onclick="cancelarEdicion(${id}, '${original.replace(/'/g, "&#39;").replace(/\"/g, '&quot;')}")">Cancelar</button>
+    //         </div>
+    //     `;
+    //     document.getElementById('edit-input-' + id).focus();
+    // }
     function cancelarEdicion(id, original) {
         const msgText = document.getElementById('message-text-' + id);
         if (msgText) msgText.textContent = original;
