@@ -180,7 +180,7 @@ while ($row = $result->fetch_assoc()) {
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="abrirMenuGlobalPuntos(this, ' . $message_id . ', true, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
+        echo '<button class="menu-puntos-btn" onclick="mostrarMenuMsgOptions(this, ' . $message_id . ', true, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
         echo '</div>';
         // Si es archivo, agrega la clase file-bubble
         $extra_class = ($tipo === "archivo") ? ' file-bubble' : '';
@@ -257,7 +257,7 @@ while ($row = $result->fetch_assoc()) {
     // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos envuelto
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="abrirMenuGlobalPuntos(this, ' . $message_id . ', false, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
+        echo '<button class="menu-puntos-btn" onclick="mostrarMenuMsgOptions(this, ' . $message_id . ', false, \'' . $tipo . '\', ' . ($can_delete ? 'true' : 'false') . ')">⋮</button>';
         echo '</div>';
     }
 
@@ -266,7 +266,7 @@ while ($row = $result->fetch_assoc()) {
 actualizar_actividad();
 $conn->close();
 ?>
-<div id="menu-global-puntos" style="display:none;"></div>
+<div id="menu-msg-options"></div>
 <style>
     /* Contenedor de mensajes */
     .message-container-flex {
@@ -791,6 +791,66 @@ $conn->close();
     body.dark-mode #menu-global-puntos .menu-puntos-opcion:hover {
         background: #333 !important;
     }
+
+    #menu-msg-options {
+        position: absolute;
+        background: #23272f;
+        border: 1.5px solid #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13);
+        padding: 0;
+        min-width: 180px;
+        z-index: 1001;
+        display: none;
+        flex-direction: column;
+    }
+
+    #menu-msg-options.show {
+        display: flex;
+    }
+
+    #menu-msg-options .msg-option {
+        padding: 12px 18px;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.08em;
+        background: none;
+        transition: background 0.2s, color 0.2s;
+        white-space: nowrap;
+        border-bottom: none;
+        margin-bottom: 2px;
+        text-align: left;
+        border-radius: 0;
+    }
+
+    #menu-msg-options .msg-option:last-child {
+        margin-bottom: 0;
+    }
+
+    #menu-msg-options .msg-option:not(:last-child) {
+        border-bottom: 1px solid #444;
+    }
+
+    #menu-msg-options .msg-option:hover {
+        background: #333;
+        color: #fff;
+        border-bottom: none;
+    }
+
+    body.dark-mode #menu-msg-options {
+        background: #232323;
+        border: 1px solid #444;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32);
+    }
+
+    body.dark-mode #menu-msg-options .msg-option {
+        color: #e0e0e0;
+    }
+
+    body.dark-mode #menu-msg-options .msg-option:hover {
+        background: #333;
+    }
 </style>
 
 <script>
@@ -960,6 +1020,69 @@ $conn->close();
     function loadMessages() {
         ocultarMenuGlobalPuntos();
         // Aquí va tu lógica AJAX para recargar mensajes
+        $.get('load_messages.php')
+            .done(function (data) {
+                $('#chat-box').html(data);
+            })
+            .fail(function (xhr, status, error) {
+                alert('Error al recargar mensajes: ' + error);
+            });
+    }
+
+    // --- Menú flotante tipo upload-menu para los 3 puntos ---
+    function mostrarMenuMsgOptions(btn, messageId, esPropio, tipo, puedeEliminar) {
+        const menu = document.getElementById('menu-msg-options');
+        // Limpiar menú
+        menu.innerHTML = '';
+        // Opciones
+        const responderBtn = document.createElement('div');
+        responderBtn.className = 'msg-option';
+        responderBtn.textContent = 'Responder';
+        responderBtn.onclick = function () { responderMensaje(messageId); ocultarMenuMsgOptions(); };
+        menu.appendChild(responderBtn);
+        if (esPropio && tipo === 'texto') {
+            const editarBtn = document.createElement('div');
+            editarBtn.className = 'msg-option';
+            editarBtn.textContent = 'Editar';
+            editarBtn.onclick = function () { editarMensaje(messageId); ocultarMenuMsgOptions(); };
+            menu.appendChild(editarBtn);
+        }
+        if (puedeEliminar) {
+            const eliminarBtn = document.createElement('div');
+            eliminarBtn.className = 'msg-option';
+            eliminarBtn.textContent = 'Eliminar';
+            eliminarBtn.onclick = function () { eliminarMensaje(messageId); ocultarMenuMsgOptions(); };
+            menu.appendChild(eliminarBtn);
+        }
+        // Posicionar el menú igual que el upload-menu
+        const rect = btn.getBoundingClientRect();
+        menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+        if (rect.left + menu.offsetWidth < window.innerWidth) {
+            menu.style.left = (rect.left + window.scrollX) + 'px';
+            menu.style.right = '';
+        } else {
+            menu.style.left = '';
+            menu.style.right = (window.innerWidth - rect.right - window.scrollX) + 'px';
+        }
+        menu.classList.add('show');
+        setTimeout(() => {
+            document.addEventListener('mousedown', cerrarMenuMsgOptionsHandler);
+        }, 0);
+    }
+    function cerrarMenuMsgOptionsHandler(e) {
+        const menu = document.getElementById('menu-msg-options');
+        if (!menu.contains(e.target)) {
+            ocultarMenuMsgOptions();
+        }
+    }
+    function ocultarMenuMsgOptions() {
+        const menu = document.getElementById('menu-msg-options');
+        menu.classList.remove('show');
+        document.removeEventListener('mousedown', cerrarMenuMsgOptionsHandler);
+    }
+    // Ocultar menú al recargar mensajes
+    function loadMessages() {
+        ocultarMenuMsgOptions();
         $.get('load_messages.php')
             .done(function (data) {
                 $('#chat-box').html(data);
