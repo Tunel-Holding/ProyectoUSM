@@ -1739,6 +1739,79 @@ if ($idgrupo) {
                 editInput.style.height = Math.min(editInput.scrollHeight, 160) + 'px';
             }
         });
+
+        // --- MENÚ DE 3 PUNTOS FLOTANTE ---
+        document.addEventListener('click', function (e) {
+            // Abrir menú flotante al hacer click en los 3 puntos
+            if (e.target.classList.contains('menu-puntos-btn')) {
+                const btn = e.target;
+                const messageId = btn.getAttribute('data-message-id');
+                const messageType = btn.getAttribute('data-message-type');
+                const userName = btn.getAttribute('data-username');
+                // Elimina menú anterior si existe
+                const oldMenu = document.getElementById('menu-puntos-flotante');
+                if (oldMenu) oldMenu.remove();
+                // Crea el menú
+                const menu = document.createElement('div');
+                menu.id = 'menu-puntos-flotante';
+                menu.className = 'menu-puntos-flotante';
+                menu.innerHTML = `
+                    <button class="menu-puntos-opcion" onclick="responderMensaje(${messageId})">Responder</button>
+                    ${messageType === 'texto' ? `<button class="menu-puntos-opcion" onclick="editarMensaje(${messageId})">Editar</button>` : ''}
+                    <button class="menu-puntos-opcion" onclick="eliminarMensaje(${messageId})">Eliminar</button>
+                `;
+                document.body.appendChild(menu);
+                // Posiciona el menú
+                const rect = btn.getBoundingClientRect();
+                menu.style.position = 'absolute';
+                menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+                menu.style.left = (window.scrollX + rect.left) + 'px';
+                menu.style.zIndex = 99999;
+                // Cierra al hacer click fuera
+                setTimeout(() => {
+                    document.addEventListener('mousedown', function handler(ev) {
+                        if (!menu.contains(ev.target) && ev.target !== btn) {
+                            menu.remove();
+                            document.removeEventListener('mousedown', handler);
+                        }
+                    });
+                }, 10);
+                // Evita scroll automático al abrir menú
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+
+        // Agrega estilos para el menú flotante
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .menu-puntos-flotante {
+            background: #fff;
+            border: 1.5px solid #174388;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13);
+            min-width: 180px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            z-index: 99999;
+        }
+        .menu-puntos-flotante .menu-puntos-opcion {
+            padding: 12px 18px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 15px;
+            color: #213555;
+            transition: background 0.2s;
+        }
+        .menu-puntos-flotante .menu-puntos-opcion:hover {
+            background: #f4f8fb;
+        }
+        `;
+        document.head.appendChild(style);
     </script>
 
 
