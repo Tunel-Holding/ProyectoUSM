@@ -1530,26 +1530,7 @@ if ($idgrupo) {
 
         // 🗑️ Eliminar mensaje
         function deleteMessage(messageId) {
-            if (confirm('¿Estás seguro de que quieres eliminar este mensaje? Esta acción no se puede deshacer.')) {
-                $.post('delete_message.php', {
-                    message_id: messageId
-                })
-                    .done(function (data) {
-                        try {
-                            const response = JSON.parse(data);
-                            if (response.success) {
-                                loadMessages(); // Recargar mensajes para mostrar el cambio
-                            } else {
-                                showError(response.error || 'Error al eliminar el mensaje');
-                            }
-                        } catch (e) {
-                            showError('Error al procesar la respuesta del servidor');
-                        }
-                    })
-                    .fail(function (xhr, status, error) {
-                        showError('Error de conexión: ' + error);
-                    });
-            }
+            // Ya no se usa confirm, todo pasa por el modal personalizado
         }
 
         // 📍 Auto-scroll
