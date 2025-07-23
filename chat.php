@@ -1887,13 +1887,13 @@ if ($idgrupo) {
         let mensajeAEliminar = null;
 
         // Sobrescribe la función eliminarMensaje para usar el modal
-        function eliminarMensaje(id) {
+        window.eliminarMensaje = function (id) {
             // Cierra el menú flotante si está abierto
             const menu = document.getElementById('menu-puntos-flotante');
             if (menu) menu.remove();
             mensajeAEliminar = id;
             document.getElementById('delete-confirm-modal').style.display = 'flex';
-        }
+        };
         // Manejo de botones del modal
         const deleteModal = document.getElementById('delete-confirm-modal');
         document.getElementById('delete-cancel-btn').onclick = function () {
