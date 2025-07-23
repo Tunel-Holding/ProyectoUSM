@@ -181,7 +181,11 @@ while ($row = $result->fetch_assoc()) {
     if ($is_current_user) {
         // Para el usuario actual: [botones] [burbuja] [avatar]
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
+        echo '<button class="menu-puntos-btn" '
+            . 'data-message-id="' . $message_id . '" '
+            . 'data-message-type="' . $tipo . '" '
+            . 'data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '"'
+            . ' onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">';
         echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
         if ($tipo === "texto") {
@@ -266,7 +270,11 @@ while ($row = $result->fetch_assoc()) {
     // Al final del contenedor flex, para otros usuarios, agrego el botón de 3 puntos envuelto
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
-        echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
+        echo '<button class="menu-puntos-btn" '
+            . 'data-message-id="' . $message_id . '" '
+            . 'data-message-type="' . $tipo . '" '
+            . 'data-username="' . htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8') . '"'
+            . ' onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
                 <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
             </div>';
