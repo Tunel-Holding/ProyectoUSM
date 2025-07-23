@@ -1605,6 +1605,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
         `;
         document.head.appendChild(style);
+        // Cambia la posición del menú de subida (upload-menu) para que use left: 1px en vez de right
+        const uploadMenuStyle = document.createElement('style');
+        uploadMenuStyle.innerHTML = `
+#upload-menu {
+    left: 1px !important;
+    right: auto !important;
+}`;
+        document.head.appendChild(uploadMenuStyle);
     </script>
 </body>
 
