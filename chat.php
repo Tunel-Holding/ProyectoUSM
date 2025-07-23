@@ -1106,9 +1106,6 @@ if ($idgrupo) {
         </div>
     </div>
 
-    <!-- Menú de 3 puntitos global -->
-    <div id="menu-puntos-global" class="menu-puntos" style="display:none; position:fixed; z-index:99999;"></div>
-
     <script>
         // 🔧 Configuración global
         const CONFIG = {
@@ -1742,53 +1739,6 @@ if ($idgrupo) {
                 editInput.style.height = Math.min(editInput.scrollHeight, 160) + 'px';
             }
         });
-
-        // Opciones del menú (puedes personalizar según permisos)
-        function getMenuPuntosOpciones(messageId, esPropio) {
-            let html = '';
-            html += `<button class="menu-puntos-opcion" onclick="responderMensaje(${messageId}); cerrarMenuPuntosGlobal();">Responder</button>`;
-            if (esPropio) {
-                html += `<button class="menu-puntos-opcion" onclick="editarMensaje(${messageId}); cerrarMenuPuntosGlobal();">Editar</button>`;
-                html += `<button class="menu-puntos-opcion" onclick="eliminarMensaje(${messageId}); cerrarMenuPuntosGlobal();">Eliminar</button>`;
-            }
-            return html;
-        }
-
-        // Mostrar el menú global en la posición del botón
-        function mostrarMenuPuntosGlobal(btn, messageId, esPropio) {
-            const menu = document.getElementById('menu-puntos-global');
-            menu.innerHTML = getMenuPuntosOpciones(messageId, esPropio);
-            // Posicionar el menú justo debajo del botón
-            const rect = btn.getBoundingClientRect();
-            menu.style.left = (rect.left + window.scrollX) + 'px';
-            menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-            menu.style.display = 'flex';
-            menu.classList.add('show');
-            // Guardar el id del mensaje para referencia
-            menu.dataset.messageId = messageId;
-            // Cerrar al hacer clic fuera
-            setTimeout(() => {
-                document.addEventListener('mousedown', cerrarMenuPuntosGlobalHandler);
-            }, 0);
-        }
-
-        function cerrarMenuPuntosGlobal() {
-            const menu = document.getElementById('menu-puntos-global');
-            menu.style.display = 'none';
-            menu.classList.remove('show');
-            menu.innerHTML = '';
-            document.removeEventListener('mousedown', cerrarMenuPuntosGlobalHandler);
-        }
-        function cerrarMenuPuntosGlobalHandler(e) {
-            const menu = document.getElementById('menu-puntos-global');
-            if (!menu.contains(e.target)) {
-                cerrarMenuPuntosGlobal();
-            }
-        }
-
-        // Reemplaza el onclick de los botones de 3 puntitos en load_messages.php por:
-        // <button class="menu-puntos-btn" onclick="mostrarMenuPuntosGlobal(this, MESSAGE_ID, ES_PROPIO)">⋮</button>
-        // ES_PROPIO debe ser true/false según el usuario
     </script>
 
 
