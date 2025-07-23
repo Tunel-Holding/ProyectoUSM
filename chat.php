@@ -947,7 +947,7 @@ if ($idgrupo) {
             min-width: 48px;
             border-radius: 50%;
             border: none;
-            background: #25d366;
+            background: #174388;
             color: #fff;
             font-size: 1.8em;
             display: flex;
@@ -955,8 +955,12 @@ if ($idgrupo) {
             justify-content: center;
             cursor: pointer;
             transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
+            box-shadow: 0 2px 8px rgba(23, 67, 136, 0.2);
             margin-bottom: 2px;
+        }
+
+        .edit-modal-save:hover {
+            background: #0e3470;
         }
     </style>
 </head>
