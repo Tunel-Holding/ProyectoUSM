@@ -1470,11 +1470,39 @@ if ($idgrupo) {
         }
 
         // 🔄 Cargar mensajes
+        let menuPuntosAbierto = null;
+        // Sobrescribo mostrarMenuPuntos para guardar el menú abierto
+        function mostrarMenuPuntos(btn, messageId, esPropio) {
+            document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
+            const menu = document.getElementById('menu-puntos-' + messageId);
+            menu.classList.toggle('show');
+            if (menu.classList.contains('show')) {
+                menuPuntosAbierto = messageId;
+            } else {
+                menuPuntosAbierto = null;
+            }
+            document.addEventListener('mousedown', function handler(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('show');
+                    menuPuntosAbierto = null;
+                    document.removeEventListener('mousedown', handler);
+                }
+            });
+        }
+
+        // Modifico loadMessages para reabrir el menú si corresponde
         function loadMessages() {
             $.get('load_messages.php')
                 .done(function (data) {
                     $('#chat-box').html(data);
                     autoScroll();
+                    // Reabrir menú si estaba abierto
+                    if (menuPuntosAbierto) {
+                        const btn = document.querySelector('.menu-puntos-btn[onclick*="' + menuPuntosAbierto + '"]');
+                        if (btn) {
+                            setTimeout(() => btn.click(), 50);
+                        }
+                    }
                 })
                 .fail(function (xhr, status, error) {
                     console.error('Error loading messages:', error);
