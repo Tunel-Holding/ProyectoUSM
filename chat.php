@@ -1761,12 +1761,12 @@ if ($idgrupo) {
                     <button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>
                 `;
                 document.body.appendChild(menu);
-                // Posiciona el menú de forma fija respecto a la ventana
+                // Posiciona el menú de forma absoluta respecto al documento
                 function updateMenuPosition() {
                     const rect = btn.getBoundingClientRect();
-                    menu.style.position = 'fixed';
-                    menu.style.top = (rect.bottom + 4) + 'px';
-                    menu.style.left = rect.left + 'px';
+                    menu.style.position = 'absolute';
+                    menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+                    menu.style.left = (window.scrollX + rect.left) + 'px';
                     menu.style.zIndex = 99999;
                 }
                 updateMenuPosition();
