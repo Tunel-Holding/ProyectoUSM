@@ -755,6 +755,10 @@ $conn->close();
         box-shadow: 0 2px 8px rgba(33, 53, 85, 0.10) !important;
         background: #fff !important;
     }
+
+    .msg-foto {
+        cursor: pointer !important;
+    }
 </style>
 
 <script>

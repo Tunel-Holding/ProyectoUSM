@@ -147,6 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -155,12 +156,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     <link rel="stylesheet" href="css/principalalumnostyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <title>Chat - UniHub</title>
     <script src="js/control_inactividad.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
+
         /* SOLO rediseño el área central del chat y barra de entrada, sin tocar header ni menú */
         .chat-dashboard-area {
             display: flex;
@@ -172,9 +176,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             background: #f4f8fb;
             transition: background 0.3s ease;
         }
+
         body.dark-mode .chat-dashboard-area {
             background: #1a1a1a;
         }
+
         .chat-dashboard-main {
             background: #fff;
             width: 100vw;
@@ -187,20 +193,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             position: relative;
             transition: background 0.3s ease, box-shadow 0.3s ease;
         }
+
         body.dark-mode .chat-dashboard-main {
             background: #2d2d2d;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
+
         @media (max-width: 1500px) {
             .chat-dashboard-main {
                 width: 1100px;
             }
         }
+
         @media (max-width: 1200px) {
             .chat-dashboard-main {
                 width: 900px;
             }
         }
+
         @media (max-width: 950px) {
             .chat-dashboard-main {
                 width: 100vw;
@@ -208,10 +218,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 border-radius: 0;
                 margin: 0;
             }
+
             .chat-dashboard-area {
                 flex-direction: column;
             }
         }
+
         .chat-dashboard-messages {
             flex: 1;
             overflow-y: auto;
@@ -224,9 +236,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             min-height: 0;
             transition: background 0.3s ease;
         }
+
         body.dark-mode .chat-dashboard-messages {
             background: #1e1e1e;
         }
+
         .chat-dashboard-entry {
             width: 100%;
             background: #fff;
@@ -239,10 +253,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             border-top: 1px solid #e6e6e6;
             transition: background 0.3s ease, border-color 0.3s ease;
         }
+
         body.dark-mode .chat-dashboard-entry {
             background: #2d2d2d;
             border-top: 1px solid #404040;
         }
+
         .chat-dashboard-entry input[type="text"] {
             border-radius: 24px;
             border: 1px solid #e0e0e0;
@@ -253,19 +269,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             transition: border 0.2s, background 0.2s, color 0.2s;
             flex: 1;
         }
+
         .chat-dashboard-entry input[type="text"]:focus {
             border: 1.5px solid #ffd166;
             background: #fffbe6;
         }
+
         body.dark-mode .chat-dashboard-entry input[type="text"] {
             background: #404040;
             border: 1px solid #555;
             color: #ffffff;
         }
+
         body.dark-mode .chat-dashboard-entry input[type="text"]:focus {
             border: 1.5px solid #ffd166;
             background: #4a4a4a;
         }
+
         .chat-dashboard-entry .button {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: transform 0.1s;
@@ -278,13 +298,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             background: #174388;
             border: none;
         }
+
         .chat-dashboard-entry .button:active {
             transform: scale(0.95);
         }
+
         .chat-dashboard-entry .button img {
             width: 28px;
             height: 28px;
         }
+
         .chat-dashboard-reply {
             background: #f1f1f1;
             border-left: 4px solid #007bff;
@@ -298,16 +321,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             width: 100%;
             transition: background 0.3s ease;
         }
+
         body.dark-mode .chat-dashboard-reply {
             background: #404040;
         }
+
         .chat-dashboard-reply #reply-to-user {
             color: #2196f3;
             font-weight: 600;
         }
+
         .chat-dashboard-reply #cancel-reply {
             margin-left: auto;
         }
+
         #upload-progress-modal {
             position: fixed;
             z-index: 10000;
@@ -321,6 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             align-items: center;
             justify-content: center;
         }
+
         #upload-progress-modal .modal-content {
             background-color: #fefefe;
             padding: 20px 40px;
@@ -331,20 +359,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
+
         body.dark-mode #upload-progress-modal .modal-content {
             background-color: #2d2d2d;
             border-color: #555;
             color: #f1f1f1;
         }
+
         .progress-bar-container {
             width: 100%;
             background-color: #e0e0e0;
             border-radius: 5px;
             margin: 20px 0;
         }
+
         body.dark-mode .progress-bar-container {
             background-color: #404040;
         }
+
         .progress-bar {
             width: 0%;
             height: 20px;
@@ -355,13 +387,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             border-radius: 5px;
             transition: width 0.4s ease;
         }
+
         #progress-text {
             font-weight: bold;
         }
+
         .upload-wrapper {
             position: relative;
             display: inline-block;
         }
+
         #upload-menu {
             position: absolute !important;
             bottom: 80px !important;
@@ -375,9 +410,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             z-index: 1001 !important;
             display: none;
         }
+
         #upload-menu.show {
             display: block;
         }
+
         #upload-menu .upload-option {
             padding: 12px 18px !important;
             cursor: pointer !important;
@@ -390,17 +427,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             border-bottom: none !important;
             margin-bottom: 2px !important;
         }
+
         #upload-menu .upload-option:last-child {
             margin-bottom: 0 !important;
         }
+
         #upload-menu .upload-option:not(:last-child) {
             border-bottom: 1px solid #444 !important;
         }
+
         #upload-menu .upload-option:hover {
             background: #333 !important;
             color: #fff !important;
             border-bottom: none !important;
         }
+
         .reply-preview {
             display: flex;
             align-items: center;
@@ -414,12 +455,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             min-height: 40px;
             max-width: 100%;
         }
+
         .reply-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
+
         .reply-user {
             color: #25d366;
             font-weight: 600;
@@ -429,6 +472,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .reply-text {
             color: #fff;
             font-size: 0.97em;
@@ -436,6 +480,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .close-reply {
             background: none;
             border: none;
@@ -446,9 +491,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             opacity: 0.7;
             transition: opacity 0.2s;
         }
+
         .close-reply:hover {
             opacity: 1;
         }
+
         .reply-preview-blue {
             display: flex;
             align-items: center;
@@ -462,6 +509,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             min-height: 40px;
             max-width: 100%;
         }
+
         .reply-content-blue {
             flex: 1;
             display: flex;
@@ -469,6 +517,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             overflow: hidden;
             gap: 2px;
         }
+
         .reply-user-blue {
             color: #174388;
             font-weight: 700;
@@ -477,6 +526,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .reply-message-blue {
             color: #fff;
             font-size: 0.98em;
@@ -485,6 +535,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             text-overflow: ellipsis;
             font-weight: 400;
         }
+
         .close-reply-blue {
             background: none;
             border: none;
@@ -495,9 +546,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             opacity: 0.7;
             transition: opacity 0.2s;
         }
+
         .close-reply-blue:hover {
             opacity: 1;
         }
+
         .reply-img-thumb {
             max-width: 60px;
             max-height: 40px;
@@ -505,14 +558,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             margin-top: 2px;
             display: block;
         }
+
         .chat-entry-wrapper {
             display: flex;
             flex-direction: column;
             gap: 0;
         }
+
         .reply-preview-blue {
             margin-bottom: 6px;
         }
+
         #image-modal {
             display: none;
             position: fixed;
@@ -526,9 +582,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             justify-content: center;
             animation: fadeInModal 0.25s;
         }
+
         #image-modal.show {
             display: flex;
         }
+
         #image-modal .modal-img {
             max-width: 90vw;
             max-height: 80vh;
@@ -536,6 +594,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
             animation: zoomInModal 0.25s;
         }
+
         #image-modal .close-modal {
             position: absolute;
             top: 32px;
@@ -549,27 +608,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             z-index: 20001;
             transition: opacity 0.2s;
         }
+
         #image-modal .close-modal:hover {
             opacity: 1;
         }
+
         @keyframes fadeInModal {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
+
         @keyframes zoomInModal {
             from {
                 transform: scale(0.8);
                 opacity: 0.5;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
             }
         }
+
         #edit-modal {
             display: none;
             position: fixed;
@@ -583,9 +648,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             justify-content: center;
             animation: fadeInModal 0.25s;
         }
+
         #edit-modal.show {
             display: flex;
         }
+
         .edit-modal-content {
             background: #23272f;
             border-radius: 22px;
@@ -599,6 +666,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             flex-direction: column;
             gap: 28px;
         }
+
         .edit-modal-close {
             position: absolute;
             top: 16px;
@@ -612,9 +680,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             transition: opacity 0.2s;
             z-index: 1;
         }
+
         .edit-modal-close:hover {
             opacity: 1;
         }
+
         .edit-modal-bubble {
             background: #174388;
             color: #fff;
@@ -628,6 +698,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             word-break: break-word;
             margin-top: 20px;
         }
+
         .edit-modal-input {
             width: 100%;
             min-height: 40px;
@@ -644,12 +715,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             overflow-y: auto;
             transition: border-color 0.2s;
         }
+
         .edit-modal-input:focus {
             border-bottom: 2px solid #34b7f1;
         }
+
         .edit-modal-input::placeholder {
             color: #888;
         }
+
         .edit-modal-save {
             position: absolute;
             bottom: 16px;
@@ -668,18 +742,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             transition: background 0.2s, box-shadow 0.2s;
             box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
         }
+
         .edit-modal-save:hover {
             background: #22c55e;
             box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
         }
+
         @media (max-width: 600px) {
             .edit-modal-content {
                 padding: 18px 8px 18px 8px;
             }
+
             .edit-modal-bubble {
                 max-width: 100%;
             }
         }
+
         .edit-modal-flex-row {
             display: flex;
             flex-direction: row;
@@ -687,26 +765,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             gap: 12px;
             width: 100%;
         }
+
         .edit-modal-input {
             flex: 1 1 auto;
             min-width: 0;
         }
+
         .edit-modal-save {
             flex: 0 0 auto;
             height: 48px;
             margin-bottom: 0;
             align-self: center;
         }
+
         .edit-modal-textarea-container {
             flex: 1 1 auto;
             min-width: 0;
             display: flex;
             align-items: flex-end;
         }
+
         .edit-modal-btn-container {
             display: flex;
             align-items: flex-end;
         }
+
         .edit-modal-input {
             width: 100%;
             min-height: 40px;
@@ -723,6 +806,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             transition: border-color 0.2s;
             box-sizing: border-box;
         }
+
         .edit-modal-save {
             height: 40px;
             min-width: 48px;
@@ -739,10 +823,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             box-shadow: 0 2px 8px rgba(23, 67, 136, 0.2);
             margin-bottom: 2px;
         }
+
         .edit-modal-save:hover {
             background: #0e3470;
             box-shadow: 0 4px 16px rgba(23, 67, 136, 0.3);
         }
+
         /* Asegurar que el botón de videollamada tenga el mismo estilo que .button */
         #video-call-button.button {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -759,15 +845,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             margin-right: 0;
             padding: 0;
         }
+
         #video-call-button.button:active {
             transform: scale(0.95);
         }
+
         #video-call-button.button img {
             width: 28px;
             height: 28px;
         }
+
+        .msg-foto {
+            cursor: pointer !important;
+        }
     </style>
 </head>
+
 <body>
     <div class="cabecera">
         <button type="button" id="logoButton">
@@ -802,13 +895,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             <div class="upload-option" id="upload-file">Subir Archivo</div>
                         </div>
                     </div>
-                    <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="250" autocomplete="off" />
+                    <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="250"
+                        autocomplete="off" />
                     <button id="send-button" class="button" title="Enviar mensaje">
                         <img src="css/enviar-mensaje.png" alt="Send">
                     </button>
                     <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                    <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf" style="display: none;">
-                    <a id="video-call-button" class="button llamada" href="videollamada_profesor.php" title="Videollamada">
+                    <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
+                        style="display: none;">
+                    <a id="video-call-button" class="button llamada" href="videollamada_profesor.php"
+                        title="Videollamada">
                         <img src="css/icons/meet.svg" alt="Videollamada">
                     </a>
                 </div>
@@ -836,7 +932,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             <div class="edit-modal-bubble" id="edit-modal-original"></div>
             <div class="edit-modal-flex-row">
                 <div class="edit-modal-textarea-container" style="flex:1;display:flex;align-items:flex-end;">
-                    <textarea class="edit-modal-input" id="edit-modal-input" maxlength="250" placeholder="Escribe el nuevo mensaje..."></textarea>
+                    <textarea class="edit-modal-input" id="edit-modal-input" maxlength="250"
+                        placeholder="Escribe el nuevo mensaje..."></textarea>
                 </div>
                 <div class="edit-modal-btn-container" style="display:flex;align-items:flex-end;">
                     <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
@@ -1308,4 +1405,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         // El botón de videollamada sigue funcionando porque es un <a> con href a videollamada_profesor.php
     </script>
 </body>
+
 </html>
