@@ -364,8 +364,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
         #upload-menu {
             position: absolute !important;
-            bottom: 20px !important;
-            right: 50px !important;
+            bottom: 80px !important;
+            right: 10px !important;
             background: #23272f !important;
             border: 1.5px solid #fff !important;
             border-radius: 12px !important;
@@ -742,6 +742,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         .edit-modal-save:hover {
             background: #0e3470;
             box-shadow: 0 4px 16px rgba(23, 67, 136, 0.3);
+        }
+        /* Asegurar que el botón de videollamada tenga el mismo estilo que .button */
+        #video-call-button.button {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.1s;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #174388;
+            border: none;
+            margin-left: 0;
+            margin-right: 0;
+            padding: 0;
+        }
+        #video-call-button.button:active {
+            transform: scale(0.95);
+        }
+        #video-call-button.button img {
+            width: 28px;
+            height: 28px;
         }
     </style>
 </head>
