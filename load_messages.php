@@ -182,23 +182,11 @@ while ($row = $result->fetch_assoc()) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', true)">⋮</button>';
         echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">';
-        // Responder
-        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">
-            <svg width="18" height="18" fill="currentColor" style="vertical-align:middle;margin-right:7px;" viewBox="0 0 16 16"><path d="M6.854 4.146a.5.5 0 0 0-.708.708L8.293 7H1.5a.5.5 0 0 0 0 1h6.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/><path d="M13.5 8a.5.5 0 0 1-.5.5H9a.5.5 0 0 1 0-1h4a.5.5 0 0 1 .5.5z"/></svg>
-            Responder
-        </button>';
-        // Editar solo si es texto
+        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
         if ($tipo === "texto") {
-            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">
-                <svg width="18" height="18" fill="currentColor" style="vertical-align:middle;margin-right:7px;" viewBox="0 0 16 16"><path d="M15.502 1.94a1.5 1.5 0 0 1 0 2.12l-1.439 1.439-2.12-2.12 1.439-1.44a1.5 1.5 0 0 1 2.12 0zm-2.56 3.18-2.12-2.12-8.096 8.096a.5.5 0 0 0-.121.196l-1 3a.5.5 0 0 0 .633.633l3-1a.5.5 0 0 0 .196-.12l8.096-8.097z"/></svg>
-                Editar
-            </button>';
+            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
         }
-        // Eliminar
-        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">
-            <svg width="18" height="18" fill="currentColor" style="vertical-align:middle;margin-right:7px;" viewBox="0 0 16 16"><path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0v-6zm2 .5a.5.5 0 0 1 .5-.5.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1 0-2h3.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1H14.5a1 1 0 0 1 1 1zm-11 1v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4h-8z"/></svg>
-            Eliminar
-        </button>';
+        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
         echo '</div>';
         echo '</div>';
         // Si es archivo, agrega la clase file-bubble
@@ -277,13 +265,9 @@ while ($row = $result->fetch_assoc()) {
     if (!$is_current_user) {
         echo '<div class="menu-puntos-wrapper" style="position: relative; display: inline-block;">';
         echo '<button class="menu-puntos-btn" onclick="mostrarMenuPuntos(this, ' . $message_id . ', false)">⋮</button>';
-        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '" style="border-radius:12px;">';
-        echo '<button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>';
-        if ($tipo === "texto") {
-            echo '<button class="menu-puntos-opcion" onclick="editarMensaje(' . $message_id . ')">Editar</button>';
-        }//probando
-        echo '<button class="menu-puntos-opcion" onclick="eliminarMensaje(' . $message_id . ')">Eliminar</button>';
-        echo '</div>';
+        echo '<div class="menu-puntos" id="menu-puntos-' . $message_id . '">
+                <button class="menu-puntos-opcion" onclick="responderMensaje(' . $message_id . ')">Responder</button>
+            </div>';
         echo '</div>';
     }
 
