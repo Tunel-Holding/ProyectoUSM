@@ -1,4 +1,9 @@
 <?php
+
+// Configuración segura de la cookie de sesión
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1); // Solo si usas HTTPS
+ini_set('session.cookie_samesite', 'Strict');
 session_start();
 
 include 'conexion.php';
@@ -21,7 +26,14 @@ try {
         throw new Exception("Todos los campos son obligatorios");
     }
 
-    // Consulta login
+    // Validar formato de usuario (solo letras, números, guion y guion bajo, máximo 50)
+    if (!preg_match('/^[a-zA-Z0-9_-]{1,50}$/', $nombre_usuario)) {
+        throw new Exception("Usuario o contraseña incorrectos.");
+    }
+
+    if (strlen($clave) > 50) {
+        throw new Exception("Usuario o contraseña incorrectos.");
+    }
     $sql = "SELECT id, nombre_usuario, contrasena, nivel_usuario, email FROM usuarios WHERE nombre_usuario = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$nombre_usuario]);
@@ -31,6 +43,9 @@ try {
 
         // Verificar contraseña
         if (password_verify($clave, $row['contrasena'])) {
+            // Regenerar sesión para evitar session fixation
+            session_regenerate_id(true);
+
             // Guardar datos básicos del usuario
             $_SESSION['idusuario'] = $row['id'];
             $_SESSION['nombre_usuario'] = $row['nombre_usuario'];

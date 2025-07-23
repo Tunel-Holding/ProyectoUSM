@@ -122,14 +122,6 @@ if (!empty($materias_ids)) {
         exit;
     }
     
-    // Verificar que las materias no están asignadas a otros profesores
-    foreach ($materias_existentes as $materia) {
-        if ($materia['id_profesor'] !== null && $materia['id_profesor'] != $profesor_id) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Una o más materias ya están asignadas a otros profesores']);
-            exit;
-        }
-    }
 }
 
 try {

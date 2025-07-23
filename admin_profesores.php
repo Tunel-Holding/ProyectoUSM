@@ -281,7 +281,7 @@ class ProfesoresView {
             }
             
             // Si está asignada a otro profesor, hacer no seleccionable
-            $disabled = $asignadaAOtro ? 'disabled' : '';
+            $disabled = '';
             $class = $asignadaAOtro ? 'class="materia-asignada"' : '';
             
             $options .= '<option value="' . $materia['id'] . '" ' . $selected . ' ' . $disabled . ' ' . $class . '>' . $materiaText . '</option>';
