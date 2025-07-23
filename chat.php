@@ -1770,18 +1770,21 @@ if ($idgrupo) {
                     menu.style.zIndex = 99999;
                 }
                 updateMenuPosition();
-                window.addEventListener('scroll', updateMenuPosition);
-                window.addEventListener('resize', updateMenuPosition);
-                // Deshabilita el scroll del body
-                document.body.style.overflow = 'hidden';
+                // Al hacer scroll o resize, cerrar el menú
+                function closeMenuOnScrollOrResize() {
+                    if (menu.parentNode) menu.remove();
+                    window.removeEventListener('scroll', closeMenuOnScrollOrResize);
+                    window.removeEventListener('resize', closeMenuOnScrollOrResize);
+                }
+                window.addEventListener('scroll', closeMenuOnScrollOrResize);
+                window.addEventListener('resize', closeMenuOnScrollOrResize);
                 // Cierra al hacer click fuera
                 setTimeout(() => {
                     document.addEventListener('mousedown', function handler(ev) {
                         if (!menu.contains(ev.target) && ev.target !== btn) {
                             menu.remove();
-                            window.removeEventListener('scroll', updateMenuPosition);
-                            window.removeEventListener('resize', updateMenuPosition);
-                            document.body.style.overflow = '';
+                            window.removeEventListener('scroll', closeMenuOnScrollOrResize);
+                            window.removeEventListener('resize', closeMenuOnScrollOrResize);
                             document.removeEventListener('mousedown', handler);
                         }
                     });
