@@ -790,43 +790,54 @@ if ($idgrupo) {
         .edit-modal-content {
             background: #23272f;
             border-radius: 22px;
-            padding: 44px 36px 32px 36px;
+            padding: 32px;
             min-width: 350px;
             max-width: 95vw;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.45);
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 20px;
         }
 
-        .edit-modal-header {
-            font-size: 1.3em;
+        .edit-modal-close {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: none;
+            border: none;
             color: #fff;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            font-size: 1.8em;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+            z-index: 1;
+        }
+
+        .edit-modal-close:hover {
+            opacity: 1;
         }
 
         .edit-modal-bubble {
             background: #174388;
             color: #fff;
             border-radius: 14px 14px 14px 4px;
-            padding: 12px 18px 10px 18px;
-            font-size: 1.02em;
+            padding: 12px 16px;
+            font-size: 1em;
             margin-bottom: 0;
             box-shadow: 0 2px 8px rgba(23, 67, 136, 0.18);
             max-width: 70%;
             align-self: flex-start;
             word-break: break-word;
+            margin-top: 20px;
         }
 
         .edit-modal-input {
             width: 100%;
-            min-height: 48px;
+            min-height: 40px;
             font-size: 1.13em;
             border: none;
-            border-bottom: 2.5px solid #25d366;
+            border-bottom: 2px solid #25d366;
             background: transparent;
             color: #fff;
             margin-bottom: 0;
@@ -837,43 +848,35 @@ if ($idgrupo) {
         }
 
         .edit-modal-input:focus {
-            border-bottom: 2.5px solid #34b7f1;
+            border-bottom: 2px solid #34b7f1;
         }
 
-        .edit-modal-actions {
-            display: flex;
-            gap: 18px;
-            justify-content: flex-end;
-            margin-top: 18px;
+        .edit-modal-input::placeholder {
+            color: #888;
         }
 
-        .edit-modal-btn {
-            width: 54px;
-            height: 54px;
+        .edit-modal-save {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             border: none;
-            font-size: 2.1em;
+            background: #25d366;
+            color: #fff;
+            font-size: 1.8em;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
         }
 
-        .edit-modal-btn.cancel {
-            background: #444;
-            color: #eee;
-        }
-
-        .edit-modal-btn:not(.cancel) {
-            background: #25d366;
-            color: #fff;
-        }
-
-        .edit-modal-btn:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.18);
+        .edit-modal-save:hover {
+            background: #22c55e;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
         }
 
         @media (max-width: 600px) {
@@ -1014,13 +1017,10 @@ if ($idgrupo) {
     <!-- Modal para editar mensaje -->
     <div id="edit-modal">
         <div class="edit-modal-content">
-            <div class="edit-modal-header">Edita el mensaje</div>
+            <button class="edit-modal-close" id="edit-modal-close" title="Cerrar">&times;</button>
             <div class="edit-modal-bubble" id="edit-modal-original"></div>
-            <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000"></textarea>
-            <div class="edit-modal-actions">
-                <button class="edit-modal-btn cancel" id="edit-modal-cancel" title="Cancelar edición">&#10005;</button>
-                <button class="edit-modal-btn" id="edit-modal-save" title="Guardar edición">&#10003;</button>
-            </div>
+            <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000" placeholder="texto..."></textarea>
+            <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
         </div>
     </div>
 
@@ -1545,8 +1545,8 @@ if ($idgrupo) {
             const modal = document.getElementById('edit-modal');
             const original = document.getElementById('edit-modal-original');
             const input = document.getElementById('edit-modal-input');
-            const cancelBtn = document.getElementById('edit-modal-cancel');
             const saveBtn = document.getElementById('edit-modal-save');
+            const closeBtn = document.getElementById('edit-modal-close');
             let editingId = null;
 
             // Delegación para botón editar
@@ -1588,11 +1588,20 @@ if ($idgrupo) {
                     })
                     .catch(() => alert('Error de conexión al editar mensaje'));
             });
-            // Cancelar edición
-            cancelBtn.addEventListener('click', function () {
+            // Cerrar modal al hacer clic fuera
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    editingId = null;
+                }
+            });
+
+            // Cerrar con botón X
+            closeBtn.addEventListener('click', function () {
                 modal.classList.remove('show');
                 editingId = null;
             });
+
             // Cerrar con ESC
             document.addEventListener('keydown', function (e) {
                 if (modal.classList.contains('show') && e.key === 'Escape') {
