@@ -1782,35 +1782,46 @@ if ($idgrupo) {
             }
         });
 
-        // Agrega estilos para el menú flotante
+        // Agrega estilos para el menú flotante (idénticos al menú anterior)
         const style = document.createElement('style');
         style.innerHTML = `
-        .menu-puntos-flotante {
-            background: #fff;
-            border: 1.5px solid #174388;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13);
-            min-width: 180px;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            z-index: 99999;
-        }
-        .menu-puntos-flotante .menu-puntos-opcion {
-            padding: 12px 18px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            text-align: left;
-            font-size: 15px;
-            color: #213555;
-            transition: background 0.2s;
-        }
-        .menu-puntos-flotante .menu-puntos-opcion:hover {
-            background: #f4f8fb;
-        }
-        `;
+.menu-puntos-flotante {
+    background: #fff !important;
+    border: 1.5px solid #fff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(33, 53, 85, 0.13) !important;
+    min-width: 180px !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: absolute !important;
+    z-index: 99999 !important;
+}
+.menu-puntos-flotante .menu-puntos-opcion {
+    padding: 10px 18px !important;
+    cursor: pointer !important;
+    background: none !important;
+    border: none !important;
+    text-align: left !important;
+    font-size: 15px !important;
+    color: #213555 !important;
+    transition: background 0.2s !important;
+}
+.menu-puntos-flotante .menu-puntos-opcion:hover {
+    background: #f4f8fb !important;
+}
+body.dark-mode .menu-puntos-flotante {
+    background: #232323 !important;
+    border: 1px solid #444 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32) !important;
+}
+body.dark-mode .menu-puntos-flotante .menu-puntos-opcion {
+    color: #e0e0e0 !important;
+}
+body.dark-mode .menu-puntos-flotante .menu-puntos-opcion:hover {
+    background: #333 !important;
+}
+`;
         document.head.appendChild(style);
     </script>
 
