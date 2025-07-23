@@ -1270,7 +1270,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $('#reply-to-user').text('Respondiendo a: ' + userName);
             let html = '';
             if (messageType === 'texto') {
-                html = messageContent;
+                // Decodificar entidades antes de escapar para HTML
+                $mensaje_decodificado = html_entity_decode($messageContent, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                html = htmlspecialchars($mensaje_decodificado, ENT_QUOTES, 'UTF-8');
             } else if (messageType === 'imagen') {
                 html = '<span style="color:#aaa;">Imagen</span><br><img src="' + messageContent + '" class="reply-img-thumb">';
             } else if (messageType === 'archivo') {
