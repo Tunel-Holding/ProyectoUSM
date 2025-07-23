@@ -891,6 +891,24 @@ if ($idgrupo) {
                 max-width: 100%;
             }
         }
+
+        .edit-modal-flex-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .edit-modal-input {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .edit-modal-save {
+            flex: 0 0 auto;
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 
@@ -1022,8 +1040,11 @@ if ($idgrupo) {
         <div class="edit-modal-content">
             <button class="edit-modal-close" id="edit-modal-close" title="Cerrar">&times;</button>
             <div class="edit-modal-bubble" id="edit-modal-original"></div>
-            <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000" placeholder="texto..."></textarea>
-            <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
+            <div class="edit-modal-flex-row">
+                <textarea class="edit-modal-input" id="edit-modal-input" maxlength="1000"
+                    placeholder="Escribe el nuevo mensaje..."></textarea>
+                <button class="edit-modal-save" id="edit-modal-save" title="Guardar edición">&#10003;</button>
+            </div>
         </div>
     </div>
 
