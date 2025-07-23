@@ -186,9 +186,7 @@ class AddProfesorManager {
                     </p>
                     
                     <div style='text-align: center; margin-top: 30px;'>
-                        <a href='#' style='background: #61b7ff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;'>
-                            Acceder al Sistema
-                        </a>
+                         <a href='http://www.conexiondocente.com' target='_blank' style='background-color: #3a85ff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;'>Ir a la Página</a>
                     </div>
                 </div>
                 
