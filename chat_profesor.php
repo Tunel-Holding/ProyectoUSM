@@ -858,6 +858,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         .msg-foto {
             cursor: pointer !important;
         }
+
+        .reply-preview-blue.reply-link {
+            cursor: pointer !important;
+        }
+
+        .highlight-reply {
+            box-shadow: 0 0 0 3px #2196f3, 0 2px 8px rgba(33, 53, 85, 0.10) !important;
+            transition: box-shadow 0.3s;
+        }
     </style>
 </head>
 
@@ -878,7 +887,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 <!-- Los mensajes se cargan aquí dinámicamente -->
             </div>
             <div class="chat-entry-wrapper">
-                <div id="reply-preview" class="reply-preview-blue" style="display: none;">
+                <div id="reply-preview" class="reply-preview-blue reply-link" style="display: none;" data-reply-id="">
                     <div class="reply-content-blue">
                         <div class="reply-user-blue" id="reply-to-user"></div>
                         <div class="reply-message-blue" id="reply-message"></div>
@@ -1269,7 +1278,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 html = messageContent;
             }
             $('#reply-message').html(html);
-            $('#reply-preview').show().data('reply-to', messageId);
+            $('#reply-preview').show().data('reply-to', messageId).attr('data-reply-id', messageId);
             $('#message').focus();
         }
         function hideReplyPreview() {
@@ -1400,6 +1409,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 });
                 editInput.style.height = 'auto';
                 editInput.style.height = Math.min(editInput.scrollHeight, 160) + 'px';
+            }
+        });
+        // Al mostrar la respuesta, asigna el data-reply-id
+        document.addEventListener('click', function (e) {
+            let replyDiv = e.target;
+            while (replyDiv && !(replyDiv.classList && replyDiv.classList.contains('reply-preview-blue'))) {
+                replyDiv = replyDiv.parentElement;
+            }
+            if (replyDiv && replyDiv.classList.contains('reply-link') && replyDiv.hasAttribute('data-reply-id')) {
+                const replyId = replyDiv.getAttribute('data-reply-id');
+                const target = document.getElementById('message-container-' + replyId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.classList.add('highlight-reply');
+                    setTimeout(() => target.classList.remove('highlight-reply'), 1500);
+                }
             }
         });
         // El botón de videollamada sigue funcionando porque es un <a> con href a videollamada_profesor.php
