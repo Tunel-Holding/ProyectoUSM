@@ -1851,6 +1851,28 @@ if ($idgrupo) {
             if (menu) menu.remove();
         }
 
+        // Función global para editar mensaje desde el menú flotante
+        function editarMensaje(id) {
+            // Busca el elemento del mensaje
+            const messageElem = document.getElementById('message-text-' + id);
+            if (!messageElem) return;
+            const originalText = messageElem.textContent;
+            // Abre el modal de edición
+            const modal = document.getElementById('edit-modal');
+            const original = document.getElementById('edit-modal-original');
+            const input = document.getElementById('edit-modal-input');
+            original.textContent = originalText;
+            input.value = originalText;
+            input.placeholder = 'Escribe el nuevo mensaje...';
+            modal.classList.add('show');
+            input.focus();
+            // Ajustar altura del textarea
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+            // Guarda el id que se está editando
+            window._editingMessageId = id;
+        }
+
         // Agrega estilos para el menú flotante (idénticos al menú anterior)
         const style = document.createElement('style');
         style.innerHTML = `
