@@ -285,8 +285,12 @@ if(!empty($_POST['password']) && !empty($_POST['confirm_password']) && !empty($_
         <div class="reset-card">
             <div class="logo-section">
                 <div class="logo-circle">UH</div>
+                <?php if($tipo == 'success'){?>
+                    <h1 class="title">🔐 Contraseña actualizada</h1>
+                <?php }else{?>
                 <h1 class="title">🔐 Restablecer Contraseña</h1>
                 <p class="subtitle">Crea una nueva contraseña segura para tu cuenta</p>
+                <?php }?>
             </div>
             
             <?php if(!empty($mensaje)): ?>
@@ -297,7 +301,9 @@ if(!empty($_POST['password']) && !empty($_POST['confirm_password']) && !empty($_
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-            
+            <?php if($tipo == 'success'){?>
+                <a href="Ingreso.php" class="back-link">Volver al Inicio de Sesión</a>
+            <?php }else{?>
             <?php if($tipo !== 'success' && !empty($fp_code)): ?>
                 <form method="POST" action="">
                     <div class="form-group">
@@ -335,7 +341,7 @@ if(!empty($_POST['password']) && !empty($_POST['confirm_password']) && !empty($_
             <p class="info-text">
                 Una vez que cambies tu contraseña, podrás iniciar sesión con tus nuevas credenciales.
             </p>
-            
+            <?php }?>
             <a href="Ingreso.php" class="back-link">Volver al Inicio de Sesión</a>
 		</div>
 	</div>

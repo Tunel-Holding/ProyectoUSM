@@ -519,7 +519,7 @@ $conn->close();
                     <?php echo $mensaje; ?>
                 </div>
             <?php endif; ?>
-           
+           <?php if($tipo != 'success'){?>
             <form method="POST" action="">
                 <div class="form-group">
                     <label for="email">📧 Correo Electrónico</label>
@@ -536,7 +536,7 @@ $conn->close();
             <p class="info-text">
                 Te enviaremos un enlace seguro a tu correo electrónico para que puedas restablecer tu contraseña.
             </p>
-            
+        <?php }?>
         
         </div>
     </div>
