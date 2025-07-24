@@ -29,6 +29,40 @@ if ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+// --- INICIO BLOQUE BARRA LATERAL DE MATERIAS ---
+$id_usuario = $_SESSION['idusuario'];
+$profesor_id = null;
+// Obtener id del profesor
+$sql_profesor = "SELECT id FROM profesores WHERE id_usuario = ? LIMIT 1";
+$stmt_profesor = $conn->prepare($sql_profesor);
+if ($stmt_profesor) {
+    $stmt_profesor->bind_param("i", $id_usuario);
+    $stmt_profesor->execute();
+    $stmt_profesor->bind_result($profesor_id);
+    $stmt_profesor->fetch();
+    $stmt_profesor->close();
+}
+$materias = [];
+$materia_actual = isset($_SESSION['idmateria']) ? $_SESSION['idmateria'] : null;
+if ($profesor_id) {
+    $sql = "SELECT id, nombre, seccion FROM materias WHERE id_profesor = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $profesor_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $materias[] = $row;
+    }
+    $stmt->close();
+    // Seleccionar materia por defecto si no hay una seleccionada y hay materias
+    if (!$materia_actual && count($materias) > 0) {
+        $_SESSION['idmateria'] = $materias[0]['id'];
+        $materia_actual = $materias[0]['id'];
+    }
+}
+$sin_materias = empty($materias);
+// --- FIN BLOQUE BARRA LATERAL DE MATERIAS ---
+
 if (!isset($_SESSION['idusuario'])) {
     header("Location: login.php");
     exit();
@@ -882,6 +916,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     </div>
     <?php include 'menu_profesor.php'; ?>
     <div class="chat-dashboard-area">
+        <!-- INICIO SIDEBAR DE MATERIAS (igual que alumnos) -->
+        <div class="sidebar-materias">
+            <h2>Mis Materias</h2>
+            <div class="lista-materias">
+                <?php foreach (
+                    $materias as $mat): ?>
+                    <div class="materia-item<?php if ($materia_actual == $mat['id'])
+                        echo ' selected'; ?>"
+                        onclick="window.location.href='dirigirchat_profesores.php?valor=<?php echo $mat['id']; ?>'">
+                        <?php echo htmlspecialchars($mat['nombre']) . ' (' . htmlspecialchars($mat['seccion']) . ')'; ?>
+                    </div>
+                <?php endforeach; ?>
+                <?php if ($sin_materias): ?>
+                    <div style="color:#888; text-align:center; margin-top:30px;">No tienes materias asignadas.</div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <!-- FIN SIDEBAR DE MATERIAS -->
         <div class="chat-dashboard-main">
             <div class="chat-dashboard-messages" id="chat-box">
                 <!-- Los mensajes se cargan aquí dinámicamente -->
