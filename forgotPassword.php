@@ -270,12 +270,7 @@ if(!empty($_POST['email'])) {
         $mensaje = '❌ El correo electrónico no está registrado en nuestro sistema.';
         $tipo = 'error';
     }
-} else if(!$usuario_autenticado) {
-    // Usuario viene del perfil y ya se cerró la sesión
-    $mensaje = '🔒 Sesión cerrada por seguridad. Por favor, inicia sesión con tu nueva contraseña.';
-    $tipo = 'success';
 }
-actualizar_actividad();
 $conn->close();
 ?>
 
