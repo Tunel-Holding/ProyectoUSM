@@ -1,16 +1,4 @@
 <?php
-require_once 'comprobar_sesion.php';
-    actualizar_actividad();
-
-// Verificar si el usuario viene de modificar contraseña desde su perfil
-$usuario_autenticado = isset($_SESSION['idusuario']) && !empty($_SESSION['idusuario']);
-// Si viene del perfil y está autenticado, cerrar sesión por seguridad
-if ($usuario_autenticado) {
-    
-    cerrar_sesion();
-    $mensaje = '🔒 Sesión cerrada por seguridad. Por favor, inicia sesión con tu nueva contraseña.';
-    $tipo = 'success';
-}
 
 include 'conexion.php';
 require 'vendor/autoload.php';
@@ -541,7 +529,7 @@ $conn->close();
                 <div class="form-group">
                     <label for="email">📧 Correo Electrónico</label>
                     <input type="email" id="email" name="email" required 
-                           placeholder="ejemplo@usm.edu.ve"
+                           placeholder="ejemplo@ejemplo.com"
                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                 </div>
                 
