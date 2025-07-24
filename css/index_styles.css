@@ -7,7 +7,7 @@ body {
 
 header {
     min-height: 60px;
-    background-color: #292fb9;
+    background-color: #0d65e4;
     color: #fff;
     padding: 5px 0px;
     display: flex;
@@ -58,8 +58,8 @@ header .login_button {
 }
 
 header .login_button:hover {
-    background-color: #292fb9;
-    border: 2px solid #fff;
+    background-color: #0d65e4;
+    border: 3px solid #fff;
     color: #fff;
     cursor: pointer;
 }
@@ -159,7 +159,7 @@ header .login_button ion-icon {
 
 .feature-card ion-icon {
     font-size: 4.5em;
-    color: #292fb9; /* Color principal de la marca */
+    color: #0d65e4; /* Color principal de la marca */
     margin-bottom: 20px;
 }
 
@@ -180,8 +180,8 @@ header .login_button ion-icon {
 .agradecimientos{
     display: flex;
     align-items: center;
-    border: 3px solid #292fb9;
-    background-color: #292fb9;
+    border: 3px solid #0d65e4;
+    background-color: #0d65e4;
     justify-content: center;
     margin: 20px 0;
     gap: 10px;
@@ -198,6 +198,6 @@ header .login_button ion-icon {
 
 .agradecimientos:hover {
     background-color: #ddd;
-    color: #292fb9;
-    border: 3px solid #292fb9;
+    color: #0d65e4;
+    border: 3px solid #0d65e4;
 }
