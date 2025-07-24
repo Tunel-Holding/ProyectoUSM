@@ -26,7 +26,7 @@ try {
           $mail->Port = 587;
           
           // Destinatarios y contenido
-        $mail->setFrom('modulo11usm@gmail.com', 'UniHub - Universidad Santa Maria');
+        $mail->setFrom('modulo11usm@gmail.com', 'UniHub');
           $mail->addAddress($email);
         $mail->Subject = '🔐 Recuperación de Contraseña - UniHub';
         
@@ -138,12 +138,12 @@ try {
                 <div class="header">
                     <div class="logo">UH</div>
                     <h1>🔐 Recuperación de Contraseña</h1>
-                    <p>UniHub - Universidad Santa Maria</p>
+                    <p>UniHub</p>
                 </div>
                 
                 <div class="content">
                     <div class="greeting">
-                        Hola <strong>' . htmlspecialchars($nombre_usuario) . '</strong>,
+                        Buenos días <strong>' . htmlspecialchars($nombre_usuario) . '</strong>,
                     </div>
                     
                     <div class="message">
@@ -164,7 +164,7 @@ try {
                 
                 <div class="footer">
                     <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-                    <p>© 2024 UniHub - Universidad Santa Maria. Todos los derechos reservados.</p>
+                    <p>© 2025 UniHub. Todos los derechos reservados.</p>
                 </div>
             </div>
         </body>
@@ -184,7 +184,7 @@ try {
 
 // Procesar la solicitud de recuperación de contraseña
 if(!empty($_POST['email'])) {
-          $email = $_POST['email'];
+    $email = $_POST['email'];
     $sql = "SELECT * FROM usuarios WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -215,7 +215,7 @@ if(!empty($_POST['email'])) {
                 }
             }
         } else if ($nivel_usuario == 'profesor') {
-            $sql_usuario = "SELECT nombres, cedula FROM profesores WHERE email = ?";
+            $sql_usuario = "SELECT nombre, cedula FROM profesores WHERE email = ?";
             $stmt_usuario = $conn->prepare($sql_usuario);
             $stmt_usuario->bind_param("s", $email);
             $stmt_usuario->execute();
@@ -223,8 +223,8 @@ if(!empty($_POST['email'])) {
             
             if($result_usuario->num_rows > 0) {
                 $usuario = $result_usuario->fetch_assoc();
-                if (!empty($usuario['nombres'])) {
-                    $nombre_usuario = $usuario['nombres'];
+                if (!empty($usuario['nombre'])) {
+                    $nombre_usuario = $usuario['nombre'];
                 } else {
                     $nombre_usuario = $usuario['cedula'];
                 }
