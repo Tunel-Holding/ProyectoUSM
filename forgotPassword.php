@@ -198,7 +198,7 @@ if(!empty($_POST['email'])) {
         // Obtener información del usuario según su nivel
         $nombre_usuario = '';
         if ($nivel_usuario == 'administrador') {
-            $sql_usuario = "SELECT nombres, apellidos, cedula FROM datos_usuario WHERE email = ?";
+            $sql_usuario = "SELECT nombres, apellidos, cedula FROM datos_usuario WHERE correo = ?";
             $stmt_usuario = $conn->prepare($sql_usuario);
             $stmt_usuario->bind_param("s", $email);
             $stmt_usuario->execute();
