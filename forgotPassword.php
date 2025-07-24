@@ -32,6 +32,8 @@ try {
         
         // Cuerpo del email moderno
         $mailContent = '
+
+
         <!DOCTYPE html>
         <html lang="es">
         <head>
@@ -40,6 +42,85 @@ try {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Recuperación de Contraseña</title>
         </head>
+
+        <style>
+
+    /* password_recovery.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.email-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.header {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.logo-image {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.content {
+    padding: 20px;
+    text-align: center;
+}
+
+.greeting {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.message {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.reset-button {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.reset-button:hover {
+    background-color: #218838;
+}
+
+.warning {
+    font-size: 14px;
+    color: #dc3545;
+    margin-top: 20px;
+}
+
+.footer {
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+}
+
+
+        </style>
+
         <body>
             <div class="email-container">
                 <div class="header">
@@ -284,7 +365,7 @@ $conn->close();
             width: 100%;
             padding: 15px 20px;
             border: 2px solid #e1e5e9;
-            border-radius: 15px;
+            border-radius: 50px;
             font-size: 16px;
             transition: all 0.3s ease;
             box-sizing: border-box;
@@ -294,16 +375,16 @@ $conn->close();
         .form-group input:focus {
             outline: none;
             border-color: #0c51b1;
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 0 3px rgba(139, 139, 139, 0.27);
         }
         
         .submit-btn {
-            width: 100%;
+            width: 50%;
             background:#0d65e4;
             color: white;
             border: none;
             padding: 15px 30px;
-            border-radius: 15px;
+            border-radius: 50px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -398,7 +479,7 @@ $conn->close();
             background: #0d65e4;
             color: white;
             padding: 10px 18px;
-            border-radius: 6px;
+            border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
             box-shadow: 1px 2px 6px rgba(0,0,0,0.08);
