@@ -23,5 +23,7 @@ try {
     echo "<pre>" . $e->getMessage() . "</pre>";
     exit;
 }
+
+mysqli_query($conn, "SET time_zone = 'America/Caracas'");
 //prueba pa ve cositas pq
 ?>
