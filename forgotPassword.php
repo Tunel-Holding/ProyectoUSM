@@ -26,7 +26,7 @@ try {
           $mail->Port = 587;
           
           // Destinatarios y contenido
-        $mail->setFrom('modulo11usm@gmail.com', 'UniHub');
+        $mail->setFrom('modulo11usm@gmail.com', 'UniHub - Universidad Santa Maria');
           $mail->addAddress($email);
         $mail->Subject = '🔐 Recuperación de Contraseña - UniHub';
         
@@ -36,114 +36,23 @@ try {
         <html lang="es">
         <head>
             <meta charset="UTF-8">
+            <link rel="stylesheet" href="css/password_recovery.css">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Recuperación de Contraseña</title>
-            <style>
-                                 body {
-                     font-family: "Poppins", Arial, sans-serif;
-                     margin: 0;
-                     padding: 0;
-                     background: linear-gradient(135deg, #87CEEB 0%, #FFE4B5 100%);
-                     min-height: 100vh;
-                 }
-                .email-container {
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background: white;
-                    border-radius: 20px;
-                    overflow: hidden;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-                }
-                                 .header {
-                     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-                     padding: 40px 30px;
-                     text-align: center;
-                     color: white;
-                 }
-                .header h1 {
-                    margin: 0;
-                    font-size: 28px;
-                    font-weight: 600;
-                }
-                .header p {
-                    margin: 10px 0 0 0;
-                    opacity: 0.9;
-                    font-size: 16px;
-                }
-                .content {
-                    padding: 40px 30px;
-                    text-align: center;
-                }
-                .greeting {
-                    font-size: 18px;
-                    color: #333;
-                    margin-bottom: 20px;
-                }
-                .message {
-                    font-size: 16px;
-                    color: #666;
-                    line-height: 1.6;
-                    margin-bottom: 30px;
-                }
-                                 .reset-button {
-                     display: inline-block;
-                     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-                     color: white;
-                     text-decoration: none;
-                     padding: 15px 30px;
-                     border-radius: 50px;
-                     font-weight: 600;
-                     font-size: 16px;
-                     margin: 20px 0;
-                     transition: all 0.3s ease;
-                     box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-                 }
-                 .reset-button:hover {
-                     transform: translateY(-2px);
-                     box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-                 }
-                .warning {
-                    background: #fff3cd;
-                    border: 1px solid #ffeaa7;
-                    border-radius: 10px;
-                    padding: 15px;
-                    margin: 20px 0;
-                    color: #856404;
-                    font-size: 14px;
-                }
-                .footer {
-                    background: #f8f9fa;
-                    padding: 30px;
-                    text-align: center;
-                    color: #666;
-                    font-size: 14px;
-                }
-                                 .logo {
-                     width: 80px;
-                     height: 80px;
-                     background: white;
-                     border-radius: 50%;
-                     margin: 0 auto 20px;
-                     display: flex;
-                     align-items: center;
-                     justify-content: center;
-                     font-size: 24px;
-                     font-weight: bold;
-                     color: #FFD700;
-                 }
-            </style>
         </head>
         <body>
             <div class="email-container">
                 <div class="header">
-                    <div class="logo">UH</div>
-                    <h1>🔐 Recuperación de Contraseña</h1>
-                    <p>UniHub</p>
+                    <div class="logo">
+                    <img src="css/logounihubazul.png" alt="Logo UniHub" class="logo-image"></
+                    </div>
+                    <h1>Recuperar Contraseña</h1>
+                    <p>UniHub - Universidad Santa Maria</p>
                 </div>
                 
                 <div class="content">
                     <div class="greeting">
-                        Buenos días <strong>' . htmlspecialchars($nombre_usuario) . '</strong>,
+                        Hola <strong>' . htmlspecialchars($nombre_usuario) . '</strong>,
                     </div>
                     
                     <div class="message">
@@ -152,11 +61,11 @@ try {
                     </div>
                     
                     <a href="' . $resetPassLink . '" class="reset-button">
-                        🔑 Restablecer Contraseña
+                         Restablecer Contraseña
                     </a>
                     
                     <div class="warning">
-                        <strong>⚠️ Importante:</strong> Este enlace expirará en 24 horas por seguridad. 
+                        <strong>Importante:</strong> Este enlace expirará en 24 horas por seguridad. 
                         Si no puedes hacer clic en el botón, copia y pega este enlace en tu navegador:<br>
                                                  <a href="' . $resetPassLink . '" style="color: #FFD700; word-break: break-all;">' . $resetPassLink . '</a>
                     </div>
@@ -164,7 +73,7 @@ try {
                 
                 <div class="footer">
                     <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-                    <p>© 2025 UniHub. Todos los derechos reservados.</p>
+                    <p>© 2024 UniHub - Universidad Santa Maria. Todos los derechos reservados.</p>
                 </div>
             </div>
         </body>
@@ -184,7 +93,7 @@ try {
 
 // Procesar la solicitud de recuperación de contraseña
 if(!empty($_POST['email'])) {
-    $email = $_POST['email'];
+          $email = $_POST['email'];
     $sql = "SELECT * FROM usuarios WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -215,7 +124,7 @@ if(!empty($_POST['email'])) {
                 }
             }
         } else if ($nivel_usuario == 'profesor') {
-            $sql_usuario = "SELECT nombre, cedula FROM profesores WHERE email = ?";
+            $sql_usuario = "SELECT nombres, cedula FROM profesores WHERE email = ?";
             $stmt_usuario = $conn->prepare($sql_usuario);
             $stmt_usuario->bind_param("s", $email);
             $stmt_usuario->execute();
@@ -223,8 +132,8 @@ if(!empty($_POST['email'])) {
             
             if($result_usuario->num_rows > 0) {
                 $usuario = $result_usuario->fetch_assoc();
-                if (!empty($usuario['nombre'])) {
-                    $nombre_usuario = $usuario['nombre'];
+                if (!empty($usuario['nombres'])) {
+                    $nombre_usuario = $usuario['nombres'];
                 } else {
                     $nombre_usuario = $usuario['cedula'];
                 }
@@ -256,18 +165,18 @@ if(!empty($_POST['email'])) {
             
             // Enviar email de recuperación
             if(enviarEmailRecuperacion($email, $nombre_usuario, $resetPassLink)) {
-                $mensaje = '✅ ¡Perfecto! Hemos enviado un enlace de recuperación a tu correo electrónico. Revisa tu bandeja de entrada y sigue las instrucciones.';
+                $mensaje = '¡Perfecto! Hemos enviado un enlace de recuperación a tu correo electrónico. Revisa tu bandeja de entrada y sigue las instrucciones.';
                 $tipo = 'success';
             } else {
-                $mensaje = '❌ Error al enviar el correo electrónico. Por favor, intente nuevamente o contacta al administrador.';
+                $mensaje = 'Error al enviar el correo electrónico. Por favor, intente nuevamente o contacta al administrador.';
                 $tipo = 'error';
             }
         } else {
-            $mensaje = '❌ Se produjo un problema técnico. Por favor, intente nuevamente.';
+            $mensaje = 'Se produjo un problema técnico. Por favor, intente nuevamente.';
             $tipo = 'error';
         }
     } else {
-        $mensaje = '❌ El correo electrónico no está registrado en nuestro sistema.';
+        $mensaje = 'El correo electrónico no está registrado en nuestro sistema.';
         $tipo = 'error';
     }
 }
@@ -285,7 +194,10 @@ $conn->close();
     <style>
         .forgot-password-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, #87CEEB 0%, #FFE4B5 100%);
+            background-image: url('css/IMG_7235copia.webp');
+            background-size: cover;
+            background-position: center;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -295,6 +207,7 @@ $conn->close();
         
         .forgot-card {
             background: white;
+            opacity: 90%;
             border-radius: 25px;
             padding: 50px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
@@ -312,17 +225,25 @@ $conn->close();
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            background:#0c51b1; 
         }
         
         .logo-section {
             margin-bottom: 30px;
         }
         
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
         .logo-circle {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            background: transparent;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -372,13 +293,13 @@ $conn->close();
         
         .form-group input:focus {
             outline: none;
-            border-color: #FFD700;
+            border-color: #0c51b1;
             box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
         }
         
         .submit-btn {
             width: 100%;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            background:#0d65e4;
             color: white;
             border: none;
             padding: 15px 30px;
@@ -393,7 +314,8 @@ $conn->close();
         
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+            background: #0c51b1;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
         .submit-btn:active {
@@ -418,20 +340,6 @@ $conn->close();
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
-        }
-        
-        .back-link {
-            color: #FFD700;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .back-link:hover {
-            color: #FFA500;
         }
         
         .back-link::before {
@@ -487,8 +395,8 @@ $conn->close();
             position: absolute;
             top: 20px;
             left: 20px;
-            background: #ffd700;
-            color: #004c97;
+            background: #0d65e4;
+            color: white;
             padding: 10px 18px;
             border-radius: 6px;
             text-decoration: none;
@@ -498,8 +406,8 @@ $conn->close();
             z-index: 1000;
         }
         .back-link:hover {
-            background: #ffcc00;
-            color: #222;
+            color: white;
+            background: #0c51b1;
         }
     </style>
 </head>
@@ -509,8 +417,10 @@ $conn->close();
     <a href="inicio.php" class="back-link">Volver al Inicio de Sesión</a>
         <div class="forgot-card">
             <div class="logo-section">
-                <div class="logo-circle">UH</div>
-                <h1 class="title">🔐 Recuperar Contraseña</h1>
+                <div class="logo-circle">
+                    <img src="css/logounihubazul.png" alt="Logo UniHub" class="logo-image">
+                </div>
+                <h1 class="title">Recuperar Contraseña</h1>
                 <p class="subtitle">Ingresa tu correo electrónico para recibir un enlace de recuperación</p>
             </div>
             
@@ -519,24 +429,24 @@ $conn->close();
                     <?php echo $mensaje; ?>
                 </div>
             <?php endif; ?>
-           <?php if($tipo != 'success'){?>
+           
             <form method="POST" action="">
                 <div class="form-group">
-                    <label for="email">📧 Correo Electrónico</label>
+                    <label for="email">Correo Electrónico</label>
                     <input type="email" id="email" name="email" required 
                            placeholder="ejemplo@ejemplo.com"
                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                 </div>
                 
                 <button type="submit" class="submit-btn">
-                    📤 Enviar Enlace de Recuperación
+                    Recuperar Contraseña
                 </button>
             </form>
             
             <p class="info-text">
                 Te enviaremos un enlace seguro a tu correo electrónico para que puedas restablecer tu contraseña.
             </p>
-        <?php }?>
+            
         
         </div>
     </div>
