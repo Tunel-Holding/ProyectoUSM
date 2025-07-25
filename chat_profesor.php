@@ -916,12 +916,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     </div>
     <?php include 'menu_profesor.php'; ?>
     <div class="chat-dashboard-area">
-        <!-- INICIO SIDEBAR DE MATERIAS (igual que alumnos) -->
+        <?php
+        // Sidebar de materias (idéntico a alumnos, pero para profesores)
+        $sin_materias = empty($materias);
+        ?>
         <div class="sidebar-materias">
             <h2>Mis Materias</h2>
             <div class="lista-materias">
-                <?php foreach (
-                    $materias as $mat): ?>
+                <?php foreach ($materias as $mat): ?>
                     <div class="materia-item<?php if ($materia_actual == $mat['id'])
                         echo ' selected'; ?>"
                         onclick="window.location.href='dirigirchat_profesores.php?valor=<?php echo $mat['id']; ?>'">
@@ -933,7 +935,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 <?php endif; ?>
             </div>
         </div>
-        <!-- FIN SIDEBAR DE MATERIAS -->
         <div class="chat-dashboard-main">
             <div class="chat-dashboard-messages" id="chat-box">
                 <!-- Los mensajes se cargan aquí dinámicamente -->
@@ -947,8 +948,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     <button id="cancel-reply" class="close-reply-blue" title="Cancelar respuesta">&times;</button>
                 </div>
                 <div class="chat-dashboard-entry">
+                    <?php $sin_materias = empty($materias); ?>
                     <div class="upload-wrapper">
-                        <button id="upload-button" class="button" title="Subir archivo o imagen">
+                        <button id="upload-button" class="button" title="Subir archivo o imagen" <?php if ($sin_materias)
+                            echo 'disabled style=\"opacity:0.5;cursor:not-allowed;\"'; ?>>
                             <img src="css/plus-pequeno.png" alt="Upload">
                         </button>
                         <div id="upload-menu">
@@ -956,16 +959,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             <div class="upload-option" id="upload-file">Subir Archivo</div>
                         </div>
                     </div>
-                    <input type="text" id="message" placeholder="Escribe un mensaje..." maxlength="250"
-                        autocomplete="off" />
-                    <button id="send-button" class="button" title="Enviar mensaje">
+                    <input type="text" id="message"
+                        placeholder="<?php echo $sin_materias ? 'No tienes materias disponibles' : 'Escribe un mensaje...'; ?>"
+                        maxlength="250" autocomplete="off" <?php if ($sin_materias)
+                            echo 'disabled style=\"background:#eee;cursor:not-allowed;\"'; ?> />
+                    <button id="send-button" class="button" title="Enviar mensaje" <?php if ($sin_materias)
+                        echo 'disabled style=\"opacity:0.5;cursor:not-allowed;\"'; ?>>
                         <img src="css/enviar-mensaje.png" alt="Send">
                     </button>
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" <?php if ($sin_materias)
+                        echo 'disabled'; ?>>
                     <input type="file" id="fileInput" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
-                        style="display: none;">
+                        style="display: none;" <?php if ($sin_materias)
+                            echo 'disabled'; ?>>
                     <a id="video-call-button" class="button llamada" href="videollamada_profesor.php"
-                        title="Videollamada">
+                        title="Videollamada" <?php if ($sin_materias)
+                        echo 'style=\"opacity:0.5;cursor:not-allowed;\"'; ?>>
                         <img src="css/icons/meet.svg" alt="Videollamada">
                     </a>
                 </div>
