@@ -324,7 +324,7 @@ body.dark-mode .btn-secondary:hover {
     text-decoration: none;
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
+    border-radius: 50px;
     transition: var(--transition);
     display: flex;
     align-items: center;
@@ -332,14 +332,12 @@ body.dark-mode .btn-secondary:hover {
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
 .nav-link img {
     width: 20px;
     height: 20px;
-    filter: brightness(0) invert(1);
 }
 
 /* Botón de cambio de tema */
@@ -372,7 +370,6 @@ body.dark-mode .btn-secondary:hover {
 /* Botones principales */
 .btn-primary {
     background-color: var(--primary-yellow);
-    color: var(--gray-900);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -422,7 +419,8 @@ body.dark-mode .btn-secondary:hover {
 }
 
 .hero-container {
-    max-width: 800px;
+    margin-top:0px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
