@@ -38,6 +38,14 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
         height: auto;
       }
 
+      @media (max-width: 600px) {
+        .container {
+          max-width: 100%;
+          width: 95%;
+          padding: 20px;
+        }
+      }
+
       h1 {
         color: rgba(255, 255, 255, 1); /* Color celeste oscuro para el título */
         text-align: center;

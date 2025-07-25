@@ -33,7 +33,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
         }
 
         .container {
-            max-width: 90%;
+            max-width: 1000px;
             /* Ajustar el ancho del contenedor */
             margin: auto;
             text-align: center;
@@ -56,7 +56,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             color: #007ACC;
         }
         .titulo {
-            font-size: 48px;
+            font-size: 68px;
             /* Ajusta el tamaño de la fuente */
             font-weight: bold;
             /* Aplica negrita */
@@ -68,7 +68,20 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             /* Aplica la fuente Roboto */
             text-align: center;
             /* Centra el título */
-            
+        }
+
+        @media (max-width: 600px) {
+            .titulo {
+                font-size: 36px;
+            }
+            table {
+                font-size: 14px;
+            }
+            .acciones a.btn-modificar,
+            .acciones a.btn-ajustar {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
         }
 
         body.dark-mode .titulo {
@@ -154,13 +167,6 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             width: 100%;
         }
 
-        .button-container {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
         .search-box {
             flex: 1;
             padding: 12px 20px;
@@ -200,27 +206,6 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
         .search-button:hover {
             background-color: #365ac0;
-            transform: scale(1.05);
-        }
-
-        .add-student-button {
-            padding: 12px 24px;
-            border-radius: 40px;
-            background-color: #28a745; /* Color verde */
-            color: white;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .add-student-button:hover {
-            background-color: #218838;
             transform: scale(1.05);
         }
 
@@ -435,7 +420,6 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
                         <input type="text" name="query" class="search-box" placeholder="Ingrese cédula...">
                         <button type="submit" class="search-button">Buscar</button>
                     </form>
-                    <a href="agregar_estudiante.php" class="add-student-button">Agregar Estudiante</a>
                 </div>
                 <p id="error-message" class="error-message">⚠️ Cedula no ingresada' . $errorMensaje . '</p>
             ';

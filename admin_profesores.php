@@ -281,7 +281,7 @@ class ProfesoresView {
             }
             
             // Si está asignada a otro profesor, hacer no seleccionable
-            $disabled = '';
+            $disabled = $asignadaAOtro ? 'disabled' : '';
             $class = $asignadaAOtro ? 'class="materia-asignada"' : '';
             
             $options .= '<option value="' . $materia['id'] . '" ' . $selected . ' ' . $disabled . ' ' . $class . '>' . $materiaText . '</option>';
@@ -534,6 +534,63 @@ class ProfesoresStyles {
                 border-radius: var(--border-radius);
                 box-shadow: var(--shadow-md);
                 border: 1px solid var(--gray-200);
+                overflow-x: auto;
+            }
+
+            @media (max-width: 600px) {
+                .profesores-table table {
+                    width: 100%;
+                    border-collapse: separate;
+                    border-spacing: 0 0.5rem;
+                }
+
+                .profesores-table thead {
+                    display: none;
+                }
+
+                .profesores-table tbody tr {
+                    display: block;
+                    background: var(--white);
+                    border-radius: var(--border-radius);
+                    box-shadow: var(--shadow-md);
+                    margin-bottom: 1rem;
+                    padding: 1rem;
+                }
+
+                .profesores-table tbody tr td {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.5rem 1rem;
+                    font-size: 0.9rem;
+                    border: none;
+                    border-bottom: 1px solid var(--gray-200);
+                }
+
+                .profesores-table tbody tr td:last-child {
+                    border-bottom: none;
+                }
+
+                .profesores-table tbody tr td .profesor-name {
+                    font-weight: 600;
+                    color: var(--gray-800);
+                    font-size: 1rem;
+                }
+
+                .profesores-table tbody tr td select.materias-select {
+                    min-height: auto;
+                    padding: 0.5rem;
+                    font-size: 0.85rem;
+                }
+
+                .profesores-table tbody tr td .action-buttons {
+                    display: flex;
+                    gap: 0.5rem;
+                }
+
+                .profesores-table tbody tr td .btn-delete {
+                    padding: 0.5rem 1rem;
+                    font-size: 0.85rem;
+                }
             }
 
             .profesores-table table {

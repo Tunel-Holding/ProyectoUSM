@@ -90,6 +90,17 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
             letter-spacing: 0.5px;
         }
 
+        @media (max-width: 600px) {
+            .admin-table th:nth-child(3),
+            .admin-table th:nth-child(4),
+            .admin-table th:nth-child(5),
+            .admin-table td:nth-child(3),
+            .admin-table td:nth-child(4),
+            .admin-table td:nth-child(5) {
+                display: none;
+            }
+        }
+
         .admin-table tr:hover {
             background-color: var(--gray-100);
             transition: var(--transition);
