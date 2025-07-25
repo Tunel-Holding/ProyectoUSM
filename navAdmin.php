@@ -39,19 +39,19 @@
                 </li>
                 <li class="nav-item">
                     <a href="admin_profesores.php" class="nav-link">
-                        <img src="css/profesor.png" alt="Profesores">
+                        <img src="css/profesorw.png" alt="Profesores">
                         Profesores
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="admin_alumnos.php" class="nav-link">
-                        <img src="css/alumno.png" alt="Alumnos">
+                        <img src="css/alumnow.png" alt="Alumnos">
                         Alumnos
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="admin_materias.php" class="nav-link">
-                        <img src="css/horario.png" alt="Materias">
+                        <img src="css/horariow.png" alt="Materias">
                         Materias
                     </a>
                 </li>
@@ -69,7 +69,7 @@
                 </li>
                 <li class="nav-item">
                     <form action="logout.php" method="POST" style="margin: 0;">
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" style="color:white;" class="btn-primary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16 13v-2H7V8l-5 4 5 4v-3z M17 2H5C3.9 2 3 2.9 3 4v3h2V4h12v16H5v-3H3v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
                             </svg>

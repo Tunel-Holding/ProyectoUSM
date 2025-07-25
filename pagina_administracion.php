@@ -72,7 +72,14 @@ $conn->close();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin-general.css">
+
+
     <title>UniHub - Panel de Administración</title>
+    <style>
+        .hero, .hero-container {
+            margin-top: 0 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -84,19 +91,19 @@ $conn->close();
             <h1 class="hero-title">Bienvenido al administrador del Sistema UniHub</h1>
             <p class="hero-subtitle">Panel de administración completo para gestionar estudiantes, profesores y materias de manera eficiente</p>
             <div class="hero-cta">
-                <a href="admin_profesores.php" class="btn-primary">
+                <a href="admin_profesores.php" style="color:black;" class="btn-primary">
                     <img src="css/profesor.png" alt="Profesores" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Profesores
                 </a>
-                <a href="admin_alumnos.php" class="btn-primary">
+                <a href="admin_alumnos.php" style="color:black;" class="btn-primary">
                     <img src="css/alumno.png" alt="Alumnos" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Alumnos
                 </a>
-                <a href="admin_materias.php" class="btn-primary">
+                <a href="admin_materias.php" style="color:black;" class="btn-primary">
                     <img src="css/horario.png" alt="Materias" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Materias
                 </a>
-                <a href="admin_asistencias.php" class="btn-primary">
+                <a href="admin_asistencias.php" style="color:black;" class="btn-primary">
                     <img src="css/asistencia.png" alt="Asistencias" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Asistencias
                 </a>
