@@ -72,8 +72,6 @@ $conn->close();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin-general.css">
-
-
     <title>UniHub - Panel de Administración</title>
     <style>
         .hero, .hero-container {
@@ -99,7 +97,7 @@ $conn->close();
                     <img src="css/alumno.png" alt="Alumnos" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Alumnos
                 </a>
-                <a href="admin_materias.php" style="color:black;" class="btn-primary">
+                 <a href="admin_materias.php" style="color:black;" class="btn-primary">
                     <img src="css/horario.png" alt="Materias" style="width: 20px; height: 20px; filter: none;">
                     Gestionar Materias
                 </a>
@@ -169,7 +167,7 @@ $conn->close();
     </main>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     // Funcionalidad del cambio de tema
     const themeToggle = document.getElementById('themeToggle');
     const themeIconLight = document.querySelector('.theme-icon-light');
