@@ -59,52 +59,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = trim($_POST['telefono'] ?? $estudiante['telefono']);
     $direccion = trim($_POST['direccion'] ?? $estudiante['direccion']);
 
-    // Procesar la foto si se subió una nueva
-    $foto_subida = false;
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-        $target_dir = "fotoperfil/";
-        // Asegúrate de que el directorio exista y tenga permisos de escritura
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0755, true); // Crea el directorio si no existe
-        }
-
-        $nombre_archivo = time() . '_' . basename($_FILES["foto"]["name"]);
-        $target_file = $target_dir . $nombre_archivo;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $check = getimagesize($_FILES["foto"]["tmp_name"]);
-
-        if ($check !== false) {
-            // Validar si la imagen es cuadrada
-            if ($check[0] !== $check[1]) {
-                $error_message = "La foto debe ser cuadrada (igual de altura y anchura).";
-            }
-            // Validar el tamaño de la imagen (5MB máximo)
-            elseif ($_FILES["foto"]["size"] > 5000000) { // Aumentado a 5MB
-                $error_message = "La foto es demasiado grande (máximo 5MB).";
-            }
-            // Validar el tipo de archivo
-            elseif (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
-                $error_message = "Solo se permiten archivos JPG, JPEG, PNG y GIF.";
+   // Si se envió una imagen recortada desde Croppie, procesarla
+    if (!empty($_POST['croppie_result'])) {
+        $croppie_data = $_POST['croppie_result'];
+        if (preg_match('/^data:image\/(\w+);base64,/', $croppie_data, $type)) {
+            $croppie_data = substr($croppie_data, strpos($croppie_data, ',') + 1);
+            $croppie_data = base64_decode($croppie_data);
+            $ext = strtolower($type[1]);
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $error_message = "Formato de imagen recortada no válido.";
             } else {
-                // Antes de mover, verificar si la foto ya existe para este usuario y borrar la anterior si es diferente
-                $sql_get_old_foto = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
-                $stmt_get_old_foto = $conn->prepare($sql_get_old_foto);
-                if ($stmt_get_old_foto) {
-                    $stmt_get_old_foto->bind_param("i", $id_usuario);
-                    $stmt_get_old_foto->execute();
-                    $result_old_foto = $stmt_get_old_foto->get_result();
-                    if ($result_old_foto->num_rows > 0) {
-                        $old_foto_row = $result_old_foto->fetch_assoc();
-                        $old_foto_path = $old_foto_row['foto'];
-                        // Asegurarse de no borrar la foto por defecto si es la actual
-                        if ($old_foto_path && $old_foto_path != "css/perfil.png" && file_exists($old_foto_path)) {
-                            unlink($old_foto_path); // Borrar la foto antigua del servidor
-                        }
-                    }
-                    $stmt_get_old_foto->close();
+                $target_dir = "fotoperfil/";
+                if (!file_exists($target_dir)) {
+                    mkdir($target_dir, 0755, true);
                 }
-
-                if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
+                $nombre_archivo = time() . '_croppie.' . $ext;
+                $target_file = $target_dir . $nombre_archivo;
+                if (file_put_contents($target_file, $croppie_data)) {
                     // Actualizar o insertar la foto en la base de datos
                     $sql_foto_check = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
                     $stmt_foto_check = $conn->prepare($sql_foto_check);
@@ -112,27 +83,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt_foto_check->execute();
                     $result_foto_check = $stmt_foto_check->get_result();
                     if ($result_foto_check->num_rows > 0) {
-                        $sql_update_foto = "UPDATE fotousuario SET foto = ? WHERE id_usuario = ?";
-                        $stmt_update_foto = $conn->prepare($sql_update_foto);
-                        $stmt_update_foto->bind_param("si", $target_file, $id_usuario);
-                        $stmt_update_foto->execute();
-                        $stmt_update_foto->close();
+                        $sql_update = "UPDATE fotousuario SET foto = ? WHERE id_usuario = ?";
+                        $stmt_update = $conn->prepare($sql_update);
+                        $stmt_update->bind_param("si", $target_file, $id_usuario);
+                        $stmt_update->execute();
+                        $stmt_update->close();
                     } else {
-                        $sql_insert_foto = "INSERT INTO fotousuario (id_usuario, foto) VALUES (?, ?)";
-                        $stmt_insert_foto = $conn->prepare($sql_insert_foto);
-                        $stmt_insert_foto->bind_param("is", $id_usuario, $target_file);
-                        $stmt_insert_foto->execute();
-                        $stmt_insert_foto->close();
+                        $sql_insert = "INSERT INTO fotousuario (id_usuario, foto) VALUES (?, ?)";
+                        $stmt_insert = $conn->prepare($sql_insert);
+                        $stmt_insert->bind_param("is", $id_usuario, $target_file);
+                        $stmt_insert->execute();
+                        $stmt_insert->close();
                     }
-                    $foto = $target_file; // Actualiza la variable $foto con la nueva ruta
-                    $foto_subida = true;
+                    $foto = $target_file;
+                    $success_message = "Foto actualizada correctamente.";
                     $stmt_foto_check->close();
                 } else {
-                    $error_message = "Error al mover el archivo subido.";
+                    $error_message = "Error al guardar la imagen recortada.";
                 }
             }
         } else {
-            $error_message = "El archivo no es una imagen válida.";
+            $error_message = "Imagen recortada no válida.";
         }
     }
 
@@ -229,6 +200,12 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
     <link
         href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+        
+    <!-- Croppie CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+    <!-- jQuery y Croppie JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
     <title>Modificar datos - UniHub</title>
     <script src="js/control_inactividad.js"></script>
     <style>
@@ -669,28 +646,33 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
 
     <div class="pagina">
         <div class="wecontainer">
+            <a href="datos_profesor.php">
+            <button class="button">Regresar</button>
+            </a>
             <h1>Modificar Datos del Profesor</h1>
             <form method="POST" action="" enctype="multipart/form-data">
                 <div class="perfil-container">
+                    
                     <div class="perfil-foto-wrapper" id="fotoWrapper">
                         <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
-                        <input type="file" id="fotoInput" name="foto" accept="image/*" style="display: none;">
-                        <label for="fotoInput" class="edit-icon" title="Cambiar foto de perfil">
+                        <!-- Oculto, pero sirve para disparar el cambio -->
+                        <input type="file" name="foto" id="input-imagen" accept="image/*" style="display: none;">
+                        <label for="input-imagen" class="edit-icon" title="Cambiar foto de perfil">
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
                                 <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                                 <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
                             </svg>
                         </label>
                     </div>
+                <br>
+                <br>
+                <!-- Contenedor para Croppie (inicialmente oculto) -->
+                <div id="croppie-container" style="display: none;"></div>
+                <button type="button" id="btn-cortar" style="display:none; margin: 10px auto;">Recortar Imagen</button>
+                <input type="hidden" name="croppie_result" id="croppie-result">
                 </div>
 
-                <?php if ($error_message): ?>
-                    <p class="error-message"><?php echo $error_message; ?></p>
-                <?php endif; ?>
-                <?php if ($success_message): ?>
-                    <p class="success-message"><?php echo $success_message; ?></p>
-                <?php endif; ?>
-
+                
                 <div class="form">
                     <label for="cedula">Número de Cédula:</label>
                     <p id="cedula"><?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?></p>
@@ -728,62 +710,47 @@ if (isset($conn) && $conn->ping()) { // Verificar si la conexión aún está abi
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Script para la vista previa de la foto y validación del lado del cliente
-            const fotoInput = document.getElementById('fotoInput');
-            const perfilFoto = document.getElementById('perfilFoto');
-            const fotoWrapper = document.getElementById('fotoWrapper');
-
-            // Cuando se haga clic en el wrapper o en la imagen, se activa el input de archivo
-            fotoWrapper.addEventListener('click', function() {
-                fotoInput.click();
-            });
-
-            fotoInput.addEventListener('change', function(event) {
-                if (event.target.files && event.target.files[0]) {
-                    const file = event.target.files[0];
-                    const img = new Image();
-                    img.onload = function() {
-                        // Validar si la imagen es cuadrada
-                        if (img.width !== img.height) {
-                            alert('La foto debe ser cuadrada (igual de altura y anchura).');
-                            // Limpiar la selección del archivo si no es cuadrada
-                            fotoInput.value = '';
-                            perfilFoto.src = "<?php echo htmlspecialchars($foto); ?>"; // Vuelve a la foto original
-                        } else if (file.size > 5000000) { // Validar tamaño (5MB)
-                            alert('La foto es demasiado grande (máximo 5MB).');
-                            fotoInput.value = '';
-                            perfilFoto.src = "<?php echo htmlspecialchars($foto); ?>";
-                        }
-                        else {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                perfilFoto.src = e.target.result;
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    };
-                    img.src = URL.createObjectURL(file); // Cargar la imagen para obtener sus dimensiones
-                }
-            });
-
-            // Limpiar mensajes de éxito/error después de unos segundos
-            const successMessageDiv = document.querySelector('.success-message');
-            const errorMessageDiv = document.querySelector('.error-message');
-
-            if (successMessageDiv) {
-                setTimeout(() => {
-                    successMessageDiv.style.opacity = '0';
-                    setTimeout(() => successMessageDiv.remove(), 1000); // Eliminar después de la transición
-                }, 5000); // Ocultar después de 5 segundos
+         document.getElementById('input-imagen').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (file.size > 500000) { // Validar tamaño máximo de 5MB
+            alert('El archivo es demasiado grande. El tamaño máximo permitido es 5MB.');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // Mostrar el cropper cada vez que se selecciona una imagen
+            document.getElementById('croppie-container').style.display = 'block';
+            document.getElementById('btn-cortar').style.display = 'inline-block';
+            // Si ya existe una instancia, destruirla
+            if (window.croppieInstance) {
+                window.croppieInstance.destroy();
             }
-            if (errorMessageDiv) {
-                setTimeout(() => {
-                    errorMessageDiv.style.opacity = '0';
-                    setTimeout(() => errorMessageDiv.remove(), 1000);
-                }, 5000);
-            }
+            window.croppieInstance = new Croppie(document.getElementById('croppie-container'), {
+                viewport: { width: 200, height: 200, type: 'square' },
+                boundary: { width: 300, height: 300 }
+            });
+            window.croppieInstance.bind({
+                url: e.target.result
+            });
+        }
+        reader.readAsDataURL(file);
+    });
+
+    // Al hacer clic en el botón de recortar, se obtiene la imagen recortada
+    document.getElementById('btn-cortar').addEventListener('click', function () {
+        window.croppieInstance.result({
+            type: 'base64',
+            size: 'viewport'
+        }).then(function (base64) {
+            document.getElementById('croppie-result').value = base64;
+            alert('Imagen recortada lista para enviar. Ahora puedes guardar los cambios.');
+            document.getElementById('croppie-container').style.display = 'none';
+            document.getElementById('btn-cortar').style.display = 'none';
+            // Actualizar la foto de vista previa en el wrapper
+            document.getElementById('perfilFoto').src = base64;
         });
+    });
     </script>
 </body>
 
