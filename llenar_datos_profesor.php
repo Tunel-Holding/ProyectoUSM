@@ -37,7 +37,7 @@ function validarEntrada($dato, $tipo = 'texto', $longitudMax = 255) {
         case 'cedula':
             // Cedula: entre 2 y 8 dígitos
             return preg_match('/^\d{2,8}$/', $dato) ? $dato : false;
-            
+
         case 'nombre':
             // Validar nombres (solo letras, espacios y algunos caracteres especiales)
             return preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/', $dato) ? $dato : false;
@@ -165,11 +165,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             header("Location: datos_profesor.php");
                             exit();
                         } else {
-                            $errores[] = "Error al guardar los datos en la base de datos.";
+                            $errores[] = "Error al guardar los datos. Por favor, inténtelo de nuevo.";
                         }
                         $stmt->close();
                     } else {
-                        $errores[] = "Error en la preparación de la consulta.";
+                        $errores[] = "Error interno: Por favor, inténtelo de nuevo.";
                     }
                 }
             }
@@ -482,7 +482,7 @@ actualizar_actividad();
                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
                                 title="Solo se permiten letras y espacios"
                                 value="<?php echo isset($datos['nombres']) ? htmlspecialchars($datos['nombres']) : ''; ?>"
-                                maxlength="100"
+                                maxlength="50"
                                 required>
                     </div>
 
@@ -493,7 +493,7 @@ actualizar_actividad();
                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
                                 title="Solo se permiten letras y espacios"
                                 value="<?php echo isset($datos['apellidos']) ? htmlspecialchars($datos['apellidos']) : ''; ?>"
-                                maxlength="100"
+                                maxlength="50"
                                 required>
                     </div>
 
