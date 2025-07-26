@@ -1,6 +1,9 @@
 <?php
 include 'comprobar_sesion.php';
 actualizar_actividad();
+require_once 'authGuard.php';
+$auth = AuthGuard::getInstance();
+$auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 include 'conexion.php';
 
 // Obtener el ID del usuario de la sesión
@@ -10,16 +13,13 @@ $id_usuario = $_SESSION['idusuario'];
 $sql = "SELECT cedula, nombres, apellidos, sexo, telefono, correo, direccion 
         FROM datos_usuario 
         WHERE usuario_id = ?";
-
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die("Error en la consulta: " . $conn->error);
 }
-
 $stmt->bind_param("i", $id_usuario);
 $stmt->execute();
 $result = $stmt->get_result();
-
 if ($result->num_rows > 0) {
     $estudiante = $result->fetch_assoc();
 } else {
@@ -44,67 +44,64 @@ if ($stmt_foto) {
 $error_message = "";
 $success_message = "";
 
+// Procesar el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener y sanitizar solo los campos editables
+    // Si se envió una imagen recortada desde Croppie, procesarla
+    if (!empty($_POST['croppie_result'])) {
+        $croppie_data = $_POST['croppie_result'];
+        if (preg_match('/^data:image\/(\w+);base64,/', $croppie_data, $type)) {
+            $croppie_data = substr($croppie_data, strpos($croppie_data, ',') + 1);
+            $croppie_data = base64_decode($croppie_data);
+            $ext = strtolower($type[1]);
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $error_message = "Formato de imagen recortada no válido.";
+            } else {
+                $target_dir = "fotoperfil/";
+                if (!file_exists($target_dir)) {
+                    mkdir($target_dir, 0755, true);
+                }
+                $nombre_archivo = time() . '_croppie.' . $ext;
+                $target_file = $target_dir . $nombre_archivo;
+                if (file_put_contents($target_file, $croppie_data)) {
+                    // Actualizar o insertar la foto en la base de datos
+                    $sql_foto_check = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
+                    $stmt_foto_check = $conn->prepare($sql_foto_check);
+                    $stmt_foto_check->bind_param("i", $id_usuario);
+                    $stmt_foto_check->execute();
+                    $result_foto_check = $stmt_foto_check->get_result();
+                    if ($result_foto_check->num_rows > 0) {
+                        $sql_update = "UPDATE fotousuario SET foto = ? WHERE id_usuario = ?";
+                        $stmt_update = $conn->prepare($sql_update);
+                        $stmt_update->bind_param("si", $target_file, $id_usuario);
+                        $stmt_update->execute();
+                        $stmt_update->close();
+                    } else {
+                        $sql_insert = "INSERT INTO fotousuario (id_usuario, foto) VALUES (?, ?)";
+                        $stmt_insert = $conn->prepare($sql_insert);
+                        $stmt_insert->bind_param("is", $id_usuario, $target_file);
+                        $stmt_insert->execute();
+                        $stmt_insert->close();
+                    }
+                    $foto = $target_file;
+                    $success_message = "Foto actualizada correctamente.";
+                    $stmt_foto_check->close();
+                } else {
+                    $error_message = "Error al guardar la imagen recortada.";
+                }
+            }
+        } else {
+            $error_message = "Imagen recortada no válida.";
+        }
+    }
+    
+    // Procesar campos editables (sexo, teléfono, dirección)
     $sexo = trim($_POST['sexo'] ?? $estudiante['sexo']);
     $telefono = trim($_POST['telefono'] ?? $estudiante['telefono']);
     $direccion = trim($_POST['direccion'] ?? $estudiante['direccion']);
-
-    // Procesar la foto si se subió una nueva
-    $foto_subida = false;
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-        $target_dir = "fotoperfil/";
-        $nombre_archivo = time() . '_' . basename($_FILES["foto"]["name"]);
-        $target_file = $target_dir . $nombre_archivo;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $check = getimagesize($_FILES["foto"]["tmp_name"]);
-        if ($check !== false) {
-            if ($check[0] !== $check[1]) {
-                $error_message = "La foto debe ser cuadrada (igual de altura y anchura).";
-            } elseif ($_FILES["foto"]["size"] > 500000) {
-                $error_message = "La foto es demasiado grande.";
-            } elseif (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
-                $error_message = "Solo se permiten archivos JPG, JPEG, PNG y GIF.";
-            } elseif (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
-                // Borrar la foto anterior si existe y no es la de por defecto
-                if ($foto != "css/perfil.png" && file_exists($foto)) {
-                    unlink($foto);
-                }
-                // Actualizar o insertar la foto en la base de datos
-                $sql_foto_check = "SELECT foto FROM fotousuario WHERE id_usuario = ?";
-                $stmt_foto_check = $conn->prepare($sql_foto_check);
-                $stmt_foto_check->bind_param("i", $id_usuario);
-                $stmt_foto_check->execute();
-                $result_foto_check = $stmt_foto_check->get_result();
-                if ($result_foto_check->num_rows > 0) {
-                    $sql_update_foto = "UPDATE fotousuario SET foto = ? WHERE id_usuario = ?";
-                    $stmt_update_foto = $conn->prepare($sql_update_foto);
-                    $stmt_update_foto->bind_param("si", $target_file, $id_usuario);
-                    $stmt_update_foto->execute();
-                    $stmt_update_foto->close();
-                } else {
-                    $sql_insert_foto = "INSERT INTO fotousuario (id_usuario, foto) VALUES (?, ?)";
-                    $stmt_insert_foto = $conn->prepare($sql_insert_foto);
-                    $stmt_insert_foto->bind_param("is", $id_usuario, $target_file);
-                    $stmt_insert_foto->execute();
-                    $stmt_insert_foto->close();
-                }
-                $foto = $target_file;
-                $foto_subida = true;
-                $stmt_foto_check->close();
-            } else {
-                $error_message = "Error al subir la foto.";
-            }
-        } else {
-            $error_message = "El archivo no es una imagen válida.";
-        }
-    }
-
-    // Verificar que todos los campos editables estén presentes
+    
     if (empty($sexo) || empty($telefono) || empty($direccion)) {
         $error_message = "Todos los campos son obligatorios.";
     } elseif (!$error_message) {
-        // Validar formato del teléfono (solo números y algunos caracteres especiales)
         if (!preg_match('/^[\\d\\s\\-\\+\\(\\)]+$/', $telefono)) {
             $error_message = "El formato del teléfono no es válido.";
         } else if (strlen($telefono) > 11) {
@@ -112,15 +109,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else if (strlen($direccion) > 100) {
             $error_message = "La dirección no puede tener más de 100 caracteres.";
         } else {
-            // Actualizar solo los campos editables en la base de datos usando prepared statement
             $sql_update = "UPDATE datos_usuario SET sexo = ?, telefono = ?, direccion = ? WHERE usuario_id = ?";
             $stmt_update = $conn->prepare($sql_update);
             if ($stmt_update) {
                 $stmt_update->bind_param("sssi", $sexo, $telefono, $direccion, $id_usuario);
                 if ($stmt_update->execute()) {
                     $success_message = "Datos actualizados correctamente.";
-                    // Refrescar los datos para mostrar los nuevos valores
-                    header("Location: datos.php?success=1");
+                    header("Location: modificar_datos.php?success=1");
                     exit();
                 } else {
                     $error_message = "Error al actualizar los datos: " . $stmt_update->error;
@@ -135,25 +130,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 actualizar_actividad();
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="icon" href="css/icono.png" type="image/png"> -->
-    <link rel="icon" href="css/logounihubblanco.png" type="image/png">
+    <title>Modificar Datos - UniHub</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/principalalumnostyle.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Noto+Sans+KR:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <title>Modificar Datos - UniHub</title>
-    <script src="js/control_inactividad.js"></script>
-    <style>
+    <!-- Croppie CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+    <!-- jQuery y Croppie JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+ <style>
         /* Variables CSS para el modo oscuro y colores base */
         :root {
             --background-color-light: #f4f7f6; /* Fondo general claro, más suave */
@@ -647,9 +637,10 @@ $conn->close();
             z-index: 2;
         }
     </style>
-</head>
 
+</head>
 <body>
+   <!-- Resto del header y menú -->
     <div class="contenedorentrante3">
         <img src="css\logo.png">
     </div>
@@ -664,18 +655,29 @@ $conn->close();
             <p>UniHub</p>
         </div>
     </div>
-
     <?php include 'menu_alumno.php'; ?>
 
     <div class="pagina">
         <div class="wecontainer">
+            <a href="datos.php">
+            <button class="button">Regresar</button>
+            </a>
+            <br>
             <h1>Modificar Datos</h1>
+            
+            <?php if ($error_message): ?>
+                <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
+            <?php endif; ?>
+            <?php if (!empty($_GET['success']) || $success_message): ?>
+                <p class="success-message"><?php echo htmlspecialchars($success_message ?: "Datos actualizados correctamente."); ?></p>
+            <?php endif; ?>
             <form method="POST" action="" enctype="multipart/form-data">
                 <div class="perfil-container" style="justify-content: center; align-items: center;">
                     <div class="perfil-foto-wrapper" id="fotoWrapper">
                         <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
-                        <input type="file" id="foto" name="foto" accept="image/*" style="display: none;">
-                        <label for="foto" class="edit-icon" title="Cambiar foto de perfil">
+                        <!-- Oculto, pero sirve para disparar el cambio -->
+                        <input type="file" name="foto" id="input-imagen" accept="image/*" style="display: none;">
+                        <label for="input-imagen" class="edit-icon" title="Cambiar foto de perfil">
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
                                 <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                                 <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0"/>
@@ -683,44 +685,29 @@ $conn->close();
                         </label>
                     </div>
                 </div>
-                <?php if ($error_message): ?>
-                    <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
-                <?php endif; ?>
-                <?php if (isset($_GET['success'])): ?>
-                    <p class="success-message">Datos actualizados correctamente.</p>
-                <?php endif; ?>
+                <!-- Contenedor para Croppie (inicialmente oculto) -->
+                <div id="croppie-container" style="display: none;"></div>
+                <button type="button" id="btn-cortar" style="display:none; margin: 10px auto;">Recortar Imagen</button>
+                <input type="hidden" name="croppie_result" id="croppie-result">
                 <div class="form">
                     <label for="cedula">Número de Cédula:</label>
-                    <div class="readonly-field">
-                        <?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?>
-                    </div>
+                    <div class="readonly-field"><?php echo htmlspecialchars($estudiante['cedula'] ?? ''); ?></div>
                     <label for="nombres">Nombres:</label>
-                    <div class="readonly-field">
-                        <?php echo htmlspecialchars($estudiante['nombres'] ?? ''); ?>
-                    </div>
+                    <div class="readonly-field"><?php echo htmlspecialchars($estudiante['nombres'] ?? ''); ?></div>
                     <label for="apellidos">Apellidos:</label>
-                    <div class="readonly-field">
-                        <?php echo htmlspecialchars($estudiante['apellidos'] ?? ''); ?>
-                    </div>
+                    <div class="readonly-field"><?php echo htmlspecialchars($estudiante['apellidos'] ?? ''); ?></div>
                     <label for="correo">Correo:</label>
-                    <div class="readonly-field">
-                        <?php echo htmlspecialchars($estudiante['correo'] ?? ''); ?>
-                    </div>
+                    <div class="readonly-field"><?php echo htmlspecialchars($estudiante['correo'] ?? ''); ?></div>
                     <label for="sexo">Sexo:</label>
-                    <select id="sexo" name="sexo"
-                        class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <select id="sexo" name="sexo" class="<?php echo empty($_POST['sexo']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
                         <option value="" <?php if (($estudiante['sexo'] ?? '') == '') echo 'selected'; ?>>Seleccione</option>
                         <option value="Masculino" <?php if (($estudiante['sexo'] ?? '') == 'Masculino') echo 'selected'; ?>>Masculino</option>
                         <option value="Femenino" <?php if (($estudiante['sexo'] ?? '') == 'Femenino') echo 'selected'; ?>>Femenino</option>
                     </select>
                     <label for="telefono">Teléfono:</label>
-                    <input maxlength="11" type="text" id="telefono" name="telefono"
-                        value="<?php echo htmlspecialchars($estudiante['telefono'] ?? ''); ?>"
-                        class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <input maxlength="11" type="text" id="telefono" name="telefono" value="<?php echo htmlspecialchars($estudiante['telefono'] ?? ''); ?>" class="<?php echo empty($_POST['telefono']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
                     <label for="direccion">Dirección:</label>
-                    <input maxlength="100" type="text" id="direccion" name="direccion"
-                        value="<?php echo htmlspecialchars($estudiante['direccion'] ?? ''); ?>"
-                        class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
+                    <input maxlength="100" type="text" id="direccion" name="direccion" value="<?php echo htmlspecialchars($estudiante['direccion'] ?? ''); ?>" class="<?php echo empty($_POST['direccion']) && $_SERVER["REQUEST_METHOD"] == "POST" ? 'error' : ''; ?>">
                     <a href="forgotPassword.php">Cambiar contraseña</a>
                     <input type="submit" class="button" value="Guardar cambios">
                 </div>
@@ -728,55 +715,49 @@ $conn->close();
         </div>
     </div>
 
-    <div class="soporte-flotante-container">
-        <a href="contacto.php" class="soporte-flotante" title="Soporte">
-            <span class="soporte-mensaje">Contacto soporte</span>
-            <img src="css/audifonos-blanco.png" alt="Soporte">
-        </a>
-    </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Script para la vista previa de la foto
-            const fotoInput = document.getElementById('foto');
-            const perfilFoto = document.getElementById('perfilFoto');
-
-            fotoInput.addEventListener('change', function(event) {
-                if (event.target.files && event.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        perfilFoto.src = e.target.result;
-                    };
-                    reader.readAsDataURL(event.target.files[0]);
-                }
-            });
-
-            // Manejar mensajes de éxito/error de PHP (si vienen por GET)
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('success') && urlParams.get('success') === '1') {
-                // Mostrar mensaje de éxito si es necesario, aunque el PHP ya hace un redirect con mensaje.
-                // Podrías poner un setTimeout para que desaparezca
-                const successMessageDiv = document.querySelector('.success-message');
-                if (successMessageDiv) {
-                    successMessageDiv.style.opacity = '1';
-                    setTimeout(() => {
-                        successMessageDiv.style.opacity = '0';
-                        setTimeout(() => successMessageDiv.remove(), 1000); // Eliminar después de la transición
-                    }, 5000); // Ocultar después de 5 segundos
-                }
+    // Vista previa de la foto actual (si el usuario carga una nueva imagen)
+    document.getElementById('input-imagen').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (file.size>500000) { // Validar tamaño máximo de 5MB
+            alert('El archivo es demasiado grande. El tamaño máximo permitido es 5MB.');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // Mostrar el cropper cada vez que se selecciona una imagen
+            document.getElementById('croppie-container').style.display = 'block';
+            document.getElementById('btn-cortar').style.display = 'inline-block';
+            // Si ya existe una instancia, destruirla
+            if (window.croppieInstance) {
+                window.croppieInstance.destroy();
             }
-            // Similar para el error_message si lo gestionaras por GET
-            <?php if ($error_message): ?>
-                const errorMessageDiv = document.querySelector('.error-message');
-                if (errorMessageDiv) {
-                    errorMessageDiv.style.opacity = '1';
-                    setTimeout(() => {
-                        errorMessageDiv.style.opacity = '0';
-                        setTimeout(() => errorMessageDiv.remove(), 1000);
-                    }, 5000);
-                }
-            <?php endif; ?>
+            window.croppieInstance = new Croppie(document.getElementById('croppie-container'), {
+                viewport: { width: 200, height: 200, type: 'square' },
+                boundary: { width: 300, height: 300 }
+            });
+            window.croppieInstance.bind({
+                url: e.target.result
+            });
+        }
+        reader.readAsDataURL(file);
+    });
+
+    // Al hacer clic en el botón de recortar, se obtiene la imagen recortada
+    document.getElementById('btn-cortar').addEventListener('click', function () {
+        window.croppieInstance.result({
+            type: 'base64',
+            size: 'viewport'
+        }).then(function (base64) {
+            document.getElementById('croppie-result').value = base64;
+            alert('Imagen recortada lista para enviar. Ahora puedes guardar los cambios.');
+            document.getElementById('croppie-container').style.display = 'none';
+            document.getElementById('btn-cortar').style.display = 'none';
+            // Actualizar la foto de vista previa en el wrapper
+            document.getElementById('perfilFoto').src = base64;
         });
+    });
     </script>
 </body>
 </html>
