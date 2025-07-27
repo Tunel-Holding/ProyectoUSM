@@ -1077,7 +1077,28 @@ if ($idgrupo) {
                 <div class="consulta-modal-content">
                     <h2>Material de consulta</h2>
                     <div class="archivos-enviados">
-                        
+                        <?php
+                        // Mostrar archivos enviados en el chat de la materia actual
+                        if (isset($materia_actual)) {
+                            $stmt_archivos = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ? AND tipo = 'archivo' ORDER BY created_at DESC");
+                            $stmt_archivos->bind_param("i", $materia_actual);
+                            $stmt_archivos->execute();
+                            $result_archivos = $stmt_archivos->get_result();
+                            if ($result_archivos->num_rows > 0) {
+                                while ($archivo = $result_archivos->fetch_assoc()) {
+                                    $nombre_archivo = basename($archivo['message']);
+                                    $fecha = date('d/m/Y H:i', strtotime($archivo['created_at']));
+                                    echo '<div style="margin-bottom:10px;">
+                                            <a href="' . htmlspecialchars($archivo['message']) . '" target="_blank" style="color:#174388;font-weight:600;text-decoration:underline;">' . htmlspecialchars($nombre_archivo) . '</a>
+                                            <span style="color:#888;font-size:0.95em;margin-left:8px;">(' . $fecha . ')</span>
+                                          </div>';
+                                }
+                            } else {
+                                echo '<div style="color:#888;">No hay archivos enviados en este chat.</div>';
+                            }
+                            $stmt_archivos->close();
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
@@ -1912,27 +1933,6 @@ if ($idgrupo) {
                 menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')\">Responder</button>`;
                 if (isCurrentUser) {
                     if (messageType === 'texto') {
-                        menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"editarMensaje(${messageId})\">Editar</button>`;
-                    }
-                    menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>`;
-                }
-                menu.innerHTML = menuHtml;
-                document.body.appendChild(menu);
-                // Posiciona el menú igual que el menú anterior
-                function updateMenuPosition() {
-                    const rect = btn.getBoundingClientRect();
-                    menu.style.position = 'fixed';
-                    menu.style.zIndex = 99999;
-                    // Medidas del menú
-                    menu.style.visibility = 'hidden';
-                    menu.style.display = 'block';
-                    const menuWidth = menu.offsetWidth;
-                    const menuHeight = menu.offsetHeight;
-                    menu.style.visibility = '';
-                    menu.style.display = '';
-                    // Ajustar posición según lado
-                    if (isCurrentUser) {
-                        // Usuario actual: menú a la izquierda del botón
                         menu.style.left = (rect.left - menuWidth - 8) + 'px';
                         menu.style.top = (rect.top - menuHeight + rect.height + 8) + 'px';
                     } else {
