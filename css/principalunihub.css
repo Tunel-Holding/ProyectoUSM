@@ -528,3 +528,54 @@ body.dark-mode .texto {
 body.dark-mode .chat-dashboard-main {
     background: #1e1e1e !important;
 }
+
+.profesor-columna-derecha .profesor-contenedor-horario {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.profesor-columna-derecha .contenedor-materias-grid {
+  max-height: calc(100vh - 240px); /* Ajusta 180px según el alto de header, paddings, etc. */
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-blue) #f1f1f1;
+}
+
+/* Estilos para navegadores WebKit (Chrome, Safari, Edge) */
+.profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar-thumb {
+  background: var(--primary-blue);
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-blue);
+}
+
+/* --- MODO OSCURO --- */
+body.dark-mode .profesor-columna-derecha .contenedor-materias-grid {
+  scrollbar-color: var(--primary-yellow) #2d3340;
+}
+
+body.dark-mode .profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar-track {
+  background: #23272f;
+}
+
+body.dark-mode .profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar-thumb {
+  background: var(--primary-yellow);
+  border-color: #23272f;
+}
+
+body.dark-mode .profesor-columna-derecha .contenedor-materias-grid::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}

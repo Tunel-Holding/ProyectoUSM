@@ -76,7 +76,7 @@ sort($horas_disponibles);
 $stmt_horario->close();
 
 // Materias asignadas al profesor y número de estudiantes
-$query_materias = "SELECT m.nombre, COUNT(i.id_estudiante) AS num_estudiantes 
+$query_materias = "SELECT m.nombre, m.seccion, COUNT(i.id_estudiante) AS num_estudiantes 
                    FROM materias m 
                    LEFT JOIN inscripciones i ON m.id = i.id_materia 
                    WHERE m.id_profesor = ? 
@@ -240,7 +240,7 @@ $conn->close();
                         <?php while ($row = $result_materias->fetch_assoc()): ?>
                             <div class="tarjeta-materia">
                                 <div class="icono-materia">📚</div>
-                                <h3 class="nombre-materia"><?php echo htmlspecialchars($row['nombre']); ?></h3>
+                                <h3 class="nombre-materia"><?php echo htmlspecialchars($row['nombre']); ?> (<?php echo htmlspecialchars($row['seccion']); ?>)</h3>
                                 <div class="info-materia">
                                     <div class="info-item">
                                         <span class="icono">👥</span>

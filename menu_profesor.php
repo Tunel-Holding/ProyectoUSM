@@ -181,7 +181,7 @@ actualizar_actividad();
             redirigir('datos_profesor.php');
         });
         document.getElementById('chat').addEventListener('click', function () {
-            redirigir('seleccionarmateria_profesor.php');
+            redirigir('chat_profesor.php');
         });
         document.getElementById('cursos').addEventListener('click', function () {
             redirigir('cursos.php');

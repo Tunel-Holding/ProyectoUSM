@@ -87,7 +87,7 @@ actualizar_actividad();
         $stmt_profesor->close();
 
         // Consulta para obtener las materias que da el profesor
-        $sql = "SELECT m.nombre, m.id FROM materias m 
+        $sql = "SELECT m.nombre, m.id, m.seccion FROM materias m 
                 WHERE m.id_profesor = ?";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -104,7 +104,7 @@ actualizar_actividad();
                 ?>
                 <div class="div-materia">
                     <img src="css/images.png">
-                    <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
+                    <h2><?php echo htmlspecialchars($fila['nombre'] . " - " . $fila['seccion']); ?></h2>
                     <a class="botoninscribir" data-valor="<?php echo htmlspecialchars($fila['id']); ?>">Curso</a>
                 </div>
                 <?php
