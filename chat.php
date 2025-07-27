@@ -431,10 +431,32 @@ if ($idgrupo) {
             border-radius: 18px 18px 0 0;
             min-height: 0;
             transition: background 0.3s ease;
+            scrollbar-width: thin;
+            scrollbar-color: #174388 #e6e6e6;
         }
 
         body.dark-mode .chat-dashboard-messages {
             background: #1e1e1e;
+            scrollbar-color: #ffd166 #23263a;
+        }
+
+        .chat-dashboard-messages::-webkit-scrollbar {
+            width: 10px;
+            background: #e6e6e6;
+            border-radius: 8px;
+        }
+
+        .chat-dashboard-messages::-webkit-scrollbar-thumb {
+            background: #174388;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .chat-dashboard-messages::-webkit-scrollbar {
+            background: #23263a;
+        }
+
+        body.dark-mode .chat-dashboard-messages::-webkit-scrollbar-thumb {
+            background: #ffd166;
         }
 
         .chat-dashboard-entry {
@@ -1169,7 +1191,7 @@ if ($idgrupo) {
     }
     .consulta-modal-content .archivos-enviados{
         width: 100%;
-        height: 100%;
+        height: 90%;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -2010,6 +2032,7 @@ if ($idgrupo) {
                 menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"responderMensajeConTipo(${messageId}, '${userName.replace(/'/g, "&#39;")}', '${messageType}')\">Responder</button>`;
                 if (isCurrentUser) {
                     if (messageType === 'texto') {
+                       
                         menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"editarMensaje(${messageId})\">Editar</button>`;
                     }
                     menuHtml += `<button class=\"menu-puntos-opcion\" onclick=\"eliminarMensaje(${messageId})\">Eliminar</button>`;
