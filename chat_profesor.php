@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
 
         body.dark-mode .chat-dashboard-main {
-            background: #2d2d2d;
+            background: #1e1e1e;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -1071,7 +1071,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     .consulta-modal-content {
         background: #fff;
         border-radius: 18px;
-        width: 75%;
+        width: 50%;
         height: 75%;
         box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         position: relative;
