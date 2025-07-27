@@ -528,3 +528,14 @@ body.dark-mode .texto {
 body.dark-mode .chat-dashboard-main {
     background: #1e1e1e !important;
 }
+
+.profesor-columna-derecha .profesor-contenedor-horario {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.profesor-columna-derecha .contenedor-materias-grid {
+  max-height: calc(100vh - 180px); /* Ajusta 180px según el alto de header, paddings, etc. */
+  overflow-y: auto;
+}
