@@ -1381,12 +1381,9 @@ if ($idgrupo) {
                 });
             }
 
-            // Cerrar menú al hacer clic fuera (solo si existe el menú)
             document.addEventListener('click', function (event) {
                 var div = document.getElementById('menu');
-                if (div && !div.contains(event.target)) {
-                    div.classList.remove('toggle');
-                }
+                div.classList.remove('toggle');
             });
 
             // Mensajes
