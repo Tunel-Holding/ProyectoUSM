@@ -283,6 +283,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             flex-shrink: 0;
         }
 
+        .consulta-element{
+            margin-bottom: 12px;
+            padding: 16px 16px;
+            background: #174388;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .consulta-link{
+            color: #fff;
+        }
+
         @media (max-width: 1500px) {
             .chat-dashboard-main {
                 width: 1100px;
@@ -993,6 +1008,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             <!-- Modal para material de consulta -->
             <div id="consulta-modal" class="consulta-modal">
                 <div class="consulta-modal-content">
+                    <button class="consulta-modal-close" id="consulta-modal-close" title="Cerrar">&times;</button>
                     <h2>Material de consulta</h2>
                     <div class="archivos-enviados">
                         <?php
@@ -1006,10 +1022,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 while ($archivo = $result_archivos->fetch_assoc()) {
                                     $nombre_archivo = basename($archivo['message']);
                                     $fecha = date('d/m/Y H:i', strtotime($archivo['created_at']));
-                                    echo '<div style="margin-bottom:10px;">
-                                            <a href="' . htmlspecialchars($archivo['message']) . '" target="_blank" style="color:#174388;font-weight:600;text-decoration:underline;">' . htmlspecialchars($nombre_archivo) . '</a>
-                                            <span style="color:#888;font-size:0.95em;margin-left:8px;">(' . $fecha . ')</span>
-                                          </div>';
+                                    // Determinar el icono según la extensión
+                                    $ext = strtolower(pathinfo($nombre_archivo, PATHINFO_EXTENSION));
+                                    $icono = '';
+                                    if (in_array($ext, ['doc', 'docx'])) {
+                                        $icono = 'css/word.png';
+                                    } elseif (in_array($ext, ['xls', 'xlsx'])) {
+                                        $icono = 'css/excel.png';
+                                    } elseif (in_array($ext, ['ppt', 'pptx'])) {
+                                        $icono = 'css/powerpoint.png';
+                                    } elseif ($ext === 'pdf') {
+                                        $icono = 'css/pdf.png';
+                                    }
+                                    echo '<div class="consulta-element">';
+                                    if ($icono) {
+                                        echo '<img src="' . $icono . '" alt="icono archivo" style="width:38px;height:38px;vertical-align:middle;margin-right:12px;">';
+                                    }
+                                    echo '<a href="' . htmlspecialchars($archivo['message']) . '" target="_blank" class="consulta-link">' . htmlspecialchars($nombre_archivo) . '</a>';
+                                    echo '<span class="consulta-fecha">(' . $fecha . ')</span>';
+                                    echo '</div>';
                                 }
                             } else {
                                 echo '<div style="color:#888;">No hay archivos enviados en este chat.</div>';
@@ -1050,6 +1081,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         align-items: center;
         justify-content: center;
     }
+
+    .consulta-modal-content h2{
+        margin-bottom: 16px;
+    }
+
     .consulta-modal-content .archivos-enviados{
         width: 100%;
         height: 100%;
@@ -1062,7 +1098,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         background: #23263a;
         color: #fff;
     }
+
+    .consulta-modal-close {
+        position: absolute;
+        top: 18px;
+        right: 24px;
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 2.2em;
+        cursor: pointer;
+        opacity: 0.7;
+        z-index: 1;
+        transition: color 0.2s, opacity 0.2s;
+    }
+    .consulta-modal-close:hover {
+        color: #e74c3c;
+        opacity: 1;
+    }
     </style>
+    <script>
+    // Modal para material de consulta: cerrar con la X, click fuera o ESC
+    document.addEventListener('DOMContentLoaded', function() {
+        const consultaBtn = document.getElementById('consultaButton');
+        const modal = document.getElementById('consulta-modal');
+        const closeBtn = document.getElementById('consulta-modal-close');
+        if (consultaBtn && modal) {
+            consultaBtn.addEventListener('click', function(e) {
+                modal.classList.add('show');
+            });
+            // Cerrar modal al hacer click fuera del contenido
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+            // Cerrar con ESC
+            document.addEventListener('keydown', function(e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                }
+            });
+            // Cerrar con la X
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    modal.classList.remove('show');
+                });
+            }
+        }
+    });
+    </script>
             <div class="chat-dashboard-messages" id="chat-box">
                 <!-- Los mensajes se cargan aquí dinámicamente -->
             </div>
