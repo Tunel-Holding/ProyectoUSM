@@ -322,7 +322,7 @@ if ($idgrupo) {
         }
 
         body.dark-mode .chat-dashboard-main {
-            background: #2d2d2d;
+            background: #1e1e1e;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -351,6 +351,58 @@ if ($idgrupo) {
             .chat-dashboard-area {
                 flex-direction: column;
             }
+        }
+
+
+        .consulta-button {
+            background-color: #174388;
+            position: relative;
+            padding: 12px 16px;
+            border-radius: 100px;
+            top: 10px;
+            left: 10px;
+            width: 75px;
+            max-width: 260px;
+            max-height: 75px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            transition: width 0.3s;
+            gap: 0;
+        }
+
+        .consulta-button span {
+            opacity: 0;
+            visibility: hidden;
+            max-width: 0;
+            margin-right: 0;
+            margin-left: 0;
+            transition: opacity 0.2s, max-width 0.2s, margin-right 0.2s, margin-left 0.2s, visibility 0.2s;
+            white-space: nowrap;
+            color: #fff;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .consulta-button:hover {
+            width: 250px;
+        }
+
+        .consulta-button:hover span {
+            opacity: 1;
+            visibility: visible;
+            max-width: 160px;
+            margin-right: 12px;
+            margin-left: 0;
+        }
+
+        .consulta-button ion-icon {
+            color: white;
+            margin-left: 0;
+            font-size: 1.6em;
+            flex-shrink: 0;
         }
 
         .chat-dashboard-messages {
@@ -1016,6 +1068,86 @@ if ($idgrupo) {
             </div>
         </div>
         <div class="chat-dashboard-main">
+            <div class="consulta-button" id="consultaButton">
+                <span>Material de consulta</span>
+                <ion-icon name="book-outline"></ion-icon>
+            </div>
+            <!-- Modal para material de consulta -->
+            <div id="consulta-modal" class="consulta-modal">
+                <div class="consulta-modal-content">
+                    <h2>Material de consulta</h2>
+                    <div class="archivos-enviados">
+                        
+                    </div>
+                </div>
+            </div>
+    <style>
+    .consulta-modal {
+        display: none;
+        position: fixed;
+        z-index: 20010;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(24, 26, 27, 0.65);
+        align-items: center;
+        justify-content: center;
+        animation: fadeInModal 0.25s;
+    }
+    .consulta-modal.show {
+        display: flex !important;
+    }
+    .consulta-modal-content {
+        background: #fff;
+        border-radius: 18px;
+        width: 75%;
+        height: 75%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        position: relative;
+        padding: 40px 32px;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: center;
+    }
+    .consulta-modal-content .archivos-enviados{
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    body.dark-mode .consulta-modal-content {
+        background: #23263a;
+        color: #fff;
+    }
+    </style>
+    <script>
+    // Modal para material de consulta
+    document.addEventListener('DOMContentLoaded', function() {
+        const consultaBtn = document.getElementById('consultaButton');
+        const modal = document.getElementById('consulta-modal');
+        if (consultaBtn && modal) {
+            consultaBtn.addEventListener('click', function(e) {
+                modal.classList.add('show');
+            });
+            // Cerrar modal al hacer click fuera del contenido
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+            // Cerrar con ESC
+            document.addEventListener('keydown', function(e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                }
+            });
+        }
+    });
+    </script>
             <div class="chat-dashboard-messages" id="chat-box">
                 <!-- Los mensajes se cargan aquí dinámicamente -->
             </div>
@@ -1214,23 +1346,24 @@ if ($idgrupo) {
                 });
             }
 
-            // Scroll del menú
+
+            // Scroll del menú (solo si existen los elementos)
             const contenedor = document.getElementById('contenedor');
             const botonIzquierdo = document.getElementById('boton-izquierdo');
             const botonDerecho = document.getElementById('boton-derecho');
+            if (contenedor && botonIzquierdo && botonDerecho) {
+                botonIzquierdo.addEventListener('click', () => {
+                    contenedor.scrollBy({ left: -94, behavior: 'smooth' });
+                });
+                botonDerecho.addEventListener('click', () => {
+                    contenedor.scrollBy({ left: 94, behavior: 'smooth' });
+                });
+            }
 
-            botonIzquierdo.addEventListener('click', () => {
-                contenedor.scrollBy({ left: -94, behavior: 'smooth' });
-            });
-
-            botonDerecho.addEventListener('click', () => {
-                contenedor.scrollBy({ left: 94, behavior: 'smooth' });
-            });
-
-            // Cerrar menú al hacer clic fuera
+            // Cerrar menú al hacer clic fuera (solo si existe el menú)
             document.addEventListener('click', function (event) {
                 var div = document.getElementById('menu');
-                if (!div.contains(event.target)) {
+                if (div && !div.contains(event.target)) {
                     div.classList.remove('toggle');
                 }
             });
@@ -1935,6 +2068,8 @@ body.dark-mode .menu-puntos-flotante .menu-puntos-opcion:hover {
 `;
         document.head.appendChild(style);
     </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 
 </body>
