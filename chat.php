@@ -1383,7 +1383,7 @@ if ($idgrupo) {
 
             document.addEventListener('click', function (event) {
                 var div = document.getElementById('menu');
-                div.classList.toggle('toggle');
+                div.classList.remove('toggle');
             });
 
             // Mensajes
