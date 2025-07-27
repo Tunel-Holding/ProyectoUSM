@@ -1629,6 +1629,7 @@ if ($idgrupo) {
         function mostrarMenuPuntos(btn, messageId, esPropio) {
             document.querySelectorAll('.menu-puntos').forEach(m => m.classList.remove('show'));
             const menu = document.getElementById('menu-puntos-' + messageId);
+            if (!menu) return;
             menu.classList.toggle('show');
             if (menu.classList.contains('show')) {
                 menuPuntosAbierto = messageId;
@@ -1941,7 +1942,7 @@ if ($idgrupo) {
                         menu.style.top = (rect.top - menuHeight + rect.height + 8) + 'px';
                     }
                 }
-                updateMenuPosition();
+                //updateMenuPosition();
                 // Al hacer scroll en el chat o resize, cerrar el menú
                 const chatBox = document.getElementById('chat-box');
                 function closeMenuOnScrollOrResize() {
