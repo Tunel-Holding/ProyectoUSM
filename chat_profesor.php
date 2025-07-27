@@ -1783,6 +1783,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     </script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+    // Modal para material de consulta
+    document.addEventListener('DOMContentLoaded', function() {
+        const consultaBtn = document.getElementById('consultaButton');
+        const modal = document.getElementById('consulta-modal');
+        if (consultaBtn && modal) {
+            consultaBtn.addEventListener('click', function(e) {
+                modal.classList.add('show');
+            });
+            // Cerrar modal al hacer click fuera del contenido
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+            // Cerrar con ESC
+            document.addEventListener('keydown', function(e) {
+                if (modal.classList.contains('show') && e.key === 'Escape') {
+                    modal.classList.remove('show');
+                }
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>
