@@ -995,7 +995,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 <div class="consulta-modal-content">
                     <h2>Material de consulta</h2>
                     <div class="archivos-enviados">
-                        
+                        <?php
+                        // Mostrar archivos enviados en el chat de la materia actual
+                        if (isset($materia_actual)) {
+                            $stmt_archivos = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ? AND tipo = 'archivo' ORDER BY created_at DESC");
+                            $stmt_archivos->bind_param("i", $materia_actual);
+                            $stmt_archivos->execute();
+                            $result_archivos = $stmt_archivos->get_result();
+                            if ($result_archivos->num_rows > 0) {
+                                while ($archivo = $result_archivos->fetch_assoc()) {
+                                    $nombre_archivo = basename($archivo['message']);
+                                    $fecha = date('d/m/Y H:i', strtotime($archivo['created_at']));
+                                    echo '<div style="margin-bottom:10px;">
+                                            <a href="' . htmlspecialchars($archivo['message']) . '" target="_blank" style="color:#174388;font-weight:600;text-decoration:underline;">' . htmlspecialchars($nombre_archivo) . '</a>
+                                            <span style="color:#888;font-size:0.95em;margin-left:8px;">(' . $fecha . ')</span>
+                                          </div>';
+                                }
+                            } else {
+                                echo '<div style="color:#888;">No hay archivos enviados en este chat.</div>';
+                            }
+                            $stmt_archivos->close();
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
