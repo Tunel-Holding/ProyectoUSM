@@ -335,10 +335,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             border-radius: 18px 18px 0 0;
             min-height: 0;
             transition: background 0.3s ease;
+            scrollbar-width: thin;
+            scrollbar-color: #174388 #e6e6e6;
+        }
+
+        .chat-dashboard-messages::-webkit-scrollbar {
+            width: 10px;
+            background: #e6e6e6;
+            border-radius: 8px;
+        }
+
+        .chat-dashboard-messages::-webkit-scrollbar-thumb {
+            background: #174388;
+            border-radius: 8px;
         }
 
         body.dark-mode .chat-dashboard-messages {
             background: #1e1e1e;
+            scrollbar-color: #ffd166 #23263a;
+        }
+
+        body.dark-mode .chat-dashboard-messages::-webkit-scrollbar {
+            background: #23263a;
+        }
+
+        body.dark-mode .chat-dashboard-messages::-webkit-scrollbar-thumb {
+            background: #ffd166;
         }
 
         .chat-dashboard-entry {
@@ -1089,7 +1111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     .consulta-modal-content .archivos-enviados{
         width: 90%;
-        height: 100%;
+        height: 90%;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
