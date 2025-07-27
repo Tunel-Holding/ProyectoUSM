@@ -7,28 +7,6 @@ include 'comprobar_sesion.php';
 require 'conexion.php';
 actualizar_actividad();
 
-// Obtener el nombre y sección de la materia
-if (!isset($_SESSION['idmateria']) || empty($_SESSION['idmateria'])) {
-    echo '<pre>';
-    print_r($_SESSION);
-    echo '</pre>';
-    echo "Error: no se ha seleccionado una materia";
-    exit();
-}
-$id_materia = $_SESSION['idmateria'];
-$stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
-$stmt->bind_param("i", $id_materia);
-$stmt->execute();
-$result = $stmt->get_result();
-if ($row = $result->fetch_assoc()) {
-    $_SESSION['nombremateria'] = $row['nombre'];
-    $_SESSION['seccion_materia'] = $row['seccion'];
-} else {
-    $_SESSION['nombremateria'] = "Materia no encontrada";
-    $_SESSION['seccion_materia'] = "";
-}
-$stmt->close();
-
 // --- INICIO BLOQUE BARRA LATERAL DE MATERIAS ---
 $id_usuario = $_SESSION['idusuario'];
 $profesor_id = null;
@@ -62,6 +40,27 @@ if ($profesor_id) {
 }
 $sin_materias = empty($materias);
 // --- FIN BLOQUE BARRA LATERAL DE MATERIAS ---
+
+// Obtener el nombre y sección de la materia
+if (!isset($_SESSION['idmateria']) || empty($_SESSION['idmateria'])) {
+    // Si después de intentar seleccionar una por defecto, sigue sin haber materia,
+    // es porque el profesor no tiene materias asignadas.
+    // No mostramos error, la interfaz ya manejará el estado "sin_materias".
+} else {
+    $id_materia = $_SESSION['idmateria'];
+    $stmt = $conn->prepare("SELECT nombre, seccion FROM materias WHERE id = ?");
+    $stmt->bind_param("i", $id_materia);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $_SESSION['nombremateria'] = $row['nombre'];
+        $_SESSION['seccion_materia'] = $row['seccion'];
+    } else {
+        $_SESSION['nombremateria'] = "Materia no encontrada";
+        $_SESSION['seccion_materia'] = "";
+    }
+    $stmt->close();
+}
 
 if (!isset($_SESSION['idusuario'])) {
     header("Location: login.php");
