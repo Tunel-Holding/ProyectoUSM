@@ -285,6 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
         .consulta-element{
             margin-bottom: 12px;
+            margin-right: 10px;
             padding: 16px 16px;
             background: #174388;
             border-radius: 10px;
