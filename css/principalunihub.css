@@ -536,6 +536,6 @@ body.dark-mode .chat-dashboard-main {
 }
 
 .profesor-columna-derecha .contenedor-materias-grid {
-  max-height: calc(100vh - 180px); /* Ajusta 180px según el alto de header, paddings, etc. */
+  max-height: calc(100vh - 240px); /* Ajusta 180px según el alto de header, paddings, etc. */
   overflow-y: auto;
 }
