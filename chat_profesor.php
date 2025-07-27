@@ -1090,6 +1090,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     .consulta-modal-content .archivos-enviados{
         width: 90%;
         height: 100%;
+        margin-bottom: 15px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
