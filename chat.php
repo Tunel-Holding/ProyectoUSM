@@ -1174,6 +1174,26 @@ if ($idgrupo) {
         display: flex;
         flex-direction: column;
         gap: 16px;
+        scrollbar-width: thin;
+        scrollbar-color: #174388 #e6e6e6;
+    }
+    .consulta-modal-content .archivos-enviados::-webkit-scrollbar {
+        width: 8px;
+        background: #e6e6e6;
+        border-radius: 8px;
+    }
+    .consulta-modal-content .archivos-enviados::-webkit-scrollbar-thumb {
+        background: #174388;
+        border-radius: 8px;
+    }
+    body.dark-mode .consulta-modal-content .archivos-enviados {
+        scrollbar-color: #ffd166 #23263a;
+    }
+    body.dark-mode .consulta-modal-content .archivos-enviados::-webkit-scrollbar {
+        background: #23263a;
+    }
+    body.dark-mode .consulta-modal-content .archivos-enviados::-webkit-scrollbar-thumb {
+        background: #ffd166;
     }
     body.dark-mode .consulta-modal-content {
         background: #23263a;
