@@ -376,7 +376,7 @@ body.dark-mode {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 20px); /* ← Añadido */
+  max-height: calc(100vh - 20px); /* ← Cambiado a max-height */
 }
 
 .profesor-contenedor-horario {
