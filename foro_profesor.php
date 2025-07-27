@@ -385,14 +385,249 @@ function renderComentarios($comentarios, $archivo_id, $comentarios_archivo, $pad
     <title>Foro Profesor - UniHub</title>
     <script src="js/control_inactividad.js"></script>
     <style>
+    :root {
+        --color-bg: #f8f9fa;
+        --color-bg-alt: #fff;
+        --color-text: #222;
+        --color-text-alt: #555;
+        --color-primary: #174388;
+        --color-secondary: #1e5aa8;
+        --color-accent: #ffd700;
+        --color-border: #dee2e6;
+        --color-border-strong: #174388;
+        --color-comment-bg: #e3f2fd;
+        --color-comment-border: #b6d4fe;
+        --color-input-bg: #fff;
+        --color-input-border: #ccc;
+        --color-btn-bg: #174388;
+        --color-btn-bg-alt: #888;
+        --color-btn-text: #fff;
+        --color-toast-bg: #e6f9ed;
+        --color-toast-text: #1a7f4c;
+        --color-toast-border: #20c997;
+        --color-scrollbar: #e3f2fd;
+        --color-scrollbar-thumb: #174388;
+    }
+    body.dark-mode {
+        --color-bg: #1a1a2e;
+        --color-bg-alt: #2d3748;
+        --color-text: #f8f9fa;
+        --color-text-alt: #a0aec0;
+        --color-primary: #ffd700;
+        --color-secondary: #4a5568;
+        --color-accent: #ffd700;
+        --color-border: #4a5568;
+        --color-border-strong: #ffd700;
+        --color-comment-bg: #2d3748;
+        --color-comment-border: #4a5568;
+        --color-input-bg: #23263a;
+        --color-input-border: #4a5568;
+        --color-btn-bg: #ffd700;
+        --color-btn-bg-alt: #4a5568;
+        --color-btn-text: #23263a;
+        --color-toast-bg: #23263a;
+        --color-toast-text: #ffd700;
+        --color-toast-border: #ffd700;
+        --color-scrollbar: #2d3748;
+        --color-scrollbar-thumb: #ffd700;
+    }
+
     body {
         background: var(--color-bg) !important;
         color: var(--color-text) !important;
     }
     .classroom-container {
-        background: var(--color-bg) !important;
+        background: var(--color-bg-alt) !important;
         color: var(--color-text) !important;
         box-shadow: 0 4px 24px rgba(33,53,85,0.10);
+        border-radius: 12px;
+        padding: 24px 12px;
+        margin: 32px auto;
+        max-width: 900px;
+    }
+    .publicar-section, .classroom-posts-grid {
+        background: var(--color-bg) !important;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(33,53,85,0.07);
+        padding: 18px 16px;
+        margin-bottom: 24px;
+    }
+    .publicar-section h2 {
+        color: var(--color-primary);
+        font-size: 1.3em;
+        margin-bottom: 12px;
+    }
+    .publicar-section label, .publicar-section textarea, .publicar-section select, .publicar-section input[type="file"] {
+        color: var(--color-text);
+    }
+    .publicar-section textarea, .publicar-section select, .publicar-section input[type="file"] {
+        background: var(--color-input-bg);
+        border: 1px solid var(--color-input-border);
+        border-radius: 6px;
+        padding: 6px 8px;
+        margin-bottom: 8px;
+        color: var(--color-text);
+        width: 100%;
+        font-size: 1em;
+    }
+    .publicar-section button {
+        background: var(--color-btn-bg);
+        color: var(--color-btn-text);
+        border: none;
+        border-radius: 6px;
+        padding: 7px 18px;
+        font-weight: 600;
+        font-size: 1em;
+        margin-top: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .publicar-section button:hover {
+        background: var(--color-secondary);
+        color: var(--color-accent);
+    }
+    .classroom-posts-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .classroom-post {
+        background: var(--color-bg-alt);
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(33,53,85,0.07);
+        padding: 18px 16px;
+    }
+    .post-header {
+        color: var(--color-primary);
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: 8px;
+    }
+    .post-content strong {
+        color: var(--color-secondary);
+    }
+    .classroom-comments {
+        background: var(--color-comment-bg);
+        border: 1px solid var(--color-comment-border);
+        border-radius: 8px;
+        padding: 12px 10px;
+        margin-top: 10px;
+        color: var(--color-text);
+    }
+    .classroom-comment-form input[type="text"] {
+        background: var(--color-input-bg);
+        border: 1px solid var(--color-input-border);
+        color: var(--color-text);
+        border-radius: 6px;
+        padding: 5px 8px;
+        margin-right: 8px;
+        width: 60%;
+    }
+    .classroom-comment-form button {
+        background: var(--color-btn-bg);
+        color: var(--color-btn-text);
+        border: none;
+        border-radius: 6px;
+        padding: 5px 14px;
+        font-weight: 600;
+        font-size: 1em;
+        margin-left: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .classroom-comment-form button:hover {
+        background: var(--color-secondary);
+        color: var(--color-accent);
+    }
+    .btn-mostrar-respuesta, .btn-cancelar-respuesta {
+        background: var(--color-btn-bg-alt);
+        color: var(--color-btn-text);
+        border: none;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 0.95em;
+        margin-left: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn-mostrar-respuesta:hover, .btn-cancelar-respuesta:hover {
+        background: var(--color-secondary);
+        color: var(--color-accent);
+    }
+    .classroom-comment {
+        background: transparent;
+        border-left: 3px solid var(--color-border-strong);
+        margin-bottom: 10px;
+        padding: 6px 0 6px 12px;
+        color: var(--color-text);
+    }
+    .comment-autor {
+        font-weight: bold;
+        color: var(--color-primary);
+    }
+    .comment-fecha {
+        color: var(--color-text-alt);
+        font-size: 0.9em;
+    }
+    .reply-to {
+        color: var(--color-secondary);
+        font-size: 0.95em;
+        margin-left: 4px;
+    }
+    /* Toasts */
+    .toast-success {
+        position: fixed;
+        right: 32px;
+        bottom: 32px;
+        background: var(--color-toast-bg);
+        color: var(--color-toast-text);
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(33,53,85,0.13);
+        padding: 18px 32px 18px 18px;
+        font-size: 1.1em;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        min-width: 260px;
+        animation: toastIn 0.4s;
+        border: 2px solid var(--color-toast-border);
+    }
+    .toast-icon {
+        font-size: 1.5em;
+        margin-right: 12px;
+    }
+    .toast-msg {
+        flex: 1;
+    }
+    .toast-close {
+        margin-left: 16px;
+        font-size: 1.3em;
+        color: var(--color-toast-text);
+        cursor: pointer;
+    }
+    @keyframes toastIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* Scrollbar personalizado para classroom-container */
+    .classroom-container::-webkit-scrollbar {
+        height: 10px;
+        background: var(--color-scrollbar);
+        border-radius: 8px;
+    }
+    .classroom-container::-webkit-scrollbar-thumb {
+        background: var(--color-scrollbar-thumb);
+        border-radius: 8px;
+    }
+    .classroom-container::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary);
+    }
+    .classroom-container::-webkit-scrollbar-corner {
+        background: var(--color-scrollbar);
+    }
+    .classroom-container {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar);
     }
     </style>
 </head>
