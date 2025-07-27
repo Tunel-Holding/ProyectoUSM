@@ -376,6 +376,7 @@ body.dark-mode {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  height: calc(100vh - 20px); /* ← Añadido */
 }
 
 .profesor-contenedor-horario {
@@ -526,4 +527,4 @@ body.dark-mode .texto {
 
 body.dark-mode .chat-dashboard-main {
     background: #1e1e1e !important;
-} 
+}
