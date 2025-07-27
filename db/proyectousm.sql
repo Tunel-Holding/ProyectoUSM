@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 19-07-2025 a las 19:37:13
--- Versión del servidor: 8.3.0
--- Versión de PHP: 8.3.6
+-- Tiempo de generación: 27-07-2025 a las 13:55:37
+-- Versión del servidor: 9.1.0
+-- Versión de PHP: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,17 +36,48 @@ CREATE TABLE IF NOT EXISTS `archivos` (
   `ruta_archivo` varchar(255) NOT NULL,
   `fecha_subida` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `parcial` int DEFAULT NULL,
+  `descripcion` text,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   KEY `materia_id` (`materia_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `archivos`
 --
 
-INSERT INTO `archivos` (`id`, `usuario_id`, `materia_id`, `nombre_archivo`, `ruta_archivo`, `fecha_subida`, `parcial`) VALUES
-(71, 6, 2, 'cuaderno-de-ejercicios-y-practicas-php.pdf', 'uploads/cuaderno-de-ejercicios-y-practicas-php.pdf', '2025-01-19 09:42:34', 1);
+INSERT INTO `archivos` (`id`, `usuario_id`, `materia_id`, `nombre_archivo`, `ruta_archivo`, `fecha_subida`, `parcial`, `descripcion`) VALUES
+(71, 6, 2, 'cuaderno-de-ejercicios-y-practicas-php.pdf', 'uploads/cuaderno-de-ejercicios-y-practicas-php.pdf', '2025-01-19 09:42:34', 1, NULL),
+(117, 33, 90, 'uploads/68862604d883a_material.png', '', '2025-07-27 13:13:40', NULL, 'hola como andan tonotos');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `comentarios`
+--
+
+DROP TABLE IF EXISTS `comentarios`;
+CREATE TABLE IF NOT EXISTS `comentarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `archivo_id` int NOT NULL,
+  `id_publicacion` int NOT NULL,
+  `id_usuario` int NOT NULL,
+  `comentario` text COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP,
+  `id_comentario_padre` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_publicacion` (`id_publicacion`),
+  KEY `id_usuario` (`id_usuario`)
+) ENGINE=MyISAM AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `comentarios`
+--
+
+INSERT INTO `comentarios` (`id`, `archivo_id`, `id_publicacion`, `id_usuario`, `comentario`, `fecha`, `id_comentario_padre`) VALUES
+(137, 117, 0, 33, 'ojal ser feliz', '2025-07-27 09:46:51', 132),
+(132, 117, 0, 33, 'hola soy la profe', '2025-07-27 09:13:53', NULL),
+(133, 117, 0, 33, 'puedo responderme', '2025-07-27 09:14:00', 132);
 
 -- --------------------------------------------------------
 
@@ -58,28 +89,29 @@ DROP TABLE IF EXISTS `datos_usuario`;
 CREATE TABLE IF NOT EXISTS `datos_usuario` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int NOT NULL,
-  `cedula` int DEFAULT NULL,
+  `cedula` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   `nombres` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   `apellidos` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   `sexo` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
-  `telefono` int DEFAULT NULL,
+  `telefono` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   `correo` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   `direccion` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `datos_usuario`
 --
 
 INSERT INTO `datos_usuario` (`id`, `usuario_id`, `cedula`, `nombres`, `apellidos`, `sexo`, `telefono`, `correo`, `direccion`) VALUES
-(1, 1, 29989547, 'Tomas Alejandro', 'Reveron Lopez', 'Masculino', 2147483647, 'tomyreveroncito@gmail.com', 'Caricuao'),
-(2, 6, 31661441, 'Sebastian Aaron', 'Sanchez Ramirez', 'Masculino', 2147483647, 'sebastiansanchezar3@gmail.com', 'bucare'),
-(3, 24, 30395202, 'María Victoria', 'García García', 'Femenino', 2147483647, 'mvggarcia05@gmail.com', 'Baruta'),
-(4, 29, 14446246, 'Jade', 'Poya', 'Femenino', 2147483647, 'jadepoya0505@gmail.com', 'El paraiso ?'),
-(6, 34, 30715834, 'Stefano', 'Lattanzi', 'Masculino', 2147483647, 'lattanzi30715834@usm.edu.ve', 'sd'),
-(7, 35, 30542563, 'Andrea', 'Mejiaod12', 'Femenino', 2147483647, 'avictoria1501@gmail.com', 'e');
+(1, 1, '29989547', 'Tomas Alejandro', 'Reveron Lopez', 'Masculino', '04122884386', 'tomyreveroncito@gmail.com', 'Caricuao'),
+(2, 6, '31661441', 'Sebastian Aaron', 'Sanchez Ramirez', 'Masculino', '04122001161', 'sebastiansanchezar3@gmail.com', 'bucare'),
+(3, 24, '30395202', 'María Victoria', 'García García', 'Femenino', '04129610038', 'mvggarcia05@gmail.com', 'Baruta'),
+(6, 33, '299990008', 'Jade', 'Moya', 'Masculino', '4142145277', 'jademoya0101@gmail.com', 'name'),
+(5, 31, '30542565', 'Andrea', 'Mejia', 'Femenino', '0412701095', 'avictoria1501@gmail.com', 'fff'),
+(7, 34, '29990008', 'Jade', 'Moya', 'Masculino', '01621626218278217821', 'jademoya0101@gmail.com', 'name'),
+(8, 35, '29990008', 'Jade', 'Moya', 'Femenino', '04142145277', 'jademoya04@gmail.com', 'el paraiso');
 
 -- --------------------------------------------------------
 
@@ -113,13 +145,13 @@ CREATE TABLE IF NOT EXISTS `estudiantes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_usuario` int NOT NULL,
   `cedula` int DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `carrera` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `semestre` int NOT NULL,
   `creditosdisponibles` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `estudiantes`
@@ -134,7 +166,8 @@ INSERT INTO `estudiantes` (`id`, `id_usuario`, `cedula`, `email`, `carrera`, `se
 (6, 27, NULL, '', 'Ingenieria en Sistemas', 1, 20),
 (7, 28, NULL, '', 'Ingenieria en Sistemas', 1, 20),
 (8, 31, 30542565, 'avictoria1501@gmail.com', 'Ingenieria en Sistemas', 1, 18),
-(9, 35, NULL, '', 'Ingenieria en Sistemas', 1, 11);
+(9, 34, NULL, '', 'Ingenieria en Sistemas', 1, 0),
+(10, 35, NULL, '', 'Ingenieria en Sistemas', 1, 20);
 
 -- --------------------------------------------------------
 
@@ -148,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `fotousuario` (
   `id_usuario` int NOT NULL,
   `foto` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `fotousuario`
@@ -156,8 +189,7 @@ CREATE TABLE IF NOT EXISTS `fotousuario` (
 
 INSERT INTO `fotousuario` (`id`, `id_usuario`, `foto`) VALUES
 (4, 1, 'fotoperfil/WhatsApp Image 2025-01-20 at 3.49.33 PM.jpeg'),
-(5, 24, 'fotoperfil/1734223601310.jpg'),
-(6, 31, 'fotoperfil/1752551467_cee4450498c423515b76012ce54d9bce.jpg');
+(5, 24, 'fotoperfil/1734223601310.jpg');
 
 -- --------------------------------------------------------
 
@@ -248,38 +280,38 @@ CREATE TABLE IF NOT EXISTS `horarios` (
   `id` int NOT NULL AUTO_INCREMENT,
   `id_estudiante` int DEFAULT NULL,
   `id_materia` int DEFAULT NULL,
+  `dia` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `hora_inicio` time DEFAULT NULL,
+  `hora_fin` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_estudiante` (`id_estudiante`),
   KEY `id_materia` (`id_materia`)
-) ENGINE=MyISAM AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `horarios`
 --
 
-INSERT INTO `horarios` (`id`, `id_estudiante`, `id_materia`) VALUES
-(85, 1, 78),
-(84, 1, 78),
-(75, 25, 78),
-(74, 25, 78),
-(73, 24, 78),
-(72, 24, 78),
-(103, 1, 90),
-(92, 1, 84),
-(93, 1, 84),
-(94, 1, 86),
-(95, 1, 88),
-(96, 1, 89),
-(97, 24, 80),
-(98, 24, 80),
-(99, 24, 88),
-(102, 24, 89),
-(101, 24, 86),
-(104, 31, 84),
-(105, 35, 84),
-(106, 35, 84),
-(107, 35, 86),
-(108, 35, 89);
+INSERT INTO `horarios` (`id`, `id_estudiante`, `id_materia`, `dia`, `hora_inicio`, `hora_fin`) VALUES
+(85, 1, 78, 'Jueves', '07:00:00', '08:30:00'),
+(84, 1, 78, 'Martes', '07:00:00', '09:15:00'),
+(75, 25, 78, 'Jueves', '07:00:00', '08:30:00'),
+(74, 25, 78, 'Martes', '07:00:00', '09:15:00'),
+(73, 24, 78, 'Jueves', '07:00:00', '08:30:00'),
+(72, 24, 78, 'Martes', '07:00:00', '09:15:00'),
+(103, 1, 90, 'Lunes', '07:00:00', '14:00:00'),
+(92, 1, 84, 'Martes', '07:00:00', '08:30:00'),
+(93, 1, 84, 'Jueves', '07:00:00', '09:15:00'),
+(94, 1, 86, 'Miércoles', '10:00:00', '11:30:00'),
+(95, 1, 88, 'Viernes', '08:30:00', '10:00:00'),
+(96, 1, 89, 'Viernes', '07:00:00', '08:30:00'),
+(97, 24, 80, 'Lunes', '07:00:00', '08:30:00'),
+(98, 24, 80, 'Miércoles', '07:00:00', '08:30:00'),
+(99, 24, 88, 'Viernes', '08:30:00', '10:00:00'),
+(102, 24, 89, 'Viernes', '07:00:00', '08:30:00'),
+(101, 24, 86, 'Miércoles', '10:00:00', '11:30:00'),
+(104, 31, 84, '', '00:00:00', '00:00:00'),
+(105, 34, 90, 'Jueves', '01:45:00', '21:00:00');
 
 -- --------------------------------------------------------
 
@@ -296,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `horariosmateria` (
   `hora_fin` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_materia` (`id_materia`)
-) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `horariosmateria`
@@ -333,14 +365,12 @@ INSERT INTO `horariosmateria` (`id`, `id_materia`, `dia`, `hora_inicio`, `hora_f
 (46, 82, 'Martes', '07:00:00', '08:30:00'),
 (47, 83, 'Martes', '08:30:00', '10:00:00'),
 (48, 83, 'Miércoles', '08:30:00', '10:00:00'),
-(69, 82, 'Miércoles', '10:00:00', '13:00:00'),
 (54, 88, 'Viernes', '08:30:00', '10:00:00'),
 (53, 86, 'Miércoles', '10:00:00', '11:30:00'),
 (55, 89, 'Viernes', '07:00:00', '08:30:00'),
 (59, 90, 'Jueves', '01:45:00', '21:00:00'),
 (66, 84, 'Lunes', '11:00:00', '12:00:00'),
-(68, 84, 'Miércoles', '09:41:00', '11:00:00'),
-(70, 85, 'Martes', '14:00:00', '17:00:00');
+(68, 84, 'Miércoles', '09:41:00', '11:00:00');
 
 -- --------------------------------------------------------
 
@@ -357,7 +387,7 @@ CREATE TABLE IF NOT EXISTS `inscripciones` (
   PRIMARY KEY (`id`),
   KEY `id_estudiante` (`id_estudiante`),
   KEY `id_materia` (`id_materia`)
-) ENGINE=MyISAM AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `inscripciones`
@@ -377,9 +407,7 @@ INSERT INTO `inscripciones` (`id`, `id_estudiante`, `id_materia`, `fecha_inscrip
 (47, 24, 89, '2025-01-20'),
 (46, 24, 86, '2025-01-20'),
 (49, 31, 84, '2025-07-12'),
-(50, 35, 84, '2025-07-19'),
-(51, 35, 86, '2025-07-19'),
-(52, 35, 89, '2025-07-19');
+(50, 34, 90, '2025-07-15');
 
 -- --------------------------------------------------------
 
@@ -398,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `materias` (
   `seccion` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_profesor` (`id_profesor`)
-) ENGINE=MyISAM AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `materias`
@@ -409,15 +437,14 @@ INSERT INTO `materias` (`id`, `nombre`, `salon`, `id_profesor`, `creditos`, `sem
 (83, 'Matematicas 1', '702', NULL, 5, 1, 'D'),
 (80, 'Matematicas 1', '902', 8, 5, 1, 'A'),
 (81, 'Matematicas 1', '902', 4, 5, 1, 'B'),
-(82, 'Matematicas 1', '901', NULL, 5, 1, 'C'),
+(82, 'Matematicas 1', '901', 8, 5, 1, 'C'),
 (85, 'Herramientas de Apoyo', '902', 2, 2, 1, 'B'),
 (86, 'Fisica 1', '901', 1, 5, 1, 'A'),
 (87, 'Fisica 1', '901', 6, 5, 1, 'B'),
 (88, 'Lenguaje y Comunicacion', '702', NULL, 2, 1, 'A'),
 (89, 'Ingles 1', '702', 5, 2, 1, 'A'),
-(90, 'Daniela Garcia', '902', NULL, 20, 1, 'A'),
-(91, 'Daniela Garcia', '902', 3, 20, 1, 'B'),
-(92, 'Lenguaje y Comunicacion', '702', NULL, 2, 1, 'B');
+(90, 'Daniela Garcia', '902', 8, 20, 1, 'A'),
+(91, 'Daniela Garcia', '902', 3, 20, 1, 'B');
 
 -- --------------------------------------------------------
 
@@ -436,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `reply_to` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `messages`
@@ -458,9 +485,10 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `created_at`, `group_id`, `t
 (155, 29, 'sd', '2025-07-10 17:49:12', 87, 'texto', '0'),
 (156, 29, 'asd', '2025-07-10 17:49:13', 87, 'texto', '0'),
 (157, 29, 'asdas', '2025-07-10 18:33:55', 87, 'texto', '0'),
-(163, 35, 'hola', '2025-07-19 06:57:41', 84, 'texto', '149'),
 (162, 31, 'km', '2025-07-13 18:16:33', 84, 'texto', '149'),
-(161, 31, 'uploads/6872a5595fc63_1752343897.jpg', '2025-07-12 18:11:37', 84, 'imagen', '0');
+(161, 31, 'uploads/6872a5595fc63_1752343897.jpg', '2025-07-12 18:11:37', 84, 'imagen', '0'),
+(163, 34, 'hola', '2025-07-22 15:50:45', 90, 'texto', '0'),
+(164, 34, 'uploads/menu.png', '2025-07-22 16:36:23', 90, 'imagen', '0');
 
 -- --------------------------------------------------------
 
@@ -480,7 +508,7 @@ CREATE TABLE IF NOT EXISTS `notas` (
   `materia_id` int DEFAULT NULL,
   `semestre` int DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=MyISAM AUTO_INCREMENT=208 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `notas`
@@ -500,9 +528,7 @@ INSERT INTO `notas` (`Id`, `usuario_id`, `Parcial1`, `Parcial2`, `Parcial3`, `Pa
 (202, 24, '12', '5', '18', '18', '13', 89, 1),
 (201, 24, NULL, NULL, NULL, NULL, NULL, 86, 1),
 (204, 31, NULL, NULL, NULL, NULL, NULL, 84, 1),
-(205, 35, NULL, NULL, NULL, NULL, NULL, 84, NULL),
-(206, 35, NULL, NULL, NULL, NULL, NULL, 86, NULL),
-(207, 35, NULL, NULL, NULL, NULL, NULL, 89, NULL);
+(205, 34, NULL, NULL, NULL, NULL, NULL, 90, NULL);
 
 -- --------------------------------------------------------
 
@@ -516,22 +542,41 @@ CREATE TABLE IF NOT EXISTS `profesores` (
   `id_usuario` int DEFAULT NULL,
   `cedula` int NOT NULL,
   `nombre` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `material` varchar(255) COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `profesores`
 --
 
-INSERT INTO `profesores` (`id`, `id_usuario`, `cedula`, `nombre`) VALUES
-(1, 5, 0, 'Angel Cepeda'),
-(2, 4, 0, 'Hector Hurtado'),
-(3, 6, 0, 'Sebastian Sanchez'),
-(4, 7, 0, 'Saul Mendoza'),
-(5, 29, 29989547, 'Tomas Reveron'),
-(6, 30, 0, 'Daniela Garcia'),
-(8, 33, 0, 'Stefano Lattanzi');
+INSERT INTO `profesores` (`id`, `id_usuario`, `cedula`, `nombre`, `material`) VALUES
+(1, 5, 0, 'Angel Cepeda', NULL),
+(2, 4, 0, 'Hector Hurtado', NULL),
+(3, 6, 0, 'Sebastian Sanchez', NULL),
+(4, 7, 0, 'Saul Mendoza', NULL),
+(5, 29, 29989547, 'Tomas Reveron', NULL),
+(6, 30, 0, 'Daniela Garcia', NULL),
+(8, 33, 0, 'Jade', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `publicaciones`
+--
+
+DROP TABLE IF EXISTS `publicaciones`;
+CREATE TABLE IF NOT EXISTS `publicaciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_profesor` int NOT NULL,
+  `titulo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `contenido` text COLLATE utf8mb4_general_ci,
+  `archivo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_profesor` (`id_profesor`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -558,8 +603,7 @@ CREATE TABLE IF NOT EXISTS `tareas` (
 INSERT INTO `tareas` (`id`, `id_materia`, `titulo_tarea`, `categoria`, `fecha_entrega`, `hora_entrega`, `descripcion`) VALUES
 (2, 87, 'cacota', 'examen', '2025-07-10', '17:15:00', 'cacota mucha'),
 (3, 87, 'fortnite', 'examen', '2025-07-11', '02:00:00', 'modo construccion solo para pros nada de noobs dribling pared'),
-(5, 87, 'TOCAR A LIVIO', 'examen', '2025-07-12', '03:33:00', 'tocar a livio mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho demasiado'),
-(6, 87, '🥵🥵🥵🥵Darle duro a miguel🥵🥵🥵🥵', 'examen', '2025-07-14', '05:55:00', '🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵');
+(5, 87, 'TOCAR A LIVIO', 'examen', '2025-07-12', '03:33:00', 'tocar a livio mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho mucho demasiado');
 
 -- --------------------------------------------------------
 
@@ -575,7 +619,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `contrasena` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `nivel_usuario` enum('administrador','profesor','usuario') CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   `session` tinyint(1) NOT NULL DEFAULT '0',
-  `codigo_recuperacion` varchar(255) COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `codigo_recuperacion` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
@@ -594,9 +638,10 @@ INSERT INTO `usuarios` (`id`, `nombre_usuario`, `email`, `contrasena`, `nivel_us
 (28, 'Jpipi', 'janpipi@gmail.com', '$2y$10$dfQJGv63KFl9irf8NC04ZeiMddn/buoDgFHGW0lnTduyhJ9nRmfI.', 'administrador', 0, ''),
 (29, 'Tprofesor', 'reveron29989547@usm.edu.ve', '$2y$10$WMsYx2.0SweZ9QFFhCvFuOVkHOT//2wfMQNnv/alJSVqvSmPa8SDm', 'profesor', 0, ''),
 (30, 'DGarcia', 'danielagarciaprof@gmail.com', '$2y$10$l2QfBJE/NbuwJJ3VYqR6DuWlbiaEeze0oTaM7fQqoH0LF66GsSN.u', 'profesor', 0, ''),
-(35, 'andrea', 'avictoria1501@gmail.com', '$2y$10$Hm5jMWuvUBZps5.tJ/DYF.ZKIuPh0TlPCrNsD7JPMf/Tm6dacol2K', 'usuario', 0, ''),
-(33, 'stefano', 'lattanzi30715834@usm.edu.ve.com', '$2y$10$JNuyX.txfPzBUHxsPVC9Tet0t0wMix9qfnMmJmUyUkZMJSLuxvYfW', 'profesor', 0, ''),
-(34, 'stefanoA', 'lattanzi30715834@usm.edu.ve', '$2y$10$2g/.s2MHvYLSjGK55Xcw0OOsD4BUQO3yTlz3WPxJasAQuzKlfZHEm', 'profesor', 0, '');
+(31, 'andreamejia', 'avictoria1501@gmail.com', '$2y$10$qhyCJhavTPoEvfcYTYI19ubu0z8Bpb4HP8DwuXX.BGkEZD92ZZzPy', 'administrador', 0, ''),
+(33, 'Jade3', 'jademoya06@gmail.com', '$2y$10$2WCgq/ksLjKZ6AQ0gbAYVuvTOHmLK/Z/xR2EHOJ7xhuTGh2S1FIjm', 'profesor', 0, ''),
+(34, 'jade', 'jademoya0606@gmail.com', '$2y$10$TWbPllt3ZlK9MFoCDnsjTOwQbqz2BtXwEOXziAvhFMOrUQz5.7bYS', 'administrador', 0, ''),
+(35, 'jadepro', 'jademoya04@gmail.com', '$2y$10$eVTEgum4zhDNU4k/9NtVUO.xBbxBYeMGE8ydkK1OdcqtPbDQuJ2sW', 'usuario', 0, '');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -58,6 +58,12 @@ actualizar_actividad();
                     <p>Tareas</p>
                 </div>
             </div>
+            <div class="opción">
+                <div class="intopcion" id="material">
+                    <img src="css/material.png">
+                    <p>Material</p>
+                </div>
+            </div>
         </div>
         <button class="boton" id="boton-derecho">
             <svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -188,6 +194,9 @@ actualizar_actividad();
         });
         document.getElementById('tareas').addEventListener('click', function () {
             redirigir('Seleccion_de_materias_tareas_profesor.php');
+        });
+        document.getElementById('material').addEventListener('click', function () {
+            redirigir('foro_profesor.php');
         });
     });
 

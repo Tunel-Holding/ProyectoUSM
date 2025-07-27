@@ -23,18 +23,20 @@ class AuthGuard {
     }
     
     public function checkAccess($nivelRequerido) {
+        $nivelActual = null;
         if (isset($_SESSION['nivelusu'])){
-          if ($_SESSION['nivelusu'] == 'administrador'){
-            $nivelActual = 3;
-          }
-          elseif ($_SESSION['nivelusu'] == 'profesor'){
-            $nivelActual = 2;
-          }
-          elseif ($_SESSION['nivelusu'] == 'usuario'){
-            $nivelActual = 1;
-          }
+            if ($_SESSION['nivelusu'] === 'administrador' || $_SESSION['nivelusu'] === 3 || $_SESSION['nivelusu'] === '3') {
+                $nivelActual = 3;
+            } elseif ($_SESSION['nivelusu'] === 'profesor' || $_SESSION['nivelusu'] === 2 || $_SESSION['nivelusu'] === '2') {
+                $nivelActual = 2;
+            } elseif ($_SESSION['nivelusu'] === 'usuario' || $_SESSION['nivelusu'] === 1 || $_SESSION['nivelusu'] === '1') {
+                $nivelActual = 1;
+            } else {
+                // Si el valor es inesperado pero hay sesión, asumir usuario normal
+                $nivelActual = 1;
+            }
         }
-         if ($nivelActual != $nivelRequerido) {
+        if ($nivelActual != $nivelRequerido) {
             error_log("Acceso denegado. Se esperaba: $nivelRequerido, tiene: " . ($_SESSION['nivelusu'] ?? 'NULL'));
             $this->denyAccess();
         }
