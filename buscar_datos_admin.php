@@ -22,28 +22,27 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
+      body{
+        padding-top:100px;
+        background-color:#3a85ff;
+      }
+
       .container {
-        max-width: 1200px; /* Ancho máximo aumentado */
+        max-width: 1000px; /* Ancho máximo aumentado */
         width: 90%; /* Ancho del contenedor ajustado al 90% de la pantalla */
-        background-color: rgba(68, 106, 211, 1); /* Fondo celeste del cuadro */
+        background-color: #61b7ff; /* Fondo celeste del cuadro */
         padding: 60px; /* Espaciado interno aumentado */
-        border-radius: 12px;
+        border-radius: 30px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border-width: 10px 2px 10px 2px; /* Bordes superiores e inferiores gruesos, laterales finos */
         border-style: solid;
         border-color: rgba(255, 255, 255, 1);; /* Borde amarillo */
         margin: 20px auto; /* Margen superior e inferior aumentados */
         display: flex;
+        align-items: center;
+        justify-content: center;
         flex-direction: column;
         height: auto;
-      }
-
-      @media (max-width: 600px) {
-        .container {
-          max-width: 100%;
-          width: 95%;
-          padding: 20px;
-        }
       }
 
       h1 {
@@ -67,11 +66,16 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
         width: 100%;
         padding: 16px; /* Espaciado interno aumentado */
         margin-bottom: 24px; /* Espaciado inferior aumentado */
-        border: 1px solid #0056b3; /* Borde celeste */
-        border-radius: 8px;
+        border:2px solid #61b7ff;
+        border-radius: 12px;
+        color:#333;
         font-size: 20px; /* Tamaño del texto aumentado */
-        box-sizing: border-box;
         font-family: "Roboto", sans-serif; /* Fuente Roboto */
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: #0056b3; /* Color celeste oscuro al enfocar */
       }
 
       input[type="submit"] {
@@ -79,10 +83,11 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
         color: #fff;
         padding: 16px; /* Espaciado interno aumentado */
         border: none;
-        border-radius: 8px;
+        margin-left:25%;
+        border-radius: 50px;
         cursor: pointer;
         font-size: 20px; /* Tamaño del texto aumentado */
-        width: 100%;
+        width: 50%;
         transition: background-color 0.3s ease;
         font-family: "Roboto", sans-serif; /* Fuente Roboto */
       }
@@ -104,7 +109,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
           type="text"
           id="query"
           name="query"
-          placeholder="Buscar por cédula..."
+          placeholder="Ingrese cedula del usuario"
         />
         <input type="submit" value="Buscar" />
       </form>
