@@ -24,13 +24,17 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
       body{
         padding-top:100px;
+        align-items: center;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
         background-color:#3a85ff;
       }
 
       .container {
         max-width: 1000px; /* Ancho máximo aumentado */
         width: 90%; /* Ancho del contenedor ajustado al 90% de la pantalla */
-        background-color: #61b7ff; /* Fondo celeste del cuadro */
+        --bg-container: rgb(240, 240, 240); /* Fondo celeste del cuadro */
         padding: 60px; /* Espaciado interno aumentado */
         border-radius: 30px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -46,7 +50,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
       }
 
       h1 {
-        color: rgba(255, 255, 255, 1); /* Color celeste oscuro para el título */
+        color: #333333; /* Color celeste oscuro para el título */
         text-align: center;
         margin-bottom: 24px;
         font-size: 70px; /* Tamaño del texto aumentado */
@@ -58,7 +62,7 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
         display: block;
         margin-bottom: 12px; /* Espaciado inferior aumentado */
         font-weight: 700; /* Negrita */
-        color: rgba(255, 255, 255, 1);; /* Color celeste para las etiquetas */
+        color: #333333; /* Color celeste para las etiquetas */
         font-size: 24px; /* Tamaño del texto aumentado */
       }
 
@@ -66,8 +70,8 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
         width: 100%;
         padding: 16px; /* Espaciado interno aumentado */
         margin-bottom: 24px; /* Espaciado inferior aumentado */
-        border:2px solid #61b7ff;
-        border-radius: 12px;
+        border:2px solid #3333333a;
+        border-radius: 40px;
         color:#333;
         font-size: 20px; /* Tamaño del texto aumentado */
         font-family: "Roboto", sans-serif; /* Fuente Roboto */
@@ -79,21 +83,20 @@ $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
       }
 
       input[type="submit"] {
-        background-color: #0056b3; /* Fondo celeste oscuro */
+        background-color: rgba(68, 106, 211, 1);
         color: #fff;
         padding: 16px; /* Espaciado interno aumentado */
         border: none;
-        margin-left:25%;
         border-radius: 50px;
         cursor: pointer;
         font-size: 20px; /* Tamaño del texto aumentado */
-        width: 50%;
+        width: 40%;
         transition: background-color 0.3s ease;
         font-family: "Roboto", sans-serif; /* Fuente Roboto */
       }
 
       input[type="submit"]:hover {
-        background-color: #003f7f; /* Fondo celeste más oscuro al pasar el mouse */
+        background-color: #365ac0; /* Fondo celeste más oscuro al pasar el mouse */
       }
     </style>
   </head>
