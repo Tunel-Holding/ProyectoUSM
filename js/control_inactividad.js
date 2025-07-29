@@ -2,8 +2,8 @@
 // Control de inactividad y actualización de sesión PHP
 
 // Tiempo máximo de inactividad en milisegundos (5 minutos)
-const DURACION_MAXIMA = 5 * 60 * 1000; // 300000 ms
-const DURACION_ADVERTENCIA = 4 * 60 * 1000; // 240000 ms
+const DURACION_MAXIMA = 20 * 60 * 1000; // 300000 ms
+const DURACION_ADVERTENCIA = 15 * 60 * 1000; // 240000 ms
 let timeoutInactividad;
 let timeoutAdvertencia;
 let advertenciaMostrada = false;
