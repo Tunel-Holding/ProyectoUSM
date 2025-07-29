@@ -19,7 +19,7 @@ function enviarEmailBienvenidaEstudiante($username, $email, $password) {
         // Destinatarios y contenido
         $mail->setFrom('unihub@conexiondocente.com', 'UniHub');
         $mail->addAddress($email);
-        $mail->Subject = '¡Bienvenido a UniHub! - Creación de tu cuenta de estudiante';
+        $mail->Subject = '¡Bienvenido a UniHub! - Creación de tu cuenta de estudiante (Incluye guía instruccional)';
 
         // Cuerpo del email
         $mail->Body = generarEmailHTMLEstudiante($username, $password);
