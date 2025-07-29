@@ -118,8 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Si todo fue bien, confirmar transacción
         $conn->commit();
         
-        // Enviar email de bienvenida
-        enviarEmailBienvenidaEstudiante($username, $email, $password);
+        // // Enviar email de bienvenida
+        // enviarEmailBienvenidaEstudiante($username, $email, $password);
 
         echo "<script>
                 alert('Estudiante agregado exitosamente.');
