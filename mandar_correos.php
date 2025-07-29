@@ -24,6 +24,12 @@ function enviarEmailBienvenidaEstudiante($username, $email, $password) {
         // Cuerpo del email
         $mail->Body = generarEmailHTMLEstudiante($username, $password);
 
+        // Adjuntar la guía instruccional
+        $ruta_guia = __DIR__ . '/css/Guia Instruccional Estudiante - UniHub.pdf';
+        if (file_exists($ruta_guia)) {
+            $mail->addAttachment($ruta_guia, 'Guia Instruccional Estudiante - UniHub.pdf');
+        }
+
         // Enviar el correo
         $mail->send();
         return true;
