@@ -286,7 +286,17 @@ actualizar_actividad();
     <div class="task-card" data-status="<?php echo htmlspecialchars($status_class, ENT_QUOTES, 'UTF-8'); ?>" data-fechaentrega="<?php echo htmlspecialchars($tarea['fecha_entrega'] . 'T' . $tarea['hora_entrega'] . '-04:00', ENT_QUOTES, 'UTF-8'); ?>">
         <div class="task-card-content">
             <h4 class="task-title"><?php echo htmlspecialchars($tarea['titulo_tarea']); ?></h4>
-            <p class="task-description"><?php echo htmlspecialchars($tarea['descripcion']); ?></p>
+            <?php
+            $descripcion = htmlspecialchars($tarea['descripcion']);
+            $maxLength = 220;
+            if (mb_strlen($descripcion) > $maxLength) {
+                $descripcionCorta = mb_substr($descripcion, 0, $maxLength) . '...';
+                echo '<p class="task-description" data-full="' . $descripcion . '" data-short="' . $descripcionCorta . '" style="margin-bottom:8px;">' . $descripcionCorta . '</p>';
+                echo '<button class="ver-mas-btn" style="background:none;border:none;color:#174388;font-weight:600;cursor:pointer;padding:0 0 0 2px;font-size:0.98em;">Ver más</button>';
+            } else {
+                echo '<p class="task-description">' . $descripcion . '</p>';
+            }
+            ?>
             <div class="task-details">
                 <p><i class="fas fa-book"></i> Categoría: <?php echo htmlspecialchars($tarea['categoria']); ?></p>
                 <p><i class="far fa-calendar-alt"></i> Fecha: <?php echo htmlspecialchars(date("d/m/Y", strtotime($tarea['fecha_entrega']))); ?></p>
@@ -387,6 +397,37 @@ if (isset($conn) && $conn instanceof mysqli) {
     </div>
 </div>
 
+    <style>
+    .ver-mas-btn {
+        background: none;
+        border: none;
+        color: #174388;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0 0 0 2px;
+        font-size: 0.98em;
+        margin-bottom: 8px;
+    }
+    .ver-mas-btn:hover {
+        text-decoration: underline;
+        color: #0e3470;
+    }
+    .task-description {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        max-height: 5.8em;
+        transition: max-height 0.3s;
+        word-break: break-word;
+    }
+    .task-description.expanded {
+        -webkit-line-clamp: unset;
+        max-height: none;
+        overflow: visible;
+    }
+    </style>
     <script>
         // Script para la fecha actual del semestre y funcionalidades de tareas
         document.addEventListener('DOMContentLoaded', () => {
@@ -458,6 +499,22 @@ if (isset($conn) && $conn instanceof mysqli) {
                     });
                 });
             }
+
+            // --- Ver más / Ver menos para descripciones largas ---
+            document.querySelectorAll('.ver-mas-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var desc = btn.previousElementSibling;
+                    if (!desc.classList.contains('expanded')) {
+                        desc.classList.add('expanded');
+                        desc.textContent = desc.getAttribute('data-full');
+                        btn.textContent = 'Ver menos';
+                    } else {
+                        desc.classList.remove('expanded');
+                        desc.textContent = desc.getAttribute('data-short');
+                        btn.textContent = 'Ver más';
+                    }
+                });
+            });
 
             // --- Desactivar botones de subir/remplazar tarea en tiempo real si expira la hora de entrega ---
 
