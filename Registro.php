@@ -50,7 +50,7 @@ if (strlen($nombre) < 3 || strlen($nombre) > 50) {
 }
 
 // Validar contraseña segura
-if (strlen($contraseña) < 8 || !preg_match('/[A-Z]/', $contraseña) || !preg_match('/[a-z]/', $contraseña) || !preg_match('/[0-9]/', $contraseña)) {
+if (!preg_match('/[A-Z]/', $contraseña) || !preg_match('/[a-z]/', $contraseña) || !preg_match('/[0-9]/', $contraseña)) {
     $_SESSION['mensaje'] = "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números.";
     header("Location: inicio.php");
     exit();
