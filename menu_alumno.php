@@ -181,9 +181,6 @@
         document.getElementById('datos').addEventListener('click', function () {
             redirigir('datos.php');
         });
-        document.getElementById('inscripcion').addEventListener('click', function () {
-            redirigir('inscripcion.php');
-        });
         document.getElementById('chat').addEventListener('click', function () {
             redirigir('chat.php');
         });
