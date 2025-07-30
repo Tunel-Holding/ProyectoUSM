@@ -37,11 +37,6 @@
                     <p>Datos</p>
                 </div>
             </div>
-            <div class="opción" id="inscripcion">
-                <div class="intopcion">
-                    <img src="css/inscripción.png">
-                    <p>Materias</p>
-                </div>
             </div>
             <div class="opción" id="chat">
                 <div class="intopcion">
