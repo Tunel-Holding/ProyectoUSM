@@ -1,10 +1,4 @@
 <?php
-require_once 'authGuard.php';
-$auth = AuthGuard::getInstance();
-$auth->checkAccess(AuthGuard::NIVEL_ADMIN);
-
-require 'conexion.php';
-require 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -93,62 +87,34 @@ function generarEmailHTMLEstudiante($nombre_usuario, $password) {
     </html>";
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+// --- ENVÍO MASIVO DE CORREOS A TODOS LOS ESTUDIANTES ---
+require_once 'conexion.php';
+require_once 'vendor/autoload.php';
 
-    // Validar datos
-    if (empty($username) || empty($email) || empty($password)) {
-        die("Por favor, complete todos los campos.");
-    }
 
-    // Hash de la contraseña
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+$sql = "SELECT nombre_usuario, email FROM usuarios WHERE nivel_usuario = 'usuario'";
+$result = $conn->query($sql);
 
-    // Iniciar transacción
-    $conn->begin_transaction();
-
-    try {
-        // 1. Insertar en la tabla `usuarios`
-        $sql_usuario = "INSERT INTO usuarios (nombre_usuario, email, contrasena, nivel_usuario) VALUES (?, ?, ?, 'usuario')";
-        $stmt_usuario = $conn->prepare($sql_usuario);
-        $stmt_usuario->bind_param("sss", $username, $email, $hashed_password);
-        $stmt_usuario->execute();
-        $id_usuario = $stmt_usuario->insert_id;
-        $stmt_usuario->close();
-
-        // 3. Insertar en la tabla `estudiantes`
-        $sql_estudiante = "INSERT INTO estudiantes (id_usuario, semestre, creditosdisponibles) VALUES (?, 1, 20)"; // Valores por defecto
-        $stmt_estudiante = $conn->prepare($sql_estudiante);
-        $stmt_estudiante->bind_param("i", $id_usuario);
-        $stmt_estudiante->execute();
-        $stmt_estudiante->close();
-
-        // Si todo fue bien, confirmar transacción
-        $conn->commit();
-        
-        // Enviar email de bienvenida
-        enviarEmailBienvenidaEstudiante($username, $email, $password);
-
-        echo "<script>
-                alert('Estudiante agregado exitosamente.');
-                window.location.href = 'admin_alumnos.php';
-              </script>";
-
-    } catch (mysqli_sql_exception $exception) {
-        $conn->rollback();
-        // Manejar error de duplicado de correo o usuario
-        if ($conn->errno == 1062) {
-            echo "<script>
-                    alert('Error: El nombre de usuario o el correo electrónico ya existen.');
-                    window.location.href = 'agregar_estudiante.php';
-                  </script>";
+if ($result && $result->num_rows > 0) {
+    $enviados = 0;
+    $fallidos = 0;
+    while ($row = $result->fetch_assoc()) {
+        $usuario = $row['nombre_usuario'];
+        $correo = $row['email'];
+        $clave = 'UsMAlumno0**';
+        if (enviarEmailBienvenidaEstudiante($usuario, $correo, $clave)) {
+            $enviados++;
+            echo "Correo enviado a $usuario ($correo)<br>";
         } else {
-            echo "Error al agregar estudiante: " . $exception->getMessage();
+            $fallidos++;
+            echo "<span style='color:red'>Fallo al enviar a $usuario ($correo)</span><br>";
         }
+        // Puedes poner sleep(1); si quieres evitar bloqueos por spam
     }
-
-    $conn->close();
+    echo "<hr><b>Correos enviados: $enviados. Fallidos: $fallidos.</b>";
+} else {
+    echo "No se encontraron estudiantes para enviar correos.";
 }
+
+
 ?>

@@ -296,6 +296,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             justify-content: space-between;
             transition: background 0.2s, color 0.2s;
         }
+                                            /* ...existing code... */
+                                    .consulta-element {
+                                        margin-bottom: 12px;
+                                        margin-right: 10px;
+                                        padding: 16px 16px;
+                                        background: #174388;
+                                        border-radius: 10px;
+                                        display: block; /* Cambia flex por block */
+                                        color: #fff;
+                                    }
+                                    
+                                    .consulta-fecha {
+                                        display: block;
+                                        margin-top: 6px;
+                                        color: #fff;
+                                        font-size: 0.98em;
+                                        opacity: 0.8;
+                                        text-align: left; /* Alinea a la izquierda */
+                                    }
 
         .consulta-link{
             color: #fff;
@@ -1039,6 +1058,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                         <?php
                         // Mostrar archivos enviados en el chat de la materia actual
                         if (isset($materia_actual)) {
+
+                            $stmt_links = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ? AND user_id = ? ORDER BY created_at DESC");
+                            $stmt_links->bind_param("ii", $materia_actual, $_SESSION['idusuario']);
+                            $stmt_links->execute();
+                            $result_links = $stmt_links->get_result();
+                            if ($result_links->num_rows > 0) {
+                                while ($link = $result_links->fetch_assoc()) {
+                                    // Solo mostrar si es un link válido
+                                    if (filter_var($link['message'], FILTER_VALIDATE_URL)) {
+                                        $fecha = date('d/m/Y H:i', strtotime($link['created_at']));
+                                       
+                                        echo '<div class="consulta-element">';
+                                        echo '<a href="' . htmlspecialchars($link['message']) . '" target="_blank" class="consulta-link">' . htmlspecialchars($link['message']) . '</a>';
+                                        echo '<br>';
+                                        echo '<span class="consulta-fecha">' . $fecha . '</span>';
+                                        echo '</div>';
+                                    }
+                                }
+                            } 
                             $stmt_archivos = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ? AND tipo = 'archivo' ORDER BY created_at DESC");
                             $stmt_archivos->bind_param("i", $materia_actual);
                             $stmt_archivos->execute();
@@ -1452,7 +1490,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 return;
             }
             if (file.size > CONFIG.maxFileSize) {
-                showError('El archivo es demasiado grande (máximo 50MB), file.size: ' + file.size + ' bytes');
+                showError('El archivo es demasiado grande (máximo 50MB)');
                 return;
             }
             uploadFileWithProgress(file, 'file');

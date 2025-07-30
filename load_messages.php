@@ -232,7 +232,13 @@ while ($row = $result->fetch_assoc()) {
     }
     // Ahora el mensaje principal
     if ($tipo === "texto") {
+        ;
+        if (filter_var($mensaje, FILTER_VALIDATE_URL)) {
+        echo "<p id='message-text-" . intval($message_id) . "'><a href='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' target='_blank' style='color:#fff;text-decoration:underline;'>" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "</a></p>";
+
+    } else {
         echo "<p id='message-text-" . intval($message_id) . "'>" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "</p>";
+    }
     } elseif ($tipo === "imagen") {
         echo "<img class='msg-foto' id='message-img-" . intval($message_id) . "' src='" . htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8') . "' alt='Imagen'>";
     } elseif ($tipo === "archivo") {
