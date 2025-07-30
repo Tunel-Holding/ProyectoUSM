@@ -1059,8 +1059,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                         // Mostrar archivos enviados en el chat de la materia actual
                         if (isset($materia_actual)) {
 
-                            $stmt_links = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ?  ORDER BY created_at DESC");
-                            $stmt_links->bind_param("i", $materia_actual);
+                            $stmt_links = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ? AND user_id = ? ORDER BY created_at DESC");
+                            $stmt_links->bind_param("ii", $materia_actual, $_SESSION['idusuario']);
                             $stmt_links->execute();
                             $result_links = $stmt_links->get_result();
                             if ($result_links->num_rows > 0) {

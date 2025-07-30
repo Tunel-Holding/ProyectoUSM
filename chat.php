@@ -409,6 +409,7 @@ if ($idgrupo) {
 
         .consulta-element{
             margin-bottom: 12px;
+            margin-right: 10px;
             padding: 16px 16px;
             background: #174388;
             border-radius: 10px;
@@ -417,6 +418,25 @@ if ($idgrupo) {
             justify-content: space-between;
             transition: background 0.2s, color 0.2s;
         }
+                                            /* ...existing code... */
+                                    .consulta-element {
+                                        margin-bottom: 12px;
+                                        margin-right: 10px;
+                                        padding: 16px 16px;
+                                        background: #174388;
+                                        border-radius: 10px;
+                                        display: block; /* Cambia flex por block */
+                                        color: #fff;
+                                    }
+                                    
+                                    .consulta-fecha {
+                                        display: block;
+                                        margin-top: 6px;
+                                        color: #fff;
+                                        font-size: 0.98em;
+                                        opacity: 0.8;
+                                        text-align: left; /* Alinea a la izquierda */
+                                    }
 
         .consulta-link{
             color: #fff;
@@ -1118,6 +1138,75 @@ if ($idgrupo) {
                     <h2>Material de consulta</h2>
                     <div class="archivos-enviados">
                         <?php
+$stmt_profesores = $conn->prepare("SELECT id_profesor FROM materias WHERE id = ?");
+                    $stmt_profesores->bind_param("i", $materia_actual);
+                    $stmt_profesores->execute();
+                    $result_profesores = $stmt_profesores->get_result();
+                    $profesores_ids = [];
+                    while ($row = $result_profesores->fetch_assoc()) {
+                        $profesores_ids[] = $row['id_profesor'];
+                    }
+                    $stmt_profesores->close();
+
+                    // 2. Obtener los id_usuario de esos profesores
+                    $usuarios_profesores = [];
+                    if (!empty($profesores_ids)) {
+                        $in = implode(',', array_fill(0, count($profesores_ids), '?'));
+                        $types = str_repeat('i', count($profesores_ids));
+                        $sql_usuarios = "SELECT id_usuario FROM profesores WHERE id IN ($in)";
+                        $stmt_usuarios = $conn->prepare($sql_usuarios);
+                        $stmt_usuarios->bind_param($types, ...$profesores_ids);
+                        $stmt_usuarios->execute();
+                        $result_usuarios = $stmt_usuarios->get_result();
+                        while ($row = $result_usuarios->fetch_assoc()) {
+                            $usuarios_profesores[] = $row['id_usuario'];
+                        }
+                        $stmt_usuarios->close();
+                    }
+
+                    // 3. Buscar los mensajes enviados por esos user_id
+                    if (!empty($usuarios_profesores)) {
+                        $in = implode(',', array_fill(0, count($usuarios_profesores), '?'));
+                        $types = str_repeat('i', count($usuarios_profesores) + 1);
+                        $sql_links = "SELECT message, created_at FROM messages WHERE group_id = ? AND user_id IN ($in) ORDER BY created_at DESC";
+                        $stmt_links = $conn->prepare($sql_links);
+                        $params = array_merge([$materia_actual], $usuarios_profesores);
+                        $stmt_links->bind_param($types, ...$params);
+                        $stmt_links->execute();
+                        $result_links = $stmt_links->get_result();
+
+                        if ($result_links->num_rows > 0) {
+                            while ($link = $result_links->fetch_assoc()) {
+                                if (filter_var($link['message'], FILTER_VALIDATE_URL)) {
+                                    $fecha = date('d/m/Y H:i', strtotime($link['created_at']));
+                                    echo '<div class="consulta-element">';
+                                    echo '<a href="' . htmlspecialchars($link['message']) . '" target="_blank" class="consulta-link">' . htmlspecialchars($link['message']) . '</a>';
+                                    echo '<br>';
+                                    echo '<span class="consulta-fecha">' . $fecha . '</span>';
+                                    echo '</div>';
+                                }
+                            }
+                        }
+                        $stmt_links->close();
+                    }
+                        $stmt_links = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ?  ORDER BY created_at DESC");
+                        $stmt_links->bind_param("i", $materia_actual);
+                        $stmt_links->execute();
+                        $result_links = $stmt_links->get_result();
+                        if ($result_links->num_rows > 0) {
+                            while ($link = $result_links->fetch_assoc()) {
+                                // Solo mostrar si es un link válido
+                                if (filter_var($link['message'], FILTER_VALIDATE_URL)) {
+                                    $fecha = date('d/m/Y H:i', strtotime($link['created_at']));
+                                   
+                                    echo '<div class="consulta-element">';
+                                    echo '<a href="' . htmlspecialchars($link['message']) . '" target="_blank" class="consulta-link">' . htmlspecialchars($link['message']) . '</a>';
+                                    echo '<br>';
+                                    echo '<span class="consulta-fecha">' . $fecha . '</span>';
+                                    echo '</div>';
+                                }
+                            }
+                        }
                         // Mostrar archivos enviados en el chat de la materia actual
                         if (isset($materia_actual)) {
                             $stmt_archivos = $conn->prepare("SELECT message, created_at FROM messages WHERE group_id = ? AND tipo = 'archivo' ORDER BY created_at DESC");
@@ -1240,6 +1329,7 @@ if ($idgrupo) {
         color: #e74c3c;
         opacity: 1;
     }
+    
     </style>
     <script>
     // Modal para material de consulta
