@@ -48,11 +48,19 @@ foreach ($lines as $line) {
         $hora_fin_clase = trim(str_replace('Hora de fin:', '', $line));
         continue;
     }
-    // Separar nombre y asistencias
-    $parts = explode(' ', $line, 3);
-    $nombre = isset($parts[0]) ? $parts[0] : '';
-    $apellido = isset($parts[1]) ? $parts[1] : '';
-    $asistencias = isset($parts[2]) ? $parts[2] : '';
+    // Nueva lógica para separar nombre completo y asistencias
+    $pos = strpos($line, '(');
+    if ($pos !== false) {
+        $nombre_apellido = trim(substr($line, 0, $pos));
+        $asistencias = trim(substr($line, $pos));
+    } else {
+        $nombre_apellido = trim($line);
+        $asistencias = '';
+    }
+    // Separar nombre y apellido (el apellido es todo menos la primera palabra)
+    $nombre_parts = explode(' ', $nombre_apellido, 2);
+    $nombre = isset($nombre_parts[0]) ? $nombre_parts[0] : '';
+    $apellido = isset($nombre_parts[1]) ? $nombre_parts[1] : '';
     $rows[] = [
         'nombre' => $nombre,
         'apellido' => $apellido,
