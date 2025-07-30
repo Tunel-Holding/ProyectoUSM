@@ -87,33 +87,17 @@ function generarEmailHTMLEstudiante($nombre_usuario, $password) {
     </html>";
 }
 
-// --- ENVÍO MASIVO DE CORREOS A TODOS LOS ESTUDIANTES ---
-require_once 'conexion.php';
-require_once 'vendor/autoload.php';
 
+// --- ENVÍO DE CORREO DE PRUEBA A UNA SOLA PERSONA ---
+// Cambia estos valores por los datos de prueba deseados
+$usuario = 'MLeon';
+$correo = 'leon.abogado20@gmail.com';
+$clave = 'UsMAlumno0**';
 
-$sql = "SELECT nombre_usuario, email FROM usuarios WHERE nivel_usuario = 'usuario'";
-$result = $conn->query($sql);
-
-if ($result && $result->num_rows > 0) {
-    $enviados = 0;
-    $fallidos = 0;
-    while ($row = $result->fetch_assoc()) {
-        $usuario = $row['nombre_usuario'];
-        $correo = $row['email'];
-        $clave = 'UsMAlumno0**';
-        if (enviarEmailBienvenidaEstudiante($usuario, $correo, $clave)) {
-            $enviados++;
-            echo "Correo enviado a $usuario ($correo)<br>";
-        } else {
-            $fallidos++;
-            echo "<span style='color:red'>Fallo al enviar a $usuario ($correo)</span><br>";
-        }
-        // Puedes poner sleep(1); si quieres evitar bloqueos por spam
-    }
-    echo "<hr><b>Correos enviados: $enviados. Fallidos: $fallidos.</b>";
+if (enviarEmailBienvenidaEstudiante($usuario, $correo, $clave)) {
+    echo "Correo de prueba enviado a $usuario ($correo)";
 } else {
-    echo "No se encontraron estudiantes para enviar correos.";
+    echo "<span style='color:red'>Fallo al enviar el correo de prueba a $usuario ($correo)</span>";
 }
 
 
