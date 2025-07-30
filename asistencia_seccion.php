@@ -65,9 +65,9 @@ $conn->close();
                 <?php foreach ($estudiantes as $idx => $estudiante): ?>
                     <tr>
                         <?php $nombre_simple = explode(' ', $estudiante['nombres'])[0]; ?>
-                        <?php $apellido_simple = explode(' ', $estudiante['apellidos'])[0]; ?>
+                        <?php $apellido_completo = $estudiante['apellidos']; // Usar apellido completo ?>
                         <td><?php echo htmlspecialchars($nombre_simple); ?></td>
-                        <td><?php echo htmlspecialchars($apellido_simple); ?></td>
+                        <td><?php echo htmlspecialchars($apellido_completo); ?></td>
                         <td>
                             <button type="button" class="btn-asistencia" id="asistencia-btn-<?php echo $idx; ?>" onclick="toggleAsistencia(this)" disabled>Asistir</button>
                         </td>
