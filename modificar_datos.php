@@ -720,7 +720,7 @@ $conn->close();
     document.getElementById('input-imagen').addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (!file) return;
-        if (file.size>500000) { // Validar tamaño máximo de 5MB
+        if (file.size>500000000000000000000) { // Validar tamaño máximo de 5MB
             alert('El archivo es demasiado grande. El tamaño máximo permitido es 5MB.');
             return;
         }
