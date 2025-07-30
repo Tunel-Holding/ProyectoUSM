@@ -25,10 +25,16 @@ function enviarEmailBienvenidaEstudiante($username, $email, $password) {
         // Destinatarios y contenido
         $mail->setFrom('unihub@conexiondocente.com', 'UniHub');
         $mail->addAddress($email);
-        $mail->Subject = '¡Bienvenido a UniHub! - Creación de tu cuenta de estudiante';
+        $mail->Subject = '¡Bienvenido a UniHub! - Creación de tu cuenta de estudiante (Incluye guía instruccional)';
 
         // Cuerpo del email
         $mail->Body = generarEmailHTMLEstudiante($username, $password);
+
+        // Adjuntar la guía instruccional
+        $ruta_guia = __DIR__ . '/css/Guia Instruccional Estudiante - UniHub.pdf';
+        if (file_exists($ruta_guia)) {
+            $mail->addAttachment($ruta_guia, 'Guia Instruccional Estudiante - UniHub.pdf');
+        }
 
         // Enviar el correo
         $mail->send();
@@ -69,6 +75,10 @@ function generarEmailHTMLEstudiante($nombre_usuario, $password) {
                     Ya puedes acceder al sistema UniHub con tus credenciales. 
                     Te recomendamos guardar esta información en un lugar seguro.
                 </p>
+
+                <div style='background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 8px; padding: 18px; margin: 25px 0 10px 0; font-size: 16px;'>
+                    <strong>¡Importante!</strong> Recuerda ingresar a la página y completar tus datos antes de las <b>6:00 p.m.</b> para aparecer en la lista de asistencia del sistema.
+                </div>
                 
                 <div style='text-align: center; margin-top: 30px;'>
                     <a href='http://www.conexiondocente.com' target='_blank' style='background-color: #3a85ff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;'>Ir a la Página</a>
@@ -118,8 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Si todo fue bien, confirmar transacción
         $conn->commit();
         
-        // // Enviar email de bienvenida
-        // enviarEmailBienvenidaEstudiante($username, $email, $password);
+        // Enviar email de bienvenida
+        enviarEmailBienvenidaEstudiante($username, $email, $password);
 
         echo "<script>
                 alert('Estudiante agregado exitosamente.');
