@@ -4,43 +4,43 @@ require_once 'authGuard.php';
 $auth = AuthGuard::getInstance();
 $auth->checkAccess(AuthGuard::NIVEL_ADMIN);
 
+// Recibe POST con lista de estudiantes únicos y crea el archivo de asistencia
+date_default_timezone_set('America/Caracas');
 $materia_id = isset($_GET['materia_id']) ? intval($_GET['materia_id']) : 0;
 $seccion = isset($_GET['seccion']) ? $_GET['seccion'] : '';
-if ($materia_id <= 0 || empty($seccion)) {
+$file = isset($_GET['file']) ? $_GET['file'] : '';
+if ($materia_id <= 0 || empty($seccion) || empty($file)) {
     http_response_code(400);
     echo 'Parámetros inválidos';
     exit;
 }
 
-$query = "SELECT d.nombres, d.apellidos FROM datos_usuario d
-          JOIN inscripciones i ON d.usuario_id = i.id_estudiante
-          JOIN materias m ON i.id_materia = m.id
-          WHERE i.id_materia = ? AND m.seccion = ?
-          ORDER BY d.apellidos, d.nombres";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('is', $materia_id, $seccion);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$lista = [];
-while ($row = $result->fetch_assoc()) {
-    // Sólo primer nombre y primer apellido
-    $nombre = explode(' ', $row['nombres'])[0];
-    $apellido = explode(' ', $row['apellidos'])[0];
-    $lista[] = $nombre . ' ' . $apellido;
+// Recibir el JSON con los estudiantes
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
+if (!isset($data['estudiantes']) || !is_array($data['estudiantes'])) {
+    http_response_code(400);
+    echo 'Lista de estudiantes inválida';
+    exit;
 }
-$stmt->close();
-$conn->close();
 
+$estudiantes = array_unique(array_map('trim', $data['estudiantes']));
 
-if (!is_dir('clase')) {
-    mkdir('clase');
+// Crear carpeta si no existe
+$dir = __DIR__ . '/clase/';
+if (!is_dir($dir)) {
+    mkdir($dir, 0777, true);
 }
-$filename = isset($_GET['file']) ? 'clase/' . basename($_GET['file']) : 'clase/lista_' . $materia_id . '_' . preg_replace('/[^a-zA-Z0-9]/', '_', $seccion) . '.txt';
-// Guardar hora de inicio en la parte superior
-date_default_timezone_set('America/Caracas');
+
+$filepath = $dir . basename($file);
+
+// Escribir encabezado con hora de inicio y fecha
 $hora_inicio = date('H:i:s');
-$contenido = "Hora de inicio: $hora_inicio\n" . implode("\n", $lista);
-file_put_contents($filename, $contenido);
-echo 'Archivo creado: ' . $filename;
+$fecha = date('d-m-Y');
+$contenido = "Hora de inicio: $hora_inicio | Fecha: $fecha\n";
+foreach ($estudiantes as $est) {
+    $contenido .= $est . "\n";
+}
+file_put_contents($filepath, $contenido);
+echo 'Lista creada';
 ?>

@@ -95,12 +95,31 @@ $conn->close();
                 var SS = fecha.getSeconds().toString().padStart(2,'0');
                 var timestamp = dd + '-' + mm + '-' + yyyy + '_' + HH + '-' + MM + '-' + SS;
                 window._asistenciaFile = 'lista_' + <?php echo $materia_id; ?> + '_' + '<?php echo preg_replace("/[^a-zA-Z0-9]/", "_", $seccion); ?>' + '_' + timestamp + '.txt';
-                fetch('crear_lista_clase.php?materia_id=<?php echo $materia_id; ?>&seccion=<?php echo urlencode($seccion); ?>&file=' + window._asistenciaFile)
-                    .then(response => response.text())
-                    .then(data => {
-                        // Opcional: mostrar mensaje de éxito
-                        // alert('Archivo de clase creado');
-                    });
+
+                // Obtener nombres únicos de la tabla
+                var filas = document.querySelectorAll('.tabla-asistencia tbody tr');
+                var estudiantesSet = new Set();
+                filas.forEach(function(fila) {
+                    var nombre = fila.querySelector('td').textContent.trim();
+                    var apellido = fila.querySelectorAll('td')[1].textContent.trim();
+                    var estudiante = nombre + ' ' + apellido;
+                    estudiantesSet.add(estudiante);
+                });
+                var estudiantesUnicos = Array.from(estudiantesSet);
+
+                // Enviar los nombres únicos al backend para crear la lista
+                fetch('crear_lista_clase.php?materia_id=<?php echo $materia_id; ?>&seccion=<?php echo urlencode($seccion); ?>&file=' + window._asistenciaFile, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ estudiantes: estudiantesUnicos })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Opcional: mostrar mensaje de éxito
+                    // alert('Archivo de clase creado');
+                });
             } else {
                 btn.textContent = 'Iniciar clase';
                 btn.classList.remove('retirado');
