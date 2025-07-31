@@ -1,5 +1,6 @@
 
 <?php
+start_session();
 // DEPURACIÓN: mostrar errores PHP en la respuesta JSON (quitar en producción)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
