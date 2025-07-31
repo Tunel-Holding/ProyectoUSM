@@ -52,7 +52,6 @@ $tareas = $result->fetch_all(MYSQLI_ASSOC);
         }
         .task-card {
             min-height: 340px;
-            max-height: 340px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
