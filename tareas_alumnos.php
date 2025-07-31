@@ -23,7 +23,6 @@ $stmt->bind_param("si", $id_alumno, $idMateria);
 $stmt->execute();
 $result = $stmt->get_result();
 $tareas = $result->fetch_all(MYSQLI_ASSOC);
-actualizar_actividad();
 // $conn->close(); // Se mueve al final del archivo
 ?>
 
