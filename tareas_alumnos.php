@@ -797,13 +797,17 @@ if (isset($conn) && $conn instanceof mysqli) {
                 .catch(async (err) => {
                     // Intentar mostrar el error completo de la respuesta
                     let text = '';
-                    try {
-                        const resp = await fetch(uploadForm.action, { method: 'POST', body: formData });
-                        text = await resp.text();
-                    } catch (e) {
-                        text = err && err.message ? err.message : '';
+                    if (err && err.message) {
+                        text = err.message;
+                    } else {
+                        try {
+                            const resp = await fetch(uploadForm.action, { method: 'POST', body: formData });
+                            text = await resp.text();
+                        } catch (e) {
+                            text = e && e.message ? e.message : '';
+                        }
                     }
-                    uploadErrorMsg.textContent = 'No se pudo conectar con el servidor.\n' + text;
+                    uploadErrorMsg.textContent = 'Error específico del servidor:\n' + text;
                     uploadErrorMsg.style.display = 'block';
                 });
             });
