@@ -6,14 +6,13 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ob_start();
 
-include 'comprobar_sesion.php';
+
 include 'conexion.php';
-actualizar_actividad();
+
 header('Content-Type: application/json');
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    actualizar_actividad();
     $id_tarea = $_POST['id_tarea'];
     $id_alumno = $_SESSION['idusuario'];
 
@@ -130,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $response['success'] = false;
     $response['error'] = "Solicitud no válida.";
 }
-actualizar_actividad();
 $conn->close();
 // Limpiar cualquier salida previa y mostrar solo JSON
 $php_error = ob_get_clean();
