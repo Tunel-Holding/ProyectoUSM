@@ -752,7 +752,7 @@ if (isset($conn) && $conn instanceof mysqli) {
                         uploadErrorMsg.style.display = 'block';
                         return;
                     }
-                    const maxSize = 50 * 1024 * 1024; // 10MB
+                    const maxSize = 10 * 1024 * 1024; // 10MB
                     if (archivoInput.files[0].size > maxSize) {
                         sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
                         sizeError.style.display = 'block';
@@ -774,19 +774,39 @@ if (isset($conn) && $conn instanceof mysqli) {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
+                .then(async response => {
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        // Si la respuesta no es JSON, mostrar el texto completo
+                        const text = await response.text();
+                        uploadErrorMsg.textContent = 'Respuesta inesperada del servidor:\n' + text;
+                        uploadErrorMsg.style.display = 'block';
+                        return;
+                    }
                     if (data.success) {
                         hideModal();
-                        // Opcional: recargar la página o actualizar tareas
                         location.reload();
                     } else {
-                        uploadErrorMsg.textContent = data.error || 'Ocurrió un error al subir el archivo.';
+                        let msg = '';
+                        if (data.error) msg += data.error + '\n';
+                        if (data.php_error) msg += 'PHP: ' + data.php_error;
+                        if (!msg) msg = JSON.stringify(data);
+                        uploadErrorMsg.textContent = msg;
                         uploadErrorMsg.style.display = 'block';
                     }
                 })
-                .catch(() => {
-                    uploadErrorMsg.textContent = 'No se pudo conectar con el servidor.';
+                .catch(async (err) => {
+                    // Intentar mostrar el error completo de la respuesta
+                    let text = '';
+                    try {
+                        const resp = await fetch(uploadForm.action, { method: 'POST', body: formData });
+                        text = await resp.text();
+                    } catch (e) {
+                        text = err && err.message ? err.message : '';
+                    }
+                    uploadErrorMsg.textContent = 'No se pudo conectar con el servidor.\n' + text;
                     uploadErrorMsg.style.display = 'block';
                 });
             });
