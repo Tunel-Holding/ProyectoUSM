@@ -1,5 +1,7 @@
 
+
 <?php
+// ¡IMPORTANTE! No debe haber espacios ni líneas en blanco antes de esta línea
 session_start();
 // DEPURACIÓN: mostrar errores PHP en la respuesta JSON (quitar en producción)
 ini_set('display_errors', 1);
@@ -7,15 +9,23 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ob_start();
 
-
 include 'conexion.php';
 
 header('Content-Type: application/json');
 $response = array();
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id_tarea = $_POST['id_tarea'];
-    $id_alumno = $_SESSION['idusuario'];
+    $id_tarea = isset($_POST['id_tarea']) ? $_POST['id_tarea'] : null;
+    $id_alumno = isset($_SESSION['idusuario']) ? $_SESSION['idusuario'] : null;
+    if (!$id_alumno) {
+        $php_error = ob_get_clean();
+        $response['success'] = false;
+        $response['error'] = "No has iniciado sesión. Por favor, vuelve a iniciar sesión.";
+        if ($php_error) $response['php_error'] = $php_error;
+        echo json_encode($response);
+        exit();
+    }
 
     $link_tarea = isset($_POST['link_tarea']) ? trim($_POST['link_tarea']) : '';
     $archivo_subido = isset($_FILES['archivo_tarea']) && $_FILES['archivo_tarea']['error'] === UPLOAD_ERR_OK;
