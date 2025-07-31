@@ -1,5 +1,3 @@
-
-
 <?php
 // ¡IMPORTANTE! No debe haber espacios ni líneas en blanco antes de esta línea
 session_start();
