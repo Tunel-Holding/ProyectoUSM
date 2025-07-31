@@ -772,12 +772,14 @@ if (isset($conn) && $conn instanceof mysqli) {
                     body: formData
                 })
                 .then(async response => {
+                    // Intentar leer como JSON, si falla leer como texto
                     let data;
+                    let text = '';
                     try {
                         data = await response.json();
                     } catch (e) {
-                        // Si la respuesta no es JSON, mostrar el texto completo
-                        const text = await response.text();
+                        // Si la respuesta no es JSON, leer como texto
+                        text = await response.text();
                         uploadErrorMsg.textContent = 'Respuesta inesperada del servidor:\n' + text;
                         uploadErrorMsg.style.display = 'block';
                         return;
@@ -794,19 +796,9 @@ if (isset($conn) && $conn instanceof mysqli) {
                         uploadErrorMsg.style.display = 'block';
                     }
                 })
-                .catch(async (err) => {
-                    // Intentar mostrar el error completo de la respuesta
-                    let text = '';
-                    if (err && err.message) {
-                        text = err.message;
-                    } else {
-                        try {
-                            const resp = await fetch(uploadForm.action, { method: 'POST', body: formData });
-                            text = await resp.text();
-                        } catch (e) {
-                            text = e && e.message ? e.message : '';
-                        }
-                    }
+                .catch((err) => {
+                    // Mostrar el mensaje de error del catch
+                    let text = err && err.message ? err.message : 'Error de red o servidor.';
                     uploadErrorMsg.textContent = 'Error específico del servidor:\n' + text;
                     uploadErrorMsg.style.display = 'block';
                 });
