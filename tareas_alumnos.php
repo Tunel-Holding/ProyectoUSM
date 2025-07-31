@@ -772,15 +772,31 @@ if (isset($conn) && $conn instanceof mysqli) {
                     body: formData
                 })
                 .then(async response => {
-                    // Intentar leer como JSON, si falla leer como texto
+                    if (!response.ok) {
+                        // Si el estado HTTP no es 2xx, mostrar el código y el texto
+                        let errorText = `Error HTTP ${response.status}: ${response.statusText}`;
+                        try {
+                            // Si hay cuerpo, intenta leerlo como texto
+                            const body = await response.text();
+                            if (body) errorText += '\n' + body;
+                        } catch (e) {}
+                        uploadErrorMsg.textContent = errorText;
+                        uploadErrorMsg.style.display = 'block';
+                        return;
+                    }
+                    // Si la respuesta está vacía, mostrar mensaje
+                    const contentType = response.headers.get('content-type') || '';
+                    if (!contentType.includes('application/json')) {
+                        const text = await response.text();
+                        uploadErrorMsg.textContent = 'Respuesta inesperada del servidor:\n' + text;
+                        uploadErrorMsg.style.display = 'block';
+                        return;
+                    }
                     let data;
-                    let text = '';
                     try {
                         data = await response.json();
                     } catch (e) {
-                        // Si la respuesta no es JSON, leer como texto
-                        text = await response.text();
-                        uploadErrorMsg.textContent = 'Respuesta inesperada del servidor:\n' + text;
+                        uploadErrorMsg.textContent = 'No se pudo leer la respuesta JSON del servidor.';
                         uploadErrorMsg.style.display = 'block';
                         return;
                     }
@@ -797,7 +813,6 @@ if (isset($conn) && $conn instanceof mysqli) {
                     }
                 })
                 .catch((err) => {
-                    // Mostrar el mensaje de error del catch
                     let text = err && err.message ? err.message : 'Error de red o servidor.';
                     uploadErrorMsg.textContent = 'Error específico del servidor:\n' + text;
                     uploadErrorMsg.style.display = 'block';
