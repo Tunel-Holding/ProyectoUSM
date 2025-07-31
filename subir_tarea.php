@@ -1,4 +1,11 @@
+
 <?php
+// DEPURACIÓN: mostrar errores PHP en la respuesta JSON (quitar en producción)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+ob_start();
+
 include 'comprobar_sesion.php';
 include 'conexion.php';
 actualizar_actividad();
@@ -15,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $directorio_subida = 'uploads/';
     $ruta_archivo = '';
-    // Validaciones antes de mover el archivo
     $max_file_size = 25 * 1024 * 1024; // 25 MB
     $allowed_extensions = ['pdf', 'docx', 'zip', 'jpg', 'jpeg', 'png'];
 
@@ -24,37 +30,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $file_ext = strtolower(pathinfo($_FILES['archivo_tarea']['name'], PATHINFO_EXTENSION));
 
         if ($file_size > $max_file_size) {
+            $php_error = ob_get_clean();
             $response['success'] = false;
             $response['error'] = "El archivo es demasiado grande. El tamaño máximo permitido es 25 MB.";
+            if ($php_error) $response['php_error'] = $php_error;
             echo json_encode($response);
             exit();
         }
 
         if (!in_array($file_ext, $allowed_extensions)) {
+            $php_error = ob_get_clean();
             $response['success'] = false;
             $response['error'] = "Tipo de archivo no permitido. Solo se permiten: PDF, DOCX, ZIP, JPG, JPEG, PNG.";
+            if ($php_error) $response['php_error'] = $php_error;
             echo json_encode($response);
             exit();
         }
-    }
 
-    if (!$archivo_subido && $link_tarea !== '') {
+        if (!is_dir($directorio_subida)) {
+            mkdir($directorio_subida, 0755, true);
+        }
+        $nombre_archivo = uniqid('tarea_') . '_' . time() . '.' . $file_ext;
+        $ruta_archivo = $directorio_subida . $nombre_archivo;
+        if (!move_uploaded_file($_FILES['archivo_tarea']['tmp_name'], $ruta_archivo)) {
+            $php_error = ob_get_clean();
+            $response['success'] = false;
+            $response['error'] = "Error al guardar el archivo en el servidor.";
+            if ($php_error) $response['php_error'] = $php_error;
+            echo json_encode($response);
+            exit();
+        }
+    } elseif (!$archivo_subido && $link_tarea !== '') {
         // Validar que el link sea una URL válida
         if (!filter_var($link_tarea, FILTER_VALIDATE_URL)) {
+            $php_error = ob_get_clean();
             $response['success'] = false;
             $response['error'] = "El enlace ingresado no es una URL válida.";
+            if ($php_error) $response['php_error'] = $php_error;
             echo json_encode($response);
             exit();
         }
-    }
-
-    if ($archivo_subido && move_uploaded_file($_FILES['archivo_tarea']['tmp_name'], $ruta_archivo)) {
-        // Subida de archivo
-    } elseif (!$archivo_subido && $link_tarea !== '') {
-        // Subida de link (sin archivo), $ruta_archivo ya contiene el link
+        $ruta_archivo = $link_tarea;
     } else {
+        $php_error = ob_get_clean();
         $response['success'] = false;
         $response['error'] = "Debes subir un archivo o ingresar un link válido.";
+        if ($php_error) $response['php_error'] = $php_error;
         echo json_encode($response);
         exit();
     }
@@ -111,6 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 actualizar_actividad();
 $conn->close();
+// Limpiar cualquier salida previa y mostrar solo JSON
+$php_error = ob_get_clean();
+if ($php_error) $response['php_error'] = $php_error;
 echo json_encode($response);
 exit();
 ?>
