@@ -6,7 +6,6 @@ $auth->checkAccess(AuthGuard::NIVEL_USUARIO);
 
 
 include 'conexion.php'; // Asegúrate de tener un archivo para la conexión a la base de datos
-actualizar_actividad();
 // Consultar tareas desde la base de datos
 $idMateria = $_SESSION['idmateria'];
 $id_alumno = $_SESSION['idusuario'];
