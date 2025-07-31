@@ -681,8 +681,8 @@ if (isset($conn) && $conn instanceof mysqli) {
                 sizeError.textContent = '';
                 if (archivoInput.files.length > 0) {
                     archivoNombre.textContent = archivoInput.files[0].name;
-                    // Validar tamaño (por ejemplo, 10MB)
-                    const maxSize = 10 * 1024 * 1024; // 10MB
+                    // Validar tamaño (por ejemplo, 25MB)
+                    const maxSize = 50 * 1024 * 1024; // 25MB
                     if (archivoInput.files[0].size > maxSize) {
                         sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
                         sizeError.style.display = 'block';
@@ -752,7 +752,7 @@ if (isset($conn) && $conn instanceof mysqli) {
                         uploadErrorMsg.style.display = 'block';
                         return;
                     }
-                    const maxSize = 10 * 1024 * 1024; // 10MB
+                    const maxSize = 50 * 1024 * 1024; // 10MB
                     if (archivoInput.files[0].size > maxSize) {
                         sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
                         sizeError.style.display = 'block';

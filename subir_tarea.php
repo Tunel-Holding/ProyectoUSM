@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $directorio_subida = 'uploads/';
     $ruta_archivo = '';
-    $max_file_size = 25 * 1024 * 1024; // 25 MB
+    $max_file_size = 50 * 1024 * 1024; // 25 MB
     $allowed_extensions = ['pdf', 'docx', 'zip', 'jpg', 'jpeg', 'png'];
 
     if ($archivo_subido) {
