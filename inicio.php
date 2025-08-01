@@ -29,7 +29,7 @@
                     <div class="barravertical"></div> -->
                     <img src="css/logounihubazul.png" class="logo-uni1">
                 </div>
-                <h2>Iniciar Sesión</h2>
+                <h2>Iniciar sesión</h2>
                 <span>Usa tu usuario y contraseña</span>
                 <div class="container-input">
                     <ion-icon name="person-outline"></ion-icon>

@@ -98,7 +98,7 @@ actualizar_actividad();
 
     <?php include 'menu_alumno.php'; ?>
 
-    <h1>Seleccionar Curso</h1>
+    <h1>Seleccionar curso</h1>
     <div class="materias">
         <?php
         require 'conexion.php';

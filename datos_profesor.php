@@ -320,7 +320,7 @@ $conn->close(); // Cerrar la conexión
 
     <div class="contenedor-principal">
         <div class="wecontainer">
-            <h1>Datos del Profesor</h1>
+            <h1>Datos del profesor</h1>
             <div class="perfil-container">
                 <img src="<?php echo $foto; ?>" alt="Foto de perfil" class="perfil-foto" id="perfilFoto">
                 </div>

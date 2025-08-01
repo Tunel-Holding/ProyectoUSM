@@ -1112,7 +1112,7 @@ if ($idgrupo) {
         }
         ?>
         <div class="sidebar-materias">
-            <h2>Mis Materias</h2>
+            <h2>Mis materias</h2>
             <div class="lista-materias">
                 <?php foreach ($materias as $mat): ?>
                     <div class="materia-item<?php if ($materia_actual == $mat['id'])

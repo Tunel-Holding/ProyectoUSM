@@ -163,7 +163,7 @@ $conn->close();
         <!-- Columna izquierda: Horario semanal -->
         <div class="profesor-columna-izquierda">
             <div class="profesor-contenedor-horario">
-                <h2 class="profesor-titulo-horario">Horario Semanal Completo</h2>
+                <h2 class="profesor-titulo-horario">Horario semanal completo</h2>
                 <?php
                 $dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
                 // Inicializar matriz de control de rowspan
@@ -234,7 +234,7 @@ $conn->close();
         <!-- Columna derecha: Materias asignadas -->
         <div class="profesor-columna-derecha">
             <div class="profesor-contenedor-horario">
-                <h2 class="profesor-titulo-horario">Materias Asignadas</h2>
+                <h2 class="profesor-titulo-horario">Materias asignadas</h2>
                 <div class="contenedor-materias-grid">
                     <?php if ($result_materias->num_rows > 0): ?>
                         <?php while ($row = $result_materias->fetch_assoc()): ?>

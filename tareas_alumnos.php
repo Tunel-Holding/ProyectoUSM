@@ -188,7 +188,7 @@ $tareas = $result->fetch_all(MYSQLI_ASSOC);
 
     <div class="contenido">
         <section class="semester-progress-section card">
-            <h1>Mis Tareas - <?php echo $_SESSION['nombremateria']; ?></h1>
+            <h1>Mis tareas - <?php echo $_SESSION['nombremateria']; ?></h1>
             <div class="progress-metrics">
 
 
