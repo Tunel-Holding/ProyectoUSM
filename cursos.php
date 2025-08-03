@@ -142,7 +142,7 @@ actualizar_actividad();
     <div class="materias">
         <?php
         // Obtener los cursos que imparte el profesor
-        $sql_cursos = "SELECT nombre, id FROM materias WHERE id_profesor = $id_profesor";
+        $sql_cursos = "SELECT nombre, id, seccion FROM materias WHERE id_profesor = $id_profesor";
         $result_cursos = $conn->query($sql_cursos);
 
         if ($result_cursos->num_rows > 0) {
@@ -150,7 +150,7 @@ actualizar_actividad();
                 ?>
                 <div class="div-materia">
                     <img src="css/images.png">
-                    <h2><?php echo htmlspecialchars($fila['nombre']); ?></h2>
+                    <h2><?php echo htmlspecialchars($fila['nombre'])." (". htmlspecialchars($fila['seccion']) .")" ; ?></h2>
                     <a class="botoninscribir" data-valor="<?php echo htmlspecialchars($fila['id']); ?>">Ver Curso</a>
                 </div>
                 <?php
