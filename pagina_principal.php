@@ -793,29 +793,17 @@ $conn->close();
         .tabla-tareas-pendientes tr:last-child td {
             border-bottom: none;
         }
-        .estado-pendiente {
-            background: #ffd70033;
+        .hora-limite {
+            background: #17438822;
             color: var(--color-primary-blue);
             padding: 4px 12px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 12px;
-            border: 1px solid var(--color-accent-gold);
+            border: 1px solid var(--color-primary-blue);
         }
-        body.dark-mode .tabla-tareas-pendientes {
-            background: var(--gradient-card-bg);
-            box-shadow: var(--shadow-table);
-        }
-        body.dark-mode .tabla-tareas-pendientes th {
-            background: var(--gradient-header-bg);
-            color: var(--color-text-light);
-        }
-        body.dark-mode .tabla-tareas-pendientes td {
-            color: var(--color-text-light);
-            border-bottom-color: var(--color-border-light);
-        }
-        body.dark-mode .estado-pendiente {
-            background: #ffd70033;
+        body.dark-mode .hora-limite {
+            background: #2d374822;
             color: var(--color-accent-gold);
             border-color: var(--color-accent-gold);
         }
@@ -861,7 +849,7 @@ $conn->close();
                                 <th>Tarea</th>
                                 <th>Materia</th>
                                 <th>Fecha límite</th>
-                                <th>Estado</th>
+                                <th>Hora límite</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -869,19 +857,19 @@ $conn->close();
                                 <td>Entregar ensayo</td>
                                 <td>Lengua y Comunicación</td>
                                 <td>10/08/2025</td>
-                                <td><span class="estado-pendiente">Pendiente</span></td>
+                                <td><span class="hora-limite">16:00</span></td>
                             </tr>
                             <tr>
                                 <td>Resolver ejercicios</td>
                                 <td>Matemáticas</td>
                                 <td>12/08/2025</td>
-                                <td><span class="estado-pendiente">Pendiente</span></td>
+                                <td><span class="hora-limite">23:59</span></td>
                             </tr>
                             <tr>
                                 <td>Subir presentación</td>
                                 <td>Historia</td>
                                 <td>15/08/2025</td>
-                                <td><span class="estado-pendiente">Pendiente</span></td>
+                                <td><span class="hora-limite">08:30</span></td>
                             </tr>
                         </tbody>
                     </table>
