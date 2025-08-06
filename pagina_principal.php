@@ -856,19 +856,19 @@ $conn->close();
                             <tr>
                                 <td>Entregar ensayo</td>
                                 <td>Lengua y Comunicación</td>
-                                <td>10/08/2025</td>
+                                <td><span class="hora-limite">10/08/2025</span></td>
                                 <td><span class="hora-limite">16:00</span></td>
                             </tr>
                             <tr>
                                 <td>Resolver ejercicios</td>
                                 <td>Matemáticas</td>
-                                <td>12/08/2025</td>
+                                <td><span class="hora-limite">12/08/2025</span></td>
                                 <td><span class="hora-limite">23:59</span></td>
                             </tr>
                             <tr>
                                 <td>Subir presentación</td>
                                 <td>Historia</td>
-                                <td>15/08/2025</td>
+                                <td><span class="hora-limite">15/08/2025</span></td>
                                 <td><span class="hora-limite">08:30</span></td>
                             </tr>
                         </tbody>
