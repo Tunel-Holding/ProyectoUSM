@@ -847,30 +847,48 @@ $conn->close();
                         <thead>
                             <tr>
                                 <th>Tarea</th>
-                                <th>Materia</th>
+                                <th>Modulo</th>
                                 <th>Fecha límite</th>
                                 <th>Hora límite</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Entregar ensayo</td>
-                                <td>Lengua y Comunicación</td>
-                                <td><span class="hora-limite">10/08/2025</span></td>
-                                <td><span class="hora-limite">16:00</span></td>
-                            </tr>
-                            <tr>
-                                <td>Resolver ejercicios</td>
-                                <td>Matemáticas</td>
-                                <td><span class="hora-limite">12/08/2025</span></td>
-                                <td><span class="hora-limite">23:59</span></td>
-                            </tr>
-                            <tr>
-                                <td>Subir presentación</td>
-                                <td>Historia</td>
-                                <td><span class="hora-limite">15/08/2025</span></td>
-                                <td><span class="hora-limite">08:30</span></td>
-                            </tr>
+                        <?php
+                        // Volver a abrir la conexión para esta consulta si ya está cerrada
+                        require_once 'conexion.php';
+                        $user_id = $_SESSION['idusuario'];
+                        $sql_materias = "SELECT m.id, m.nombre FROM inscripciones i JOIN materias m ON i.id_materia = m.id WHERE i.id_estudiante = ?";
+                        $stmt_mats = $conn->prepare($sql_materias);
+                        $stmt_mats->bind_param("i", $user_id);
+                        $stmt_mats->execute();
+                        $res_mats = $stmt_mats->get_result();
+                        $tareas_pendientes = [];
+                        while ($mat = $res_mats->fetch_assoc()) {
+                            $sql_tareas = "SELECT t.id, t.titulo_tarea, t.fecha_entrega, t.hora_entrega, m.nombre as modulo FROM tareas t LEFT JOIN entregas_tareas et ON t.id = et.id_tarea AND et.id_alumno = ? JOIN materias m ON t.id_materia = m.id WHERE t.id_materia = ? AND et.id_entrega IS NULL ORDER BY t.fecha_entrega, t.hora_entrega";
+                            $stmt_tareas = $conn->prepare($sql_tareas);
+                            $stmt_tareas->bind_param("ii", $user_id, $mat['id']);
+                            $stmt_tareas->execute();
+                            $res_tareas = $stmt_tareas->get_result();
+                            while ($tarea = $res_tareas->fetch_assoc()) {
+                                $tareas_pendientes[] = $tarea;
+                            }
+                            $stmt_tareas->close();
+                        }
+                        $stmt_mats->close();
+                        // $conn->close(); // No cerrar aquí, la conexión la maneja conexion.php
+                        if (empty($tareas_pendientes)) {
+                            echo '<tr><td colspan="4">No tienes tareas pendientes.</td></tr>';
+                        } else {
+                            foreach ($tareas_pendientes as $tarea) {
+                                echo '<tr>';
+                                echo '<td>' . htmlspecialchars($tarea['titulo_tarea']) . '</td>';
+                                echo '<td>' . htmlspecialchars($tarea['modulo']) . '</td>';
+                                echo '<td><span class="hora-limite">' . date('d/m/Y', strtotime($tarea['fecha_entrega'])) . '</span></td>';
+                                echo '<td><span class="hora-limite">' . htmlspecialchars($tarea['hora_entrega']) . '</span></td>';
+                                echo '</tr>';
+                            }
+                        }
+                        ?>
                         </tbody>
                     </table>
                 </div>
