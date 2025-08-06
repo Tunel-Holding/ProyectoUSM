@@ -187,7 +187,7 @@ $tareas = $result->fetch_all(MYSQLI_ASSOC);
 
     <div class="contenido">
         <section class="semester-progress-section card">
-            <h1>Mis Tareas - <?php echo $_SESSION['nombremateria']; ?></h1>
+            <h1>Mis tareas - <?php echo $_SESSION['nombremateria']; ?></h1>
             <div class="progress-metrics">
 
 
@@ -748,9 +748,9 @@ if (isset($conn) && $conn instanceof mysqli) {
                         uploadErrorMsg.style.display = 'block';
                         return;
                     }
-                    const maxSize = 10 * 1024 * 1024; // 10MB
+                    const maxSize = 25 * 1024 * 1024; // 25MB
                     if (archivoInput.files[0].size > maxSize) {
-                        sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 10MB.';
+                        sizeError.textContent = 'El archivo es demasiado grande. El tamaño máximo permitido es 25MB.';
                         sizeError.style.display = 'block';
                         return;
                     }

@@ -846,7 +846,7 @@ $conn->close();
             <!-- Columna izquierda: Horario semanal -->
             <div class="columna-izquierda">
                 <div class="contenedor-horario">
-                    <h2 class="titulo-horario">Horario Semanal Completo</h2>
+                    <h2 class="titulo-horario">Horario semanal completo</h2>
                     <?php 
                     define('INCLUDED_FROM_MAIN', true);
                     include 'horario_alumno.php'; 
@@ -891,7 +891,7 @@ $conn->close();
             <!-- Columna derecha: Materias inscritas -->
             <div class="columna-derecha">
                 <div class="contenedor-horario">
-                    <h2 class="titulo-horario">Materias Inscritas</h2>
+                    <h2 class="titulo-horario">Materias inscritas</h2>
                     <div class="contenedor-materias-grid">
                         <?php while ($row = $resultado->fetch_assoc()): ?>
                             <a href="detalle_materia.php?id=<?php echo $row['id_materia']; ?>" class="tarjeta-materia-link">

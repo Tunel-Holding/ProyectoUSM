@@ -60,7 +60,7 @@ actualizar_actividad();
 
     <?php include 'menu_profesor.php'; ?>
 
-    <h1 class="titulo">Seleccionar Materia</h1>
+    <h1 class="titulo">Seleccionar materia</h1>
 
     <div class="materias">
         <?php

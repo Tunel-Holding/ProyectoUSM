@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
         'application/pdf'
     ];
-    $max_size = 50 * 1024 * 1024; // 50MB
+    $max_size = 25 * 1024 * 1024; // 25MB
 
     if (!in_array($file['type'], $allowed_types)) {
         echo json_encode(['error' => 'Tipo de archivo no permitido']);
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
 
     if ($file['size'] > $max_size) {
-        echo json_encode(['error' => 'El archivo es demasiado grande (máximo 10MB)']);
+        echo json_encode(['error' => 'El archivo es demasiado grande (máximo 25MB)']);
         exit();
     }
 
@@ -1112,7 +1112,7 @@ if ($idgrupo) {
         }
         ?>
         <div class="sidebar-materias">
-            <h2>Mis Materias</h2>
+            <h2>Mis materias</h2>
             <div class="lista-materias">
                 <?php foreach ($materias as $mat): ?>
                     <div class="materia-item<?php if ($materia_actual == $mat['id'])
