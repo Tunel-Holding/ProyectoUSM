@@ -781,10 +781,29 @@ actualizar_actividad();
             overflow: hidden;
         }
         .tabla-tareas-pendientes th, .tabla-tareas-pendientes td {
-            padding: 10px 8px;
+            padding: 8px 4px;
             text-align: center;
             border-bottom: var(--border-light-2);
             font-size: 13px;
+        }
+        .tabla-tareas-pendientes td:first-child, .tabla-tareas-pendientes th:first-child {
+            min-width: 80px;
+            max-width: 140px;
+            width: 120px;
+            word-break: break-word;
+        }
+        .tabla-tareas-pendientes td {
+            vertical-align: middle;
+        }
+        .ver-mas {
+            font-size: 12px;
+            color: var(--color-primary-blue);
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 4px;
+        }
+        body.dark-mode .ver-mas {
+            color: var(--color-accent-gold);
         }
         .tabla-tareas-pendientes th {
             background: var(--gradient-header-bg);
@@ -880,9 +899,18 @@ actualizar_actividad();
                         if (empty($tareas_pendientes)) {
                             echo '<tr><td colspan="4">No tienes tareas pendientes.</td></tr>';
                         } else {
-                            foreach ($tareas_pendientes as $tarea) {
+                            foreach ($tareas_pendientes as $idx => $tarea) {
+                                $texto_completo = htmlspecialchars($tarea['titulo_tarea']);
+                                $texto_corto = mb_strimwidth($texto_completo, 0, 40, '...');
+                                $id = 'tarea_texto_' . $idx;
                                 echo '<tr>';
-                                echo '<td>' . htmlspecialchars($tarea['titulo_tarea']) . '</td>';
+                                echo '<td>';
+                                echo '<span id="' . $id . '_short">' . $texto_corto . '</span>';
+                                echo '<span id="' . $id . '_full" style="display:none;">' . $texto_completo . '</span>';
+                                if (mb_strlen($texto_completo) > 40) {
+                                    echo ' <a href="#" class="ver-mas" onclick="toggleTareaTexto(\'' . $id . '\'); return false;">Ver más</a>';
+                                }
+                                echo '</td>';
                                 echo '<td>' . htmlspecialchars($tarea['modulo']) . '</td>';
                                 echo '<td><span class="hora-limite">' . date('d/m/Y', strtotime($tarea['fecha_entrega'])) . '</span></td>';
                                 echo '<td><span class="hora-limite">' . htmlspecialchars($tarea['hora_entrega']) . '</span></td>';
@@ -927,7 +955,21 @@ actualizar_actividad();
         </a>
     </div>
     <script>
-        // Aquí solo debe ir JS exclusivo de la página, si lo hubiera. Se eliminó la lógica de menú y tema.
+    // Mostrar/ocultar texto completo de la tarea
+    function toggleTareaTexto(id) {
+        var shortSpan = document.getElementById(id + '_short');
+        var fullSpan = document.getElementById(id + '_full');
+        var link = shortSpan.parentNode.querySelector('.ver-mas');
+        if (shortSpan.style.display === 'none') {
+            shortSpan.style.display = '';
+            fullSpan.style.display = 'none';
+            link.textContent = 'Ver más';
+        } else {
+            shortSpan.style.display = 'none';
+            fullSpan.style.display = '';
+            link.textContent = 'Ver menos';
+        }
+    }
     </script>
 </body>
 
