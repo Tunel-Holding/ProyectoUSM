@@ -787,9 +787,9 @@ actualizar_actividad();
             font-size: 13px;
         }
         .tabla-tareas-pendientes td:first-child, .tabla-tareas-pendientes th:first-child {
-            min-width: 80px;
-            max-width: 140px;
-            width: 120px;
+            min-width: 110px;
+            max-width: 180px;
+            width: 150px;
             word-break: break-word;
         }
         .tabla-tareas-pendientes td {
