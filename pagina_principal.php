@@ -768,6 +768,57 @@ $conn->close();
                 gap: 20px; /* Sin !important */
             }
         }
+
+        /* --- Tabla de Tareas Pendientes --- */
+        .tabla-tareas-pendientes {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: var(--gradient-card-bg);
+            border-radius: var(--border-radius-base);
+            box-shadow: var(--shadow-table);
+            overflow: hidden;
+        }
+        .tabla-tareas-pendientes th, .tabla-tareas-pendientes td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: var(--border-light-2);
+            font-size: 13px;
+        }
+        .tabla-tareas-pendientes th {
+            background: var(--gradient-header-bg);
+            color: var(--color-text-light);
+            font-weight: 600;
+        }
+        .tabla-tareas-pendientes tr:last-child td {
+            border-bottom: none;
+        }
+        .estado-pendiente {
+            background: #ffd70033;
+            color: var(--color-primary-blue);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            border: 1px solid var(--color-accent-gold);
+        }
+        body.dark-mode .tabla-tareas-pendientes {
+            background: var(--gradient-card-bg);
+            box-shadow: var(--shadow-table);
+        }
+        body.dark-mode .tabla-tareas-pendientes th {
+            background: var(--gradient-header-bg);
+            color: var(--color-text-light);
+        }
+        body.dark-mode .tabla-tareas-pendientes td {
+            color: var(--color-text-light);
+            border-bottom-color: var(--color-border-light);
+        }
+        body.dark-mode .estado-pendiente {
+            background: #ffd70033;
+            color: var(--color-accent-gold);
+            border-color: var(--color-accent-gold);
+        }
     </style>
 </head>
 
@@ -800,6 +851,40 @@ $conn->close();
                     define('INCLUDED_FROM_MAIN', true);
                     include 'horario_alumno.php'; 
                     ?>
+                </div>
+                <!-- Tabla de tareas pendientes -->
+                <div class="contenedor-horario" style="margin-top:20px;">
+                    <h2 class="titulo-horario">Tareas Pendientes</h2>
+                    <table class="tabla-tareas-pendientes">
+                        <thead>
+                            <tr>
+                                <th>Tarea</th>
+                                <th>Materia</th>
+                                <th>Fecha límite</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Entregar ensayo</td>
+                                <td>Lengua y Comunicación</td>
+                                <td>10/08/2025</td>
+                                <td><span class="estado-pendiente">Pendiente</span></td>
+                            </tr>
+                            <tr>
+                                <td>Resolver ejercicios</td>
+                                <td>Matemáticas</td>
+                                <td>12/08/2025</td>
+                                <td><span class="estado-pendiente">Pendiente</span></td>
+                            </tr>
+                            <tr>
+                                <td>Subir presentación</td>
+                                <td>Historia</td>
+                                <td>15/08/2025</td>
+                                <td><span class="estado-pendiente">Pendiente</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             
