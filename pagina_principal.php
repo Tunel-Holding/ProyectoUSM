@@ -118,8 +118,9 @@ $stmt_materias->close();
 
 
 
+
 actualizar_actividad();
-$conn->close();
+// $conn->close(); // No cerrar aquí, la conexión se usa más abajo
 
 ?>
 
