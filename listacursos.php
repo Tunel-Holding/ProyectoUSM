@@ -51,6 +51,7 @@ if (!isset($_SESSION['idusuario'])) {
     <?php
     require "conexion.php";
     $id_materia = $_GET['valor'];
+    echo "<div style='color: red; font-weight: bold;'>DEBUG: id_materia = " . htmlspecialchars($id_materia) . "</div>";
 
     // Obtener los estudiantes inscritos en la materia
     $sql_estudiantes = "
