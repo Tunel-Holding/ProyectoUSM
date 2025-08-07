@@ -55,8 +55,8 @@ if (!isset($_SESSION['idusuario'])) {
     // Obtener los estudiantes inscritos en la materia
     $sql_estudiantes = "
                 SELECT du.nombres, du.apellidos, du.cedula, du.correo 
-                FROM inscripciones i
-                JOIN datos_usuario du ON i.id_estudiante = du.id
+                FROM datos_usuario du
+                JOIN inscripciones i ON i.id_estudiante = du.id
                 WHERE i.id_materia = $id_materia
                 AND du.usuario_id NOT IN (SELECT id_usuario FROM profesores)
             ";
