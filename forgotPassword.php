@@ -14,19 +14,19 @@ if ($conn->connect_error) {
 // Función para enviar email usando PHPMailer
 function enviarEmailRecuperacion($email, $nombre_usuario, $resetPassLink) {
 try {
-          $mail = new PHPMailer(true);
-          $mail->CharSet = 'UTF-8'; 
-          $mail->isSMTP();
-          $mail->isHTML(true);
-          $mail->Host = 'smtp.gmail.com';
-          $mail->SMTPAuth = true;
-          $mail->Username = 'modulo11usm@gmail.com';
-          $mail->Password = 'aoau ilmo tglw yodm';
-          $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-          $mail->Port = 587;
+        $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
+        $mail->isSMTP();
+        $mail->isHTML(true);
+        $mail->Host = 'mail.conexiondocente.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'unihub@conexiondocente.com';
+        $mail->Password = 'unihubconexiondocente**';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = 465;
           
           // Destinatarios y contenido
-        $mail->setFrom('modulo11usm@gmail.com', 'UniHub - Universidad Santa Maria');
+        $mail->setFrom('unihub@conexiondocente.com', 'UniHub');
           $mail->addAddress($email);
         $mail->Subject = '🔐 Recuperación de Contraseña - UniHub';
         
