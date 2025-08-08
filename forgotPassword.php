@@ -174,7 +174,14 @@ body {
 
 // Procesar la solicitud de recuperación de contraseña
 if(!empty($_POST['email'])) {
-          $email = $_POST['email'];
+    $email = trim($_POST['email']);
+    // Validar formato de email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $mensaje = 'Por favor, ingresa un correo electrónico válido.';
+        $tipo = 'error';
+        // Detener ejecución si el email no es válido
+        return;
+    }
     $sql = "SELECT * FROM usuarios WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -220,7 +227,7 @@ if(!empty($_POST['email'])) {
                 }
             }
         } else {
-            $sql_usuario = "SELECT cedula FROM estudiantes WHERE email = ?";
+            $sql_usuario = "SELECT cedula FROM datos_usuario WHERE correo = ?";
             $stmt_usuario = $conn->prepare($sql_usuario);
             $stmt_usuario->bind_param("s", $email);
             $stmt_usuario->execute();
