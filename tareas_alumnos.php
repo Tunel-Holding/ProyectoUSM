@@ -317,6 +317,14 @@ $tareas = $result->fetch_all(MYSQLI_ASSOC);
             <button class="submit-task-btn btn-mini<?php if ($expirada) echo ' disabled-task-btn'; ?>" data-idtarea="<?php echo intval($tarea['id']); ?>" data-archivo="<?php echo htmlspecialchars($archivo_entregado ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-vencida="<?php echo $expirada ? '1' : '0'; ?>" <?php if ($expirada) echo 'disabled tabindex="-1"'; ?> >
                 <i class="fas fa-upload"></i> <?php echo $entregada ? 'Remplazar Tarea' : 'Subir Tarea'; ?>
             </button>
+            <?php if ($entregada && !empty($archivo_entregado)): ?>
+                <?php $is_link = preg_match('/^https?:\/\//i', $archivo_entregado); ?>
+                <a href="<?php echo htmlspecialchars($archivo_entregado); ?>" target="_blank" class="btn-mini" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                    <button class="submit-task-btn btn-mini" style="background-color: var(--accent-blue);">
+                        <i class="fas <?php echo $is_link ? 'fa-link' : 'fa-eye'; ?>"></i> <?php echo $is_link ? 'Ver Link subido' : 'Ver Archivo subido'; ?>
+                    </button>
+                </a>
+            <?php endif; ?>
             <?php if ($entregada): ?>
                 <p class="task-completed-message"><i class="fas fa-check-circle"></i> Tarea Entregada</p>
             <?php endif; ?>
@@ -413,6 +421,7 @@ if (isset($conn) && $conn instanceof mysqli) {
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-line-clamp: 4;
+        line-clamp: 4;
         -webkit-box-orient: vertical;
         max-height: 5.8em;
         transition: max-height 0.3s;
@@ -625,7 +634,7 @@ if (isset($conn) && $conn instanceof mysqli) {
                                 nombreOriginal = partes.slice(2).join('_');
                             }
                             archivoNombre.textContent = 'Archivo: ' + nombreOriginal;
-                            document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Remplazar Archivo';
+                            document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Reemplazar Archivo';
                         } else {
                             archivoNombre.textContent = '';
                             document.getElementById('archivo_tarea_btn').innerHTML = '<i class="fas fa-file-upload"></i> Seleccionar Archivo';
