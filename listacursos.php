@@ -50,18 +50,29 @@ if (!isset($_SESSION['idusuario'])) {
 
     <?php
     require "conexion.php";
-    $id_materia = $_GET['valor'];
-    echo "<div style='color: red; font-weight: bold;'>DEBUG: id_materia = " . htmlspecialchars($id_materia) . "</div>";
+    // Validar id_materia de la URL
+    $id_materia = filter_input(INPUT_GET, 'valor', FILTER_VALIDATE_INT);
+    if ($id_materia === false || $id_materia === null) {
+        echo "Parámetro de materia inválido.";
+        exit;
+    }
 
     // Obtener los estudiantes inscritos en la materia
     $sql_estudiantes = "
                 SELECT du.nombres, du.apellidos, du.cedula, du.correo 
                 FROM datos_usuario du
-                JOIN inscripciones i ON i.id_estudiante = du.id
-                WHERE i.id_materia = $id_materia
+                JOIN inscripciones i ON i.id_estudiante = du.usuario_id
+                WHERE i.id_materia = ?
                 AND du.usuario_id NOT IN (SELECT id_usuario FROM profesores)
             ";
-    $result_estudiantes = $conn->query($sql_estudiantes);
+    $stmt = $conn->prepare($sql_estudiantes);
+    if (!$stmt) {
+        echo "Error al preparar la consulta.";
+        exit;
+    }
+    $stmt->bind_param("i", $id_materia);
+    $stmt->execute();
+    $result_estudiantes = $stmt->get_result();
 
     if ($result_estudiantes->num_rows > 0) {
         echo "<div class='div-horario'>";
@@ -80,6 +91,7 @@ if (!isset($_SESSION['idusuario'])) {
     } else {
         echo "No hay estudiantes inscritos en esta materia.";
     }
+    if (isset($stmt) && $stmt) { $stmt->close(); }
     $conn->close();
     ?>
 
