@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
     $reply_to = isset($_POST['reply_to']) ? (int) $_POST['reply_to'] : 0;
     $message = trim($_POST['message']);
 
-    if (strlen($message) > 0 && strlen($message) <= 250) {
+    if (strlen($message) > 0 && strlen($message) <= 10000) {
          if (
             preg_match('/^[\p{L}\p{N}\s\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{1F700}-\x{1F77F}\x{1F780}-\x{1F7FF}\x{1F800}-\x{1F8FF}\x{1F900}-\x{1F9FF}\x{1FA00}-\x{1FA6F}\x{1FA70}-\x{1FAFF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{2300}-\x{23FF}\x{2B50}\x{1F004}\x{1F0CF}\x{1F18E}\x{1F191}-\x{1F19A}\x{1F1E6}-\x{1F1FF}\x{1F201}-\x{1F251}\x{200D}\x{FE0F}\!\?\.,:\/@#%&=_\-]+$/u', $message)
         )  {
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
             echo json_encode(['error' => 'El mensaje contiene caracteres no permitidos']);
         }
     } else {
-        echo json_encode(['error' => 'El mensaje debe tener entre 1 y 250 caracteres']);
+        echo json_encode(['error' => 'El mensaje debe tener entre 1 y 10000 caracteres']);
     }
     exit();
 }
@@ -1256,7 +1256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     </div>
                     <input type="text" id="message"
                         placeholder="<?php echo $sin_materias ? 'No tienes materias disponibles' : 'Escribe un mensaje...'; ?>"
-                        maxlength="250" autocomplete="off" <?php if ($sin_materias)
+                        maxlength="10000" autocomplete="off" <?php if ($sin_materias)
                             echo 'disabled style=\"background:#eee;cursor:not-allowed;\"'; ?> />
                     <button id="send-button" class="button" title="Enviar mensaje" <?php if ($sin_materias)
                         echo 'disabled style=\"opacity:0.5;cursor:not-allowed;\"'; ?>>
@@ -1297,7 +1297,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             <div class="edit-modal-bubble" id="edit-modal-original"></div>
             <div class="edit-modal-flex-row">
                 <div class="edit-modal-textarea-container" style="flex:1;display:flex;align-items:flex-end;">
-                    <textarea class="edit-modal-input" id="edit-modal-input" maxlength="250"
+                    <textarea class="edit-modal-input" id="edit-modal-input" maxlength="10000"
                         placeholder="Escribe el nuevo mensaje..."></textarea>
                 </div>
                 <div class="edit-modal-btn-container" style="display:flex;align-items:flex-end;">
@@ -1309,7 +1309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     <script>
         // Configuración global igual que en chat.php
         const CONFIG = {
-            maxMessageLength: 250,
+            maxMessageLength: 10000,
             maxImageSize: 5 * 1024 * 1024, // 5MB
             maxFileSize: 50 * 1024 * 1024, // 50MB
             allowedImageTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
