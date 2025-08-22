@@ -26,4 +26,16 @@ try {
 
 mysqli_query($conn, "SET time_zone = 'America/Caracas'");
 //prueba pa ve cositas pq
+// Cierre automático de la conexión al terminar el script, incluso si hubo exit/redirect
+// Capturar por valor para cerrar la instancia exacta asociada a este include
+$__conn_to_close = $conn;
+register_shutdown_function(function () use ($__conn_to_close) {
+    if (isset($__conn_to_close) && $__conn_to_close instanceof mysqli) {
+        try {
+            $__conn_to_close->close(); // Si ya está cerrada, el try/catch evita advertencias por MYSQLI_REPORT_STRICT
+        } catch (Throwable $e) {
+            // Ignorar: conexión ya cerrada o no válida
+        }
+    }
+});
 ?>
