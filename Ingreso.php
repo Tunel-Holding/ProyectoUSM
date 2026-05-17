@@ -5,7 +5,7 @@ ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1); // Solo si usas HTTPS
 ini_set('session.cookie_samesite', 'Strict');
 session_start();
-
+// si
 include 'conexion.php';
 
 // Función para limpiar y validar entrada
